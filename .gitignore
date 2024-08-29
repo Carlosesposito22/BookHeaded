@@ -1,3 +1,16 @@
+# Não ignore o README.md
+!README.md
+
+# Não ignore o teste.py
+!teste.py
+
+# Não ignore o LICENSE
+!LICENSE
+
+# Não ignore nada da pasta .github
+!.github/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
