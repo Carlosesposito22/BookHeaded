@@ -49,6 +49,9 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
   <img src="https://contrib.rocks/image?repo=Carlosesposito22/Projeto-Django" />
 </a>
 
+<br>
+<br>
+
 <details>
 <summary>Entrega 1</summary>
 
