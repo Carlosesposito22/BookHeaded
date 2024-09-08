@@ -21,8 +21,6 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
 </ul>
 </details>
 
-<br>
-
 <details>
 <summary>Entrega 1</summary>
 
