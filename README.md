@@ -48,3 +48,41 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
 <a href="https://github.com/Carlosesposito22/Projeto-Django/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Carlosesposito22/Projeto-Django" />
 </a>
+
+<details>
+<summary>Entrega 1</summary>
+
+<br>
+
+## 📑 Jira Backlog
+  <img src="imageJiraBacklog.png" alt="Jira Baclog"> 
+
+<br>
+
+## 📑 Jira Board 
+  <img src="imageJiraBoard.png" alt="Jira Board">
+
+<br>
+
+## 📑 Prototipação Lo-Fi
+<p style="text-align: center; text-decoration: none;">
+  <a href="https://www.figma.com/design/647wQMhbLuuVg614lNbp5g/Untitled?node-id=0-1&t=NoCqAA1pU0jS4wmj-1" style="text-decoration: none;">
+  <span>🧷 Figma</span>
+  </a>
+</p>
+
+<br>
+
+## 📹 Screencast do Protótipo
+<p style="text-align: center; text-decoration: none;">
+  <a href="https://www.youtube.com/watch?v=toAvguviqcI" style="text-decoration: none;">
+  <span>🧷 Screencast do protótipo Lo-Fi (1)</span>
+</a>
+</p>
+
+<br>
+</details>
+
+
+
+
