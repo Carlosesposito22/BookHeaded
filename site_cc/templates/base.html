@@ -1,8 +1,15 @@
+{% load static %}
 <!doctype html>
 <html lang="en" data-bs-theme="auto">
 
 <head>
-  <script src="../assets/js/color-modes.js"></script>
+  <script src="{% static 'assets/js/color-modes.js' %}"></script>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"rel="stylesheet">
+  <link rel="icon" href="images\bookheaded-onlytheboy-white.svg">
+  <title>bookheaded</title>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,35 +22,26 @@
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
 
-  <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{% static 'assets/dist/css/bootstrap.min.css' %}" rel="stylesheet">
 
-  <link href="base-style.css" rel="stylesheet">
+  <link href="{% static 'base-style.css' %}" rel="stylesheet">
 </head>
 
 <body>
 
-  <header class="p-3 text-bg-dark">
-    <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">About</a></li>
-        </ul>
+  {% include 'navbar.html' %}
 
-        <div class="text-end">
-          <button type="button" class="btn btn-outline-light me-2">Login</button>
-          <button type="button" class="btn btn-light">Sign-up</button>
-        </div>
-      </div>
-    </div>
-  </header>
+  {% block content %}
+  {% endblock %}
+
+    
 
 
-  </main>
-  <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+
+  
+
+</main>
+  <script src="{% static 'assets/dist/js/bootstrap.bundle.min.js' %}"></script>
 
 </body>
 
