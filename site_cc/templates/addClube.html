@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title  %}
+    Criando
+{% endblock title %}
+
+{% block content  %}
+    {% if user.is_authenticated %}
+        <h1 class="text-center">Adicionando Clube do Livro</h1>
+       
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <br></br>
+                            <button class="btn btn-secondary">Criar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+    Você nao tem permissao de criar um Clube   
+    {% endif %} 
+{% endblock %}

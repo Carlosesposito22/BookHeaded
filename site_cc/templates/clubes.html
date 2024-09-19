@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title  %}
+    Home Page
+{% endblock title %}
+
+{% block content  %}
+    <h1>Clube do Livro</h1>
+    <ul>
+        {% for clube in object_list %}
+            <li>
+                <a href="{% url 'club-Detail' clube.pk %}">{{ clube.titulo }}</a> - 
+                {{ clube.dataDeCriacao|date:"d/m/Y H:i" }} - 
+                {{ clube.moderador.first_name }}
+                {% if user.is_authenticated %}
+                - <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
+                <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
+                {% endif %}
+                <p>{{ clube.descricao|slice:":200"|safe }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

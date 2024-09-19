@@ -1,3 +1,42 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.urls import reverse
+from datetime import datetime, date
 
-# Create your models here.
+
+class Categoria(models.Model):
+    codigo = models.CharField(max_length=3, unique=True)
+    descricao = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.descricao
+
+class Clube(models.Model):
+    MODALIDADE_CHOICES = [
+        ('N', '-'),
+        ('P', 'Presencial'),
+        ('O', 'Online'),
+        ('H', 'Híbrido'),
+    ]
+
+    id = models.AutoField(primary_key=True)
+    moderador = models.ForeignKey(User, on_delete=models.CASCADE)
+    titulo = models.CharField(max_length=255)
+    modalidade = models.CharField(max_length=1, choices=MODALIDADE_CHOICES, default='N')
+    categoria = models.ForeignKey('Categoria', on_delete=models.SET_NULL, null=True, blank=True)
+    descricao = models.TextField(null=True, blank=True)
+    avaliacoes = models.IntegerField(null=True, blank=True, default=0)
+    livroAtual = models.CharField(max_length=255, null=True, blank=True, default='Sem livro definido')
+    numeroMembros = models.IntegerField(null=True, blank=True, default=1)
+    privado = models.BooleanField(default=False)
+    favoritado = models.BooleanField(default=False)
+    dataDeCriacao = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.titulo} | {self.moderador} | {self.dataDeCriacao.strftime("%d/%m/%Y %H:%M")}'
+
+    def get_absolute_url(self):
+        return reverse('club-Detail', args=(str(self.id)))
+
+
+

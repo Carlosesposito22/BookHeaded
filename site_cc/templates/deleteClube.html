@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title  %}
+    Deletando
+{% endblock title %}
+
+{% block content  %}
+    {% if user.is_authenticated %}
+        <h1 class="text-center">Deletando Clube do Livro</h1>
+        <br><br>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h3>Deletando Clube: {{clube.titulo}}</h3>
+                    <div class="form-group">
+                        <form method="post">
+                            {% csrf_token %}
+                            <br>
+                            <strong>Tem certeza???</strong><br><br>
+                            <button class="btn btn-secondary">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+    Você nao tem permissao de deletar este Clube   
+    {% endif %} 
+{% endblock %}

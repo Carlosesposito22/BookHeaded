@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title  %}
+    Criar conta
+{% endblock title %}
+
+{% block content  %}
+    <h1 class="text-center">Criar conta na plataforma</h1>
+    <br><br>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button class="btn btn-secondary">Criar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title  %}
+    Detail {{ clube.titulo }}
+{% endblock title %}
+
+{% block content  %}
+    <h1>{{ clube.titulo }} - {{ clube.dataDeCriacao }} -{{ clube.privado }}
+        {% if user.is_authenticated %}
+            <small> 
+                <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
+                <a href="{% url 'deleteClube' clube.pk %}">Delete</a>
+            </small>
+        {% endif %}
+    </h1>
+    <br><br>
+    <p>{{ clube.descricao|safe }}</p>
+    
+{% endblock %}
