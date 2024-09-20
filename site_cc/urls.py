@@ -11,8 +11,8 @@ urlpatterns = [
     path('addClube', AddClubView.as_view(), name="addClube"),
     path('clube/edit/<int:pk>', UpdateClubView.as_view(), name="updateClube"),
     path('clube/delete/<int:pk>', DeleteClubView.as_view(), name="deleteClube"),
-    path('clubes/', clubesView.as_view(), name='clubes'),
+    path('clubs/', clubesView.as_view(), name='clubs'),
     path('addCategoria', AddCategoriaView.as_view(), name="addCategoria"),
-    path('meus_clubes/', meusclubesDetailView.as_view(), name='meus_clubes'),
+    path('myclubes/', meusclubesDetailView.as_view(), name='myclubes'),
    
 ]

@@ -2,8 +2,13 @@
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="{% url 'pagina_principal' %}" class="nav-link px-2 text-secondary">Home</a></li>
+        <li><a href="{% url 'pagina_principal' %}" class="nav-link px-2 text-white">Home</a></li>
         <li><a href="{% url 'about' %}" class="nav-link px-2 text-white">About</a></li>
+        {% if user.is_authenticated %}
+        {% csrf_token %}
+        <a class="nav-link px-2 text-white" href=" {% url 'clubs' %}">Clubs</a>
+        <a class="nav-link px-2 text-white" href=" {% url 'myclubes' %}">My Clubs</a>
+        {% endif %}
       </ul>
 
       <div class="text-end">
@@ -12,24 +17,10 @@
           {% csrf_token %}
           <button class="btn btn-light" type="submit">Logout</button>
         </form>
-
-
-        <a class="btn btn-outline-light me-2" href=" {% url 'addClube' %}">Add clube</a>
-        <a class="btn btn-outline-light me-2" href=" {% url 'addCategoria' %}">Add Categoria</a>
-        <a class="btn btn-outline-light me-2" href=" {% url 'clubes' %}">clubes</a>
-        <a class="btn btn-outline-light me-2" href=" {% url 'meus_clubes' %}">meus_clubes</a>
-
-
-
-
         {% else %}
-
-        <a class="btn btn-outline-light me-2" href=" {% url 'register' %}">Criar conta</a>
+        <a class="btn btn-outline-light me-2" href=" {% url 'register' %}">Register</a>
         <a class="btn btn-outline-light me-2" href="{% url 'login' %}">Login</a>
         {% endif %}
-
-
-
       </div>
     </div>
   </div>

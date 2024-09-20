@@ -15,7 +15,7 @@ def about(request):
 
 class clubesView(LoginRequiredMixin, ListView):
     model = Clube
-    template_name = 'clubes.html'
+    template_name = 'clubs.html'
     ordering = ['-dataDeCriacao']
 
 def login_user(request):
@@ -74,7 +74,7 @@ class DeleteClubView(DeleteView):
 
 class meusclubesDetailView(ListView):
     model = Clube
-    template_name = 'meus_clubes.html'
+    template_name = 'myclubes.html'
     ordering = ['-dataDeCriacao'] 
 
     def get_queryset(self):

@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
-
+my clubetra
 {% block title  %}
     Home Page
 {% endblock title %}
 
 {% block content  %}
+
+<a class="btn btn-outline-light me-2" href=" {% url 'addClube' %}">Add clube</a>
+
+<a class="btn btn-outline-light me-2" href=" {% url 'addCategoria' %}">Add Categoria</a>
+
     <h1>Clube do Livro</h1>
     <ul>
         {% for clube in object_list %}
