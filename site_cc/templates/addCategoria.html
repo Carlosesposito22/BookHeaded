@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title  %}
+    Criando Categoria
+{% endblock title %}
+
+{% block content  %}
+    {% if user.is_authenticated %}
+        <h1 class="text-center">Adicionando Categoria</h1>
+       
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <br></br>
+                            <button class="btn btn-secondary">Criar nova categoria</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+    Você nao tem permissao de criar uma categoria   
+    {% endif %} 
+{% endblock %}

@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
-from .models import Clube
+from .models import Clube, Categoria
 from .forms import ClubeForm, ClubeEditForm
 from django.urls import reverse_lazy
 
@@ -47,7 +47,13 @@ class HomePageView(ListView):
 class ClubDetailView(DetailView):
     model = Clube
     template_name = 'clubDetail.html'
-    
+
+class AddCategoriaView(CreateView):
+    model = Categoria
+    template_name = 'addCategoria.html'
+    fields = '__all__'
+    success_url = reverse_lazy('addClube')
+
 class AddClubView(CreateView):
     model = Clube
     form_class = ClubeForm
