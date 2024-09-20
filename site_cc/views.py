@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib import messages
 from .models import Clube, Categoria
 from .forms import ClubeForm, ClubeEditForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
 def pagina_principal(request):
@@ -12,7 +13,7 @@ def pagina_principal(request):
 def about(request):
     return render(request, 'about.html')
 
-class clubesView(ListView):
+class clubesView(LoginRequiredMixin, ListView):
     model = Clube
     template_name = 'clubes.html'
     ordering = ['-dataDeCriacao']
@@ -70,3 +71,13 @@ class DeleteClubView(DeleteView):
     success_url = reverse_lazy('pagina_principal')
 
 
+
+class meusclubesDetailView(ListView):
+    model = Clube
+    template_name = 'meus_clubes.html'
+    ordering = ['-dataDeCriacao'] 
+
+    def get_queryset(self):
+        queryset = Clube.objects.filter(moderador=self.request.user).order_by('-dataDeCriacao')
+        print(queryset)  # Para depuração
+        return queryset

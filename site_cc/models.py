@@ -4,6 +4,7 @@ from django.urls import reverse
 from datetime import datetime, date
 
 
+
 class Categoria(models.Model):
     nome = models.CharField(max_length=100)
 

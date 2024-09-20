@@ -1,6 +1,6 @@
 from django.urls import path
 from .import views
-from .views import clubesView, ClubDetailView, AddClubView, UpdateClubView, DeleteClubView,AddCategoriaView
+from .views import clubesView, ClubDetailView, AddClubView, UpdateClubView, DeleteClubView,AddCategoriaView,meusclubesDetailView
 
 urlpatterns = [
     path('',views.pagina_principal, name='pagina_principal'),
@@ -13,5 +13,6 @@ urlpatterns = [
     path('clube/delete/<int:pk>', DeleteClubView.as_view(), name="deleteClube"),
     path('clubes/', clubesView.as_view(), name='clubes'),
     path('addCategoria', AddCategoriaView.as_view(), name="addCategoria"),
+    path('meus_clubes/', meusclubesDetailView.as_view(), name='meus_clubes'),
    
 ]
