@@ -7,8 +7,8 @@ class ClubeForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         # Preencher as opções de 'modalidade' e 'categoria' dinamicamente com uma opção inicial de placeholder
-        self.fields['modalidade'].choices = [('', 'Selecione a modalidade')] + list(Modalidade.objects.all().values_list('descricao', 'descricao'))
-        self.fields['categoria'].choices = [('', 'Selecione a categoria')] + list(Categoria.objects.all().values_list('descricao', 'descricao'))
+        self.fields['modalidade'].choices = [('', 'Selecione a modalidade')] + list(Modalidade.objects.all().values_list('id', 'descricao'))
+        self.fields['categoria'].choices = [('', 'Selecione a categoria')] + list(Categoria.objects.all().values_list('id', 'descricao'))
 
     class Meta:
         model = Clube
@@ -29,8 +29,8 @@ class ClubeEditForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         # Adicionar placeholders para as opções de seleção no formulário de edição também
-        self.fields['modalidade'].choices = [('', 'Selecione a modalidade')] + list(Modalidade.objects.all().values_list('descricao', 'descricao'))
-        self.fields['categoria'].choices = [('', 'Selecione a categoria')] + list(Categoria.objects.all().values_list('descricao', 'descricao'))
+        self.fields['modalidade'].choices = [('', 'Selecione a modalidade')] + list(Modalidade.objects.all().values_list('id', 'descricao'))
+        self.fields['categoria'].choices = [('', 'Selecione a categoria')] + list(Categoria.objects.all().values_list('id', 'descricao'))
 
     class Meta:
         model = Clube
