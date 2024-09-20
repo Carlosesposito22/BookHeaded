@@ -1,5 +1,6 @@
 {% extends 'base2.html' %}
 {% block content %}
+{% load static %}
 
 <style>
   html,
@@ -8,6 +9,7 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
+    background: white;
   }
 
   .centered-container {
@@ -17,6 +19,7 @@
     align-items: center;
     padding: 0 1rem;
     box-sizing: border-box;
+    z-index: 1;
   }
 
   .row {
@@ -68,9 +71,47 @@
     color: black;
   }
 
-  
+  .logo-image{
+    padding: 2rem;
+    display: flex;
+    z-index: 999;
+    max-width: 30rem;
+    max-height: auto;
+    width: 15rem;
+    height: auto;
+    position: absolute;
+  }
+
+  .login-drawing{
+    position: relative;
+    display: flex;
+    margin-left: 2rem;
+  }
+
+  .vertical-line{
+        display: inline-block;
+        border-left: 1px solid #ccc;
+        margin: 0 10px;
+        height: 20rem;
+        position: absolute;
+        z-index: 1000;
+        margin-left: 5rem;
+  }
+
+  @media screen and (max-width: 920px) {
+    .login-drawing, .vertical-line{
+      display: none;
+    }
+    
+  }
 
 </style>
+
+<a href="http://localhost:8000/">
+  <img src="{% static 'images/bookheadedlogo.svg' %}" class="logo-image">
+</a>
+
+
 
 <div class="container-fluid centered-container">
   <div class="row justify-content-center shadow-lg ">
@@ -81,18 +122,22 @@
           <p class="text-start text-black display-5 fw-bold login-text">Welcome back</p>
           <p class="text-start text-black fw-light user-text">Get into the perfect place for bookheads just like you.
           </p>
-          <input type="text" class="form-control p-3 user-passwd" name="username" placeholder="Enter your username">
+          <input type="text" class="form-control p-3 user-passwd" name="username" placeholder="username">
         </div>
         <div class="mb-3">
-          <input type="password" class="form-control p-3 user-passwd" name="password" placeholder="Enter your password">
+          <input type="password" class="form-control p-3 user-passwd" name="password" placeholder="password">
         </div>
-        <button type="submit" class="btn btn-primary disabled login-btn" role="button"
+          <button type="submit" class="btn btn-primary disabled login-btn" role="button"
           aria-disabled="true">Login</button>
         <p class="not-registered">Not registered yet? <a href="http://localhost:8000/membros/registration/"
             class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Sign Up</a></p>
       </form>
     </div>
   </div>
+  <span class="vertical-line"></span>
+  <img src="{% static 'images/image login.png' %}" class="login-drawing">
 </div>
+
+
 
 {% endblock %}

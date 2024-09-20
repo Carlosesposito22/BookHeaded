@@ -24,19 +24,19 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, ("voce esta logado"))
+            messages.success(request, ("You are logged in."))
             return redirect('pagina_principal')
 
 
         else:   
-            messages.success(request, ("ocorreu um erro tente novamente"))
+            messages.success(request, ("An error occured. Try again"))
             return redirect('login') 
     else:
         return render(request, 'login.html', {})
 
 def logout_user(request):
     logout(request)
-    messages.success(request, ("voce deslogou"))
+    messages.success(request, ("You logged out"))
     return redirect('pagina_principal')
 
 class HomePageView(ListView):
