@@ -8,6 +8,10 @@ from django.urls import reverse_lazy
 
 def pagina_principal(request):
     return render(request,'pagina_principal.html',{})
+
+def about(request):
+    return render(request, 'about.html')
+
 class clubesView(ListView):
     model = Clube
     template_name = 'clubes.html'

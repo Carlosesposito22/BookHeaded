@@ -1,12 +1,10 @@
-
-
 from django.urls import path
 from .import views
 from .views import clubesView, ClubDetailView, AddClubView, UpdateClubView, DeleteClubView
 
-
 urlpatterns = [
     path('',views.pagina_principal, name='pagina_principal'),
+    path('about/', views.about, name='about'),
     path('login/',views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
     path('clube/<int:pk>', ClubDetailView.as_view(), name="club-Detail"),
