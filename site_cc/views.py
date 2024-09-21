@@ -40,6 +40,11 @@ def logout_user(request):
     messages.success(request, ("You logged out"))
     return redirect('pagina_principal')
 
+def CategoriaView(request, cats):
+    categoria_clube = Clube.objects.filter(categoria__nome=cats)
+    return render(request, 'categorias.html', {'cats': cats, 'categoria_clube': categoria_clube})
+
+
 class HomePageView(ListView):
     model = Clube
     template_name = 'pagina_principal.html'
