@@ -5,42 +5,76 @@
 {% endblock title %}
 
 {% block content %}
-    Usuario número: {{ user.id }}
-    Usuario que fez o clube: {{ clube.moderador.id }}
-    
-    <h1>{{ clube.titulo }} - {{ clube.dataDeCriacao }}
+    <div class="container">
+        <h1>{{ clube.titulo }}</h1>
+        <p><strong>Data de Criação:</strong> {{ clube.dataDeCriacao }}</p>
+        <p>{{ clube.descricao|safe }}</p>
+        
+        <p><strong>Quantidade de avaliações:</strong> {{ total_avaliacoes }}</p>
+        <p><strong>Média de avaliações:</strong> {{ media_avaliacoes|floatformat:1 }}</p>
+        
         {% if user.is_authenticated %}
             {% if user.id == clube.moderador.id %}
-                <small> 
-                    <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
-                    <a href="{% url 'deleteClube' clube.pk %}">Delete</a>
-                </small>
+                <div class="my-3">
+                    <a href="{% url 'updateClube' clube.pk %}" class="btn btn-outline-secondary btn-sm">Editar</a>
+                    <a href="{% url 'deleteClube' clube.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+                </div>
             {% endif %}
         {% endif %}
-    </h1>
-
-    <br><br>
-    <p>{{ clube.descricao|safe }}</p>
-    <br><br>
-
-    <p>Quantidade de avaliações: {{ total_avaliacoes }}</p>  <!-- Mostra o total de avaliações -->
-    <p>Média de avaliações: {{ media_avaliacoes|floatformat:1 }}</p>  <!-- Corrigido para usar media_avaliacoes -->
-    
-    <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="clube_id" value="{{ clube.pk }}">
         
-        <label for="rating">Avalie de 1 a 5:</label>
-        <select name="rating" id="rating" required>
-            <option value="">Escolha uma avaliação</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-        </select>
-        
-        <button type="submit" class="btn btn-primary btn-sm">Avaliar</button>
-    </form>
+        <hr>
 
+        <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST" class="my-4">
+            {% csrf_token %}
+            <input type="hidden" name="clube_id" value="{{ clube.pk }}">
+            
+            <label for="rating">Avalie de 1 a 5:</label>
+            <select name="rating" id="rating" required class="form-control w-25">
+                <option value="">Escolha uma avaliação</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Avaliar</button>
+        </form>
+
+        {% if user.is_authenticated %}
+            {% if user != clube.moderador %}
+                {% if not user_is_member %}
+                    <form method="post" action="{% url 'adicionar-membro' clube.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-success btn-sm">Solicitar Associação</button>
+                    </form>
+                {% elif user_request_pending %}
+                    <p class="text-warning">Sua solicitação está pendente de aprovação.</p>
+                {% else %}
+                    <p class="text-success">Você é membro deste clube.</p>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+        
+        {% if user == clube.moderador %}
+            <h3>Pedidos Pendentes:</h3>
+            <ul class="list-unstyled">
+                {% for membro in clube.membros.all %}
+                    {% if not membro.aprovado %}
+                        <li class="my-2">
+                            {{ membro.usuario.username }}
+                            <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" class="d-inline-block">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-primary btn-sm">Aprovar</button>
+                            </form>
+                            <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" class="d-inline-block">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>
+                            </form>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 {% endblock %}

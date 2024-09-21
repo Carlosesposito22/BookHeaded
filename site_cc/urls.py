@@ -9,7 +9,10 @@ from .views import (
     UpdateClubView,
     DeleteClubView,
     AddCategoriaView,
-    meusclubesDetailView
+    meusclubesDetailView,
+    aprovar_membro,
+    adicionar_membro,
+    recusar_membro
 )
 
 urlpatterns = [
@@ -24,6 +27,9 @@ urlpatterns = [
     path('clubs/', clubesView.as_view(), name='clubs'),
     path('addCategoria/', AddCategoriaView.as_view(), name='addCategoria'),
     path('myclubes/', meusclubesDetailView.as_view(), name='myclubes'),
+    path('clube/<int:clube_id>/adicionar/', adicionar_membro, name='adicionar-membro'),
+    path('clube/<int:clube_id>/aprovar/<int:membro_id>/', aprovar_membro, name='aprovar-membro'),
+    path('clube/<int:clube_id>/recusar-membro/<int:membro_id>/', recusar_membro, name='recusar-membro'),
     path('categoria/<str:cats>/', CategoriaView, name='categoria'),
     path('avaliacao/<int:pk>/', AvaliacaoView, name='avaliacoes_clube'),
 ]

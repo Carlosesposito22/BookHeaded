@@ -50,4 +50,14 @@ class Avaliacao(models.Model):
     valor = models.IntegerField()
 
     def __str__(self):
-        return f"Avaliação de {self.usuario} para {self.clube}: {self.valor}"
+        return reverse('club-Detail', args=(str(self.id)))
+    
+class Membro(models.Model):
+    clube = models.ForeignKey('Clube', on_delete=models.CASCADE, related_name="membros")
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    dataDeEntrada = models.DateTimeField(auto_now_add=True)
+    aprovado = models.BooleanField(default=False) 
+    motivo_recusa = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.clube.titulo}"

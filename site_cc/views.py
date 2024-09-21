@@ -2,11 +2,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
-from .models import Clube, Categoria, Avaliacao
+from .models import Clube, Categoria, Avaliacao, Membro
 from .forms import ClubeForm, ClubeEditForm
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
+
+
 
 def pagina_principal(request):
     return render(request, 'pagina_principal.html', {})
@@ -62,6 +65,17 @@ class ClubDetailView(DetailView):
         context['media_avaliacoes'] = self.object.calcular_media_avaliacoes()  # Média de avaliações
         return context
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        clube = self.object
+        user = self.request.user
+        
+        context['user_is_member'] = Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists()
+        context['user_request_pending'] = Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists()
+
+        return context
+    
+    
 class AddCategoriaView(CreateView):
     model = Categoria
     template_name = 'addCategoria.html'
@@ -102,7 +116,41 @@ def AvaliacaoView(request, pk):
 class meusclubesDetailView(ListView):
     model = Clube
     template_name = 'myclubes.html'
-    ordering = ['-dataDeCriacao'] 
+    ordering = ['-dataDeCriacao']
 
     def get_queryset(self):
+
+        clubes_moderados = Clube.objects.filter(moderador=self.request.user)
+
+        
+        clubes_membros = Clube.objects.filter(membros__usuario=self.request.user, membros__aprovado=True)
+
+        
+        clubes = clubes_moderados | clubes_membros
         return Clube.objects.filter(moderador=self.request.user).order_by('-dataDeCriacao')
+        
+    
+def adicionar_membro(request, clube_id):
+    clube = get_object_or_404(Clube, id=clube_id)
+    if not Membro.objects.filter(clube=clube, usuario=request.user).exists():
+        Membro.objects.create(clube=clube, usuario=request.user, aprovado=False)
+    return redirect('club-Detail', pk=clube.pk)
+
+def aprovar_membro(request, clube_id, membro_id):
+    clube = get_object_or_404(Clube, id=clube_id)
+    membro = get_object_or_404(Membro, id=membro_id, clube=clube)
+    
+    
+    if request.user == clube.moderador:
+        membro.aprovado = True
+        membro.save()
+
+    return redirect('club-Detail', pk=clube.pk)
+
+def recusar_membro(request, clube_id, membro_id):
+    clube = get_object_or_404(Clube, id=clube_id)
+    membro = get_object_or_404(Membro, id=membro_id, clube=clube)
+    
+    if request.method == 'POST':
+        membro.delete()  
+        return redirect('club-Detail', pk=clube.pk)

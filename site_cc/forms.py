@@ -6,9 +6,12 @@ class ClubeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Preencher as opções de 'modalidade' e 'categoria' dinamicamente com uma opção inicial de placeholder
+        
         self.fields['modalidade'].choices = [('', 'Selecione a modalidade')] + list(Modalidade.objects.all().values_list('id', 'nome'))
         self.fields['categoria'].choices = [('', 'Selecione a categoria')] + list(Categoria.objects.all().values_list('id', 'nome'))
+        if 'class' in self.fields['privado'].widget.attrs:
+        
+            self.fields['privado'].widget.attrs['class'] = self.fields['privado'].widget.attrs['class'].replace('form-control', '').strip()
 
     class Meta:
         model = Clube
