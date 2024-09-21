@@ -50,7 +50,7 @@
                 <p class="text-success">Você é membro deste clube.</p>
             {% endif %}
         {% else %}
-            {% if not user_is_member %}  {# Verifica se não é membro do clube público #}
+            {% if not user_is_member %}
                 <form method="post" action="{% url 'adicionar-membro-publico' clube.pk %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline-success btn-sm">Juntar-se ao Clube</button>
@@ -80,23 +80,25 @@
 {% endif %}
 
 {% if user == clube.moderador %}
-    <h3>Pedidos Pendentes:</h3>
-    <ul class="list-unstyled">
-        {% for membro in clube.membros.all %}
-            {% if not membro.aprovado %}
-                <li class="my-2">
-                    {{ membro.usuario.username }}
-                    <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" class="d-inline-block">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-primary btn-sm">Aprovar</button>
-                    </form>
-                    <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" class="d-inline-block">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>
-                    </form>
-                </li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+    {% if clube.privado %}  {# Apenas exibir para clubes privados #}
+        <h3>Pedidos Pendentes:</h3>
+        <ul class="list-unstyled">
+            {% for membro in clube.membros.all %}
+                {% if not membro.aprovado %}
+                    <li class="my-2">
+                        {{ membro.usuario.username }}
+                        <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" class="d-inline-block">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Aprovar</button>
+                        </form>
+                        <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" class="d-inline-block">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>
+                        </form>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endif %}
 {% endblock %}
