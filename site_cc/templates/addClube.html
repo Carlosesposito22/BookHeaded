@@ -22,6 +22,10 @@
                 </div>
             </div>
         </div>
+        <script>
+            var name = "{{user.id}}";
+            document.getElementById("moderador").value = name;
+        </script>
     {% else %}
     Você nao tem permissao de criar um Clube   
     {% endif %} 
