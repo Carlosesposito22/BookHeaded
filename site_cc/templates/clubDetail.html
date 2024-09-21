@@ -1,21 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    Detail {{ clube.titulo }}
-{% endblock title %}
-
 {% block content %}
-<div class="container">
-    <h1>{{ clube.titulo }} - {{ clube.dataDeCriacao }}</h1>
-
-    {% if user.is_authenticated %}
-        {% if user == clube.moderador %}
-            <small>
-                <a href="{% url 'updateClube' clube.pk %}">Editar</a> 
-                <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
-            </small>
-        {% endif %}
-    {% endif %}
 
     <p><strong>Data de Criação:</strong> {{ clube.dataDeCriacao }}</p>
     <p>{{ clube.descricao|safe }}</p>
@@ -83,24 +68,37 @@
                 {% endif %}
             {% endif %}
 
-            <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST" class="my-4">
-                {% csrf_token %}
-                <input type="hidden" name="clube_id" value="{{ clube.pk }}">
-                
-                <label for="rating">Avalie de 1 a 5:</label>
-                <select name="rating" id="rating" required class="form-control w-25">
-                    <option value="">Escolha uma avaliação</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                
-                <button type="submit" class="btn btn-primary btn-sm mt-2">Avaliar</button>
-            </form>
+        <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST" class="my-4">
+            {% csrf_token %}
+            <input type="hidden" name="clube_id" value="{{ clube.pk }}">
+            
+            <label for="rating">Avalie de 1 a 5:</label>
+            <select name="rating" id="rating" required class="form-control w-25">
+                <option value="">Escolha uma avaliação</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Avaliar</button>
+        </form>
+        <br><br>
+        <h2>Comentarios:</h2>
+
+        {% if not clube.comentarios.all %}
+            Nenhuma conversa foi iniciada no clube!
+        {% else %}
+            {% for comentario in clube.comentarios.all %}
+                <strong>{{ comentario.nome }} - {{ comentario.data }}</strong>
+                <br>
+                {{ comentario.comment }}
+            {% endfor %}
         {% endif %}
     {% endif %}
+
+{% endif %}
 
     {% if user == clube.moderador %}
         {% if clube.privado %}  {# Apenas exibir para clubes privados #}
@@ -149,4 +147,3 @@ document.getElementById('saveProgress').addEventListener('click', function() {
 });
 </script>
 {% endblock %}
-

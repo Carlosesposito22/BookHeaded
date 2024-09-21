@@ -15,6 +15,7 @@
                             <div class="form-group">
                                 <form method="post">
                                     {% csrf_token %}
+                                    {{ form.media }} 
                                     {{ form.as_p }}
                                     <button class="btn btn-secondary">Update</button>
                                 </form>

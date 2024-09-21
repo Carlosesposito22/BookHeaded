@@ -1,13 +1,17 @@
-<header class="p-3 text-bg-dark">
+<style>
+  
+</style>
+
+<header class="p-3 text-bg-light shadow-lg">
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="{% url 'pagina_principal' %}" class="nav-link px-2 text-white">Home</a></li>
-        <li><a href="{% url 'about' %}" class="nav-link px-2 text-white">About</a></li>
+      <ul class="nav nav-underline col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li class="nav-item"><a href="{% url 'pagina_principal' %}" class="nav-link px-2 text-black">Home</a></li>
+        <li class="nav-item"><a href="{% url 'about' %}" class="nav-link px-2 text-black">About</a></li>
         {% if user.is_authenticated %}
         {% csrf_token %}
-        <a class="nav-link px-2 text-white" href=" {% url 'clubs' %}">Clubs</a>
-        <a class="nav-link px-2 text-white" href=" {% url 'myclubes' %}">My Clubs</a>
+        <a class="nav-item nav-link px-2 text-black" href=" {% url 'clubs' %}">Clubs</a>
+        <a class="nav-item nav-link px-2 text-black" href=" {% url 'myclubes' %}">My Clubs</a>
         {% endif %}
       </ul>
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from ckeditor.fields import RichTextField
 
 class Categoria(models.Model):
     nome = models.CharField(max_length=100)
@@ -23,6 +24,7 @@ class Clube(models.Model):
     modalidade = models.ForeignKey('Modalidade', on_delete=models.SET_NULL, null=True, blank=True, default='Sem modalidade')
     categoria = models.ForeignKey('Categoria', on_delete=models.SET_NULL, null=True, blank=True, default='Sem categoria')
     descricao = models.TextField(null=True, blank=True)
+    sobre = RichTextField(blank=True,null=True)
     numeroMembros = models.IntegerField(null=True, blank=True, default=1)
     privado = models.BooleanField(default=False)
     favoritado = models.BooleanField(default=False)
@@ -35,14 +37,26 @@ class Clube(models.Model):
         return reverse('club-Detail', args=[str(self.id)])
 
     def total_avaliacoes(self):
-        return self.avaliacao_set.count()  # Total de avaliações
+        return self.avaliacao_set.count()
     
     def calcular_media_avaliacoes(self):
         avaliacoes = self.avaliacao_set.all()
         if avaliacoes.exists():
             total = sum(avaliacao.valor for avaliacao in avaliacoes)
             return total / avaliacoes.count()
-        return 0  # Retorna 0 se não houver avaliações
+        return 0
+    
+    def estrelas_avaliacoes(self):
+        media = self.calcular_media_avaliacoes()
+        estrelas_cheias = int(media) 
+        estrelas_metade = 1 if media - estrelas_cheias >= 0.5 else 0 
+        estrelas_vazias = 5 - (estrelas_cheias + estrelas_metade) 
+
+        return (
+            '<i class="bi bi-star-fill"></i>' * estrelas_cheias + 
+            '<i class="bi bi-star-half"></i>' * estrelas_metade + 
+            '<i class="bi bi-star"></i>' * estrelas_vazias
+        )
 
 
 class Avaliacao(models.Model):
@@ -63,3 +77,12 @@ class Membro(models.Model):
 
     def __str__(self):
         return f"{self.usuario.username} - {self.clube.titulo}"
+
+class Comentario(models.Model):
+    clube = models.ForeignKey(Clube,related_name='comentarios' ,on_delete=models.CASCADE)
+    nome = models.CharField(max_length=255)
+    comment = models.TextField() 
+    data = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s - %s' % (self.clube.titulo, self.nome)
