@@ -1,33 +1,57 @@
 {% extends 'base.html' %}
 
-{% block title  %}
+{% block title %}
     Home Page
 {% endblock title %}
 
-{% block content  %}
+{% block content %}
     <h1>Clube do Livro</h1>
     <ul>
         {% for clube in object_list %}
             <li>
-                <a href="{% url 'club-Detail' clube.pk %}">{{ clube.titulo }}</a> - 
+                <a href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a> - 
                 <a href="{% url 'categoria' clube.categoria|slugify %}">{{ clube.categoria }}</a> - 
                 {{ clube.dataDeCriacao|date:"d/m/Y H:i" }} - 
                 {{ clube.moderador }}
+                
                 {% if user.is_authenticated %}
-                - 
-                {% if user.id == clube.moderador.id %}
-                    <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
-                    <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
+                    {% if user.id == clube.moderador.id %}
+                        - <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
+                        <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
+                    {% endif %}
                 {% endif %}
-                {% endif %}
+                
                 <p>{{ clube.descricao|slice:":200"|safe }}</p>
+
+                <!-- início do Modal -->
+                <div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1" aria-labelledby="clubeModalLabel-{{ clube.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="clubeModalLabel-{{ clube.id }}">{{ clube.titulo }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Membros:</strong> {{ clube.numeroMembros }}</p>
+                                <p><strong>Classificação:</strong> {{ clube.avaliacoes }}</p>
+                                <p><strong>Moderador:</strong> {{ clube.moderador }}</p>
+                                <p><strong>Tipo:</strong> {% if clube.privado %}Privado{% else %}Público{% endif %}</p>
+                                <p><strong>Gênero:</strong> {{ clube.categoria }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                <a href="{% url 'club-Detail' clube.pk %}" class="btn btn-primary">Entrar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fim do Modal -->
             </li>
         {% endfor %}
     </ul>
+
     <h1>Filtre por categoria</h1>
     {% for cat in cat_menu %}
         <a href="{% url 'categoria' cat.nome|slugify %}">{{ cat.nome }}</a><br/>
     {% endfor %}
-
-
 {% endblock %}
