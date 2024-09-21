@@ -15,13 +15,14 @@ class ClubeForm(forms.ModelForm):
 
     class Meta:
         model = Clube
-        fields = ('moderador', 'titulo', 'modalidade', 'categoria', 'descricao', 'privado')  # Removido 'livroAtual'
+        fields = ('moderador', 'titulo', 'modalidade', 'categoria', 'descricao','sobre','privado')
         widgets = {
             'moderador': forms.TextInput(attrs={'class': 'form-control', 'value': '', 'id': 'moderador', 'type': 'hidden'}),
             'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Insira o título do clube'}),
             'modalidade': forms.Select(attrs={'class': 'form-control'}),
             'categoria': forms.Select(attrs={'class': 'form-control'}),
-            'descricao': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Descreva o clube'}),
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Descreva em poucas palavras seu clube'}),
+            'sobre': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Cente mais sobre o clube'}),
             'privado': forms.CheckboxInput(attrs={'class': 'form-control'}),
         }
 
@@ -30,17 +31,17 @@ class ClubeEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Adicionar placeholders para as opções de seleção no formulário de edição também
         self.fields['modalidade'].choices = [('', 'Selecione a modalidade')] + list(Modalidade.objects.all().values_list('id', 'nome'))
         self.fields['categoria'].choices = [('', 'Selecione a categoria')] + list(Categoria.objects.all().values_list('id', 'nome'))
 
     class Meta:
         model = Clube
-        fields = ('titulo', 'modalidade', 'categoria', 'descricao', 'privado')  # Removido 'livroAtual'
+        fields = ('titulo', 'modalidade', 'categoria', 'descricao','sobre', 'privado')
         widgets = {
             'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Insira o título do clube'}),
             'modalidade': forms.Select(attrs={'class': 'form-control'}),
             'categoria': forms.Select(attrs={'class': 'form-control'}),
-            'descricao': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Descreva o clube'}),
+            'descricao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Descreva em poucas palavras seu clube'}),
+            'sobre': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Cente mais sobre o clube'}),
             'privado': forms.CheckboxInput(attrs={'class': 'form-control'}),
         }
