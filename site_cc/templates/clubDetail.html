@@ -100,8 +100,16 @@
             </form>
 
             <h2>Comentarios:</h2>
+            <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4">
+                {% csrf_token %}
+                <input type="hidden" name="clube_id" value="{{ clube.pk }}">
+                <label for="comentario">Adicionar um comentário:</label>
+                <textarea name="comentario" id="comentario" required class="form-control" rows="3"></textarea>
+                <button type="submit" class="btn btn-primary btn-sm mt-2">Adicionar Comentário</button>
+            </form>
+
             {% if not clube.comentarios.all %}
-                Nenhuma conversa foi iniciada no clube! <a href="{% url 'add_comentario' clube.pk %}">Adicionar comentário</a>
+                Nenhuma conversa foi iniciada no clube!
             {% else %}
                 {% for comentario in clube.comentarios.all %}
                     <strong>{{ comentario.nome }} - {{ comentario.data }}</strong>
