@@ -1,19 +1,54 @@
 {% extends 'base.html' %}
 
-{% block title  %}
+{% block title %}
     Detail {{ clube.titulo }}
 {% endblock title %}
 
-{% block content  %}
-    <h1>{{ clube.titulo }} - {{ clube.dataDeCriacao }} -{{ clube.privado }}
+{% block content %}
+    <h1>{{ clube.titulo }} - {{ clube.dataDeCriacao }} - {{ clube.privado }}
         {% if user.is_authenticated %}
             <small> 
                 <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
-                <a href="{% url 'deleteClube' clube.pk %}">Delete</a>
+                <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
             </small>
         {% endif %}
     </h1>
     <br><br>
     <p>{{ clube.descricao|safe }}</p>
-    
+
+    {% if user.is_authenticated %}
+        {% if user != clube.moderador %}  
+            {% if not user_is_member %}
+                <form method="post" action="{% url 'adicionar-membro' clube.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">Solicitar Associação</button>
+                </form>
+            {% elif user_request_pending %}
+                <p>Sua solicitação está pendente de aprovação.</p>
+            {% else %}
+                <p>Você é membro deste clube.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if user == clube.moderador %}
+            <h3>Pedidos Pendentes:</h3>
+            <ul>
+                {% for membro in clube.membros.all %}
+                    {% if not membro.aprovado %}
+                        <li>
+                            {{ membro.usuario.username }}
+                            <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit">Aprovar</button>
+                            </form>
+                            <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit">Recusar</button>
+                            </form>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endif %}
 {% endblock %}
