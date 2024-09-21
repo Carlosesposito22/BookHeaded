@@ -41,8 +41,8 @@ def logout_user(request):
     return redirect('pagina_principal')
 
 def CategoriaView(request, cats):
-    categoria_clube = Clube.objects.filter(categoria__nome=cats)
-    return render(request, 'categorias.html', {'cats': cats, 'categoria_clube': categoria_clube})
+    categoria_clube = Clube.objects.filter(categoria__nome=cats.replace('-', ' '))
+    return render(request, 'categorias.html', {'cats': cats.replace('-', ' '), 'categoria_clube': categoria_clube})
 
 
 class HomePageView(ListView):
