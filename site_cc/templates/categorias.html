@@ -1,33 +1,30 @@
 {% extends 'base.html' %}
 
-{% block title  %}
+{% block title %}
     Home Page
 {% endblock title %}
 
-{% block content  %}
-    <h1>Clube do Livro</h1>
-    <ul>
-        {% for clube in object_list %}
+{% block content %}
+
+    {% if categoria_clube %}
+        <h1>Categoria: {{ cats }}</h1>
+        <ul>
+            {% for clube in categoria_clube %}
             <li>
                 <a href="{% url 'club-Detail' clube.pk %}">{{ clube.titulo }}</a> - 
-                <a href="{% url 'categoria' clube.categoria|slugify %}">{{ clube.categoria }}</a> - 
                 {{ clube.dataDeCriacao|date:"d/m/Y H:i" }} - 
                 {{ clube.moderador.first_name }}
                 {% if user.is_authenticated %}
-                - 
                 {% if user.id == clube.moderador.id %}
-                    <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
+                    - <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
                     <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
                 {% endif %}
                 {% endif %}
                 <p>{{ clube.descricao|slice:":200"|safe }}</p>
             </li>
-        {% endfor %}
-    </ul>
-    <h1>Filtre por categoria</h1>
-    {% for cat in cat_menu %}
-        <a href="{% url 'categoria' cat.nome|slugify %}">{{ cat.nome }}</a><br/>
-    {% endfor %}
-
-
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h2>Esta categoria não existe!</h2>
+    {% endif %}
 {% endblock %}

@@ -17,6 +17,7 @@
           {% csrf_token %}
           <button class="btn btn-light" type="submit">Logout</button>
         </form>
+        <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/original/user-icon-on-transparent-background-free-png.png" alt="foto de usuário" width="60px">
         {% else %}
         <a class="btn btn-outline-light me-2" href=" {% url 'register' %}">Register</a>
         <a class="btn btn-outline-light me-2" href="{% url 'login' %}">Login</a>

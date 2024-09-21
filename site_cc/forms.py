@@ -14,7 +14,8 @@ class ClubeForm(forms.ModelForm):
         model = Clube
         fields = ('moderador', 'titulo', 'modalidade', 'categoria', 'descricao', 'livroAtual', 'privado')
         widgets = {
-            'moderador': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Selecione o moderador'}),
+            #'moderador': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Selecione o moderador'}),
+            'moderador': forms.TextInput(attrs={'class': 'form-control', 'value': '', 'id':'moderador', 'type':'hidden'}),
             'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Insira o título do clube'}),
             'modalidade': forms.Select(attrs={'class': 'form-control'}),
             'categoria': forms.Select(attrs={'class': 'form-control'}),

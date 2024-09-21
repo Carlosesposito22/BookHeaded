@@ -20,6 +20,11 @@ class clubesView(LoginRequiredMixin, ListView):
     template_name = 'clubs.html'
     ordering = ['-dataDeCriacao']
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(clubesView, self).get_context_data(*args, **kwargs)
+        context["cat_menu"] = Categoria.objects.all()
+        return context
+    
 def login_user(request):
     if request.method =="POST":
         username= request.POST['username']
@@ -41,6 +46,11 @@ def logout_user(request):
     logout(request)
     messages.success(request, ("You logged out"))
     return redirect('pagina_principal')
+
+def CategoriaView(request, cats):
+    categoria_clube = Clube.objects.filter(categoria__nome=cats.replace('-', ' '))
+    return render(request, 'categorias.html', {'cats': cats.replace('-', ' '), 'categoria_clube': categoria_clube})
+
 
 class HomePageView(ListView):
     model = Clube

@@ -4,13 +4,17 @@
     Detail {{ clube.titulo }}
 {% endblock title %}
 
-{% block content %}
-    <h1>{{ clube.titulo }} - {{ clube.dataDeCriacao }} - {{ clube.privado }}
+{% block content  %}
+    Usuario numero: {{user.id}}
+    Usuario que fez o clube:{{ clube.moderador.id }}
+    <h1>{{ clube.titulo }} - {{ clube.dataDeCriacao }}
         {% if user.is_authenticated %}
-            <small> 
-                <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
-                <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
-            </small>
+            {% if user.id == clube.moderador.id %}
+                <small> 
+                    <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
+                    <a href="{% url 'deleteClube' clube.pk %}">Delete</a>
+                </small>
+            {% endif %}
         {% endif %}
     </h1>
     <br><br>
