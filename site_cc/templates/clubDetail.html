@@ -50,10 +50,14 @@
                 <p class="text-success">Você é membro deste clube.</p>
             {% endif %}
         {% else %}
-            <form method="post" action="{% url 'adicionar-membro-publico' clube.pk %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-success btn-sm">Juntar-se ao Clube</button>
-            </form>
+            {% if not user_is_member %}  {# Verifica se não é membro do clube público #}
+                <form method="post" action="{% url 'adicionar-membro-publico' clube.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success btn-sm">Juntar-se ao Clube</button>
+                </form>
+            {% else %}
+                <p class="text-success">Você é membro deste clube.</p>
+            {% endif %}
         {% endif %}
 
         <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST" class="my-4">
