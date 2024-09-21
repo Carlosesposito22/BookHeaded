@@ -77,3 +77,12 @@ class Membro(models.Model):
 
     def __str__(self):
         return f"{self.usuario.username} - {self.clube.titulo}"
+
+class Comentario(models.Model):
+    clube = models.ForeignKey(Clube,related_name='comentarios' ,on_delete=models.CASCADE)
+    nome = models.CharField(max_length=255)
+    comment = models.TextField() 
+    data = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s - %s' % (self.clube.titulo, self.nome)

@@ -62,7 +62,20 @@
             
             <button type="submit" class="btn btn-primary btn-sm mt-2">Avaliar</button>
         </form>
+        <br><br>
+        <h2>Comentarios:</h2>
+
+        {% if not clube.comentarios.all %}
+            Nenhuma conversa foi iniciada no clube!
+        {% else %}
+            {% for comentario in clube.comentarios.all %}
+                <strong>{{ comentario.nome }} - {{ comentario.data }}</strong>
+                <br>
+                {{ comentario.comment }}
+            {% endfor %}
+        {% endif %}
     {% endif %}
+
 {% endif %}
 
 {% if user == clube.moderador %}
