@@ -21,7 +21,6 @@
         {% endif %}
     {% endif %}
 
-    <!-- barra de progresso -->
     <div class="my-3">
         <button id="setProgress" class="btn btn-outline-info btn-sm">Definir progresso</button>
         <div class="progress mt-2">
@@ -155,14 +154,35 @@ document.getElementById('saveProgress').addEventListener('click', function() {
     const currentPage = parseInt(document.getElementById('currentPage').value);
     const totalPages = parseInt(document.getElementById('totalPages').value);
     
-    const progressPercentage = (currentPage / totalPages) * 100;
+    const validCurrentPage = currentPage > totalPages ? totalPages : currentPage;
+
+    let progressPercentage = (validCurrentPage / totalPages) * 100;
+
+    if (progressPercentage > 100) {
+        progressPercentage = 100;
+    }
+
     const progressBar = document.getElementById('progressBar');
     progressBar.style.width = progressPercentage + '%';
     progressBar.setAttribute('aria-valuenow', progressPercentage);
     progressBar.innerText = Math.round(progressPercentage) + '%';
 
+    localStorage.setItem('progressPercentage', progressPercentage);
+
     var myModal = bootstrap.Modal.getInstance(document.getElementById('progressModal'));
     myModal.hide();
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const savedProgress = localStorage.getItem('progressPercentage');
+
+    if (savedProgress !== null) {
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.width = savedProgress + '%';
+        progressBar.setAttribute('aria-valuenow', savedProgress);
+        progressBar.innerText = Math.round(savedProgress) + '%';
+    }
+});
 </script>
 {% endblock %}
+
