@@ -14,8 +14,11 @@
                 {{ clube.dataDeCriacao|date:"d/m/Y H:i" }} - 
                 {{ clube.moderador.first_name }}
                 {% if user.is_authenticated %}
-                - <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
-                <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
+                - 
+                {% if user.id == clube.moderador.id %}
+                    <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
+                    <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
+                {% endif %}
                 {% endif %}
                 <p>{{ clube.descricao|slice:":200"|safe }}</p>
             </li>
