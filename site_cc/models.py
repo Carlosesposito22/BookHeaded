@@ -37,14 +37,26 @@ class Clube(models.Model):
         return reverse('club-Detail', args=[str(self.id)])
 
     def total_avaliacoes(self):
-        return self.avaliacao_set.count()  # Total de avaliações
+        return self.avaliacao_set.count()
     
     def calcular_media_avaliacoes(self):
         avaliacoes = self.avaliacao_set.all()
         if avaliacoes.exists():
             total = sum(avaliacao.valor for avaliacao in avaliacoes)
             return total / avaliacoes.count()
-        return 0  # Retorna 0 se não houver avaliações
+        return 0
+    
+    def estrelas_avaliacoes(self):
+        media = self.calcular_media_avaliacoes()
+        estrelas_cheias = int(media) 
+        estrelas_metade = 1 if media - estrelas_cheias >= 0.5 else 0 
+        estrelas_vazias = 5 - (estrelas_cheias + estrelas_metade) 
+
+        return (
+            '<i class="bi bi-star-fill"></i>' * estrelas_cheias + 
+            '<i class="bi bi-star-half"></i>' * estrelas_metade + 
+            '<i class="bi bi-star"></i>' * estrelas_vazias
+        )
 
 
 class Avaliacao(models.Model):
