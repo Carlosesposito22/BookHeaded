@@ -31,54 +31,109 @@ Home Page
         justify-content: right;
     }
 
-    .clubs-container{
+    .clubs-container {
+        display: flex;
+        flex-direction: column;
         padding-top: 1rem;
         padding-bottom: 1rem;
         color: black;
-        background-color:green;
     }
 
-    .title-date-div{
-        border-radius: 4rem;
-        padding: 2rem;
-        background-color: rgb(222, 222, 222);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 2rem;
+    .super-div {
+        border-radius: 1rem;
+        padding: 1rem;
+        background-color: rgb(234, 234, 234);
+        margin-top: 1rem;
     }
 
-    ul{
+    ul {
         list-style: none;
+        padding: 0;
     }
 
-    .club-title{
+    .club-title {
         font-size: 2rem;
         text-decoration: none;
         color: black;
         font-weight: bold;
-        background-color: red;
     }
 
-    .club-title:hover{
-        background-color: grey;
-    }
-
-    .date-div{
+    .icons-div {
         display: flex;
         flex-direction: row;
         gap: 1rem;
         align-items: center;
     }
 
-    i{
+    i {
         color: #0d6efd;
     }
 
-    i:hover{
+    i:hover {
         color: #0050c8;
     }
 
+    .container1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .hold-title-icons {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .dl-edt-btn{
+        z-index: 2;
+        margin-top: -2rem;
+    }
+
+    .admin-border{
+        border-style: solid;
+        border-color: #0d6efd;
+        border-width: .15rem;
+    }
+
+    .description-div{
+        font-size: 1rem;
+    }
+
+    .date{
+        margin-top: -.3rem;
+        font-size: .8rem;
+    }
+
+    .title-date{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .bi-book-fill{
+        color: white;
+    }
+
+    .bi-book-fill:hover{
+        color: white;
+    }
+
+    .bi-dot{
+        color: black;
+    }
+    .bi-dot:hover{
+        color: black;
+    }
+
+    .title-date-div{
+        display: inline;
+        align-items: center;
+    }
+
+    .super-div:hover{
+        cursor: pointer;
+    }
 
 </style>
 
@@ -94,22 +149,30 @@ Home Page
     <ul>
         {% for clube in object_list %}
         <li>
-            <div class="title-date-div">
-                <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a>
-                <div class="date-div">
-                    {% if user.is_authenticated and user.id == clube.moderador.id %}
-                    <a href="{% url 'updateClube' clube.pk %}" class="dl-edt-btn primary"><i class="bi bi-pencil-fill"></i></a>
-                    <a href="{% url 'deleteClube' clube.pk %}" class="dl-edt-btn"><i class="bi bi-trash-fill"></i></a>
-                    {% endif %}
+            <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
+                <div class="hold-title-icons">
+                    <div class="title-date-div">
+                        <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }} <i class="bi bi-dot"> </i></a>
+                    </div>
+                    <div class="icons-div">
+                        {% if user.is_authenticated and user.id == clube.moderador.id %}
+                        <a href="{% url 'updateClube' clube.pk %}" class="dl-edt-btn"><i
+                                class="bi bi-pencil-fill"></i></a>
+                        <a href="{% url 'deleteClube' clube.pk %}" class="dl-edt-btn"><i
+                                class="bi bi-trash-fill"></i></a>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="description-div">
-                    <p>Since {{ clube.dataDeCriacao|date:"d/m/Y H:i" }}</p>
-                    <p>{{ clube.descricao|slice:":200"|safe }}</p>
+                <div class="description-div display-6">
+                    <p class="date"><span class="badge text-bg-primary date">Since {{ clube.dataDeCriacao|date:"d/m/Y - H:i" }}</span></p>
+                    <hr>
+                    <p class="description"><span class="badge rounded-pill text-bg-secondary pill">{{ clube.descricao|slice:":200"|safe }}</span></p>
                 </div>
             </div>
-          
-            <div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1" aria-labelledby="clubeModalLabel-{{ clube.id }}"
-                aria-hidden="true">
+
+
+            <div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1"
+                aria-labelledby="clubeModalLabel-{{ clube.id }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -120,7 +183,8 @@ Home Page
                             <p><strong>Members:</strong> {{ clube.numeroMembros }}</p>
                             <p><strong>Rating:      </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
                             <p><strong>Admin:</strong> {{ clube.moderador }}</p>
-                            <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
+                            <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}
+                            </p>
                             <p><strong>Genre:</strong> {{ clube.categoria }}</p>
                         </div>
                         <div class="modal-footer">
@@ -130,7 +194,6 @@ Home Page
                     </div>
                 </div>
             </div>
-           
         </li>
         {% endfor %}
     </ul>
