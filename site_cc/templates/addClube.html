@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title  %}
+{% block title %}
     Criando
 {% endblock title %}
 
-{% block content  %}
+{% block content %}
     {% if user.is_authenticated %}
         <h1 class="text-center">Adicionando Clube do Livro</h1>
        
@@ -14,7 +14,7 @@
                     <div class="form-group">
                         <form method="post">
                             {% csrf_token %}
-                            {{ form.as_p }}
+                            {{ form.as_p }}  
                             <br></br>
                             <button class="btn btn-secondary">Criar</button>
                         </form>
@@ -23,10 +23,10 @@
             </div>
         </div>
         <script>
-            var name = "{{user.id}}";
+            var name = "{{ user.id }}";
             document.getElementById("moderador").value = name;
         </script>
     {% else %}
-    Você nao tem permissao de criar um Clube   
+    Você não tem permissão para criar um Clube   
     {% endif %} 
 {% endblock %}
