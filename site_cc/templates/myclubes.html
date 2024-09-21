@@ -16,7 +16,7 @@
             <a href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a> - 
             {{ clube.dataDeCriacao|date:"d/m/Y H:i" }} - 
             {{ clube.moderador }}
-            {% if user.is_authenticated %}
+            {% if user.is_authenticated and user.id == clube.moderador.id %}
             - <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
             <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
             {% endif %}
