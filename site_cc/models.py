@@ -35,7 +35,7 @@ class Clube(models.Model):
         return reverse('club-Detail', args=[str(self.id)])
 
     def total_avaliacoes(self):
-        return self.avaliacao_set.count()  # Alterado para usar a relação com o modelo Avaliacao
+        return self.avaliacao_set.count()  # Total de avaliações
     
     def calcular_media_avaliacoes(self):
         avaliacoes = self.avaliacao_set.all()
@@ -44,19 +44,21 @@ class Clube(models.Model):
             return total / avaliacoes.count()
         return 0  # Retorna 0 se não houver avaliações
 
+
 class Avaliacao(models.Model):
     clube = models.ForeignKey(Clube, on_delete=models.CASCADE)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     valor = models.IntegerField()
 
     def __str__(self):
-        return reverse('club-Detail', args=(str(self.id)))
-    
+        return f'Avaliação de {self.usuario.username} para {self.clube.titulo} com valor {self.valor}'
+
+
 class Membro(models.Model):
     clube = models.ForeignKey('Clube', on_delete=models.CASCADE, related_name="membros")
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     dataDeEntrada = models.DateTimeField(auto_now_add=True)
-    aprovado = models.BooleanField(default=False) 
+    aprovado = models.BooleanField(default=False)
     motivo_recusa = models.TextField(blank=True, null=True)
 
     def __str__(self):
