@@ -7,6 +7,8 @@ Home Page
 {% block content %}
 
 <style>
+    @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+
     body {
         font-family: 'DM Sans', 'sans-serif';
         background: white;
@@ -30,14 +32,54 @@ Home Page
     }
 
     .clubs-container{
-        background-color: rgb(207, 207, 207);
-        border-style: solid;
-        border-color: rgb(207, 207, 207);
-        border-radius: 2rem;
         padding-top: 1rem;
         padding-bottom: 1rem;
         color: black;
+        background-color:green;
     }
+
+    .title-date-div{
+        border-radius: 4rem;
+        padding: 2rem;
+        background-color: rgb(222, 222, 222);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 2rem;
+    }
+
+    ul{
+        list-style: none;
+    }
+
+    .club-title{
+        font-size: 2rem;
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+        background-color: red;
+    }
+
+    .club-title:hover{
+        background-color: grey;
+    }
+
+    .date-div{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    i{
+        color: #0d6efd;
+    }
+
+    i:hover{
+        color: #0050c8;
+    }
+
+
 </style>
 
 <h1 class="text-dark fw-bold">My Clubs</h1>
@@ -46,54 +88,52 @@ Home Page
     <div class="holder1">
         <div class="holder">
             <a class="btn btn-primary btn-lg addclub-btn" href=" {% url 'addClube' %}">Create Club</a>
-            <a class="btn btn-primary btn-lg me-2" href=" {% url 'addCategoria' %}">Add Category</a>
         </div>
-
     </div>
-
 
     <ul>
         {% for clube in object_list %}
         <li>
-            <a href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a> -
-            {{ clube.dataDeCriacao|date:"d/m/Y H:i" }} -
-            {{ clube.moderador }}
-            {% if user.is_authenticated and user.id == clube.moderador.id %}
-            - <a href="{% url 'updateClube' clube.pk %}">Editar</a> -
-            <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
-            {% endif %}
-            <p>{{ clube.descricao|slice:":200"|safe }}</p>
+            <div class="title-date-div">
+                <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a>
+                <div class="date-div">
+                    {% if user.is_authenticated and user.id == clube.moderador.id %}
+                    <a href="{% url 'updateClube' clube.pk %}" class="dl-edt-btn primary"><i class="bi bi-pencil-fill"></i></a>
+                    <a href="{% url 'deleteClube' clube.pk %}" class="dl-edt-btn"><i class="bi bi-trash-fill"></i></a>
+                    {% endif %}
+                </div>
+                <div class="description-div">
+                    <p>Since {{ clube.dataDeCriacao|date:"d/m/Y H:i" }}</p>
+                    <p>{{ clube.descricao|slice:":200"|safe }}</p>
+                </div>
+            </div>
+          
+            <div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1" aria-labelledby="clubeModalLabel-{{ clube.id }}"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="clubeModalLabel-{{ clube.id }}">{{ clube.titulo }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p><strong>Members:</strong> {{ clube.numeroMembros }}</p>
+                            <p><strong>Rating:      </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+                            <p><strong>Admin:</strong> {{ clube.moderador }}</p>
+                            <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
+                            <p><strong>Genre:</strong> {{ clube.categoria }}</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                            <a href="{% url 'club-Detail' clube.pk %}" class="btn btn-primary">Entrar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
         </li>
+        {% endfor %}
     </ul>
-
 </div>
-
-<!-- início do Modal -->
-<div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1" aria-labelledby="clubeModalLabel-{{ clube.id }}"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="clubeModalLabel-{{ clube.id }}">{{ clube.titulo }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Members:</strong> {{ clube.numeroMembros }}</p>
-                <p><strong>Rating:      </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>  
-                <p><strong>Admin:</strong> {{ clube.moderador }}</p>
-                <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
-                <p><strong>Genre:</strong> {{ clube.categoria }}</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <a href="{% url 'club-Detail' clube.pk %}" class="btn btn-primary">Entrar</a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Fim do Modal -->
-</li>
-{% endfor %}
-</ul>
 
 {% endblock %}
