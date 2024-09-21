@@ -79,7 +79,7 @@ Home Page
             </div>
             <div class="modal-body">
                 <p><strong>Members:</strong> {{ clube.numeroMembros }}</p>
-                <p><strong>Rating:</strong> {{ clube.avaliacoes }}</p>
+                <p><strong>Rating:      </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>  
                 <p><strong>Admin:</strong> {{ clube.moderador }}</p>
                 <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
                 <p><strong>Genre:</strong> {{ clube.categoria }}</p>
