@@ -1,20 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}
-    Detail {{ clube.titulo }}
-{% endblock title %}
-
 {% block content %}
-<h1>{{ clube.titulo }} - {{ clube.dataDeCriacao }}</h1>
-
-{% if user.is_authenticated %}
-    {% if user == clube.moderador %}
-        <small>
-            <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
-            <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
-        </small>
-    {% endif %}
-{% endif %}
 
 <div class="container">
     <h1>{{ clube.titulo }}</h1>
