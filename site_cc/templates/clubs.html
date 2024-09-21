@@ -12,7 +12,7 @@
                 <a href="{% url 'club-Detail' clube.pk %}">{{ clube.titulo }}</a> - 
                 <a href="{% url 'categoria' clube.categoria|slugify %}">{{ clube.categoria }}</a> - 
                 {{ clube.dataDeCriacao|date:"d/m/Y H:i" }} - 
-                {{ clube.moderador.first_name }}
+                {{ clube.moderador }}
                 {% if user.is_authenticated %}
                 - 
                 {% if user.id == clube.moderador.id %}

@@ -5,59 +5,94 @@
 {% endblock title %}
 
 {% block content %}
-    <h1>{{ clube.titulo }} - {{ clube.dataDeCriacao }}
-        {% if user.is_authenticated %}
-            {% if user == clube.moderador %}
-                <small> 
-                    <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
-                    <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
-                </small>
-            {% endif %}
-        {% endif %}
-    </h1>
-    <br><br>
+<h1>{{ clube.titulo }} - {{ clube.dataDeCriacao }}</h1>
+
+{% if user.is_authenticated %}
+    {% if user == clube.moderador %}
+        <small>
+            <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
+            <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
+        </small>
+    {% endif %}
+{% endif %}
+
+<div class="container">
+    <h1>{{ clube.titulo }}</h1>
+    <p><strong>Data de Criação:</strong> {{ clube.dataDeCriacao }}</p>
     <p>{{ clube.descricao|safe }}</p>
 
-    {% if user.is_authenticated %}
-        {% if user != clube.moderador %}
-            {% if clube.privado %}
-                {% if not user_is_member %}
-                    <form method="post" action="{% url 'adicionar-membro' clube.pk %}">
-                        {% csrf_token %}
-                        <button type="submit">Solicitar Associação</button>
-                    </form>
-                {% elif user_request_pending %}
-                    <p>Sua solicitação está pendente de aprovação.</p>
-                {% else %}
-                    <p>Você é membro deste clube.</p>
-                {% endif %}
-            {% else %}
-                <form method="post" action="{% url 'adicionar-membro-publico' clube.pk %}">
-                    {% csrf_token %}
-                    <button type="submit">Juntar-se ao Clube</button>
-                </form>
-            {% endif %}
-        {% endif %}
+    <p><strong>Quantidade de avaliações:</strong> {{ total_avaliacoes }}</p>
+    <p><strong>Média de avaliações:</strong> {{ media_avaliacoes|floatformat:1 }}</p>
 
-        {% if user == clube.moderador %}
-            <h3>Pedidos Pendentes:</h3>
-            <ul>
-                {% for membro in clube.membros.all %}
-                    {% if not membro.aprovado %}
-                        <li>
-                            {{ membro.usuario.username }}
-                            <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit">Aprovar</button>
-                            </form>
-                            <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit">Recusar</button>
-                            </form>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
+    {% if user.is_authenticated %}
+        {% if user.id == clube.moderador.id %}
+            <div class="my-3">
+                <a href="{% url 'updateClube' clube.pk %}" class="btn btn-outline-secondary btn-sm">Editar</a>
+                <a href="{% url 'deleteClube' clube.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+            </div>
         {% endif %}
     {% endif %}
+</div>
+
+<hr>
+
+{% if user.is_authenticated %}
+    {% if user != clube.moderador %}
+        {% if clube.privado %}
+            {% if not user_is_member %}
+                <form method="post" action="{% url 'adicionar-membro' clube.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-success btn-sm">Solicitar Associação</button>
+                </form>
+            {% elif user_request_pending %}
+                <p class="text-warning">Sua solicitação está pendente de aprovação.</p>
+            {% else %}
+                <p class="text-success">Você é membro deste clube.</p>
+            {% endif %}
+        {% else %}
+            <form method="post" action="{% url 'adicionar-membro-publico' clube.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-success btn-sm">Juntar-se ao Clube</button>
+            </form>
+        {% endif %}
+
+        <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST" class="my-4">
+            {% csrf_token %}
+            <input type="hidden" name="clube_id" value="{{ clube.pk }}">
+            
+            <label for="rating">Avalie de 1 a 5:</label>
+            <select name="rating" id="rating" required class="form-control w-25">
+                <option value="">Escolha uma avaliação</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Avaliar</button>
+        </form>
+    {% endif %}
+{% endif %}
+
+{% if user == clube.moderador %}
+    <h3>Pedidos Pendentes:</h3>
+    <ul class="list-unstyled">
+        {% for membro in clube.membros.all %}
+            {% if not membro.aprovado %}
+                <li class="my-2">
+                    {{ membro.usuario.username }}
+                    <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" class="d-inline-block">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-primary btn-sm">Aprovar</button>
+                    </form>
+                    <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" class="d-inline-block">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>
+                    </form>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endif %}
 {% endblock %}
