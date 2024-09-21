@@ -81,7 +81,7 @@ class Membro(models.Model):
 class Comentario(models.Model):
     clube = models.ForeignKey(Clube,related_name='comentarios' ,on_delete=models.CASCADE)
     nome = models.CharField(max_length=255)
-    comment = models.TextField() 
+    comentario = models.TextField() 
     data = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

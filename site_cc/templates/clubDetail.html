@@ -64,16 +64,20 @@
         </form>
         <br><br>
         <h2>Comentarios:</h2>
-
+        
         {% if not clube.comentarios.all %}
-            Nenhuma conversa foi iniciada no clube!
+            Nenhuma conversa foi iniciada no clube! <a href="{% url 'add_comentario' clube.pk %}"></a>
         {% else %}
             {% for comentario in clube.comentarios.all %}
                 <strong>{{ comentario.nome }} - {{ comentario.data }}</strong>
                 <br>
-                {{ comentario.comment }}
+                {{ comentario.comentario }}
+                <br>    
             {% endfor %}
         {% endif %}
+        <br><br>
+        <a href="{% url 'add_comentario' clube.pk %}">Adicionar comentario</a>
+        <br><br><br>
     {% endif %}
 
 {% endif %}

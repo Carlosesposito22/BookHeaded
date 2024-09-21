@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Adicionando comentario
+{% endblock title %}
+
+{% block content %}
+
+{% load static %}
+
+<style>
+    body{
+        font-family: 'DM Sans', 'sans-serif';
+        background-color: white;
+    }
+
+    .row{
+        height: fit-content;
+        width: fit-content;
+        display: flex;
+        position: relative;
+        flex-direction: column;
+    }
+
+    label{
+        color: black;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .holder1{
+        height: fit-content;
+        width: fit-content;
+        display: flex;
+        flex-direction: row;
+        gap: 10rem;
+    }
+
+    .create-btn{
+        display: flex;
+        position: relative;
+        
+    }
+
+    .form-img{
+        margin-top: 2rem;
+        height: 20rem;
+        width: 20rem;
+    }
+
+    .holder2{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .reading-club{
+        font-size: 4rem;
+        margin-top: -.8rem;
+    }
+
+    .superholder{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 4rem;
+    }
+
+    textarea{
+        height: 6rem;
+        width: 8rem;
+    }
+
+    .form-group {
+        border-style: solid;
+        border-color: rgb(202, 202, 202);
+        padding-top: .5rem;
+        padding-bottom: 1rem;
+        border-radius: 1rem;
+    }
+
+</style>
+
+    {% if user.is_authenticated %}
+
+    <div class="superholder">
+        <div class="holder1">
+            <div class="holder2">
+                <h1 class="text-start text-black">Deixe seu comentário no clube: <p class="h1 fw-bold reading-club">reading club</p></h1>
+                <img src="{% static 'images\create-club-pic.png' %}" class="form-img">
+            </div>
+            <div class="container-start">
+                <div class="row">
+                        <div class="form-group shadow-lg">
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form.media }} 
+                                {{ form.as_p }}  
+                                <button class="btn btn-primary btn-lg create-btn disabled" aria-disabled="true">Add Comentario</button>
+                            </form>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    Você não tem permissão para criar um Clube   
+    {% endif %} 
+{% endblock %}

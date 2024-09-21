@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
-from .models import Clube, Categoria, Avaliacao, Membro
-from .forms import ClubeForm, ClubeEditForm
+from .models import Clube, Categoria, Avaliacao, Membro, Comentario
+from .forms import ClubeForm, ClubeEditForm, ComentarioForm  # Adicionado ComentarioForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
@@ -93,8 +93,33 @@ class AddClubView(CreateView):
 
     def form_valid(self, form):
         clube = form.save()
-       
         return redirect('club-Detail', pk=clube.pk)
+
+
+class AddComentarioView(CreateView):  # Classe para adicionar comentário
+    model = Comentario
+    template_name = 'addComentario.html'
+    form_class = ComentarioForm  # Usando ComentarioForm
+
+    def form_valid(self, form):
+        comentario = form.save(commit=False)  # Não salva ainda no banco
+        comentario.nome = self.request.user.username  # Preenche com o username do usuário
+
+        # Verifica se 'clube_id' está presente na URL
+        clube_id = self.kwargs.get('pk')  # Ajuste se a URL não usar 'clube_id'
+        if clube_id:
+            comentario.clube = get_object_or_404(Clube, id=clube_id)  # Associa ao clube
+            comentario.save()  # Salva o comentário
+            return redirect('club-Detail', pk=comentario.clube.pk)  # Redireciona para a página do clube
+        else:
+            # Lidar com o caso em que clube_id não está presente
+            form.add_error(None, 'Clube não encontrado.')
+            return self.form_invalid(form)  # Retorna o formulário inválido
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['clube_id'] = self.kwargs.get('pk')  # Passa o clube_id para o contexto se precisar
+        return context
 
 class UpdateClubView(UpdateView):
     model = Clube
@@ -132,19 +157,10 @@ class meusclubesDetailView(ListView):
     def get_queryset(self):
         clubes_moderados = Clube.objects.filter(moderador=self.request.user)
         clubes_membros = Clube.objects.filter(membros__usuario=self.request.user, membros__aprovado=True)
-
-        
         clubes_publicos = Clube.objects.filter(privado=False, membros__usuario=self.request.user)
 
-        
         clubes = clubes_moderados | clubes_membros | clubes_publicos
-       
         return clubes.distinct().order_by('-dataDeCriacao')
-
-
-
-    
-        
 
 
 def adicionar_membro(request, clube_id):
@@ -172,14 +188,14 @@ def recusar_membro(request, clube_id, membro_id):
     if request.method == 'POST':
         membro.delete()  
         return redirect('club-Detail', pk=clube.pk)
+
+
 def adicionar_membro_publico(request, clube_id):
     clube = get_object_or_404(Clube, id=clube_id)
     
     if clube.privado:
-        
         return redirect('club-Detail', pk=clube.pk)
 
-    
     Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': True})
     
-    return redirect('club-Detail', pk=clube.pk)    
+    return redirect('club-Detail', pk=clube.pk)

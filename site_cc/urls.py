@@ -14,6 +14,7 @@ from .views import (
     recusar_membro,
     adicionar_membro_publico,
     AvaliacaoView,
+    AddComentarioView,
 )
 
 
@@ -35,4 +36,5 @@ urlpatterns = [
     path('categoria/<str:cats>/', CategoriaView, name='categoria'),
     path('clube/<int:clube_id>/juntar', adicionar_membro_publico, name='adicionar-membro-publico'),
     path('avaliacao/<int:pk>/', AvaliacaoView, name='avaliacoes_clube'),
+    path('clube/<int:pk>/Comentario/', AddComentarioView.as_view(), name='add_comentario'),
 ]
