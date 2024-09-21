@@ -12,15 +12,13 @@ class ClubeForm(forms.ModelForm):
 
     class Meta:
         model = Clube
-        fields = ('moderador', 'titulo', 'modalidade', 'categoria', 'descricao', 'livroAtual', 'privado')
+        fields = ('moderador', 'titulo', 'modalidade', 'categoria', 'descricao', 'privado')  # Removido 'livroAtual'
         widgets = {
-            #'moderador': forms.Select(attrs={'class': 'form-control', 'placeholder': 'Selecione o moderador'}),
-            'moderador': forms.TextInput(attrs={'class': 'form-control', 'value': '', 'id':'moderador', 'type':'hidden'}),
+            'moderador': forms.TextInput(attrs={'class': 'form-control', 'value': '', 'id': 'moderador', 'type': 'hidden'}),
             'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Insira o título do clube'}),
             'modalidade': forms.Select(attrs={'class': 'form-control'}),
             'categoria': forms.Select(attrs={'class': 'form-control'}),
             'descricao': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Descreva o clube'}),
-            'livroAtual': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Insira o livro atual'}),
             'privado': forms.CheckboxInput(attrs={'class': 'form-control'}),
         }
 
@@ -35,12 +33,11 @@ class ClubeEditForm(forms.ModelForm):
 
     class Meta:
         model = Clube
-        fields = ('titulo', 'modalidade', 'categoria', 'descricao', 'livroAtual', 'privado')
+        fields = ('titulo', 'modalidade', 'categoria', 'descricao', 'privado')  # Removido 'livroAtual'
         widgets = {
             'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Insira o título do clube'}),
             'modalidade': forms.Select(attrs={'class': 'form-control'}),
             'categoria': forms.Select(attrs={'class': 'form-control'}),
             'descricao': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Descreva o clube'}),
-            'livroAtual': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Insira o livro atual'}),
             'privado': forms.CheckboxInput(attrs={'class': 'form-control'}),
         }

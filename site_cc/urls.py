@@ -1,21 +1,29 @@
 from django.urls import path
-from .import views
-from .views import clubesView, ClubDetailView,CategoriaView,AddClubView, UpdateClubView, DeleteClubView,AddCategoriaView,meusclubesDetailView
+from . import views
+from .views import (
+    clubesView, 
+    ClubDetailView,
+    CategoriaView,
+    AddClubView,
+    AvaliacaoView,
+    UpdateClubView,
+    DeleteClubView,
+    AddCategoriaView,
+    meusclubesDetailView
+)
 
 urlpatterns = [
-    path('',views.pagina_principal, name='pagina_principal'),
+    path('', views.pagina_principal, name='pagina_principal'),
     path('about/', views.about, name='about'),
-    path('login/',views.login_user, name='login'),
+    path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
-    path('clube/<int:pk>', ClubDetailView.as_view(), name="club-Detail"),
-    path('addClube', AddClubView.as_view(), name="addClube"),
-    path('clube/edit/<int:pk>', UpdateClubView.as_view(), name="updateClube"),
-    path('clube/delete/<int:pk>', DeleteClubView.as_view(), name="deleteClube"),
+    path('clube/<int:pk>/', ClubDetailView.as_view(), name='club-Detail'),
+    path('addClube/', AddClubView.as_view(), name='addClube'),
+    path('clube/edit/<int:pk>/', UpdateClubView.as_view(), name='updateClube'),
+    path('clube/delete/<int:pk>/', DeleteClubView.as_view(), name='deleteClube'),
     path('clubs/', clubesView.as_view(), name='clubs'),
-    path('addCategoria', AddCategoriaView.as_view(), name="addCategoria"),
+    path('addCategoria/', AddCategoriaView.as_view(), name='addCategoria'),
     path('myclubes/', meusclubesDetailView.as_view(), name='myclubes'),
     path('categoria/<str:cats>/', CategoriaView, name='categoria'),
-
-
-   
+    path('avaliacao/<int:pk>/', AvaliacaoView, name='avaliacoes_clube'),
 ]

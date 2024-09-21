@@ -1,14 +1,15 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
-from .models import Clube, Categoria
+from .models import Clube, Categoria, Avaliacao
 from .forms import ClubeForm, ClubeEditForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.http import HttpResponseRedirect
 
 def pagina_principal(request):
-    return render(request,'pagina_principal.html',{})
+    return render(request, 'pagina_principal.html', {})
 
 def about(request):
     return render(request, 'about.html')
@@ -19,36 +20,32 @@ class clubesView(LoginRequiredMixin, ListView):
     ordering = ['-dataDeCriacao']
 
     def get_context_data(self, *args, **kwargs):
-        context = super(clubesView, self).get_context_data(*args, **kwargs)
+        context = super().get_context_data(*args, **kwargs)
         context["cat_menu"] = Categoria.objects.all()
         return context
-    
+
 def login_user(request):
-    if request.method =="POST":
-        username= request.POST['username']
-        password= request.POST['password']
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, ("You are logged in."))
+            messages.success(request, "Você está logado.")
             return redirect('pagina_principal')
-
-
-        else:   
-            messages.success(request, ("An error occured. Try again"))
-            return redirect('login') 
-    else:
-        return render(request, 'login.html', {})
+        else:
+            messages.error(request, "Ocorreu um erro. Tente novamente.")
+            return redirect('login')
+    return render(request, 'login.html', {})
 
 def logout_user(request):
     logout(request)
-    messages.success(request, ("You logged out"))
+    messages.success(request, "Você saiu.")
     return redirect('pagina_principal')
 
 def CategoriaView(request, cats):
     categoria_clube = Clube.objects.filter(categoria__nome=cats.replace('-', ' '))
     return render(request, 'categorias.html', {'cats': cats.replace('-', ' '), 'categoria_clube': categoria_clube})
-
 
 class HomePageView(ListView):
     model = Clube
@@ -58,6 +55,12 @@ class HomePageView(ListView):
 class ClubDetailView(DetailView):
     model = Clube
     template_name = 'clubDetail.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_avaliacoes'] = self.object.avaliacao_set.count()  # Total de avaliações
+        context['media_avaliacoes'] = self.object.calcular_media_avaliacoes()  # Média de avaliações
+        return context
 
 class AddCategoriaView(CreateView):
     model = Categoria
@@ -80,6 +83,20 @@ class DeleteClubView(DeleteView):
     template_name = 'deleteClube.html'
     success_url = reverse_lazy('pagina_principal')
 
+def AvaliacaoView(request, pk):
+    if request.method == "POST":
+        clube = get_object_or_404(Clube, id=pk)
+        rating = int(request.POST.get('rating'))
+
+        if 1 <= rating <= 5:
+            avaliacao_existente = Avaliacao.objects.filter(clube=clube, usuario=request.user).first()
+
+            if avaliacao_existente:
+                avaliacao_existente.valor = rating
+                avaliacao_existente.save()
+            else:
+                Avaliacao.objects.create(clube=clube, usuario=request.user, valor=rating)
+        return HttpResponseRedirect(reverse('club-Detail', args=[str(clube.id)]))
 
 
 class meusclubesDetailView(ListView):
@@ -88,6 +105,4 @@ class meusclubesDetailView(ListView):
     ordering = ['-dataDeCriacao'] 
 
     def get_queryset(self):
-        queryset = Clube.objects.filter(moderador=self.request.user).order_by('-dataDeCriacao')
-        print(queryset)  # Para depuração
-        return queryset
+        return Clube.objects.filter(moderador=self.request.user).order_by('-dataDeCriacao')

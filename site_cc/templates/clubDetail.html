@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title  %}
+{% block title %}
     Detail {{ clube.titulo }}
 {% endblock title %}
 
-{% block content  %}
-    Usuario numero: {{user.id}}
-    Usuario que fez o clube:{{ clube.moderador.id }}
+{% block content %}
+    Usuario número: {{ user.id }}
+    Usuario que fez o clube: {{ clube.moderador.id }}
+    
     <h1>{{ clube.titulo }} - {{ clube.dataDeCriacao }}
         {% if user.is_authenticated %}
             {% if user.id == clube.moderador.id %}
@@ -17,7 +18,29 @@
             {% endif %}
         {% endif %}
     </h1>
+
     <br><br>
     <p>{{ clube.descricao|safe }}</p>
+    <br><br>
+
+    <p>Quantidade de avaliações: {{ total_avaliacoes }}</p>  <!-- Mostra o total de avaliações -->
+    <p>Média de avaliações: {{ media_avaliacoes|floatformat:1 }}</p>  <!-- Corrigido para usar media_avaliacoes -->
     
+    <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="clube_id" value="{{ clube.pk }}">
+        
+        <label for="rating">Avalie de 1 a 5:</label>
+        <select name="rating" id="rating" required>
+            <option value="">Escolha uma avaliação</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        
+        <button type="submit" class="btn btn-primary btn-sm">Avaliar</button>
+    </form>
+
 {% endblock %}
