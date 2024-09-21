@@ -21,4 +21,10 @@
             </li>
         {% endfor %}
     </ul>
+    <h1>Filtre por categoria</h1>
+    {% for cat in cat_menu %}
+        <a href="{% url 'categoria' cat.nome|slugify %}">{{ cat.nome }}</a><br/>
+    {% endfor %}
+
+
 {% endblock %}

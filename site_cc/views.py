@@ -18,6 +18,11 @@ class clubesView(LoginRequiredMixin, ListView):
     template_name = 'clubs.html'
     ordering = ['-dataDeCriacao']
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(clubesView, self).get_context_data(*args, **kwargs)
+        context["cat_menu"] = Categoria.objects.all()
+        return context
+    
 def login_user(request):
     if request.method =="POST":
         username= request.POST['username']
