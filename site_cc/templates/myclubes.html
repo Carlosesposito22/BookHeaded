@@ -1,89 +1,99 @@
 {% extends 'base.html' %}
 
-{% block title  %}
-    Home Page
+{% block title %}
+Home Page
 {% endblock title %}
 
-{% block content  %}
+{% block content %}
 
 <style>
+    body {
+        font-family: 'DM Sans', 'sans-serif';
+        background: white;
+    }
 
-body{
-    font-family: 'DM Sans', 'sans-serif';
-}
-
-h1{
+    h1 {
         font-family: 'DM Sans', 'sans-serif';
         font-size: 4rem;
         margin-top: 2rem;
         margin-left: 3rem;
     }
 
-.addclub-btn{
-    background: rgb(0, 200, 0);
-    border-style: none;
-    margin-left: 3rem;
+    .holder {
+        height: fit-content;
+    }
 
-}
+    .holder1 {
+        display: flex;
+        align-items: center;
+        justify-content: right;
+    }
 
-.addclub-btn:hover{
-    background: rgb(0, 168, 0);
-    border-style: none;
-}
-
-.holder {
-    height: fit-content;
-    width: fit-content;
-}
-    
+    .clubs-container{
+        background-color: rgb(207, 207, 207);
+        border-style: solid;
+        border-color: rgb(207, 207, 207);
+        border-radius: 2rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        color: black;
+    }
 </style>
 
-<div class="holder">
-    <h1 class="text-dark">My Clubs</h1>
+<h1 class="text-dark fw-bold">My Clubs</h1>
 
-    <a class="btn btn-primary btn-lg me-2 addclub-btn" href=" {% url 'addClube' %}">Create Club</a>
-    
-    <a class="btn btn-primary btn-lg me-2" href=" {% url 'addCategoria' %}">Add Category</a>
-</div>
+<div class="container clubs-container">
+    <div class="holder1">
+        <div class="holder">
+            <a class="btn btn-primary btn-lg addclub-btn" href=" {% url 'addClube' %}">Create Club</a>
+            <a class="btn btn-primary btn-lg me-2" href=" {% url 'addCategoria' %}">Add Category</a>
+        </div>
+
+    </div>
 
 
-<ul>
-    {% for clube in object_list %}
+    <ul>
+        {% for clube in object_list %}
         <li>
-            <a href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a> - 
-            {{ clube.dataDeCriacao|date:"d/m/Y H:i" }} - 
+            <a href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a> -
+            {{ clube.dataDeCriacao|date:"d/m/Y H:i" }} -
             {{ clube.moderador }}
             {% if user.is_authenticated and user.id == clube.moderador.id %}
-            - <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
+            - <a href="{% url 'updateClube' clube.pk %}">Editar</a> -
             <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
             {% endif %}
             <p>{{ clube.descricao|slice:":200"|safe }}</p>
-
-            <!-- início do Modal -->
-            <div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1" aria-labelledby="clubeModalLabel-{{ clube.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="clubeModalLabel-{{ clube.id }}">{{ clube.titulo }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p><strong>Members:</strong> {{ clube.numeroMembros }}</p>
-                            <p><strong>Rating:</strong> {{ clube.avaliacoes }}</p>
-                            <p><strong>Admin:</strong> {{ clube.moderador }}</p>
-                            <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
-                            <p><strong>Genre:</strong> {{ clube.categoria }}</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                            <a href="{% url 'club-Detail' clube.pk %}" class="btn btn-primary">Entrar</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Fim do Modal -->
         </li>
-    {% endfor %}
+    </ul>
+
+</div>
+
+<!-- início do Modal -->
+<div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1" aria-labelledby="clubeModalLabel-{{ clube.id }}"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="clubeModalLabel-{{ clube.id }}">{{ clube.titulo }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Members:</strong> {{ clube.numeroMembros }}</p>
+                <p><strong>Rating:</strong> {{ clube.avaliacoes }}</p>
+                <p><strong>Admin:</strong> {{ clube.moderador }}</p>
+                <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
+                <p><strong>Genre:</strong> {{ clube.categoria }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <a href="{% url 'club-Detail' clube.pk %}" class="btn btn-primary">Entrar</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fim do Modal -->
+</li>
+{% endfor %}
 </ul>
 
 {% endblock %}
