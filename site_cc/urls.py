@@ -1,6 +1,6 @@
 from django.urls import path
 from .import views
-from .views import clubesView, ClubDetailView, AddClubView, UpdateClubView, DeleteClubView, AddCategoriaView, meusclubesDetailView, aprovar_membro, adicionar_membro, recusar_membro, CategoriaView
+from .views import clubesView, ClubDetailView, AddClubView, UpdateClubView, DeleteClubView, AddCategoriaView, meusclubesDetailView, aprovar_membro, adicionar_membro, recusar_membro, CategoriaView,adicionar_membro_publico
 
 urlpatterns = [
     path('',views.pagina_principal, name='pagina_principal'),
@@ -18,6 +18,7 @@ urlpatterns = [
     path('clube/<int:clube_id>/aprovar/<int:membro_id>/', aprovar_membro, name='aprovar-membro'),
     path('clube/<int:clube_id>/recusar-membro/<int:membro_id>/', recusar_membro, name='recusar-membro'),
     path('categoria/<str:cats>/', CategoriaView, name='categoria'),
+    path('clube/<int:clube_id>/juntar', adicionar_membro_publico, name='adicionar-membro-publico'),
 
 
    

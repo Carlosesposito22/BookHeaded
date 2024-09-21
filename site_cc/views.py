@@ -83,6 +83,11 @@ class AddClubView(CreateView):
     form_class = ClubeForm
     template_name = 'addClube.html'
 
+    def form_valid(self, form):
+        clube = form.save()
+       
+        return redirect('club-Detail', pk=clube.pk)
+
 class UpdateClubView(UpdateView):
     model = Clube
     template_name = 'updateClube.html'
@@ -101,15 +106,21 @@ class meusclubesDetailView(ListView):
     ordering = ['-dataDeCriacao']
 
     def get_queryset(self):
-        
         clubes_moderados = Clube.objects.filter(moderador=self.request.user)
 
         
         clubes_membros = Clube.objects.filter(membros__usuario=self.request.user, membros__aprovado=True)
 
         
-        clubes = clubes_moderados | clubes_membros
+        clubes_publicos = Clube.objects.filter(privado=False, membros__usuario=self.request.user)
+
+        
+        clubes = clubes_moderados | clubes_membros | clubes_publicos
+        
         return clubes.distinct().order_by('-dataDeCriacao')
+
+
+
     
 def adicionar_membro(request, clube_id):
     clube = get_object_or_404(Clube, id=clube_id)
@@ -135,3 +146,14 @@ def recusar_membro(request, clube_id, membro_id):
     if request.method == 'POST':
         membro.delete()  
         return redirect('club-Detail', pk=clube.pk)
+def adicionar_membro_publico(request, clube_id):
+    clube = get_object_or_404(Clube, id=clube_id)
+    
+    if clube.privado:
+        
+        return redirect('club-Detail', pk=clube.pk)
+
+    
+    Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': True})
+    
+    return redirect('club-Detail', pk=clube.pk)    
