@@ -6,10 +6,47 @@
 
 {% block content  %}
 
-<a class="btn btn-outline-light me-2" href=" {% url 'addClube' %}">Add clube</a>
-<a class="btn btn-outline-light me-2" href=" {% url 'addCategoria' %}">Add Categoria</a>
+<style>
 
-<h1>My Clubs</h1>
+body{
+    font-family: 'DM Sans', 'sans-serif';
+}
+
+h1{
+        font-family: 'DM Sans', 'sans-serif';
+        font-size: 4rem;
+        margin-top: 2rem;
+        margin-left: 3rem;
+    }
+
+.addclub-btn{
+    background: rgb(0, 200, 0);
+    border-style: none;
+    margin-left: 3rem;
+
+}
+
+.addclub-btn:hover{
+    background: rgb(0, 168, 0);
+    border-style: none;
+}
+
+.holder {
+    height: fit-content;
+    width: fit-content;
+}
+    
+</style>
+
+<div class="holder">
+    <h1 class="text-dark">My Clubs</h1>
+
+    <a class="btn btn-primary btn-lg me-2 addclub-btn" href=" {% url 'addClube' %}">Create Club</a>
+    
+    <a class="btn btn-primary btn-lg me-2" href=" {% url 'addCategoria' %}">Add Category</a>
+</div>
+
+
 <ul>
     {% for clube in object_list %}
         <li>
@@ -31,11 +68,11 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p><strong>Membros:</strong> {{ clube.numeroMembros }}</p>
-                            <p><strong>Classificação:</strong> {{ clube.avaliacoes }}</p>
-                            <p><strong>Moderador:</strong> {{ clube.moderador }}</p>
-                            <p><strong>Tipo:</strong> {% if clube.privado %}Privado{% else %}Público{% endif %}</p>
-                            <p><strong>Gênero:</strong> {{ clube.categoria }}</p>
+                            <p><strong>Members:</strong> {{ clube.numeroMembros }}</p>
+                            <p><strong>Rating:</strong> {{ clube.avaliacoes }}</p>
+                            <p><strong>Admin:</strong> {{ clube.moderador }}</p>
+                            <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
+                            <p><strong>Genre:</strong> {{ clube.categoria }}</p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
