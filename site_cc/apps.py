@@ -1,6 +1,13 @@
 from django.apps import AppConfig
 
 
+
 class SiteCcConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'site_cc'
+    
+    def ready(self):
+        import site_cc.signals
+       
+       
+        
