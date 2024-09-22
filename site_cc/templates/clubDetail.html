@@ -153,7 +153,8 @@ Detail {{ clube.titulo }}
                         {% if user == clube.moderador %}
                             <small>
                                 <a href="{% url 'updateClube' clube.pk %}"><i class="bi bi-pencil-fill"></i></a>
-                                <a href="{% url 'deleteClube' clube.pk %}"><i class="bi bi-trash-fill"></i></a>
+                                <a href="#" class="bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}"></a>
+                                    {% include 'modal_delete.html' %}
                                 {% if clube.privado %}
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"data-bs-target="#pedidosModal">Solicitações</button>
                                     {% include 'pedidos.html' %}
