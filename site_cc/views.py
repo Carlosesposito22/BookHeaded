@@ -22,6 +22,9 @@ def introducao(request):
 def equipe(request):
     return render(request, 'equipe.html')
 
+def contato(request):
+    return render(request, 'contato.html')
+
 class clubesView(LoginRequiredMixin, ListView):
     model = Clube
     template_name = 'clubs.html'

@@ -28,7 +28,8 @@
     <div class="row row-cols-1 row-cols-md-3 g-4">
         <div class="col">
             <div class="card h-100 ">
-                <img src="{% static 'images/juntos.jpg' %}" class="card-img-top" alt="Equipe">
+                <a href="{%  url 'introducao' %}">
+                    <img src="{% static 'images/juntos.jpg' %}" class="card-img-top" alt="Juntos"></a>
                 <div class="card-body">
                     <h5 class="card-title">Equipe</h5>
                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
@@ -38,7 +39,9 @@
         </div>
         <div class="col">
             <div class="card h-100">
-                <img src="{% static 'images/equipe.jpg' %}" class="card-img-top" alt="Juntos">
+                <a href="{%  url 'equipe' %}">
+                    <img src="{% static 'images/equipe.jpg' %}" class="card-img-top" alt="Equipe">
+                </a>
                 <div class="card-body">
                     <h5 class="card-title">Card title</h5>
                     <p class="card-text">This card has supporting text below as a natural lead-in to additional content.
@@ -48,7 +51,9 @@
         </div>
         <div class="col">
             <div class="card h-100">
-                <img src="{% static 'images/github.png' %}" class="card-img-top" alt="github">
+                <a href="{%  url 'contato' %}">
+                    <img src="{% static 'images/github.png' %}" class="card-img-top" alt="Contato">
+                </a>
                 <div class="card-body">
                     <h5 class="card-title">Card title</h5>
                     <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
