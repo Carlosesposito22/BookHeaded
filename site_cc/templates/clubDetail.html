@@ -22,11 +22,16 @@
     {% endif %}
 
     <div class="my-3">
-        <button id="setProgress" class="btn btn-outline-info btn-sm">Definir progresso</button>
-        <div class="progress mt-2">
-            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        <button id="setProgress" class="btn btn-outline-info btn-sm" style="background-color: #696969; color: white; border: none; border-radius: 8px; box-shadow: 4px 6px 10px rgba(0, 0, 0, 0.2); padding: 5px 10px;">Definir progresso</button>
+    
+        <div class="progress mt-2" style="height: 20px; background-color: #C0C0C0; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);">
+            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 7%; background-color:#4169E1; transition: width 0.7s ease; border-radius: 10px; box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                0%
+            </div>
         </div>
+        
     </div>
+    
 
     <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
         <div class="modal-dialog">
