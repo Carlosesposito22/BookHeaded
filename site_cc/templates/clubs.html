@@ -33,7 +33,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <p><strong>Membros:</strong> {{ clube.numeroMembros }}</p>
+                                <p><strong>Membros:</strong> {{ clube.contar_membros }}</p>
                                 <p><strong>Avaliação: </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
                                 <p><strong>Admin:</strong> {{ clube.moderador }}</p>
                                 <p><strong>Privacidade do Clube:</strong> {% if clube.privado %}Privado{% else %}Público{% endif %}</p>

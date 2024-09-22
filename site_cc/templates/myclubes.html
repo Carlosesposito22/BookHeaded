@@ -180,7 +180,7 @@ Home Page
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p><strong>Members:</strong> {{ clube.numeroMembros }}</p>
+                            <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
                             <p><strong>Rating:      </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
                             <p><strong>Admin:</strong> {{ clube.moderador }}</p>
                             <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}

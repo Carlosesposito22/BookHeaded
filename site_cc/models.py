@@ -55,7 +55,9 @@ class Clube(models.Model):
             '<i class="bi bi-star-half"></i>' * estrelas_metade + 
             '<i class="bi bi-star"></i>' * estrelas_vazias
         )
-
+    
+    def contar_membros(self):
+        return self.membros.filter(aprovado=True).count() + 1
 
 class Avaliacao(models.Model):
     clube = models.ForeignKey(Clube, on_delete=models.CASCADE)
