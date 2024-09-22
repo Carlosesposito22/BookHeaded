@@ -152,7 +152,7 @@ Home Page
             <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
                 <div class="hold-title-icons">
                     <div class="title-date-div">
-                        <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot">{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %} </i></a>
+                        <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot">&nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %} </i></a>
                     </div>
                     <div class="icons-div">
                         {% if user.is_authenticated and user.id == clube.moderador.id %}  <p>
@@ -166,34 +166,10 @@ Home Page
                 <div class="description-div display-6">
                     <p class="date"><span class="badge text-bg-primary date">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span></p>
                     <hr>
-                    <p class="description"><span class="badge rounded-pill text-bg-secondary pill">{{ clube.descricao|slice:":80"|safe }}</span></p>
+                    <p class="description"><span class="badge rounded-pill text-bg-secondary pill">{{ clube.descricao|slice:":100"|safe }}</span></p>
                 </div>
             </div>
-
-
-            <div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1"
-                aria-labelledby="clubeModalLabel-{{ clube.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="clubeModalLabel-{{ clube.id }}">{{ clube.titulo }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
-                            <p><strong>Rating:      </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
-                            <p><strong>Admin:</strong> {{ clube.moderador }}</p>
-                            <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}
-                            </p>
-                            <p><strong>Genre:</strong> {{ clube.categoria }}</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                            <a href="{% url 'club-Detail' clube.pk %}" class="btn btn-primary">Entrar</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% include 'modal_myclubs.html' %}
         </li>
         {% endfor %}
     </ul>
