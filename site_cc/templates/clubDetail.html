@@ -8,9 +8,10 @@
 <div class="container">
     <h1>{{ clube.titulo }}</h1>
     <p><strong>Data de Criação:</strong> {{ clube.dataDeCriacao }}</p>
-    <p>{{ clube.descricao|safe }}</p>
+    <p><strong>Descição: </strong>{{ clube.descricao|safe }}</p>
+    <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
     <p><strong>Quantidade de avaliações:</strong> {{ total_avaliacoes }}</p>
-    <p><strong>Média de avaliações:</strong> {{ media_avaliacoes|floatformat:1 }}</p>
+    <p><strong>Média de avaliações:  </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
 
     {% if user.is_authenticated %}
         {% if user == clube.moderador %}

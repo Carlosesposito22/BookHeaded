@@ -10,20 +10,13 @@
         {% for clube_context in clubes_context %}
             {% with clube=clube_context.clube %}
             <li>
+                <!-- Informações de mão bejada, viu Mamede -->
                 <a href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a> - 
-                <a href="{% url 'categoria' clube.categoria|slugify %}">{{ clube.categoria }}</a> - 
-                {{ clube.dataDeCriacao|date:"d/m/Y H:i" }} - 
-                {{ clube.moderador }}
-                
-                {% if user.is_authenticated %}
-                    {% if user.id == clube.moderador.id %}
-                        - <a href="{% url 'updateClube' clube.pk %}">Editar</a> - 
-                        <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
-                    {% endif %}
-                {% endif %}
-                
+                {{ clube.categoria }} -
+                {{ clube.dataDeCriacao|date:"d/m/Y" }}
+                {% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
                 <p>{{ clube.descricao|slice:":200"|safe }}</p>
-
+                <!-- "Só" fazer o front agora -->
                 <div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1"
                      aria-labelledby="clubeModalLabel-{{ clube.id }}" aria-hidden="true">
                     <div class="modal-dialog">
@@ -77,9 +70,5 @@
             {% endwith %}
         {% endfor %}
     </ul>
-
-    <h1>Filtre por categoria</h1>
-    {% for cat in cat_menu %}
-        <a href="{% url 'categoria' cat.nome|slugify %}">{{ cat.nome }}</a><br/>
-    {% endfor %}
+  
 {% endblock %}
