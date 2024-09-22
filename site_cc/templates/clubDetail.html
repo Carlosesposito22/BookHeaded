@@ -8,8 +8,8 @@
 <div class="container">
     <h1>{{ clube.titulo }}</h1>
     <p><strong>Data de Criação:</strong> {{ clube.dataDeCriacao }}</p>
-    <p><strong>Descição: </strong>{{ clube.descricao|safe }}</p>
-    <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
+    <p><strong>Descrição: </strong>{{ clube.descricao|safe }}</p>
+    <p><strong>Membros:</strong> {{ clube.contar_membros }}</p>
     <p><strong>Quantidade de avaliações:</strong> {{ total_avaliacoes }}</p>
     <p><strong>Média de avaliações:  </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
 
@@ -101,9 +101,12 @@
                 
                 <button type="submit" class="btn btn-primary btn-sm mt-2">Avaliar</button>
             </form>
+        {% endif %}
+    {% endif %}
 
+    {% if user.is_authenticated %}
+        {% if user_is_member or user == clube.moderador %}
             <h2>Comentários:</h2>
-            
             <div class="comentarios-container" id="comentariosContainer">
                 {% if not clube.comentarios.all %}
                     Nenhuma conversa foi iniciada no clube!
@@ -118,51 +121,50 @@
                     {% endfor %}
                 {% endif %}
             </div>
+
             <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4 d-flex align-items-center">
                 {% csrf_token %}
                 <input type="hidden" name="clube_id" value="{{ clube.pk }}">
                 <textarea name="comentario" id="comentario" required class="form-control me-2" rows="1" style="height: 38px;"></textarea>
                 <button type="submit" class="btn btn-primary btn-sm" style="height: 38px;">Comentar</button>
             </form>
-
-            <br><br><br>
-            
-            <style>
-                .comentarios-container {
-                    background-color: #f0f0f0; /* Cor cinza claro */
-                    max-height: 300px; /* Limite de altura para exibir até 8 comentários */
-                    overflow-y: auto; /* Barra de rolagem vertical */
-                    padding: 15px;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                }
-
-                .comentario-item {
-                    margin-bottom: 15px;
-                    padding-bottom: 10px;
-                    border-bottom: 1px solid #ddd;
-                }
-
-                .meu-comentario {
-                    background-color: #d9d9d9; /* Fundo cinza mais escuro */
-                    text-align: right; /* Alinhamento à direita */
-                    padding: 10px;
-                    border-radius: 8px;
-                    margin-left: auto; /* Empurra para a direita */
-                    max-width: 80%; /* Limita a largura */
-                }
-
-                .outro-comentario {
-                    background-color: #a9a9a9; /* Fundo cinza escuro para outros usuários */
-                    text-align: left; /* Alinhamento à esquerda */
-                    padding: 10px;
-                    border-radius: 8px;
-                    margin-right: auto; /* Empurra para a esquerda */
-                    max-width: 80%; /* Limita a largura */
-                }
-            </style>
         {% endif %}
     {% endif %}
+    <br><br>
+    <style>
+        .comentarios-container {
+            background-color: #f0f0f0; 
+            max-height: 300px; 
+            overflow-y: auto; 
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .comentario-item {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .meu-comentario {
+            background-color: #d9d9d9; 
+            text-align: right;
+            padding: 10px;
+            border-radius: 8px;
+            margin-left: auto; 
+            max-width: 80%; 
+        }
+
+        .outro-comentario {
+            background-color: #a9a9a9; 
+            text-align: left; 
+            padding: 10px;
+            border-radius: 8px;
+            margin-right: auto; 
+            max-width: 80%; 
+        }
+    </style>
 
     {% if user == clube.moderador %}
         {% if clube.privado %}
@@ -197,25 +199,18 @@
 
 <script>
     document.getElementById('saveProgress').addEventListener('click', function() {
-        const currentPage = document.getElementById('currentPage').value;
-        const totalPages = document.getElementById('totalPages').value;
+        const currentPage = parseInt(document.getElementById('currentPage').value);
+        const totalPages = parseInt(document.getElementById('totalPages').value);
 
-        if (currentPage && totalPages) {
-            const progressPercentage = (currentPage / totalPages) * 100;
-            const progressBar = document.getElementById('progressBar');
-
-            progressBar.style.width = progressPercentage + '%';
-            progressBar.setAttribute('aria-valuenow', progressPercentage);
-            progressBar.innerText = Math.round(progressPercentage) + '%';
+        if (!isNaN(currentPage) && !isNaN(totalPages) && totalPages > 0) {
+            const progressPercent = (currentPage / totalPages) * 100;
+            document.getElementById('progressBar').style.width = progressPercent + '%';
+            document.getElementById('progressBar').setAttribute('aria-valuenow', progressPercent);
+            document.getElementById('progressBar').innerText = Math.round(progressPercent) + '%';
             const progressModal = bootstrap.Modal.getInstance(document.getElementById('progressModal'));
             progressModal.hide();
         }
     });
-
-    window.onload = function() {
-        const comentariosContainer = document.getElementById('comentariosContainer');
-        comentariosContainer.scrollTop = comentariosContainer.scrollHeight;
-    };
 </script>
 
 {% endblock %}
