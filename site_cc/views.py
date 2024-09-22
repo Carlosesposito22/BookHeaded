@@ -7,7 +7,7 @@ from .forms import ClubeForm, ClubeEditForm, ComentarioForm  # Adicionado Coment
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 
 
 def pagina_principal(request):
@@ -178,8 +178,7 @@ def aprovar_membro(request, clube_id, membro_id):
     if request.user == clube.moderador:
         membro.aprovado = True
         membro.save()
-
-    return redirect('club-Detail', pk=clube.pk)
+        return JsonResponse({'status': 'success', 'message': 'Membro aprovado com sucesso!', 'membro_id': membro_id})
 
 
 def recusar_membro(request, clube_id, membro_id):
@@ -187,8 +186,8 @@ def recusar_membro(request, clube_id, membro_id):
     membro = get_object_or_404(Membro, id=membro_id, clube=clube)
     
     if request.method == 'POST':
-        membro.delete()  
-        return redirect('club-Detail', pk=clube.pk)
+        membro.delete()
+        return JsonResponse({'status': 'success', 'message': 'Membro recusado com sucesso!', 'membro_id': membro_id})
 
 def adicionar_membro(request, clube_id):
     clube = get_object_or_404(Clube, id=clube_id)

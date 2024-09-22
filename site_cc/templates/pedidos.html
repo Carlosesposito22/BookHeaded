@@ -1,0 +1,87 @@
+<div class="modal fade" id="pedidosModal" tabindex="-1" aria-labelledby="pedidosModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="pedidosModalLabel">Pedidos Pendentes:</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-unstyled">
+                    {% for membro in clube.membros.all %}
+                        {% if not membro.aprovado %}
+                            <!-- Adicionando ID único para cada membro -->
+                            <li class="my-2" id="membro-{{ membro.pk }}">
+                                <strong>{{ membro.usuario.username }}</strong>
+
+                                <!-- Aprovação -->
+                                <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" class="approve-form d-inline-block" data-url="{% url 'aprovar-membro' clube.pk membro.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Aprovar</button>
+                                </form>
+
+                                <!-- Recusa -->
+                                <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" class="refuse-form d-inline-block" data-url="{% url 'recusar-membro' clube.pk membro.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>
+                                </form>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('.approve-form').forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const url = form.getAttribute('data-url');
+            const csrftoken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            }).then(response => response.json()).then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('membro-' + data.membro_id).remove();
+                } else {
+                    alert('Erro: ' + data.message);
+                }
+            }).catch(error => console.error('Erro:', error));
+        });
+    });
+
+    document.querySelectorAll('.refuse-form').forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const url = form.getAttribute('data-url');
+            const csrftoken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            }).then(response => response.json()).then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('membro-' + data.membro_id).remove();
+                } else {
+                    alert('Erro: ' + data.message);
+                }
+            }).catch(error => console.error('Erro:', error));
+        });
+    });
+});
+</script>

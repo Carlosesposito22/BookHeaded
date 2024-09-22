@@ -16,8 +16,12 @@
     {% if user.is_authenticated %}
         {% if user == clube.moderador %}
             <small>
-                <a href="{% url 'updateClube' clube.pk %}">Editar</a> 
-                <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
+                <a href="{% url 'updateClube' clube.pk %}" class="btn btn-primary">Editar</a> 
+                <a href="{% url 'deleteClube' clube.pk %}" class="btn btn-primary">Deletar</a>
+                {% if clube.privado %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pedidosModal">Solicitações</button>
+                    {% include 'pedidos.html' %}
+                {% endif %}
             </small>
         {% endif %}
     {% endif %}
@@ -161,36 +165,6 @@
                     max-width: 80%;
                 }
             </style>
-        {% endif %}
-    {% endif %}
-
-    {% if user == clube.moderador %}
-        {% if clube.privado %}
-            <h3>Pedidos Pendentes:</h3>
-            <ul class="list-unstyled">
-                {% for membro in clube.membros.all %}
-                    {% if not membro.aprovado %}
-                        <li class="my-2">
-                            {{ membro.usuario.username }}
-                            <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" class="d-inline-block">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-primary btn-sm">Aprovar</button>
-                            </form>
-                            <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" class="d-inline-block">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>
-                            </form>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        {% else %}
-            <h3>Membros:</h3>
-            <ul class="list-unstyled">
-                {% for membro in clube.membros.all %}
-                    <li class="my-2">{{ membro.usuario.username }}</li>
-                {% endfor %}
-            </ul>
         {% endif %}
     {% endif %}
 </div>
