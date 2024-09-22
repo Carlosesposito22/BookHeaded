@@ -14,7 +14,7 @@ Home Page
         list-style: none;
         padding: 0rem;
         display: flex;
-        gap: 1rem;
+        gap: 0.5rem; /* Diminui o gap entre os cards */
     }
 
     .hold-evr {
@@ -26,7 +26,6 @@ Home Page
     h1 {
         font-size: 4rem;
         font-weight: bold;
-
     }
 
     .cards-div {
@@ -87,8 +86,21 @@ Home Page
         padding-bottom: 0rem;
         height: fit-content;
     }
-</style>
 
+    .carousel .carousel-item {
+        display: flex;
+        overflow: hidden;
+    }
+
+    .col-md-3 {
+        flex: 0 0 auto;
+        padding: 0 2px;
+    }
+
+    .card {
+        margin: 0;
+    }
+</style>
 
 <div class="container">
     <div class="hold-evr">
@@ -128,7 +140,7 @@ Home Page
             </ul>
         </div>
     </div>
-
+    
 </div>
 
 {% endblock %}
