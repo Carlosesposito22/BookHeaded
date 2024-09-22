@@ -13,10 +13,8 @@ from django.http import HttpResponseRedirect
 def pagina_principal(request):
     return render(request, 'pagina_principal.html', {})
 
-
 def about(request):
     return render(request, 'about.html')
-
 
 class clubesView(LoginRequiredMixin, ListView):
     model = Clube
@@ -25,9 +23,24 @@ class clubesView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context["cat_menu"] = Categoria.objects.all()
-        return context
+        clubes = context['object_list']
+        cat_menu = Categoria.objects.all()
 
+        clubes_context = []
+        user = self.request.user
+
+        for clube in clubes:
+            user_is_member = Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists()
+            user_request_pending = Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists()
+            clubes_context.append({
+                'clube': clube,
+                'user_is_member': user_is_member,
+                'user_request_pending': user_request_pending,
+            })
+
+        context['clubes_context'] = clubes_context
+        context['cat_menu'] = cat_menu
+        return context
 
 def login_user(request):
     if request.method == "POST":
@@ -43,23 +56,19 @@ def login_user(request):
             return redirect('login')
     return render(request, 'login.html', {})
 
-
 def logout_user(request):
     logout(request)
     messages.success(request, "Você saiu.")
     return redirect('pagina_principal')
 
-
 def CategoriaView(request, cats):
     categoria_clube = Clube.objects.filter(categoria__nome=cats.replace('-', ' '))
     return render(request, 'categorias.html', {'cats': cats.replace('-', ' '), 'categoria_clube': categoria_clube})
-
 
 class HomePageView(ListView):
     model = Clube
     template_name = 'pagina_principal.html'
     ordering = ['-dataDeCriacao']
-
 
 class ClubDetailView(DetailView):
     model = Clube
@@ -77,7 +86,6 @@ class ClubDetailView(DetailView):
         context['user_request_pending'] = Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists()
         
         return context
-
 
 class AddCategoriaView(CreateView):
     model = Categoria
@@ -163,13 +171,6 @@ class meusclubesDetailView(ListView):
         return clubes.distinct().order_by('-dataDeCriacao')
 
 
-def adicionar_membro(request, clube_id):
-    clube = get_object_or_404(Clube, id=clube_id)
-    if not Membro.objects.filter(clube=clube, usuario=request.user).exists():
-        Membro.objects.create(clube=clube, usuario=request.user, aprovado=False)
-    return redirect('club-Detail', pk=clube.pk)
-
-
 def aprovar_membro(request, clube_id, membro_id):
     clube = get_object_or_404(Clube, id=clube_id)
     membro = get_object_or_404(Membro, id=membro_id, clube=clube)
@@ -189,13 +190,19 @@ def recusar_membro(request, clube_id, membro_id):
         membro.delete()  
         return redirect('club-Detail', pk=clube.pk)
 
+def adicionar_membro(request, clube_id):
+    clube = get_object_or_404(Clube, id=clube_id)
+    if not Membro.objects.filter(clube=clube, usuario=request.user).exists():
+        Membro.objects.create(clube=clube, usuario=request.user, aprovado=False)
+    
+    return redirect('clubs')
+
 
 def adicionar_membro_publico(request, clube_id):
     clube = get_object_or_404(Clube, id=clube_id)
-    
     if clube.privado:
-        return redirect('club-Detail', pk=clube.pk)
-
+        return redirect('clubs')
     Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': True})
     
-    return redirect('club-Detail', pk=clube.pk)
+    return redirect('clubs')
+

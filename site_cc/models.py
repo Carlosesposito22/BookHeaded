@@ -9,13 +9,11 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nome
 
-
 class Modalidade(models.Model):
     nome = models.CharField(max_length=100)
 
     def __str__(self):
         return self.nome
-
 
 class Clube(models.Model):
     id = models.AutoField(primary_key=True)

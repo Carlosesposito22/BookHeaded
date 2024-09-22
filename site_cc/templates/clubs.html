@@ -5,10 +5,10 @@
 {% endblock title %}
 
 {% block content %}
-
     <h1>Clube do Livro</h1>
     <ul>
-        {% for clube in object_list %}
+        {% for clube_context in clubes_context %}
+            {% with clube=clube_context.clube %}
             <li>
                 <a href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a> - 
                 <a href="{% url 'categoria' clube.categoria|slugify %}">{{ clube.categoria }}</a> - 
@@ -24,8 +24,8 @@
                 
                 <p>{{ clube.descricao|slice:":200"|safe }}</p>
 
-                <!-- início do Modal -->
-                <div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1" aria-labelledby="clubeModalLabel-{{ clube.id }}" aria-hidden="true">
+                <div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1"
+                     aria-labelledby="clubeModalLabel-{{ clube.id }}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -34,20 +34,47 @@
                             </div>
                             <div class="modal-body">
                                 <p><strong>Membros:</strong> {{ clube.numeroMembros }}</p>
-                                <p><strong>Classificação:</strong> {{ clube.avaliacoes }}</p>
-                                <p><strong>Moderador:</strong> {{ clube.moderador }}</p>
-                                <p><strong>Tipo:</strong> {% if clube.privado %}Privado{% else %}Público{% endif %}</p>
+                                <p><strong>Avaliação: </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+                                <p><strong>Admin:</strong> {{ clube.moderador }}</p>
+                                <p><strong>Privacidade do Clube:</strong> {% if clube.privado %}Privado{% else %}Público{% endif %}</p>
                                 <p><strong>Gênero:</strong> {{ clube.categoria }}</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                                <a href="{% url 'club-Detail' clube.pk %}" class="btn btn-primary">Entrar</a>
+                                {% if user.is_authenticated %}
+                                    {% if user != clube.moderador %}
+                                        {% if clube.privado %}
+                                            {% if not clube_context.user_is_member %}
+                                                {% if clube_context.user_request_pending %}
+                                                    <p class="text-warning">Solicitação Pendente</p>
+                                                {% else %}
+                                                    <form method="post" action="{% url 'adicionar-membro' clube.pk %}">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-outline-success btn-sm">Solicitar Associação</button>
+                                                    </form>
+                                                {% endif %}
+                                            {% else %}
+                                                <p class="text-success">Você é membro deste clube</p>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if not clube_context.user_is_member %}
+                                                <form method="post" action="{% url 'adicionar-membro-publico' clube.pk %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-outline-success btn-sm">Juntar-se ao Clube</button>
+                                                </form>
+                                            {% else %}
+                                                <p class="text-success">Você é membro deste clube</p>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% else %}
+                                    <p class="text-warning">Você é o Moderador</p>
+                                    {% endif %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Fim do Modal -->
             </li>
+            {% endwith %}
         {% endfor %}
     </ul>
 
