@@ -128,6 +128,43 @@
                 <textarea name="comentario" id="comentario" required class="form-control me-2" rows="1" style="height: 38px;"></textarea>
                 <button type="submit" class="btn btn-primary btn-sm" style="height: 38px;">Comentar</button>
             </form>
+
+            <br><br><br>
+            
+            <style>
+                .comentarios-container {
+                    background-color: #f0f0f0;
+                    max-height: 300px; 
+                    overflow-y: auto;
+                    padding: 15px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+
+                .comentario-item {
+                    margin-bottom: 15px;
+                    padding-bottom: 10px;
+                    border-bottom: 1px solid #ddd;
+                }
+
+                .meu-comentario {
+                    background-color: #d9d9d9;
+                    text-align: right;
+                    padding: 10px;
+                    border-radius: 8px;
+                    margin-left: auto;
+                    max-width: 80%;
+                }
+
+                .outro-comentario {
+                    background-color: #a9a9a9;
+                    text-align: left;
+                    padding: 10px;
+                    border-radius: 8px;
+                    margin-right: auto;
+                    max-width: 80%;
+                }
+            </style>
         {% endif %}
     {% endif %}
     <br><br>
