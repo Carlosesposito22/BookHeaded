@@ -1,42 +1,68 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
   <div class="container mt-5">
       <h1 class="mb-4">Sobre Nós</h1>
+      <style>
+        .container {
+            color: black;
+        }
+
+        .card-img-top {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            margin: 0 auto;
+        }
+
+        .card-img-top:hover {
+            transform: scale(1.2);
+        }
+
+        .card-body {
+            text-align: center;
+        }
+      </style>
       
       <div class="row">
           <!-- Card 1 -->
           <div class="col-md-4">
               <div class="card mb-4">
-                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="Equipe">
+                <a href="{% url 'introducao' %}">
+                  <img src="{% static 'images/juntos.jpg' %}" class="card-img-top" alt="Introdução"></a>
                   <div class="card-body">
-                      <h5 class="card-title">Nossa Missão</h5>
-                      <p class="card-text">Oferecer os melhores serviços com qualidade e eficiência.</p>
+                      <h5 class="card-title">Introdução</h5>
+                      <p class="card-text">Conheça mais sobre nossa história e sobre o objetivo do nosso projeto.</p>
                   </div>
               </div>
           </div>
-
+          
           <!-- Card 2 -->
           <div class="col-md-4">
-              <div class="card mb-4">
-                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="Valores">
-                  <div class="card-body">
-                      <h5 class="card-title">Nossos Valores</h5>
-                      <p class="card-text">Integridade, comprometimento e inovação.</p>
-                  </div>
-              </div>
-          </div>
+            <div class="card mb-4">
+                <a href="{% url 'equipe' %}">
+                <img src="{% static 'images/equipe.jpg' %}" class="card-img-top" alt="Equipe"></a>
+                <div class="card-body">
+                    <h5 class="card-title">Equipe</h5>
+                    <p class="card-text">Conheça mais sobre nossa equipe.<br> da Cesar School</p>
+                </div>
+            </div>
+        </div>
 
           <!-- Card 3 -->
           <div class="col-md-4">
-              <div class="card mb-4">
-                  <img src="https://via.placeholder.com/150" class="card-img-top" alt="História">
-                  <div class="card-body">
-                      <h5 class="card-title">Nossa História</h5>
-                      <p class="card-text">Com mais de 10 anos no mercado, somos referência no setor.</p>
-                  </div>
-              </div>
-          </div>
+            <div class="card mb-4">
+                <a href="contato.html">
+                <img src="{% static 'images/github.png' %}" class="card-img-top" alt="Contato"></a>
+                <div class="card-body">
+                    <h5 class="card-title">Contato</h5>
+                    <p class="card-text">Redes sociais da equipe.<br> da Cesar School</p>
+                </div>
+            </div>
+        </div>
       </div>
   </div>
 {% endblock %}
