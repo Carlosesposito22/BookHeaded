@@ -1,202 +1,272 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Detail {{ clube.titulo }}
+Detail {{ clube.titulo }}
 {% endblock title %}
 
 {% block content %}
+
+<style>
+    *{
+        font-family: 'DM Sans', 'sans-serif';
+    }
+
+    .data-holder {
+        background-color: rgb(239, 239, 239);
+        width: fit-content;
+        padding: .8rem;
+        border-radius: 1rem;
+        border-style: solid;
+        border-width: .1rem;
+        border-color: #d1d1d1;
+    }
+
+    .hold-evr {
+        margin-top: 3rem;
+        display: flex;
+        padding: 0rem;
+        justify-content: center;
+    }
+
+    .data-progress-holder {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .progressbar-btn {
+        width: 80%;
+    }
+
+    .holder-title-btn {
+        width: fit-content;
+        height: fit-content;
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    small{
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+    }
+
+    h1{
+        font-size: 4rem;
+    }
+
+</style>
+
 <div class="container">
-    <h1>{{ clube.titulo }}</h1>
-    <p><strong>Data de Criação:</strong> {{ clube.dataDeCriacao }}</p>
-    <p><strong>Descição: </strong>{{ clube.descricao|safe }}</p>
-    <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
-    <p><strong>Quantidade de avaliações:</strong> {{ total_avaliacoes }}</p>
-    <p><strong>Média de avaliações:  </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
-
-    {% if user.is_authenticated %}
-        {% if user == clube.moderador %}
-            <small>
-                <a href="{% url 'updateClube' clube.pk %}">Editar</a> 
-                <a href="{% url 'deleteClube' clube.pk %}">Deletar</a>
-            </small>
-        {% endif %}
-    {% endif %}
-
-    <div class="my-3">
-        <button id="setProgress" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#progressModal">Definir progresso</button>
-
-        <div class="progress mt-2" style="height: 20px;">
-            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%; background-color:#4169E1;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                0%
+    <div class="hold-evr">
+        <div class="data-progress-holder">
+            <div class="holder-title-btn">
+                <h1>{{ clube.titulo }}</h1>
+                {% if user.is_authenticated %}
+                {% if user == clube.moderador %}
+                <small>
+                    <a href="{% url 'updateClube' clube.pk %}"><i
+                        class="bi bi-pencil-fill"></i></a>
+                    <a href="{% url 'deleteClube' clube.pk %}"><i
+                        class="bi bi-trash-fill"></i></a>
+                </small>
+                {% endif %}
+                {% endif %}
             </div>
-        </div>
-    </div>
+            <div class="my-3 progressbar-btn">
+                <button id="setProgress" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                    data-bs-target="#progressModal">Definir progresso</button>
 
-    <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="progressModalLabel">Definir Progresso</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="progressForm">
-                        <div class="mb-3">
-                            <label for="currentPage" class="form-label">Página Atual</label>
-                            <input type="number" class="form-control" id="currentPage" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="totalPages" class="form-label">Total de Páginas</label>
-                            <input type="number" class="form-control" id="totalPages" value="100" required>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" id="saveProgress">Salvar Progresso</button>
+                <div class="progress mt-2" style="height: 20px;">
+                    <div id="progressBar" class="progress-bar" role="progressbar"
+                        style="width: 0%; background-color:#4169E1;" aria-valuenow="0" aria-valuemin="0"
+                        aria-valuemax="100">
+                        0%
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <hr>
 
-    {% if user.is_authenticated %}
+        <div class="data-holder shadow">
+            <h3><strong>Club Data</strong></h3>
+            <hr>
+            <p><strong>Foundation:</strong> {{ clube.dataDeCriacao }}</p>
+            <p><strong>Description: </strong>{{ clube.descricao|safe }}</p>
+            <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
+            <p><strong>Total Ratings:</strong> {{ total_avaliacoes }}</p>
+            <p><strong>Rating: </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+        </div>
+
+        <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="progressModalLabel">Definir Progresso</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="progressForm">
+                            <div class="mb-3">
+                                <label for="currentPage" class="form-label">Página Atual</label>
+                                <input type="number" class="form-control" id="currentPage" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="totalPages" class="form-label">Total de Páginas</label>
+                                <input type="number" class="form-control" id="totalPages" value="100" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" id="saveProgress">Salvar Progresso</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {% if user.is_authenticated %}
         {% if user != clube.moderador %}
-            {% if clube.privado %}
-                {% if not user_is_member %}
-                    <form method="post" action="{% url 'adicionar-membro' clube.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-success btn-sm">Solicitar Associação</button>
-                    </form>
-                {% elif user_request_pending %}
-                    <p class="text-warning">Sua solicitação está pendente de aprovação.</p>
-                {% else %}
-                    <p class="text-success">Você é membro deste clube.</p>
-                {% endif %}
-            {% else %}
-                {% if not user_is_member %}
-                    <form method="post" action="{% url 'adicionar-membro-publico' clube.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-success btn-sm">Juntar-se ao Clube</button>
-                    </form>
-                {% else %}
-                    <p class="text-success">Você é membro deste clube.</p>
-                {% endif %}
-            {% endif %}
-
-            <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST" class="my-4">
-                {% csrf_token %}
-                <input type="hidden" name="clube_id" value="{{ clube.pk }}">
-                
-                <label for="rating">Avalie de 1 a 5:</label>
-                <select name="rating" id="rating" required class="form-control w-25">
-                    <option value="">Escolha uma avaliação</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                
-                <button type="submit" class="btn btn-primary btn-sm mt-2">Avaliar</button>
-            </form>
-
-            <h2>Comentários:</h2>
-            
-            <div class="comentarios-container" id="comentariosContainer">
-                {% if not clube.comentarios.all %}
-                    Nenhuma conversa foi iniciada no clube!
-                {% else %}
-                    {% for comentario in clube.comentarios.all|slice:"-8:" %}
-                        <div class="comentario-item {% if comentario.nome == user.username %}meu-comentario{% else %}outro-comentario{% endif %}">
-                            <strong>{{ comentario.nome }} - {{ comentario.data }}</strong>
-                            <br>
-                            {{ comentario.comentario }}
-                            <br>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
-            <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4 d-flex align-items-center">
-                {% csrf_token %}
-                <input type="hidden" name="clube_id" value="{{ clube.pk }}">
-                <textarea name="comentario" id="comentario" required class="form-control me-2" rows="1" style="height: 38px;"></textarea>
-                <button type="submit" class="btn btn-primary btn-sm" style="height: 38px;">Comentar</button>
-            </form>
-
-            <br><br><br>
-            
-            <style>
-                .comentarios-container {
-                    background-color: #f0f0f0;
-                    max-height: 300px; 
-                    overflow-y: auto;
-                    padding: 15px;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                }
-
-                .comentario-item {
-                    margin-bottom: 15px;
-                    padding-bottom: 10px;
-                    border-bottom: 1px solid #ddd;
-                }
-
-                .meu-comentario {
-                    background-color: #d9d9d9;
-                    text-align: right;
-                    padding: 10px;
-                    border-radius: 8px;
-                    margin-left: auto;
-                    max-width: 80%;
-                }
-
-                .outro-comentario {
-                    background-color: #a9a9a9;
-                    text-align: left;
-                    padding: 10px;
-                    border-radius: 8px;
-                    margin-right: auto;
-                    max-width: 80%;
-                }
-            </style>
-        {% endif %}
-    {% endif %}
-
-    {% if user == clube.moderador %}
         {% if clube.privado %}
-            <h3>Pedidos Pendentes:</h3>
-            <ul class="list-unstyled">
-                {% for membro in clube.membros.all %}
-                    {% if not membro.aprovado %}
-                        <li class="my-2">
-                            {{ membro.usuario.username }}
-                            <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" class="d-inline-block">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-primary btn-sm">Aprovar</button>
-                            </form>
-                            <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" class="d-inline-block">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>
-                            </form>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
+        {% if not user_is_member %}
+        <form method="post" action="{% url 'adicionar-membro' clube.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-success btn-sm">Solicitar Associação</button>
+        </form>
+        {% elif user_request_pending %}
+        <p class="text-warning">Sua solicitação está pendente de aprovação.</p>
         {% else %}
-            <h3>Membros:</h3>
-            <ul class="list-unstyled">
-                {% for membro in clube.membros.all %}
-                    <li class="my-2">{{ membro.usuario.username }}</li>
-                {% endfor %}
-            </ul>
+        <p class="text-success">Você é membro deste clube.</p>
         {% endif %}
+        {% else %}
+        {% if not user_is_member %}
+        <form method="post" action="{% url 'adicionar-membro-publico' clube.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-success btn-sm">Juntar-se ao Clube</button>
+        </form>
+        {% else %}
+        <p class="text-success">Você é membro deste clube.</p>
+        {% endif %}
+        {% endif %}
+
+        <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST" class="my-4">
+            {% csrf_token %}
+            <input type="hidden" name="clube_id" value="{{ clube.pk }}">
+
+            <label for="rating">Avalie de 1 a 5:</label>
+            <select name="rating" id="rating" required class="form-control w-25">
+                <option value="">Escolha uma avaliação</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Avaliar</button>
+        </form>
+
+        <h2>Comentários:</h2>
+
+        <div class="comentarios-container" id="comentariosContainer">
+            {% if not clube.comentarios.all %}
+            Nenhuma conversa foi iniciada no clube!
+            {% else %}
+            {% for comentario in clube.comentarios.all|slice:"-8:" %}
+            <div
+                class="comentario-item {% if comentario.nome == user.username %}meu-comentario{% else %}outro-comentario{% endif %}">
+                <strong>{{ comentario.nome }} - {{ comentario.data }}</strong>
+                <br>
+                {{ comentario.comentario }}
+                <br>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4 d-flex align-items-center">
+            {% csrf_token %}
+            <input type="hidden" name="clube_id" value="{{ clube.pk }}">
+            <textarea name="comentario" id="comentario" required class="form-control me-2" rows="1"
+                style="height: 38px;"></textarea>
+            <button type="submit" class="btn btn-primary btn-sm" style="height: 38px;">Comentar</button>
+        </form>
+
+        <br><br><br>
+
+        <style>
+            .comentarios-container {
+                background-color: #f0f0f0;
+                max-height: 300px;
+                overflow-y: auto;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .comentario-item {
+                margin-bottom: 15px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .meu-comentario {
+                background-color: #d9d9d9;
+                text-align: right;
+                padding: 10px;
+                border-radius: 8px;
+                margin-left: auto;
+                max-width: 80%;
+            }
+
+            .outro-comentario {
+                background-color: #a9a9a9;
+                text-align: left;
+                padding: 10px;
+                border-radius: 8px;
+                margin-right: auto;
+                max-width: 80%;
+            }
+        </style>
+        {% endif %}
+        {% endif %}
+    </div>
+    {% if user == clube.moderador %}
+    {% if clube.privado %}
+    <h3>Pedidos Pendentes:</h3>
+    <ul class="list-unstyled">
+        {% for membro in clube.membros.all %}
+        {% if not membro.aprovado %}
+        <li class="my-2">
+            {{ membro.usuario.username }}
+            <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" class="d-inline-block">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-primary btn-sm">Aprovar</button>
+            </form>
+            <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" class="d-inline-block">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>
+            </form>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% else %}
+    <h3>Membros:</h3>
+    <ul class="list-unstyled">
+        {% for membro in clube.membros.all %}
+        <li class="my-2">{{ membro.usuario.username }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     {% endif %}
 </div>
 
 <script>
-    document.getElementById('saveProgress').addEventListener('click', function() {
+    document.getElementById('saveProgress').addEventListener('click', function () {
         const currentPage = document.getElementById('currentPage').value;
         const totalPages = document.getElementById('totalPages').value;
 
@@ -212,7 +282,7 @@
         }
     });
 
-    window.onload = function() {
+    window.onload = function () {
         const comentariosContainer = document.getElementById('comentariosContainer');
         comentariosContainer.scrollTop = comentariosContainer.scrollHeight;
     };
