@@ -1,4 +1,5 @@
 {% extends 'base2.html' %}
+{% load static %}
 
 {% block title  %}
     Criar conta
@@ -7,17 +8,16 @@
 {% block content  %}
 
 <style>
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: white;
+    }
 
-html,
-  body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background: white;
-  }
-
-    .container-div{
+    .container-div {
         background: rgb(247, 247, 247);
         width: fit-content;
         border-style: solid;
@@ -28,7 +28,7 @@ html,
         justify-self: center;
     }
 
-    .div2{
+    .div2 {
         width: fit-content;
         color: black;
         background-color: rgb(255, 255, 255);
@@ -45,38 +45,28 @@ html,
     }
 
     .register-btn {
-    height: 100%;
-    width: fit-content;
-    min-height: 100%;
-    min-width: fit-content;
-    border-radius: 1rem;
-    font-size: 1rem;
-    font-weight: bold;
-    font-family: 'DM Sans', 'sans-serif';
-    color: white;
-    background-color: #0066FF;
-    cursor: pointer;
+        height: 100%;
+        width: fit-content;
+        min-height: 100%;
+        min-width: fit-content;
+        border-radius: 1rem;
+        font-size: 1rem;
+        font-weight: bold;
+        font-family: 'DM Sans', 'sans-serif';
+        color: white;
+        background-color: #0066FF;
+        cursor: pointer;
     }
 
     .register-btn:hover {
-    height: 100%;
-    width: fit-content;
-    min-height: 100%;
-    min-width: fit-content;
-    border-radius: 1rem;
-    font-size: 1rem;
-    font-weight: bold;
-    font-family: 'DM Sans', 'sans-serif';
-    color: white;
-    background-color: #004bbc;
-    cursor: pointer;
+        background-color: #004bbc;
     }
 
     .form-group {
         font-family: 'DM Sans', 'sans-serif';
     }
 
-    .helptext{
+    .helptext {
         font-size: .8rem;
         max-height: 100%;
         max-width: 100%;
@@ -99,15 +89,40 @@ html,
     }
 
     .alr-registered {
-    margin-top: 2rem;
-    color: black;
-    font-family: 'DM Sans', 'sans-serif';
-}
+        margin-top: 2rem;
+        color: black;
+        font-family: 'DM Sans', 'sans-serif';
+    }
 
+    .logo-image {
+        padding: 1rem;
+        padding-right: 100px; 
+        max-width: 250px; 
+        height: auto;
+        position: relative; 
+    }
+    .img-logo{
+    
+        position: relative;
+        top: 65px;
+        left: 45px;
+        width: 325px;
+        padding: 1rem;
+        padding-right: 100px; 
+        height: auto;
+        position: relative; 
+        
 
+    }
 
 </style>
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
+<a href="http://localhost:8000/">
+    <img src="{% static 'images/bookheadedlogo.svg' %}" class="img-logo">
+  </a>
+
+<div class="container d-flex justify-content-start align-items-start min-vh-100">
+   
+   
     <div class="container shadow-lg p-4 container-div">
         <h1 class="text-left text-black display-5 fw-bold">Become a certified<br>bookhead right now</h1>
         <div class="row justify-content-left div1">
@@ -125,4 +140,6 @@ html,
             class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Login</a></p>
     </div>
 </div>
+
+
 {% endblock %}
