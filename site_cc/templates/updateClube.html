@@ -1,28 +1,46 @@
 {% extends 'base.html' %}
 
-{% block title  %}
-    Atualizando
+{% block title %}
+Atualizando
 {% endblock title %}
 
-{% block content  %}
-    {% if user.is_authenticated %}
-        {% if user.id == clube.moderador.id %}
-                <h1 class="text-center">Atualizando Clube do Livro</h1>
-                <br><br>
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-md-8">
-                            <div class="form-group">
-                                <form method="post">
-                                    {% csrf_token %}
-                                    {{ form.media }} 
-                                    {{ form.as_p }}
-                                    <button class="btn btn-secondary">Update</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+{% block content %}
+
+<style>
+    *{
+        font-family: 'DM Sans', 'sans-serif';
+    }
+
+    .holder{
+        margin-top: 2rem;
+    }
+
+    label{
+        font-weight: bold;
+    }
+
+</style>
+
+{% if user.is_authenticated %}
+{% if user.id == clube.moderador.id %}
+<div class="container">
+    <div class="holder">
+        <h1 class="text-center">Edit your club details</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.media }}
+                        {{ form.as_p }}
+                        <button class="btn btn-secondary">Update</button>
+                    </form>
                 </div>
-            {% endif %}
-    {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endif %}
+{% endif %}
 {% endblock %}

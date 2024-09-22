@@ -2,67 +2,63 @@
 {% load static %}
 
 {% block content %}
-  <div class="container mt-5">
-      <h1 class="mb-4">Sobre Nós</h1>
-      <style>
-        .container {
-            color: black;
-        }
 
-        .card-img-top {
-            width: 400px; /* Define a largura */
-            height: 400px; /* Define a altura */
-            border-radius: 50%; /* Mantém o formato circular */
-            object-fit: cover; /* Faz com que a imagem se ajuste corretamente */
-            transition: transform 0.3s ease;
-            margin: 0 auto; /* Centraliza a imagem */
-        }
+<style>
+    * {
+        font-family: 'DM Sans', 'sans-serif';
+    }
 
-        .card-img-top:hover {
-            transform: scale(1.2);
-        }
+    .container {
+        color: black;
+    }
 
-        .card-body {
-            text-align: center; /* Centraliza o texto dentro do card */
-        }
-      </style>
-      
-      <div class="row">
-          <!-- Card 1 -->
-          <div class="col-md-4">
-              <div class="card mb-4">
-                <a href="introducao.html">
-                  <img src="{% static 'images/juntos.jpg' %}" class="card-img-top" alt="Introdução"></a>
-                  <div class="card-body">
-                      <h5 class="card-title">Introdução</h5>
-                      <p class="card-text">Conheça mais sobre nossa história e sobre o objetivo do nosso projeto.</p>
-                  </div>
-              </div>
-          </div>
-          
-          <!-- Card 2 -->
-          <div class="col-md-4">
-            <div class="card mb-4">
-                <a href="equipe.html">
-                <img src="{% static 'images/equipe.jpg' %}" class="card-img-top" alt="Equipe"></a>
+    .card-img-top {
+        object-fit: cover;
+    }
+
+    .card-body {
+        text-align: center;
+    }
+
+</style>
+
+<div class="container mt-5">
+    <h1 class="mb-4">About Us</h1>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card h-100 ">
+                <img src="{% static 'images/juntos.jpg' %}" class="card-img-top" alt="Equipe">
                 <div class="card-body">
                     <h5 class="card-title">Equipe</h5>
-                    <p class="card-text">Conheça mais sobre nossa equipe.<br> da Cesar School</p>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This content is a little bit longer.</p>
                 </div>
             </div>
         </div>
-
-          <!-- Card 3 -->
-          <div class="col-md-4">
-            <div class="card mb-4">
-                <a href="contato.html">
-                <img src="{% static 'images/github.png' %}" class="card-img-top" alt="Contato"></a>
+        <div class="col">
+            <div class="card h-100">
+                <img src="{% static 'images/equipe.jpg' %}" class="card-img-top" alt="Juntos">
                 <div class="card-body">
-                    <h5 class="card-title">Contato</h5>
-                    <p class="card-text">Redes sociais da equipe.<br> da Cesar School</p>
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This card has supporting text below as a natural lead-in to additional content.
+                    </p>
                 </div>
             </div>
         </div>
-      </div>
-  </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="{% static 'images/github.png' %}" class="card-img-top" alt="github">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                        additional content. This card has even longer content than the first to show that equal height
+                        action.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 {% endblock %}
