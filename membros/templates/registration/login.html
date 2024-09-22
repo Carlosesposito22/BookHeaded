@@ -61,6 +61,11 @@
     cursor: pointer;
   }
 
+  .login-btn:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+  }
+
   p,
   .user-passwd {
     font-family: 'DM Sans', 'sans-serif';
@@ -102,16 +107,12 @@
     .login-drawing, .vertical-line{
       display: none;
     }
-    
   }
-
 </style>
 
 <a href="http://localhost:8000/">
   <img src="{% static 'images/bookheadedlogo.svg' %}" class="logo-image">
 </a>
-
-
 
 <div class="container-fluid centered-container">
   <div class="row justify-content-center shadow-lg ">
@@ -122,13 +123,12 @@
           <p class="text-start text-black display-5 fw-bold login-text">Welcome back</p>
           <p class="text-start text-black fw-light user-text">Get into the perfect place for bookheads just like you.
           </p>
-          <input type="text" class="form-control p-3 user-passwd" name="username" placeholder="username">
+          <input type="text" class="form-control p-3 user-passwd" id="username" name="username" placeholder="username">
         </div>
         <div class="mb-3">
-          <input type="password" class="form-control p-3 user-passwd" name="password" placeholder="password">
+          <input type="password" class="form-control p-3 user-passwd" id="password" name="password" placeholder="password">
         </div>
-          <button type="submit" class="btn btn-primary disabled login-btn" role="button"
-          aria-disabled="true">Login</button>
+        <button type="submit" class="btn btn-primary login-btn" id="loginBtn" disabled>Login</button>
         <p class="not-registered">Not registered yet? <a href="http://localhost:8000/membros/registration/"
             class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Sign Up</a></p>
       </form>
@@ -138,6 +138,21 @@
   <img src="{% static 'images/image login.png' %}" class="login-drawing">
 </div>
 
+<script>
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const loginBtn = document.getElementById('loginBtn');
 
+  function toggleButtonState() {
+    if (usernameInput.value.trim() !== "" && passwordInput.value.trim() !== "") {
+      loginBtn.disabled = false;
+    } else {
+      loginBtn.disabled = true;
+    }
+  }
+
+  usernameInput.addEventListener('input', toggleButtonState);
+  passwordInput.addEventListener('input', toggleButtonState);
+</script>
 
 {% endblock %}
