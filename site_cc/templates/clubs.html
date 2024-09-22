@@ -80,6 +80,7 @@ Home Page
     #next {
         right: 1rem; /* Ajuste para a direita */
     }
+</style>
 
 <div class="container">
     <h1>Clubs</h1>
@@ -141,7 +142,7 @@ Home Page
 
     function updateCarousel() {
         const offset = -currentIndex * (17 + 2); // Largura do card + margem
-        carousel.style.transform = `translateX(${offset}rem)`;
+        carousel.style.transform = translateX(${offset}rem);
     }
 </script>
 
