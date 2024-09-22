@@ -270,13 +270,11 @@ Detail {{ clube.titulo }}
         const currentPage = document.getElementById('currentPage').value;
         const totalPages = document.getElementById('totalPages').value;
 
-        if (currentPage && totalPages) {
-            const progressPercentage = (currentPage / totalPages) * 100;
-            const progressBar = document.getElementById('progressBar');
-
-            progressBar.style.width = progressPercentage + '%';
-            progressBar.setAttribute('aria-valuenow', progressPercentage);
-            progressBar.innerText = Math.round(progressPercentage) + '%';
+        if (!isNaN(currentPage) && !isNaN(totalPages) && totalPages > 0) {
+            const progressPercent = (currentPage / totalPages) * 100;
+            document.getElementById('progressBar').style.width = progressPercent + '%';
+            document.getElementById('progressBar').setAttribute('aria-valuenow', progressPercent);
+            document.getElementById('progressBar').innerText = Math.round(progressPercent) + '%';
             const progressModal = bootstrap.Modal.getInstance(document.getElementById('progressModal'));
             progressModal.hide();
         }
