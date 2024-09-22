@@ -22,16 +22,14 @@
     {% endif %}
 
     <div class="my-3">
-        <button id="setProgress" class="btn btn-outline-info btn-sm" style="background-color: #696969; color: white; border: none; border-radius: 8px; box-shadow: 4px 6px 10px rgba(0, 0, 0, 0.2); padding: 5px 10px;">Definir progresso</button>
-    
-        <div class="progress mt-2" style="height: 20px; background-color: #C0C0C0; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);">
-            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 7%; background-color:#4169E1; transition: width 0.7s ease; border-radius: 10px; box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <button id="setProgress" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#progressModal">Definir progresso</button>
+
+        <div class="progress mt-2" style="height: 20px;">
+            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%; background-color:#4169E1;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                 0%
             </div>
         </div>
-        
     </div>
-    
 
     <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -103,25 +101,65 @@
                 <button type="submit" class="btn btn-primary btn-sm mt-2">Avaliar</button>
             </form>
 
-            <h2>Comentarios:</h2>
-            <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4">
+            <h2>Comentários:</h2>
+            
+            <div class="comentarios-container" id="comentariosContainer">
+                {% if not clube.comentarios.all %}
+                    Nenhuma conversa foi iniciada no clube!
+                {% else %}
+                    {% for comentario in clube.comentarios.all|slice:"-8:" %}
+                        <div class="comentario-item {% if comentario.nome == user.username %}meu-comentario{% else %}outro-comentario{% endif %}">
+                            <strong>{{ comentario.nome }} - {{ comentario.data }}</strong>
+                            <br>
+                            {{ comentario.comentario }}
+                            <br>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4 d-flex align-items-center">
                 {% csrf_token %}
                 <input type="hidden" name="clube_id" value="{{ clube.pk }}">
-                <label for="comentario">Adicionar um comentário:</label>
-                <textarea name="comentario" id="comentario" required class="form-control" rows="3"></textarea>
-                <button type="submit" class="btn btn-primary btn-sm mt-2">Adicionar Comentário</button>
+                <textarea name="comentario" id="comentario" required class="form-control me-2" rows="1" style="height: 38px;"></textarea>
+                <button type="submit" class="btn btn-primary btn-sm" style="height: 38px;">Comentar</button>
             </form>
 
-            {% if not clube.comentarios.all %}
-                Nenhuma conversa foi iniciada no clube!
-            {% else %}
-                {% for comentario in clube.comentarios.all %}
-                    <strong>{{ comentario.nome }} - {{ comentario.data }}</strong>
-                    <br>
-                    {{ comentario.comentario }}
-                    <br>
-                {% endfor %}
-            {% endif %}
+            <br><br><br>
+            
+            <style>
+                .comentarios-container {
+                    background-color: #f0f0f0; /* Cor cinza claro */
+                    max-height: 300px; /* Limite de altura para exibir até 8 comentários */
+                    overflow-y: auto; /* Barra de rolagem vertical */
+                    padding: 15px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+
+                .comentario-item {
+                    margin-bottom: 15px;
+                    padding-bottom: 10px;
+                    border-bottom: 1px solid #ddd;
+                }
+
+                .meu-comentario {
+                    background-color: #d9d9d9; /* Fundo cinza mais escuro */
+                    text-align: right; /* Alinhamento à direita */
+                    padding: 10px;
+                    border-radius: 8px;
+                    margin-left: auto; /* Empurra para a direita */
+                    max-width: 80%; /* Limita a largura */
+                }
+
+                .outro-comentario {
+                    background-color: #a9a9a9; /* Fundo cinza escuro para outros usuários */
+                    text-align: left; /* Alinhamento à esquerda */
+                    padding: 10px;
+                    border-radius: 8px;
+                    margin-right: auto; /* Empurra para a esquerda */
+                    max-width: 80%; /* Limita a largura */
+                }
+            </style>
         {% endif %}
     {% endif %}
 
@@ -145,49 +183,38 @@
                     {% endif %}
                 {% endfor %}
             </ul>
+        {% else %}
+            <h3>Membros:</h3>
+            <ul class="list-unstyled">
+                {% for membro in clube.membros.all %}
+                    <li class="my-2">{{ membro.usuario.username }}</li>
+                {% endfor %}
+            </ul>
         {% endif %}
     {% endif %}
 </div>
 
 <script>
-document.getElementById('setProgress').addEventListener('click', function() {
-    var myModal = new bootstrap.Modal(document.getElementById('progressModal'));
-    myModal.show();
-});
+    document.getElementById('saveProgress').addEventListener('click', function() {
+        const currentPage = document.getElementById('currentPage').value;
+        const totalPages = document.getElementById('totalPages').value;
 
-document.getElementById('saveProgress').addEventListener('click', function() {
-    const currentPage = parseInt(document.getElementById('currentPage').value);
-    const totalPages = parseInt(document.getElementById('totalPages').value);
-    
-    const validCurrentPage = currentPage > totalPages ? totalPages : currentPage;
+        if (currentPage && totalPages) {
+            const progressPercentage = (currentPage / totalPages) * 100;
+            const progressBar = document.getElementById('progressBar');
 
-    let progressPercentage = (validCurrentPage / totalPages) * 100;
+            progressBar.style.width = progressPercentage + '%';
+            progressBar.setAttribute('aria-valuenow', progressPercentage);
+            progressBar.innerText = Math.round(progressPercentage) + '%';
+            const progressModal = bootstrap.Modal.getInstance(document.getElementById('progressModal'));
+            progressModal.hide();
+        }
+    });
 
-    if (progressPercentage > 100) {
-        progressPercentage = 100;
-    }
-
-    const progressBar = document.getElementById('progressBar');
-    progressBar.style.width = progressPercentage + '%';
-    progressBar.setAttribute('aria-valuenow', progressPercentage);
-    progressBar.innerText = Math.round(progressPercentage) + '%';
-
-    localStorage.setItem('progressPercentage', progressPercentage);
-
-    var myModal = bootstrap.Modal.getInstance(document.getElementById('progressModal'));
-    myModal.hide();
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const savedProgress = localStorage.getItem('progressPercentage');
-
-    if (savedProgress !== null) {
-        const progressBar = document.getElementById('progressBar');
-        progressBar.style.width = savedProgress + '%';
-        progressBar.setAttribute('aria-valuenow', savedProgress);
-        progressBar.innerText = Math.round(savedProgress) + '%';
-    }
-});
+    window.onload = function() {
+        const comentariosContainer = document.getElementById('comentariosContainer');
+        comentariosContainer.scrollTop = comentariosContainer.scrollHeight;
+    };
 </script>
-{% endblock %}
 
+{% endblock %}
