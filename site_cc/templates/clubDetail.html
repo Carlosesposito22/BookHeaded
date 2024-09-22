@@ -17,6 +17,8 @@ Detail {{ clube.titulo }}
         border-style: solid;
         border-width: .1rem;
         border-color: #d1d1d1;
+        z-index: 99;
+        max-width: fit-content;
     }
 
     .hold-evr {
@@ -64,6 +66,10 @@ Detail {{ clube.titulo }}
     .hold-evr-exc-admt {
         display: flex;
         flex-direction: row;
+    }
+
+    .description-text{
+        max-width: 20rem;
     }
 
     .comentarios-container {
@@ -173,7 +179,7 @@ Detail {{ clube.titulo }}
                 <h3><strong>Club Data</strong></h3>
                 <hr>
                 <p><strong>Foundation:</strong> {{ clube.dataDeCriacao }}</p>
-                <p><strong>Description: </strong>{{ clube.descricao|safe }}</p>
+                <p class="text-break description-text"><strong>Description: </strong>{{ clube.descricao|safe }}</p>
                 <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
                 <p><strong>Total Ratings:</strong> {{ total_avaliacoes }}</p>
                 <p><strong>Rating: </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
@@ -271,7 +277,8 @@ Detail {{ clube.titulo }}
                         padding: 10px;
                         border-radius: 8px;
                         margin-left: auto;
-                        max-width: 80%;
+                        max-width: fit-content;
+                        width: fit-content;
                     }
 
                     .outro-comentario {
