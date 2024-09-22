@@ -10,68 +10,48 @@ Home Page
     * {
         font-family: 'DM Sans', 'sans-serif';
     }
-    ul {
-        list-style: none;
-        padding: 0rem;
-        display: flex;
-        gap: 1rem;
-    }
-
     .hold-evr {
         margin-top: 2rem;
         overflow: hidden;
         position: relative;
     }
-
     h1 {
         font-size: 4rem;
         font-weight: bold;
-
     }
-
     .cards-div {
         display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        margin-top: 2rem;
-        height: auto;
+        transition: transform 0.3s ease;
+        width: calc(17rem * 4); /* Largura total para 4 cards visíveis */
+        padding: 0 4rem; /* Adiciona espaço nas laterais */
     }
-
     .card {
         width: 17rem;
         height: 19rem;
-        justify-content: start;
         background-color: white;
         border-radius: 1rem;
+        margin: 0 1rem; /* Espaçamento entre os cards */
+        flex-shrink: 0; /* Impede a redução do tamanho do card */
     }
-
     .titles {
         text-decoration: none;
         color: black;
         font-size: 2rem;
         font-weight: bold;
     }
-
     .card-text {
         font-weight: normal;
         margin: 0rem;
         max-width: fit-content;
     }
-
     .genre-stars {
         display: flex;
         align-items: center;
         flex-direction: row;
     }
-
-    .stars {
-        margin-top: -.01rem;
-    }
-
     .date {
         margin-top: -1rem;
     }
-
     .description-area {
         width: 100%;
         height: 10rem;
@@ -82,19 +62,31 @@ Home Page
         padding-right: .8rem;
         border-radius: .5rem;
     }
-
-    .card-body {
-        padding-bottom: 0rem;
-        height: fit-content;
+    .carousel-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        padding: 10px;
+        z-index: 2; /* Aumenta o z-index para garantir que fiquem acima dos cards */
+    }
+    #prev {
+        left: 1rem; /* Ajuste para a esquerda */
+    }
+    #next {
+        right: 1rem; /* Ajuste para a direita */
     }
 </style>
 
-
 <div class="container">
+    <h1>Clubs</h1>
     <div class="hold-evr">
-        <h1>Clubs</h1>
-        <div class="cards-div">
-            <ul>
+        <div class="cards-div" id="carousel">
+            <ul style="display: flex; padding: 0; margin: 0;list-style: none;">
                 {% for clube_context in clubes_context %}
                 {% with clube=clube_context.clube %}
                 <li>
@@ -127,8 +119,31 @@ Home Page
                 {% endfor %}
             </ul>
         </div>
+        <button id="prev" class="carousel-button">◀</button>
+        <button id="next" class="carousel-button">▶</button>
     </div>
-
 </div>
+
+<script>
+    const carousel = document.getElementById('carousel');
+    const totalCards = document.querySelectorAll('.card').length;
+    const cardsToShow = 4; // Número de cards visíveis
+    let currentIndex = 0;
+
+    document.getElementById('next').addEventListener('click', () => {
+        currentIndex = Math.min(currentIndex + 1, totalCards - cardsToShow);
+        updateCarousel();
+    });
+
+    document.getElementById('prev').addEventListener('click', () => {
+        currentIndex = Math.max(currentIndex - 1, 0);
+        updateCarousel();
+    });
+
+    function updateCarousel() {
+        const offset = -currentIndex * (17 + 2); // Largura do card + margem
+        carousel.style.transform = `translateX(${offset}rem)`;
+    }
+</script>
 
 {% endblock %}
