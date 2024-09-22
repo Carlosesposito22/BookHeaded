@@ -10,120 +10,94 @@ Home Page
     * {
         font-family: 'DM Sans', 'sans-serif';
     }
-    ul {
-        list-style: none;
-        padding: 0rem;
-        display: flex;
-        gap: 0.5rem; /* Diminui o gap entre os cards */
-    }
-
     .hold-evr {
         margin-top: 2rem;
         overflow: hidden;
         position: relative;
     }
-
     h1 {
         font-size: 4rem;
         font-weight: bold;
     }
-
     .cards-div {
         display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        margin-top: 2rem;
-        height: auto;
+        transition: transform 0.3s ease;
+        width: calc(17rem * 4); /* Largura total para 4 cards visíveis */
+        padding: 0 4rem; /* Adiciona espaço nas laterais */
     }
-
     .card {
         width: 17rem;
         height: 19rem;
-        justify-content: start;
         background-color: white;
         border-radius: 1rem;
+        margin: 0 1rem; /* Espaçamento entre os cards */
+        flex-shrink: 0; /* Impede a redução do tamanho do card */
     }
-
     .titles {
         text-decoration: none;
         color: black;
         font-size: 2rem;
         font-weight: bold;
     }
-
     .card-text {
         font-weight: normal;
-        margin: 0rem;
+        margin: 0;
         max-width: fit-content;
     }
-
     .genre-stars {
         display: flex;
         align-items: center;
         flex-direction: row;
     }
-
-    .stars {
-        margin-top: -.01rem;
-    }
-
     .date {
         margin-top: -1rem;
     }
-
     .description-area {
         width: 100%;
         height: 10rem;
         max-height: 7rem;
         background-color: rgb(235, 235, 235);
-        padding: .3rem;
-        padding-left: .8rem;
-        padding-right: .8rem;
-        border-radius: .5rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 0.5rem;
     }
-
-    .card-body {
-        padding-bottom: 0rem;
-        height: fit-content;
+    .carousel-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        padding: 10px;
+        z-index: 2; /* Aumenta o z-index para garantir que fiquem acima dos cards */
     }
-
-    .carousel .carousel-item {
-        display: flex;
-        overflow: hidden;
+    #prev {
+        left: 1rem; /* Ajuste para a esquerda */
     }
-
-    .col-md-3 {
-        flex: 0 0 auto;
-        padding: 0 2px;
-    }
-
-    .card {
-        margin: 0;
+    #next {
+        right: 1rem; /* Ajuste para a direita */
     }
 </style>
 
 <div class="container">
+    <h1>Clubs</h1>
     <div class="hold-evr">
-        <h1>Clubs</h1>
-        <div class="cards-div">
-            <ul>
+        <div class="cards-div" id="carousel">
+            <ul style="display: flex; padding: 0; margin: 0; list-style: none;">
                 {% for clube_context in clubes_context %}
                 {% with clube=clube_context.clube %}
                 <li>
                     <div class="card shadow">
                         <div class="card-body" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
                             <h5 class="card-title">
-                                <a class="titles" href="#" data-bs-toggle="modal"
-                                    data-bs-target="#clubeModal-{{ clube.id }}">
+                                <a class="titles" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
                                     {{ clube.titulo }}
                                 </a>
                             </h5>
                             <div class="genre-stars">
-                                <h6 class="card-subtitle mb-2 text-muted">{{ clube.categoria }}<i class="bi bi-dot"></i>
-                                </h6>
-                                <p class="stars">
-                                    {% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
-                                </p>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ clube.categoria }}<i class="bi bi-dot"></i></h6>
+                                <p class="stars">{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
                             </div>
                             <p class="date">
                                 <span class="badge text-bg-primary">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span>
@@ -139,8 +113,31 @@ Home Page
                 {% endfor %}
             </ul>
         </div>
+        <button id="prev" class="carousel-button">◀</button>
+        <button id="next" class="carousel-button">▶</button>
     </div>
-    
 </div>
+
+<script>
+    const carousel = document.getElementById('carousel');
+    const totalCards = document.querySelectorAll('.card').length;
+    const cardsToShow = 4;
+    let currentIndex = 0;
+
+    document.getElementById('next').addEventListener('click', () => {
+        currentIndex = Math.min(currentIndex + 1, totalCards - cardsToShow);
+        updateCarousel();
+    });
+
+    document.getElementById('prev').addEventListener('click', () => {
+        currentIndex = Math.max(currentIndex - 1, 0);
+        updateCarousel();
+    });
+
+    function updateCarousel() {
+        const offset = -currentIndex * (17 + 2); 
+        carousel.style.transform = `translateX(${offset}rem)`; // Correção aqui
+    }
+</script>
 
 {% endblock %}

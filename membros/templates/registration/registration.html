@@ -1,12 +1,11 @@
 {% extends 'base2.html' %}
 {% load static %}
 
-{% block title  %}
-    Criar conta
+{% block title %}
+Criar conta
 {% endblock title %}
 
-{% block content  %}
-
+{% block content %}
 <style>
     html,
     body {
@@ -42,6 +41,7 @@
     h1 {
         font-family: 'DM Sans', 'sans-serif';
         margin-bottom: 2rem;
+        z-index: 99;
     }
 
     .register-btn {
@@ -75,9 +75,9 @@
     ul li {
         font-size: .8rem;
         width: fit-content;
-        background: blue;
+       
         list-style: none;
-        color: white;
+        color: black;
     }
 
     li:before {
@@ -94,50 +94,66 @@
         font-family: 'DM Sans', 'sans-serif';
     }
 
-    .logo-image {
-        padding: 1rem;
-        padding-right: 100px; 
-        max-width: 250px; 
+    .img-logo {
+        width: 15rem;
         height: auto;
-        position: relative; 
+       
+        padding: 2rem;
+        padding-left: 0rem;
     }
-    .img-logo{
-    
-        position: relative;
-        top: 65px;
-        left: 45px;
-        width: 325px;
-        padding: 1rem;
-        padding-right: 100px; 
-        height: auto;
-        position: relative; 
+
+    .supercontainer {
+        display: flex;
+        flex-direction: column;
+      
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh; 
+    }
+
+    .hold-title-logo {
+        display: flex;
+        flex-direction: column;
         
-
+        justify-content:left;
+      
+        
     }
 
+    @media screen and(max-width:650px) {
+        .img-logo {
+            max-width: 10rem;
+            min-width: 5rem;
+            max-height: auto;
+            min-height: auto;
+        }
+    }
 </style>
-<a href="http://localhost:8000/">
-    <img src="{% static 'images/bookheadedlogo.svg' %}" class="img-logo">
-  </a>
 
-<div class="container d-flex justify-content-start align-items-start min-vh-100">
-   
-   
-    <div class="container shadow-lg p-4 container-div">
-        <h1 class="text-left text-black display-5 fw-bold">Become a certified<br>bookhead right now</h1>
-        <div class="row justify-content-left div1">
-            <div class="col-md-8 div2">
-                <div class="form-group p-2">
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <button class="btn btn-secondary register-btn">Create Account</button>
-                    </form>
+<div class="container d-flex min-vh-100 supercontainer">
+    
+
+    <div class="hold-title-logo">
+        <a href="http://localhost:8000/">
+            <img src="{% static 'images/bookheadedlogo.svg' %}" class="img-logo">
+        </a>
+        <div class="container shadow-lg p-4 container-div">
+            <h1 class="text-left text-black display-5 fw-bold">Become a certified<br>bookhead right now</h1>
+            <div class="row justify-content-left div1">
+                <div class="col-md-8 div2">
+                    <div class="form-group p-2">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button class="btn btn-secondary register-btn">Create Account</button>
+                        </form>
+                    </div>
                 </div>
             </div>
+            <p class="alr-registered">Already have an account? <a href="{% url 'login' %}"
+                    class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Login</a>
+            </p>
         </div>
-        <p class="alr-registered">Already have an account? <a href="{% url 'login' %}"
-            class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Login</a></p>
     </div>
 </div>
 
