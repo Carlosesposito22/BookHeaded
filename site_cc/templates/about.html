@@ -8,6 +8,23 @@
         .container {
             color: black;
         }
+
+        .card-img-top {
+            width: 400px; /* Define a largura */
+            height: 400px; /* Define a altura */
+            border-radius: 50%; /* Mantém o formato circular */
+            object-fit: cover; /* Faz com que a imagem se ajuste corretamente */
+            transition: transform 0.3s ease;
+            margin: 0 auto; /* Centraliza a imagem */
+        }
+
+        .card-img-top:hover {
+            transform: scale(1.2);
+        }
+
+        .card-body {
+            text-align: center; /* Centraliza o texto dentro do card */
+        }
       </style>
       
       <div class="row">
@@ -18,21 +35,10 @@
                   <img src="{% static 'images/juntos.jpg' %}" class="card-img-top" alt="Introdução"></a>
                   <div class="card-body">
                       <h5 class="card-title">Introdução</h5>
-                      <p class="card-text">Conheça mais sobre nossa história.</p>
+                      <p class="card-text">Conheça mais sobre nossa história e sobre o objetivo do nosso projeto.</p>
                   </div>
               </div>
           </div>
-          <style>
-            .card-img-top {
-                border-radius: 50%;
-                object-fit: cover;
-                transition: transform 0.3s ease;
-            }
-    
-            .card-img-top:hover {
-                transform: scale(1.2);
-            }
-        </style>
           
           <!-- Card 2 -->
           <div class="col-md-4">
@@ -41,8 +47,7 @@
                 <img src="{% static 'images/equipe.jpg' %}" class="card-img-top" alt="Equipe"></a>
                 <div class="card-body">
                     <h5 class="card-title">Equipe</h5>
-                    <p class="card-text">Conheça mais sobre nossa equipe.<br>
-                  da Cesar School</p>
+                    <p class="card-text">Conheça mais sobre nossa equipe.<br> da Cesar School</p>
                 </div>
             </div>
         </div>
@@ -54,8 +59,7 @@
                 <img src="{% static 'images/github.png' %}" class="card-img-top" alt="Contato"></a>
                 <div class="card-body">
                     <h5 class="card-title">Contato</h5>
-                    <p class="card-text">Redes sociais da equipe.<br>
-                  da Cesar School</p>
+                    <p class="card-text">Redes sociais da equipe.<br> da Cesar School</p>
                 </div>
             </div>
         </div>
