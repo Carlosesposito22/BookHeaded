@@ -7,7 +7,7 @@ Detail {{ clube.titulo }}
 {% block content %}
 
 <style>
-    *{
+    * {
         font-family: 'DM Sans', 'sans-serif';
     }
 
@@ -47,16 +47,44 @@ Detail {{ clube.titulo }}
         align-items: center;
     }
 
-    small{
+    small {
         display: flex;
         flex-direction: row;
         gap: 2rem;
     }
 
-    h1{
+    h1 {
         font-size: 4rem;
     }
 
+    @media (max-width: 700px) {
+
+        .data-progress-holder{
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container{
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hold-evr {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .holder-title-btn {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .data-holder{
+            margin-top: 1rem;
+        }
+
+    }
 </style>
 
 <div class="container">
@@ -67,16 +95,14 @@ Detail {{ clube.titulo }}
                 {% if user.is_authenticated %}
                 {% if user == clube.moderador %}
                 <small>
-                    <a href="{% url 'updateClube' clube.pk %}"><i
-                        class="bi bi-pencil-fill"></i></a>
-                    <a href="{% url 'deleteClube' clube.pk %}"><i
-                        class="bi bi-trash-fill"></i></a>
+                    <a href="{% url 'updateClube' clube.pk %}"><i class="bi bi-pencil-fill"></i></a>
+                    <a href="{% url 'deleteClube' clube.pk %}"><i class="bi bi-trash-fill"></i></a>
                 </small>
                 {% endif %}
                 {% endif %}
             </div>
             <div class="my-3 progressbar-btn">
-                <button id="setProgress" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
+                <button id="setProgress" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                     data-bs-target="#progressModal">Definir progresso</button>
 
                 <div class="progress mt-2" style="height: 20px;">
@@ -236,6 +262,9 @@ Detail {{ clube.titulo }}
     </div>
     {% if user == clube.moderador %}
     {% if clube.privado %}
+    <br>
+    <hr>
+    <br>
     <h3>Pedidos Pendentes:</h3>
     <ul class="list-unstyled">
         {% for membro in clube.membros.all %}
