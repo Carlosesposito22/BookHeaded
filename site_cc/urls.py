@@ -37,4 +37,5 @@ urlpatterns = [
     path('clube/<int:clube_id>/juntar', adicionar_membro_publico, name='adicionar-membro-publico'),
     path('avaliacao/<int:pk>/', AvaliacaoView, name='avaliacoes_clube'),
     path('clube/<int:pk>/Comentario/', AddComentarioView.as_view(), name='add_comentario'),
+    path('introducao/', views.introducao, name='introducao'),
 ]

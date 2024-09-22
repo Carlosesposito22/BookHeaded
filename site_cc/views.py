@@ -16,6 +16,9 @@ def pagina_principal(request):
 def about(request):
     return render(request, 'about.html')
 
+def introducao(request):
+    return render(request, 'introducao.html')
+
 class clubesView(LoginRequiredMixin, ListView):
     model = Clube
     template_name = 'clubs.html'
@@ -171,6 +174,11 @@ class meusclubesDetailView(ListView):
         clubes_publicos = Clube.objects.filter(privado=False, membros__usuario=self.request.user)
 
         clubes = clubes_moderados | clubes_membros | clubes_publicos
+
+        nome_clube = self.request.GET.get('nome')
+        if nome_clube:
+            clubes = clubes.filter(titulo__icontains=nome_clube)  # Ajuste aqui
+
         return clubes.distinct().order_by('-dataDeCriacao')
 
 def aprovar_membro(request, clube_id, membro_id):

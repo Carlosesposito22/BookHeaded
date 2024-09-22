@@ -28,7 +28,7 @@ Home Page
     .holder1 {
         display: flex;
         align-items: center;
-        justify-content: right;
+        justify-content: space-between; /* Alinhando os itens nas extremidades */
     }
 
     .clubs-container {
@@ -67,7 +67,6 @@ Home Page
 
     i {
         color: #0d6efd;
-        
     }
 
     i:hover {
@@ -85,94 +84,125 @@ Home Page
         justify-content: space-between;
     }
 
-    .dl-edt-btn{
+    .dl-edt-btn {
         z-index: 2;
         margin-top: -2rem;
         margin-left: .8rem;
     }
 
-    .admin-border{
+    .admin-border {
         border-style: solid;
         border-color: #0d6efd;
         border-width: .15rem;
     }
 
-    .description-div{
+    .description-div {
         font-size: 1rem;
     }
 
-    .date{
+    .date {
         margin-top: -.3rem;
         font-size: .8rem;
     }
 
-    .title-date{
+    .title-date {
         display: flex;
         flex-direction: row;
         align-items: center;
     }
 
-    .bi-book-fill{
+    .bi-book-fill {
         color: white;
     }
 
-    .bi-book-fill:hover{
+    .bi-book-fill:hover {
         color: white;
     }
 
-    .bi-dot{
-        color: black;
-    }
-    .bi-dot:hover{
+    .bi-dot {
         color: black;
     }
 
-    .title-date-div{
+    .bi-dot:hover {
+        color: black;
+    }
+
+    .title-date-div {
         display: flex;
         align-items: center;
         flex-direction: row;
         width: fit-content;
     }
 
-    .super-div:hover{
+    .super-div:hover {
         cursor: pointer;
     }
 
-    .div-stars{
+    .div-stars {
         width: fit-content;
         font-size: 1.3rem;
         display: flex;
     }
 
-    .bi-star{
+    .bi-star {
         margin-right: .3rem;
     }
 
     @media screen and (max-width: 650px) {
-    .title-date-div {
-        flex-direction: column;
-        align-items: flex-start;
+        .title-date-div {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .div-stars {
+            margin-bottom: 1rem;
+            margin-left: -.2rem;
+        }
+
+        .bi-dot {
+            display: none;
+        }
     }
 
-    .div-stars {
-        margin-bottom: 1rem;
-        margin-left: -.2rem;
+    .search-container {
+        display: flex;
+        align-items: center;
+        margin-right: 1rem; /* Espaçamento entre a barra de pesquisa e o botão */
     }
 
-    .bi-dot {
-        display: none;
+    .search-input {
+        height: 2.5rem; /* Altura da barra de pesquisa */
+        border-radius: 0.5rem 0 0 0.5rem; /* Bordas arredondadas apenas do lado esquerdo */
+        border: 1px solid #ced4da; /* Borda padrão */
+        width: 300px; /* Largura da barra de pesquisa */
+        padding: 0 1rem; /* Espaçamento interno */
     }
-}
 
+    .search-btn {
+        margin-left: -1px; /* Para juntar o botão à barra de pesquisa */
+        height: 2.5rem; /* Altura do botão */
+        border-radius: 0 0.5rem 0.5rem 0; /* Bordas arredondadas apenas do lado direito */
+    }
+
+    .addclub-btn {
+        height: 2.5rem; /* Altura do botão "Create Club" */
+        display: flex; /* Para utilizar flexbox */
+        align-items: center; /* Centraliza verticalmente o texto */
+        padding: 0 1rem; /* Adiciona um pouco de padding */
+    }
 </style>
 
 <h1 class="text-dark fw-bold">My Clubs</h1>
 
 <div class="container clubs-container">
     <div class="holder1">
-        <div class="holder">
-            <a class="btn btn-primary btn-lg addclub-btn" href=" {% url 'addClube' %}">Create Club</a>
-        </div>
+        <form method="get" class="search-container">
+            <input type="text" name="nome" class="form-control search-input" placeholder="Search Clubs" aria-label="Search Clubs" value="{{ request.GET.nome }}">
+            <button class="btn btn-outline-primary search-btn" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+        <a class="btn btn-primary btn-lg addclub-btn" href="{% url 'addClube' %}">Create Club</a>
     </div>
 
     <ul>
@@ -182,7 +212,7 @@ Home Page
                 <div class="hold-title-icons">
                     <div class="title-date-div">
                         <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot"></i></a>
-                        <div class="div-stars">&nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %} </div>
+                        <div class="div-stars">&nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</div>
                     </div>
                     <div class="icons-div">
                         {% if user.is_authenticated and user.id == clube.moderador.id %}  <p>
@@ -199,7 +229,7 @@ Home Page
                     <p class="description text-break">{{ clube.descricao|slice:":100"|safe }}</p>
                 </div>
             </div>
-            {% include 'modal_myclubs.html' %}
+            {% include 'modal_myclubs.html' %} 
         </li>
         {% endfor %}
     </ul>
