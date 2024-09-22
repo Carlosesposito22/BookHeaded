@@ -41,7 +41,7 @@ Home Page
     }
     .card-text {
         font-weight: normal;
-        margin: 0rem;
+        margin: 0;
         max-width: fit-content;
     }
     .genre-stars {
@@ -57,10 +57,8 @@ Home Page
         height: 10rem;
         max-height: 7rem;
         background-color: rgb(235, 235, 235);
-        padding: .3rem;
-        padding-left: .8rem;
-        padding-right: .8rem;
-        border-radius: .5rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 0.5rem;
     }
     .carousel-button {
         position: absolute;
@@ -86,24 +84,20 @@ Home Page
     <h1>Clubs</h1>
     <div class="hold-evr">
         <div class="cards-div" id="carousel">
-            <ul style="display: flex; padding: 0; margin: 0;list-style: none;">
+            <ul style="display: flex; padding: 0; margin: 0; list-style: none;">
                 {% for clube_context in clubes_context %}
                 {% with clube=clube_context.clube %}
                 <li>
                     <div class="card shadow">
                         <div class="card-body" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
                             <h5 class="card-title">
-                                <a class="titles" href="#" data-bs-toggle="modal"
-                                    data-bs-target="#clubeModal-{{ clube.id }}">
+                                <a class="titles" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
                                     {{ clube.titulo }}
                                 </a>
                             </h5>
                             <div class="genre-stars">
-                                <h6 class="card-subtitle mb-2 text-muted">{{ clube.categoria }}<i class="bi bi-dot"></i>
-                                </h6>
-                                <p class="stars">
-                                    {% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
-                                </p>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ clube.categoria }}<i class="bi bi-dot"></i></h6>
+                                <p class="stars">{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
                             </div>
                             <p class="date">
                                 <span class="badge text-bg-primary">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span>
@@ -127,7 +121,7 @@ Home Page
 <script>
     const carousel = document.getElementById('carousel');
     const totalCards = document.querySelectorAll('.card').length;
-    const cardsToShow = 4; // Número de cards visíveis
+    const cardsToShow = 4;
     let currentIndex = 0;
 
     document.getElementById('next').addEventListener('click', () => {
@@ -141,8 +135,8 @@ Home Page
     });
 
     function updateCarousel() {
-        const offset = -currentIndex * (17 + 2); // Largura do card + margem
-        carousel.style.transform = translateX(${offset}rem);
+        const offset = -currentIndex * (17 + 2); 
+        carousel.style.transform = `translateX(${offset}rem)`; // Correção aqui
     }
 </script>
 
