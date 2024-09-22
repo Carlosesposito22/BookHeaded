@@ -7,32 +7,38 @@
 {% block content %}
 
 <style>
-
-    *{
+    * {
         font-family: 'DM Sans', 'sans-serif';
     }
 
-    ul{
+    ul {
         list-style: none;
         padding: 0rem;
     }
-
 </style>
 
-    <h1>Clubs</h1>
-    <ul>
-        {% for clube_context in clubes_context %}
-            {% with clube=clube_context.clube %}
-            <li>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a> - 
-                {{ clube.categoria }} -
-                {{ clube.dataDeCriacao|date:"d/m/Y" }}
-                {% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
-                <p>{{ clube.descricao|slice:":100"|safe }}</p>
-                {% include 'modal_clubs.html' %}
-            </li>
-            {% endwith %}
-        {% endfor %}
-    </ul>
-  
+<h1>Clubs</h1>
+
+<form method="GET" action="{% url 'clubs' %}">
+    <input type="text" name="query" placeholder="Buscar clubes..." value="{{ request.GET.query }}">
+    <button type="submit">Buscar</button>
+</form>
+
+<ul>
+    {% for clube_context in clubes_context %}
+        {% with clube=clube_context.clube %}
+        <li>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a> - 
+            {{ clube.categoria }} -
+            {{ clube.dataDeCriacao|date:"d/m/Y" }}
+            {% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
+            <p>{{ clube.descricao|slice:":100"|safe }}</p>
+            {% include 'modal_clubs.html' %}
+        </li>
+        {% endwith %}
+    {% empty %}
+        <li>Nenhum clube encontrado.</li>
+    {% endfor %}
+</ul>
+
 {% endblock %}

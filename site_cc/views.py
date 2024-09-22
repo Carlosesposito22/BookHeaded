@@ -3,12 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
 from .models import Clube, Categoria, Avaliacao, Membro, Comentario
-from .forms import ClubeForm, ClubeEditForm, ComentarioForm  # Adicionado ComentarioForm
+from .forms import ClubeForm, ClubeEditForm, ComentarioForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, JsonResponse
-
+from django.db.models import Q
 
 def pagina_principal(request):
     return render(request, 'pagina_principal.html', {})
@@ -21,9 +21,19 @@ class clubesView(LoginRequiredMixin, ListView):
     template_name = 'clubs.html'
     ordering = ['-dataDeCriacao']
 
+    def get_queryset(self):
+        query = self.request.GET.get('query', '') 
+        clubes = Clube.objects.all()
+        if query:
+            clubes = clubes.filter(
+                Q(titulo__icontains=query)
+            )
+
+        return clubes.order_by('-dataDeCriacao')
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        clubes = context['object_list']
+        clubes = self.get_queryset()
         cat_menu = Categoria.objects.all()
 
         clubes_context = []
@@ -93,7 +103,6 @@ class AddCategoriaView(CreateView):
     fields = '__all__'
     success_url = reverse_lazy('addClube')
 
-
 class AddClubView(CreateView):
     model = Clube
     form_class = ClubeForm
@@ -103,30 +112,27 @@ class AddClubView(CreateView):
         clube = form.save()
         return redirect('club-Detail', pk=clube.pk)
 
-
-class AddComentarioView(CreateView):  # Classe para adicionar comentário
+class AddComentarioView(CreateView):
     model = Comentario
     template_name = 'addComentario.html'
-    form_class = ComentarioForm  # Usando ComentarioForm
+    form_class = ComentarioForm 
 
     def form_valid(self, form):
-        comentario = form.save(commit=False)  # Não salva ainda no banco
-        comentario.nome = self.request.user.username  # Preenche com o username do usuário
+        comentario = form.save(commit=False) 
+        comentario.nome = self.request.user.username 
 
-        # Verifica se 'clube_id' está presente na URL
-        clube_id = self.kwargs.get('pk')  # Ajuste se a URL não usar 'clube_id'
+        clube_id = self.kwargs.get('pk')
         if clube_id:
-            comentario.clube = get_object_or_404(Clube, id=clube_id)  # Associa ao clube
-            comentario.save()  # Salva o comentário
-            return redirect('club-Detail', pk=comentario.clube.pk)  # Redireciona para a página do clube
+            comentario.clube = get_object_or_404(Clube, id=clube_id)
+            comentario.save() 
+            return redirect('club-Detail', pk=comentario.clube.pk) 
         else:
-            # Lidar com o caso em que clube_id não está presente
             form.add_error(None, 'Clube não encontrado.')
-            return self.form_invalid(form)  # Retorna o formulário inválido
+            return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['clube_id'] = self.kwargs.get('pk')  # Passa o clube_id para o contexto se precisar
+        context['clube_id'] = self.kwargs.get('pk') 
         return context
 
 class UpdateClubView(UpdateView):
@@ -134,12 +140,10 @@ class UpdateClubView(UpdateView):
     template_name = 'updateClube.html'
     form_class = ClubeEditForm
 
-
 class DeleteClubView(DeleteView):
     model = Clube
     template_name = 'deleteClube.html'
     success_url = reverse_lazy('pagina_principal')
-
 
 def AvaliacaoView(request, pk):
     if request.method == "POST":
@@ -156,7 +160,6 @@ def AvaliacaoView(request, pk):
                 Avaliacao.objects.create(clube=clube, usuario=request.user, valor=rating)
         return HttpResponseRedirect(reverse('club-Detail', args=[str(clube.id)]))
 
-
 class meusclubesDetailView(ListView):
     model = Clube
     template_name = 'myclubes.html'
@@ -170,7 +173,6 @@ class meusclubesDetailView(ListView):
         clubes = clubes_moderados | clubes_membros | clubes_publicos
         return clubes.distinct().order_by('-dataDeCriacao')
 
-
 def aprovar_membro(request, clube_id, membro_id):
     clube = get_object_or_404(Clube, id=clube_id)
     membro = get_object_or_404(Membro, id=membro_id, clube=clube)
@@ -179,7 +181,6 @@ def aprovar_membro(request, clube_id, membro_id):
         membro.aprovado = True
         membro.save()
         return JsonResponse({'status': 'success', 'message': 'Membro aprovado com sucesso!', 'membro_id': membro_id})
-
 
 def recusar_membro(request, clube_id, membro_id):
     clube = get_object_or_404(Clube, id=clube_id)
@@ -196,7 +197,6 @@ def adicionar_membro(request, clube_id):
     
     return redirect('clubs')
 
-
 def adicionar_membro_publico(request, clube_id):
     clube = get_object_or_404(Clube, id=clube_id)
     if clube.privado:
@@ -204,4 +204,3 @@ def adicionar_membro_publico(request, clube_id):
     Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': True})
     
     return redirect('clubs')
-
