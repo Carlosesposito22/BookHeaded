@@ -1,38 +1,135 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Home Page
+Home Page
 {% endblock title %}
 
 {% block content %}
 
 <style>
-
-    *{
+    * {
         font-family: 'DM Sans', 'sans-serif';
     }
 
-    ul{
+    ul {
         list-style: none;
         padding: 0rem;
+        display: flex;
+        gap: 1rem;
     }
 
+    .hold-evr {
+        margin-top: 2rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    h1 {
+        font-size: 4rem;
+        font-weight: bold;
+
+    }
+
+    .cards-div {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-top: 2rem;
+        height: auto;
+    }
+
+    .card {
+        width: 17rem;
+        height: 19rem;
+        justify-content: start;
+        background-color: white;
+        border-radius: 1rem;
+    }
+
+    .titles {
+        text-decoration: none;
+        color: black;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-weight: normal;
+        margin: 0rem;
+        max-width: fit-content;
+    }
+
+    .genre-stars {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+    }
+
+    .stars {
+        margin-top: -.01rem;
+    }
+
+    .date {
+        margin-top: -1rem;
+    }
+
+    .description-area {
+        width: 100%;
+        height: 10rem;
+        max-height: 7rem;
+        background-color: rgb(235, 235, 235);
+        padding: .3rem;
+        padding-left: .8rem;
+        padding-right: .8rem;
+        border-radius: .5rem;
+    }
+
+    .card-body {
+        padding-bottom: 0rem;
+        height: fit-content;
+    }
 </style>
 
-    <h1>Clubs</h1>
-    <ul>
-        {% for clube_context in clubes_context %}
-            {% with clube=clube_context.clube %}
-            <li>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a> - 
-                {{ clube.categoria }} -
-                {{ clube.dataDeCriacao|date:"d/m/Y" }}
-                {% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
-                <p>{{ clube.descricao|slice:":100"|safe }}</p>
-                {% include 'modal_clubs.html' %}
-            </li>
-            {% endwith %}
-        {% endfor %}
-    </ul>
-  
+
+<div class="container">
+    <div class="hold-evr">
+        <h1>Clubs</h1>
+        <div class="cards-div">
+            <ul>
+                {% for clube_context in clubes_context %}
+                {% with clube=clube_context.clube %}
+                <li>
+                    <div class="card shadow">
+                        <div class="card-body" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
+                            <h5 class="card-title">
+                                <a class="titles" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#clubeModal-{{ clube.id }}">
+                                    {{ clube.titulo }}
+                                </a>
+                            </h5>
+                            <div class="genre-stars">
+                                <h6 class="card-subtitle mb-2 text-muted">{{ clube.categoria }}<i class="bi bi-dot"></i>
+                                </h6>
+                                <p class="stars">
+                                    {% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
+                                </p>
+                            </div>
+                            <p class="date">
+                                <span class="badge text-bg-primary">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span>
+                            </p>
+                            <div class="description-area">
+                                <p class="card-text text-break">{{ clube.descricao|slice:":100"|safe }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% include 'modal_clubs.html' %}
+                </li>
+                {% endwith %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+
 {% endblock %}
