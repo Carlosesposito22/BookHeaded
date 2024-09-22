@@ -1,0 +1,49 @@
+<div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1"
+     aria-labelledby="clubeModalLabel-{{ clube.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="clubeModalLabel-{{ clube.id }}">{{ clube.titulo }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
+                <p><strong>Rating:&nbsp;&nbsp;</strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+                <p><strong>Admin:</strong> {{ clube.moderador }}</p>
+                <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
+                <p><strong>Genre:</strong> {{ clube.categoria }}</p>
+            </div>
+            <div class="modal-footer">
+                {% if user.is_authenticated %}
+                    {% if user != clube.moderador %}
+                        {% if clube.privado %}
+                            {% if not clube_context.user_is_member %}
+                                {% if clube_context.user_request_pending %}
+                                    <p class="text-warning">Solicitação Pendente</p>
+                                {% else %}
+                                    <form method="post" action="{% url 'adicionar-membro' clube.pk %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-success btn-sm">Solicitar Associação</button>
+                                    </form>
+                                {% endif %}
+                            {% else %}
+                                <p class="text-success">Você é membro deste clube</p>
+                            {% endif %}
+                        {% else %}
+                            {% if not clube_context.user_is_member %}
+                                <form method="post" action="{% url 'adicionar-membro-publico' clube.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-success btn-sm">Juntar-se ao Clube</button>
+                                </form>
+                            {% else %}
+                                <p class="text-success">Você é membro deste clube</p>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                    <p class="text-warning">Você é o Moderador</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
