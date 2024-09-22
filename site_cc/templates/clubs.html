@@ -5,7 +5,21 @@
 {% endblock title %}
 
 {% block content %}
-    <h1>Clube do Livro</h1>
+
+<style>
+
+    *{
+        font-family: 'DM Sans', 'sans-serif';
+    }
+
+    ul{
+        list-style: none;
+        padding: 0rem;
+    }
+
+</style>
+
+    <h1>Clubs</h1>
     <ul>
         {% for clube_context in clubes_context %}
             {% with clube=clube_context.clube %}
