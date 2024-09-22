@@ -16,6 +16,12 @@ def pagina_principal(request):
 def about(request):
     return render(request, 'about.html')
 
+def introducao(request):
+    return render(request, 'introducao.html')
+
+def equipe(request):
+    return render(request, 'equipe.html')
+
 class clubesView(LoginRequiredMixin, ListView):
     model = Clube
     template_name = 'clubs.html'
