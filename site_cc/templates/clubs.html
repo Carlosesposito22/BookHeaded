@@ -84,11 +84,20 @@ Home Page
         right: 1rem;
     }
 
-    .carousel-inner{
-        height: 20rem;
-        width: auto;
-        border-radius: 2rem;
+    .carousel-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 2rem;
+}
+
+@media screen and (max-width: 650px) {
+    .carousel-inner img {
+        object-fit: cover;
     }
+}
+
+
 </style>
 
 <div class="container">
@@ -97,13 +106,13 @@ Home Page
     <div id="carouselExampleAutoplaying" class="carousel slide img-carousel" data-bs-ride="carousel">
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <img src="{% static 'images\reading-925589_1280.jpg' %}" class="d-block w-100" alt="...">
+            <img src="{% static 'images\reading-925589_1280.jpg' %}" class="d-block w-100 photo-carousel" alt="...">
           </div>
           <div class="carousel-item">
-            <img src="{% static 'images\reading-925589_1280.jpg' %}" class="d-block w-100" alt="...">
+            <img src="{% static 'images\reading-925589_1280.jpg' %}" class="d-block w-100 photo-carousel" alt="...">
           </div>
           <div class="carousel-item">
-            <img src="{% static 'images\reading-925589_1280.jpg' %}" class="d-block w-100" alt="...">
+            <img src="{% static 'images\reading-925589_1280.jpg' %}" class="d-block w-100 photo-carousel" alt="...">
           </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
