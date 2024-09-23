@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-Home Page
+    Home Page
 {% endblock title %}
 
 {% block content %}
@@ -25,25 +25,24 @@ Home Page
     }
 
     .search-container {
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    margin-top: 20px;
-}
-    
-.search-input {
-    width: 600px; 
-    padding: 10px; 
-    border-radius: 25px 0 0 25px;
-    border: 1px solid #ced4da;
-}
+        display: flex;
+        justify-content: center;
+        align-items: center; 
+        margin-top: 20px;
+    }
 
-.search-btn {
-    padding: 10px 20px; 
-    border-radius: 0 25px 25px 0;
-    border: 1px solid #ced4da;
-}
+    .search-input {
+        width: 600px; 
+        padding: 10px; 
+        border-radius: 25px 0 0 25px;
+        border: 1px solid #ced4da;
+    }
 
+    .search-btn {
+        padding: 10px 20px; 
+        border-radius: 0 25px 25px 0;
+        border: 1px solid #ced4da;
+    }
 
     .cards-div {
         display: flex;
@@ -183,29 +182,29 @@ Home Page
         <div class="cards-div" id="carousel">
             <ul style="display: flex; padding: 0; margin: 0; list-style: none;">
                 {% for clube_context in clubes_context %}
-                {% with clube=clube_context.clube %}
-                <li>
-                    <div class="card shadow">
-                        <div class="card-body" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
-                            <h5 class="card-title">
-                                <a class="titles" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
-                                    {{ clube.titulo }}
-                                </a>
-                            </h5>
-                            <div class="genre-stars">
-                                <h6 class="card-subtitle mb-2 text-muted">{{ clube.categoria }}<i class="bi bi-dot"></i></h6>
-                                <p class="stars">{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+                    {% with clube=clube_context.clube %}
+                        <li>
+                            <div class="card shadow">
+                                <div class="card-body" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
+                                    <h5 class="card-title">
+                                        <a class="titles" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
+                                            {{ clube.titulo }}
+                                        </a>
+                                    </h5>
+                                    <div class="genre-stars">
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ clube.categoria }}<i class="bi bi-dot"></i></h6>
+                                        <p class="stars">{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+                                    </div>
+                                    <p class="date">
+                                        <span class="badge text-bg-primary">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span>
+                                    </p>
+                                    <div class="description-area">
+                                        <p class="card-text text-break">{{ clube.descricao|slice:":100"|safe }}</p>
+                                    </div>
+                                </div>
                             </div>
-                            <p class="date">
-                                <span class="badge text-bg-primary">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span>
-                            </p>
-                            <div class="description-area">
-                                <p class="card-text text-break">{{ clube.descricao|slice:":100"|safe }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-                {% endwith %}
+                        </li>
+                    {% endwith %}
                 {% endfor %}
             </ul>
         </div>
@@ -214,9 +213,9 @@ Home Page
     </div>
 
     {% for clube_context in clubes_context %}
-    {% with clube=clube_context.clube %}
-    {% include 'modal_clubs.html' %}
-    {% endwith %}
+        {% with clube=clube_context.clube %}
+            {% include 'modal_clubs.html' %}
+        {% endwith %}
     {% endfor %}
 </div>
 
