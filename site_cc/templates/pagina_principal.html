@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 
 {% block content %}
 <body>
@@ -23,7 +23,7 @@
                 <div class="info-card">
                     <div class="card-div">
                         <div class="card-icons-holder" id="star-holder">
-                            <img src="images\star.svg" class="card-icons" id="star-icon">
+                            <img src="{% static 'images/conectar.jpg' %}" class="card-icons" id="star-icon">
                         </div>
                         <p class="card-text">Onde você cria conexões<br> por meio da leitura.</p>
                     </div>
@@ -32,18 +32,18 @@
                 <div class="info-card">
                     <div class="card-div">
                         <div class="card-icons-holder" id="check-holder">
-                            <img src="images\check.svg" class="card-icons" id="check-icon">
+                            <img src="{% static 'images/livro.jpg' %}" class="card-icons" id="check-icon">
                         </div>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p class="card-text">Projeto que formenta ainda mais o amor no ato de ler.</p>
                     </div>
                 </div>
 
                 <div class="info-card">
                     <div class="card-div">
                         <div class="card-icons-holder" id="book-holder">
-                            <img src="images\book.svg" class="card-icons" id="book-icon">
+                            <img src="{% static 'images/clube.jpg' %}" class="card-icons" id="book-icon">
                         </div>
-                        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p class="card-text">Com possibilidades de criar amizades para o resto da vida.</p>
                     </div>
                 </div>
 
