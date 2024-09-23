@@ -25,24 +25,33 @@
     }
 
     .search-container {
-        display: flex;
-        justify-content: center;
-        align-items: center; 
-        margin-top: 20px;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    margin-top: 20px;
+    width: 100%; 
+}
 
+.search-input {
+    flex: 1; 
+    max-width: 600px;
+    padding: 10px; 
+    border-radius: 25px 0 0 25px;
+    border: 1px solid #ced4da;
+}
+
+.search-btn {
+    padding: 10px 20px; 
+    border-radius: 0 25px 25px 0;
+    border: 1px solid #ced4da;
+}
+
+@media screen and (max-width: 650px) {
     .search-input {
-        width: 600px; 
-        padding: 10px; 
-        border-radius: 25px 0 0 25px;
-        border: 1px solid #ced4da;
+        width: 80%;
     }
+}
 
-    .search-btn {
-        padding: 10px 20px; 
-        border-radius: 0 25px 25px 0;
-        border: 1px solid #ced4da;
-    }
 
     .cards-div {
         display: flex;
@@ -162,7 +171,8 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-
+    <br>
+    <hr>
     <div>
         <br>
         <div>
@@ -177,7 +187,6 @@
             </div>
         </div>
     </div>
-
     <div class="hold-evr">
         <div class="cards-div" id="carousel">
             <ul style="display: flex; padding: 0; margin: 0; list-style: none;">
@@ -216,7 +225,7 @@
         {% with clube=clube_context.clube %}
             {% include 'modal_clubs.html' %}
         {% endwith %}
-    {% endfor %}
+    {% endfor %}    
 </div>
 
 <script>
