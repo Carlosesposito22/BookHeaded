@@ -12,6 +12,8 @@
         {% csrf_token %}
         <a class="nav-item nav-link px-2 text-black" href=" {% url 'clubs' %}">Clubs</a>
         <a class="nav-item nav-link px-2 text-black" href=" {% url 'myclubes' %}">My Clubs</a>
+        <a class="nav-item nav-link px-2 text-black" href="{% url 'addClube' %}">Create Clubs</a>
+
         {% endif %}
       </ul>
 
