@@ -74,13 +74,13 @@ Home Page
         border-radius: 0.5rem;
         cursor: pointer;
         padding: 10px;
-        z-index: 2; /* Aumenta o z-index para garantir que fiquem acima dos cards */
+        z-index: 2;
     }
     #prev {
-        left: 1rem; /* Ajuste para a esquerda */
+        left: 1rem;
     }
     #next {
-        right: 1rem; /* Ajuste para a direita */
+        right: 1rem;
     }
 </style>
 
@@ -111,7 +111,6 @@ Home Page
                             </div>
                         </div>
                     </div>
-                    {% include 'modal_clubs.html' %}
                 </li>
                 {% endwith %}
                 {% endfor %}
@@ -120,6 +119,13 @@ Home Page
         <button id="prev" class="carousel-button">◀</button>
         <button id="next" class="carousel-button">▶</button>
     </div>
+
+    
+    {% for clube_context in clubes_context %}
+    {% with clube=clube_context.clube %}
+    {% include 'modal_clubs.html' %}
+    {% endwith %}
+    {% endfor %}
 </div>
 
 <script>
@@ -139,8 +145,8 @@ Home Page
     });
 
     function updateCarousel() {
-        const offset = -currentIndex * (17 + 2); 
-        carousel.style.transform = `translateX(${offset}rem)`; // Correção aqui
+        const offset = -currentIndex * (17 + 2);
+        carousel.style.transform = `translateX(${offset}rem)`;
     }
 </script>
 
