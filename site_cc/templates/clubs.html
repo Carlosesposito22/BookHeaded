@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
-
 {% block title %}
 Home Page
 {% endblock title %}
 
 {% block content %}
+
+{% load static %}
 
 <style>
     * {
@@ -82,10 +83,39 @@ Home Page
     #next {
         right: 1rem;
     }
+
+    .carousel-inner{
+        height: 20rem;
+        width: auto;
+        border-radius: 2rem;
+    }
 </style>
 
 <div class="container">
     <h1>Clubs</h1>
+    <br>
+    <div id="carouselExampleAutoplaying" class="carousel slide img-carousel" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="{% static 'images\reading-925589_1280.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'images\reading-925589_1280.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img src="{% static 'images\reading-925589_1280.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+
     <div class="hold-evr">
         <div class="cards-div" id="carousel">
             <ul style="display: flex; padding: 0; margin: 0; list-style: none;">
