@@ -1,5 +1,12 @@
 <style>
-  
+
+    *{
+      font-family: 'DM Sans', 'sans-serif';
+    }
+
+    .newclub-btn{
+      padding-top: .3rem;
+    }
 </style>
 
 <header class="p-3 text-bg-light shadow-lg">
@@ -12,8 +19,6 @@
         {% csrf_token %}
         <a class="nav-item nav-link px-2 text-black" href=" {% url 'clubs' %}">Clubs</a>
         <a class="nav-item nav-link px-2 text-black" href=" {% url 'myclubes' %}">My Clubs</a>
-        <a class="nav-item nav-link px-2 text-black" href="{% url 'addClube' %}">Create Clubs</a>
-
         {% endif %}
       </ul>
 
@@ -21,6 +26,7 @@
         {% if user.is_authenticated %}
         <form method="post" action="{% url 'logout' %}" style="display:inline;">
           {% csrf_token %}
+          <a class="btn bnt-sm btn-primary newclub-btn" href="{% url 'addClube' %}">New Club</a>
           <button class="btn btn-light" type="submit">Logout</button>
         </form>
         <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/original/user-icon-on-transparent-background-free-png.png" alt="foto de usuário" width="60px">
