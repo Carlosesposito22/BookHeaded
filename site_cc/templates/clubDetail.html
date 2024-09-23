@@ -77,7 +77,6 @@ Detail {{ clube.titulo }}
         max-height: 300px;
         overflow-y: auto;
         padding: 15px;
-        border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
@@ -122,14 +121,14 @@ Detail {{ clube.titulo }}
         margin-top: -1rem;
     }
 
-    .club-data-icons{
+    .club-data-icons {
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
     }
 
-    .bi-trash-fill{
+    .bi-trash-fill {
         margin-left: 1rem;
     }
 
@@ -166,8 +165,6 @@ Detail {{ clube.titulo }}
             flex-direction: column;
             align-items: flex-start;
         }
-
-
     }
 </style>
 
@@ -183,17 +180,10 @@ Detail {{ clube.titulo }}
                             {% include 'pedidos.html' %}
                         {% endif %}
                     </small>
-
-                    <div class="my-3">
-                        <button id="setProgress" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                            data-bs-target="#progressModal">Mark your progress</button>
-                    </div>
-                    
                 {% endif %}
-            {% endif %}   
-                    
+            {% endif %}
+
             <div class="btn-progress-bar">
-                
                 <div class="my-3 progressbar-holder">
                     <div class="progress progressbar">
                         <div id="progressBar" class="progress-bar" role="progressbar"
@@ -207,7 +197,15 @@ Detail {{ clube.titulo }}
 
             <hr>
 
-            <h2>Comentários:</h2>
+            <div class="capitulo-container" style="background-color: #e0e0e0; padding: 10px;border-top-left-radius: 8px;border-top-right-radius: 8px; margin-top: 1rem;">
+                <div class="my-3 d-flex justify-content-between align-items-center">
+                    <span>Capítulo atual: </span>
+                    {% if user.is_authenticated and user == clube.moderador %}
+                        <button id="setProgress" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#progressModal">Marcar progresso</button>
+                    {% endif %}
+                </div>
+            </div>
+            
 
             <div class="comentarios-container" id="comentariosContainer">
                 {% if not clube.comentarios.all %}
@@ -224,50 +222,17 @@ Detail {{ clube.titulo }}
                 {% endfor %}
                 {% endif %}
             </div>
-            <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4 d-flex align-items-center">
-                {% csrf_token %}
-                <input type="hidden" name="clube_id" value="{{ clube.pk }}">
-                <textarea name="comentario" id="comentario" required class="form-control me-2" rows="1"
-                    style="height: 38px;"></textarea>
-                <button type="submit" class="btn btn-primary btn-sm" style="height: 38px;">Comentar</button>
-                <style>
-                    .comentarios-container {
-                        background-color: #f0f0f0;
-                        max-height: 300px;
-                        overflow-y: auto;
-                        padding: 15px;
-                        border-radius: 8px;
-                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                    }
-
-                    .comentario-item {
-                        margin-bottom: 15px;
-                        padding-bottom: 10px;
-                        border-bottom: 1px solid #ddd;
-                    }
-
-                    .meu-comentario {
-                        background-color: #d9d9d9;
-                        text-align: right;
-                        padding: 10px;
-                        border-radius: 8px;
-                        margin-left: auto;
-                        max-width: fit-content;
-                        width: fit-content;
-                    }
-
-                    .outro-comentario {
-                        background-color: #a9a9a9;
-                        text-align: left;
-                        padding: 10px;
-                        border-radius: 8px;
-                        margin-right: auto;
-                        max-width: 80%;
-                    }
-                </style>
-            </form>
-
+            <div style="background-color: #e0e0e0; padding: 4ypx; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">
+                <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4 d-flex align-items-center">
+                    {% csrf_token %}
+                    <input type="hidden" name="clube_id" value="{{ clube.pk }}">
+                    <textarea name="comentario" id="comentario" required class="form-control me-2" rows="1"
+                        style="height: 38px;"></textarea>
+                    <button type="submit" class="btn btn-primary btn-sm" style="height: 38px;">Comentar</button>
+                </form>
+            </div>         
         </div>
+
         {% include 'modal_delete.html' %}
         <div class="data-holder shadow"> 
             <div class="club-data-icons">
@@ -281,7 +246,7 @@ Detail {{ clube.titulo }}
                     {% endif %}
                 {% endif %}
             </div> 
-            
+
             <hr>
             <p><strong>Foundation:</strong> {{ clube.dataDeCriacao }}</p>
             <p class="text-break description-text"><strong>Description: </strong>{{ clube.descricao|safe }}</p>
@@ -317,8 +282,7 @@ Detail {{ clube.titulo }}
             </div>
         </div>
     </div>
-
-    <div class="not-adm-items">
+    <div class="not-adm-items"></div>
         {% if user != clube.moderador %}
         <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST" class="my-4">
             {% csrf_token %}
@@ -380,4 +344,5 @@ Detail {{ clube.titulo }}
         comentariosContainer.scrollTop = comentariosContainer.scrollHeight;
     };
 </script>
+
 {% endblock %}
