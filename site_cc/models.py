@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-from ckeditor.fields import RichTextField
+
 
 class Categoria(models.Model):
     nome = models.CharField(max_length=100)
@@ -22,7 +22,7 @@ class Clube(models.Model):
     modalidade = models.ForeignKey('Modalidade', on_delete=models.SET_NULL, null=True, blank=True, default='Sem modalidade')
     categoria = models.ForeignKey('Categoria', on_delete=models.SET_NULL, null=True, blank=True, default='Sem categoria')
     descricao = models.TextField(null=True, blank=True)
-    sobre = RichTextField(blank=True,null=True)
+    sobre = models.TextField(blank=True,null=True)
     numeroMembros = models.IntegerField(null=True, blank=True, default=1)
     privado = models.BooleanField(default=False)
     favoritado = models.BooleanField(default=False)
