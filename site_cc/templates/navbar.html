@@ -12,6 +12,13 @@
       padding: 0rem;
     }
 
+    .logout-btn{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      width: 90%;
+    }
+
 </style>
 
 <header class="p-3 text-bg-light shadow-lg">
@@ -29,12 +36,7 @@
 
       <div class="text-end">
         {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}" style="display:inline;">
-          {% csrf_token %}
-          <a class="btn bnt-sm btn-primary newclub-btn" href="{% url 'addClube' %}">New Club</a>
-          <button class="btn btn-light" type="submit">Logout</button>
-        </form>
-
+        <a class="btn bnt-sm btn-primary newclub-btn" href="{% url 'addClube' %}">New Club</a>
         <div class="btn-group">
           <div class="vr"></div>
           <button type="button" class="btn dropdown-toggle btn-profile-div" data-bs-toggle="dropdown" aria-expanded="false">
@@ -45,7 +47,10 @@
             <li><a class="dropdown-item" href="#">Another action</a></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Separated link</a></li>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;" class="logout-btn-div">
+            {% csrf_token %}
+            <button class="btn btn-danger logout-btn" type="submit">Logout</button>
+        </form>
           </ul>
         </div>
         {% else %}
