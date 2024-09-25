@@ -153,6 +153,35 @@
 
   usernameInput.addEventListener('input', toggleButtonState);
   passwordInput.addEventListener('input', toggleButtonState);
+
+  const row = document.querySelector('.row');
+
+  function applyKeyEffect() {
+  row.style.transition = 'border-color 0.3s ease, box-shadow 0.3s ease';
+  row.style.borderColor = '#0066FF';
+  row.style.boxShadow = '0 0 20px rgba(0, 102, 255, 0.8), 0 0 40px rgba(0, 102, 255, 0.6)';
+}
+
+function removeKeyEffect() {
+  row.style.borderColor = 'grey';
+  row.style.boxShadow = 'none';
+}
+
+function handleKeyPress() {
+  applyKeyEffect();
+}
+
+function handleKeyUp() {
+  setTimeout(removeKeyEffect, 300);
+}
+
+usernameInput.addEventListener('keydown', handleKeyPress);
+passwordInput.addEventListener('keydown', handleKeyPress);
+
+usernameInput.addEventListener('keyup', handleKeyUp);
+passwordInput.addEventListener('keyup', handleKeyUp);
+
+
 </script>
 
 {% endblock %}
