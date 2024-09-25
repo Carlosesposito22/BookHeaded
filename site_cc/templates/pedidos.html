@@ -9,17 +9,14 @@
                 <ul class="list-unstyled">
                     {% for membro in clube.membros.all %}
                         {% if not membro.aprovado %}
-                            <!-- Adicionando ID único para cada membro -->
                             <li class="my-2" id="membro-{{ membro.pk }}">
                                 <strong>{{ membro.usuario.username }}</strong>
 
-                                <!-- Aprovação -->
                                 <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" class="approve-form d-inline-block" data-url="{% url 'aprovar-membro' clube.pk membro.pk %}">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-primary btn-sm">Aprovar</button>
                                 </form>
 
-                                <!-- Recusa -->
                                 <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" class="refuse-form d-inline-block" data-url="{% url 'recusar-membro' clube.pk membro.pk %}">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>

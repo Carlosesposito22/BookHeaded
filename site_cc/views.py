@@ -31,10 +31,10 @@ class clubesView(LoginRequiredMixin, ListView):
     ordering = ['-dataDeCriacao']
 
     def get_queryset(self):
-        nome = self.request.GET.get('nome', '')  # Pegar o valor do campo de pesquisa 'nome'
+        nome = self.request.GET.get('nome', '')
         clubes = Clube.objects.all()
         if nome:
-            clubes = clubes.filter(Q(titulo__icontains=nome))  # Filtrar clubes cujo título contém o nome
+            clubes = clubes.filter(Q(titulo__icontains=nome))
 
         return clubes.order_by('-dataDeCriacao')
 
