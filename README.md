@@ -23,6 +23,19 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
 
 <details>
 <summary>Entrega 1</summary>
+<ul>
+  <li>
+## 📑 Jira Backlog
+  <img src="Mídia/imageJiraBacklog.jpg" alt="Jira Baclog"> 
+
+<br>
+
+## 📑 Jira Board 
+  <img src="Mídia/imageJiraBoard.jpg" alt="Jira Board">
+
+</li>
+</ul>
+</details>
 
 <br>
 
