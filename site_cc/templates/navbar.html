@@ -7,6 +7,12 @@
     .newclub-btn{
       padding-top: .3rem;
     }
+
+    .btn-profile-div{
+      width: fit-content;
+      padding: 0rem;
+    }
+
 </style>
 
 <header class="p-3 text-bg-light shadow-lg">
@@ -29,7 +35,20 @@
           <a class="btn bnt-sm btn-primary newclub-btn" href="{% url 'addClube' %}">New Club</a>
           <button class="btn btn-light" type="submit">Logout</button>
         </form>
-        <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/original/user-icon-on-transparent-background-free-png.png" alt="foto de usuário" width="60px">
+
+        <div class="btn-group">
+          <div class="vr"></div>
+          <button type="button" class="btn dropdown-toggle btn-profile-div" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/original/user-icon-on-transparent-background-free-png.png" alt="foto de usuário" width="60px">
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Separated link</a></li>
+          </ul>
+        </div>
         {% else %}
         <a class="btn btn-light" href=" {% url 'register' %}">Register</a>
         <a class="btn btn-light" href="{% url 'login' %}">Login</a>
@@ -38,3 +57,4 @@
     </div>
   </div>
 </header>
+
