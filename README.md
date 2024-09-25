@@ -24,8 +24,10 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
 <details>
 <summary>Entrega 1</summary>
 
+</details>
 <details>
 <summary>Entrega 2</summary>
+  </details>
 <br>
 
 ## 📑 Jira Backlog
