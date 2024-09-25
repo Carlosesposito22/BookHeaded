@@ -11,7 +11,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Q
 
 def pagina_principal(request):
-    return render(request, 'pagina_principal.html', {})
+    return render(request, 'pagina_principal.html')
 
 def about(request):
     return render(request, 'about.html')
@@ -35,44 +35,35 @@ class clubesView(LoginRequiredMixin, ListView):
         clubes = Clube.objects.all()
         if nome:
             clubes = clubes.filter(Q(titulo__icontains=nome))
-
         return clubes.order_by('-dataDeCriacao')
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        clubes = self.get_queryset()
-        cat_menu = Categoria.objects.all()
-
-        clubes_context = []
         user = self.request.user
-
-        for clube in clubes:
-            user_is_member = Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists()
-            user_request_pending = Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists()
-            clubes_context.append({
+        clubes_context = [
+            {
                 'clube': clube,
-                'user_is_member': user_is_member,
-                'user_request_pending': user_request_pending,
-            })
-
-        context['clubes_context'] = clubes_context
-        context['cat_menu'] = cat_menu
+                'user_is_member': Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists(),
+                'user_request_pending': Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists(),
+            }
+            for clube in self.get_queryset()
+        ]
+        context.update({
+            'clubes_context': clubes_context,
+            'cat_menu': Categoria.objects.all(),
+        })
         return context
-
 
 def login_user(request):
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user:
             login(request, user)
             messages.success(request, "Você está logado.")
             return redirect('pagina_principal')
-        else:
-            messages.error(request, "Ocorreu um erro. Tente novamente.")
-            return redirect('login')
-    return render(request, 'login.html', {})
+        messages.error(request, "Ocorreu um erro. Tente novamente.")
+        return redirect('login')
+    return render(request, 'login.html')
 
 def logout_user(request):
     logout(request)
@@ -95,14 +86,13 @@ class ClubDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         clube = self.object
-        
-        context['total_avaliacoes'] = clube.total_avaliacoes()
-        context['media_avaliacoes'] = clube.calcular_media_avaliacoes()
-        
         user = self.request.user
-        context['user_is_member'] = Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists()
-        context['user_request_pending'] = Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists()
-        
+        context.update({
+            'total_avaliacoes': clube.total_avaliacoes(),
+            'media_avaliacoes': clube.calcular_media_avaliacoes(),
+            'user_is_member': Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists(),
+            'user_request_pending': Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists(),
+        })
         return context
 
 class AddCategoriaView(CreateView):
@@ -126,21 +116,19 @@ class AddComentarioView(CreateView):
     form_class = ComentarioForm 
 
     def form_valid(self, form):
-        comentario = form.save(commit=False) 
-        comentario.nome = self.request.user.username 
-
+        comentario = form.save(commit=False)
+        comentario.nome = self.request.user.username
         clube_id = self.kwargs.get('pk')
         if clube_id:
             comentario.clube = get_object_or_404(Clube, id=clube_id)
-            comentario.save() 
-            return redirect('club-Detail', pk=comentario.clube.pk) 
-        else:
-            form.add_error(None, 'Clube não encontrado.')
-            return self.form_invalid(form)
+            comentario.save()
+            return redirect('club-Detail', pk=comentario.clube.pk)
+        form.add_error(None, 'Clube não encontrado.')
+        return self.form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['clube_id'] = self.kwargs.get('pk') 
+        context['clube_id'] = self.kwargs.get('pk')
         return context
 
 class UpdateClubView(UpdateView):
@@ -157,16 +145,11 @@ def AvaliacaoView(request, pk):
     if request.method == "POST":
         clube = get_object_or_404(Clube, id=pk)
         rating = int(request.POST.get('rating'))
-
         if 1 <= rating <= 5:
-            avaliacao_existente = Avaliacao.objects.filter(clube=clube, usuario=request.user).first()
-
-            if avaliacao_existente:
-                avaliacao_existente.valor = rating
-                avaliacao_existente.save()
-            else:
-                Avaliacao.objects.create(clube=clube, usuario=request.user, valor=rating)
-        return HttpResponseRedirect(reverse('club-Detail', args=[str(clube.id)]))
+            avaliacao, created = Avaliacao.objects.update_or_create(
+                clube=clube, usuario=request.user, defaults={'valor': rating}
+            )
+        return HttpResponseRedirect(reverse('club-Detail', args=[clube.id]))
 
 class meusclubesDetailView(ListView):
     model = Clube
@@ -174,46 +157,38 @@ class meusclubesDetailView(ListView):
     ordering = ['-dataDeCriacao']
 
     def get_queryset(self):
-        clubes_moderados = Clube.objects.filter(moderador=self.request.user)
-        clubes_membros = Clube.objects.filter(membros__usuario=self.request.user, membros__aprovado=True)
-        clubes_publicos = Clube.objects.filter(privado=False, membros__usuario=self.request.user)
-
-        clubes = clubes_moderados | clubes_membros | clubes_publicos
-
+        clubes = Clube.objects.filter(
+            Q(moderador=self.request.user) | 
+            Q(membros__usuario=self.request.user, membros__aprovado=True) |
+            Q(privado=False, membros__usuario=self.request.user)
+        )
         nome_clube = self.request.GET.get('nome')
         if nome_clube:
-            clubes = clubes.filter(titulo__icontains=nome_clube)  # Ajuste aqui
-
+            clubes = clubes.filter(titulo__icontains=nome_clube)
         return clubes.distinct().order_by('-dataDeCriacao')
 
 def aprovar_membro(request, clube_id, membro_id):
     clube = get_object_or_404(Clube, id=clube_id)
     membro = get_object_or_404(Membro, id=membro_id, clube=clube)
-    
     if request.user == clube.moderador:
         membro.aprovado = True
         membro.save()
-        return JsonResponse({'status': 'success', 'message': 'Membro aprovado com sucesso!', 'membro_id': membro_id})
+    return JsonResponse({'status': 'success', 'message': 'Membro aprovado com sucesso!', 'membro_id': membro_id})
 
 def recusar_membro(request, clube_id, membro_id):
     clube = get_object_or_404(Clube, id=clube_id)
     membro = get_object_or_404(Membro, id=membro_id, clube=clube)
-    
     if request.method == 'POST':
         membro.delete()
-        return JsonResponse({'status': 'success', 'message': 'Membro recusado com sucesso!', 'membro_id': membro_id})
+    return JsonResponse({'status': 'success', 'message': 'Membro recusado com sucesso!', 'membro_id': membro_id})
 
 def adicionar_membro(request, clube_id):
     clube = get_object_or_404(Clube, id=clube_id)
-    if not Membro.objects.filter(clube=clube, usuario=request.user).exists():
-        Membro.objects.create(clube=clube, usuario=request.user, aprovado=False)
-    
+    Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': False})
     return redirect('clubs')
 
 def adicionar_membro_publico(request, clube_id):
     clube = get_object_or_404(Clube, id=clube_id)
-    if clube.privado:
-        return redirect('clubs')
-    Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': True})
-    
+    if not clube.privado:
+        Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': True})
     return redirect('clubs')
