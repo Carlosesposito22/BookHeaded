@@ -69,7 +69,7 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
     <a href="https://github.com/maludantass">Malu Dantas</a> - mldt@cesar.school 📩
   </li>
   <li>
-    <a href="https://github.com/Mateus-Ribeir0">Matheus Ribeiro</a> -mar2@cesar.school 📩
+    <a href="https://github.com/Mateus-Ribeir0">Mateus Ribeiro</a> - mar2@cesar.school 📩
   </li>
   <li>
     <a href="https://github.com/jpmamededs">João Pedro Mamede</a> - jpmd2@cesar.school 📩

@@ -112,13 +112,9 @@
     <script>
         function validateField(field) {
             const value = field.value.trim();
-            const errorElement = document.createElement('div');
-            errorElement.classList.add('error-message');
-
             if (field.type === "checkbox") {
-                return field.checked;
+                return true; 
             }
-
             return value !== '';
         }
 
@@ -128,8 +124,11 @@
             let allValid = true;
 
             fields.forEach(field => {
-                if (!validateField(field)) {
-                    allValid = false;
+               
+                if (!(field.type === "checkbox" && field.id === "privado")) {
+                    if (!validateField(field)) {
+                        allValid = false;
+                    }
                 }
             });
 
@@ -145,16 +144,13 @@
             }
         }
 
-        
         document.querySelectorAll("input, textarea, select").forEach(input => {
             input.addEventListener("input", toggleSubmitButton);
-
             if (input.type === "checkbox") {
                 input.addEventListener("change", toggleSubmitButton);
             }
         });
 
-        
         var name = "{{ user.id }}";
         document.getElementById("moderador").value = name;
     </script>

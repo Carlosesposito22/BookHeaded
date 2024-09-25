@@ -25,41 +25,40 @@
     }
 
     .search-container {
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-    margin-top: 20px;
-    width: 100%; 
-}
-
-.search-input {
-    flex: 1; 
-    max-width: 600px;
-    padding: 10px; 
-    border-radius: 25px 0 0 25px;
-    border: 1px solid #ced4da;
-}
-
-.search-btn {
-    padding: 10px 20px; 
-    border-radius: 0 25px 25px 0;
-    border: 1px solid #ced4da;
-}
-
-@media screen and (max-width: 650px) {
-    .search-input {
-        width: 80%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        width: 100%;
     }
-}
 
+    .search-input {
+        flex: 1;
+        max-width: 600px;
+        padding: 10px;
+        border-radius: 25px 0 0 25px;
+        border: 1px solid #ced4da;
+    }
+
+    .search-btn {
+        padding: 10px 20px;
+        border-radius: 0 25px 25px 0;
+        border: 1px solid #ced4da;
+    }
+
+    @media screen and (max-width: 650px) {
+        .search-input {
+            width: 80%;
+        }
+    }
 
     .cards-div {
         display: flex;
         transition: transform 0.3s ease;
-        width: calc(17rem * 10);
         padding: 2rem;
         background-color: rgb(238, 238, 238);
         border-radius: 1rem;
+        width: fit-content; 
     }
 
     .card {
@@ -225,29 +224,34 @@
         {% with clube=clube_context.clube %}
             {% include 'modal_clubs.html' %}
         {% endwith %}
-    {% endfor %}    
+    {% endfor %}
+    <br><br>
 </div>
 
+
+
 <script>
-    const carousel = document.getElementById('carousel');
-    const totalCards = document.querySelectorAll('.card').length;
-    const cardsToShow = 4;
-    let currentIndex = 0;
+    const cardWidth = 17; 
+const cardGap = 1; 
+const totalCards = document.querySelectorAll('.card').length;
+const cardsToShow = 4; 
+let currentIndex = 0;
 
-    document.getElementById('next').addEventListener('click', () => {
-        currentIndex = Math.min(currentIndex + 1, totalCards - cardsToShow);
-        updateCarousel();
-    });
+document.getElementById('next').addEventListener('click', () => {
+    currentIndex = Math.min(currentIndex + 1, totalCards - cardsToShow);
+    updateCarousel();
+});
 
-    document.getElementById('prev').addEventListener('click', () => {
-        currentIndex = Math.max(currentIndex - 1, 0);
-        updateCarousel();
-    });
+document.getElementById('prev').addEventListener('click', () => {
+    currentIndex = Math.max(currentIndex - 1, 0);
+    updateCarousel();
+});
 
-    function updateCarousel() {
-        const offset = -currentIndex * (17 + 2);
-        carousel.style.transform = `translateX(${offset}rem)`;
-    }
+function updateCarousel() {
+    const offset = -currentIndex * (cardWidth + cardGap);
+    document.getElementById('carousel').style.transform = `translateX(${offset}rem)`;
+}
+
+
 </script>
-
 {% endblock %}
