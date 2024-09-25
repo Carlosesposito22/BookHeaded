@@ -9,12 +9,12 @@
 {% load static %}
 
 <style>
-    body{
+    body {
         font-family: 'DM Sans', 'sans-serif';
         background-color: white;
     }
 
-    .row{
+    .row {
         height: fit-content;
         width: fit-content;
         display: flex;
@@ -22,13 +22,13 @@
         flex-direction: column;
     }
 
-    label{
+    label {
         color: black;
         font-size: 1rem;
         font-weight: bold;
     }
 
-    .holder1{
+    .holder1 {
         height: fit-content;
         width: fit-content;
         display: flex;
@@ -36,37 +36,36 @@
         gap: 10rem;
     }
 
-    .create-btn{
+    .create-btn {
         display: flex;
         position: relative;
-        
     }
 
-    .form-img{
+    .form-img {
         margin-top: 2rem;
         height: 20rem;
         width: 20rem;
     }
 
-    .holder2{
+    .holder2 {
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
-    .reading-club{
+    .reading-club {
         font-size: 4rem;
         margin-top: -.8rem;
     }
 
-    .superholder{
+    .superholder {
         display: flex;
         justify-content: center;
         align-items: center;
         margin-top: 4rem;
     }
 
-    textarea{
+    textarea {
         height: 6rem;
         width: 8rem;
     }
@@ -79,36 +78,89 @@
         border-radius: 1rem;
     }
 
+    .error-message {
+        color: red;
+        font-size: 0.9rem;
+        display: none;
+    }
+
 </style>
 
-    {% if user.is_authenticated %}
+{% if user.is_authenticated %}
 
     <div class="superholder">
         <div class="holder1">
             <div class="holder2">
                 <h1 class="text-start text-black">Create your new <p class="h1 fw-bold reading-club">reading club</p></h1>
-                <img src="{% static 'images\create-club-pic.png' %}" class="form-img">
+                <img src="{% static 'images/create-club-pic.png' %}" class="form-img">
             </div>
             <div class="container-start">
                 <div class="row">
-                        <div class="form-group shadow-lg">
-                            <form method="post">
-                                {% csrf_token %}
-                                {{ form.media }} 
-                                {{ form.as_p }}  
-                                <button class="btn btn-primary btn-lg create-btn" aria-disabled="true">Create</button>
-                            </form>
-                        </div>
+                    <div class="form-group shadow-lg">
+                        <form method="post" id="create-club-form">
+                            {% csrf_token %}
+                            
+                            {{ form.as_p }}
+                            <button class="btn btn-primary btn-lg create-btn" id="create-btn" disabled>Create</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function validateField(field) {
+            const value = field.value.trim();
+            const errorElement = document.createElement('div');
+            errorElement.classList.add('error-message');
+
+            if (field.type === "checkbox") {
+                return field.checked;
+            }
+
+            return value !== '';
+        }
+
+        function validateForm() {
+            const form = document.getElementById("create-club-form");
+            const fields = form.querySelectorAll("input, textarea, select");
+            let allValid = true;
+
+            fields.forEach(field => {
+                if (!validateField(field)) {
+                    allValid = false;
+                }
+            });
+
+            return allValid;
+        }
+
+        function toggleSubmitButton() {
+            const button = document.getElementById("create-btn");
+            if (validateForm()) {
+                button.removeAttribute("disabled");
+            } else {
+                button.setAttribute("disabled", "true");
+            }
+        }
+
         
-        <script>
-            var name = "{{ user.id }}";
-            document.getElementById("moderador").value = name;
-        </script>
-    {% else %}
-    Você não tem permissão para criar um Clube   
-    {% endif %} 
+        document.querySelectorAll("input, textarea, select").forEach(input => {
+            input.addEventListener("input", toggleSubmitButton);
+
+            if (input.type === "checkbox") {
+                input.addEventListener("change", toggleSubmitButton);
+            }
+        });
+
+        
+        var name = "{{ user.id }}";
+        document.getElementById("moderador").value = name;
+    </script>
+
+{% else %}
+    Você não tem permissão para criar um Clube
+{% endif %}
+
 {% endblock %}

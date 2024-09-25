@@ -19,7 +19,7 @@ class ClubeForm(forms.ModelForm):
             'modalidade': forms.Select(attrs={'class': 'form-control'}),
             'categoria': forms.Select(attrs={'class': 'form-control'}),
             'descricao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Descreva em poucas palavras seu clube'}),
-            'sobre': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Conte mais sobre o clube'}),
+            'sobre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Conte mais sobre o clube'}),
             'privado': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
@@ -38,7 +38,7 @@ class ClubeEditForm(forms.ModelForm):
             'modalidade': forms.Select(attrs={'class': 'form-control'}),
             'categoria': forms.Select(attrs={'class': 'form-control'}),
             'descricao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Descreva em poucas palavras seu clube'}),
-            'sobre': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Conte mais sobre o clube'}),
+            'sobre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Conte mais sobre o clube'}),
             'privado': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
