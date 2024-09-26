@@ -1,12 +1,25 @@
 <style>
+  *{
+    font-family: 'DM Sans', 'sans-serif';
+  }
 
-    *{
-      font-family: 'DM Sans', 'sans-serif';
-    }
+  .newclub-btn{
+    padding-top: .3rem;
+  }
 
-    .newclub-btn{
-      padding-top: .3rem;
-    }
+  .btn-profile-div{
+    width: fit-content;
+    padding: 0rem;
+  }
+
+  .logout-btn{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 90%;
+    margin-left: 0.6rem;
+  }
+
 </style>
 
 <header class="p-3 text-bg-light shadow-lg">
@@ -24,12 +37,23 @@
 
       <div class="text-end">
         {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}" style="display:inline;">
-          {% csrf_token %}
-          <a class="btn bnt-sm btn-primary newclub-btn" href="{% url 'addClube' %}">New Club</a>
-          <button class="btn btn-light" type="submit">Logout</button>
-        </form>
-        <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/original/user-icon-on-transparent-background-free-png.png" alt="foto de usuário" width="60px">
+        <a class="btn bnt-sm btn-primary newclub-btn" href="{% url 'addClube' %}">New Club</a>
+        <div class="btn-group btn-n-pfp">
+          <div class="vr"></div>
+          <button type="button" class="btn dropdown-toggle btn-profile-div" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/original/user-icon-on-transparent-background-free-png.png" alt="foto de usuário" width="60px">
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;" class="logout-btn-div">
+            {% csrf_token %}
+            <button class="btn btn-danger logout-btn" type="submit">Logout</button>
+            </form>
+          </ul>
+        </div>
         {% else %}
         <a class="btn btn-light" href=" {% url 'register' %}">Register</a>
         <a class="btn btn-light" href="{% url 'login' %}">Login</a>
@@ -38,3 +62,4 @@
     </div>
   </div>
 </header>
+

@@ -1,75 +1,341 @@
-{% extends 'base.html' %}
+{% extends 'base3.html' %}
 {% load static %}
 
 {% block content %}
+
+<style>
+
+    body{
+        background-color: black;
+    }
+
+</style>
+
+
 <body>
     <main>
+        <section id="banner-principal">
+            <div class="container-fluid p-0 d-flex flex-column flex-md-row" style="background-color: black;">
+                <div id="texto-lateral" class="col-12 col-md-4 d-flex align-items-center">
+                    <p id="typewriter" class="text-left p-3 texto_aparece"></p>
+                </div>
+                <div id="carousel-container" class="col-12 col-md-8" style="position: relative;">
+                    <div id="carouselExampleAutoplaying" class="carousel slide img-carousel" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="{% static 'images/duna.png' %}" class="d-block w-100 photo-carousel" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{% static 'images/hp.png' %}" class="d-block w-100 photo-carousel" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{% static 'images/romance.png' %}" class="d-block w-100 photo-carousel" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{% static 'images/cesar.png' %}" class="d-block w-100 photo-carousel" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{% static 'images/agatha.png' %}" class="d-block w-100 photo-carousel" alt="...">
+                            </div>            
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                        <div class="carousel-caption d-none d-md-block">
+                            <p style="font-size: 5vw; text-align: left;" id="typewriter"></p>
+                        </div>
+                    </div>
 
-       
-
-        <section id="title-section"> <!-- Section da div do texto principal da página -->
-            <div class="title-div">
-                <p>
-                    Bookheaded
-                </p>
+                    <div id="mini-carousel" class="d-flex justify-content-center" style="position: absolute; bottom: 10px; transform: translateX(-50%); z-index: 20;">
+                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="0" style="cursor: pointer;">
+                            <img src="{% static 'images/duna.png' %}" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="1" style="cursor: pointer;">
+                            <img src="{% static 'images/hp.png' %}" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="2" style="cursor: pointer;">
+                            <img src="{% static 'images/romance.png' %}" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="3" style="cursor: pointer;">
+                            <img src="{% static 'images/cesar.png' %}" class="card-img-top" alt="...">
+                        </div>
+                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="4" style="cursor: pointer;">
+                            <img src="{% static 'images/agatha.png' %}" class="card-img-top" alt="...">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button class="startnow-btn">Start Now</button> <!-- Botão de Start Now -->
         </section>
-
-        <section id="info-section"> <!-- Section dos cards e afins -->
-
-            <div class="hold-the-cards-div"> <!-- Div para segurar a posição dos cards -->
-
-                <div class="info-card">
-                    <div class="card-div">
-                        <div class="card-icons-holder" id="star-holder">
-                            <img src="{% static 'images/conectar.jpg' %}" class="card-icons" id="star-icon">
-                        </div>
-                        <p class="card-text">Onde você cria conexões<br> por meio da leitura.</p>
-                    </div>
+        <section id="vantagens-bookheaded">
+            <div class="row" style="display: flex; align-items: stretch;">
+                <div class="col-md-6" style="flex: 1;">
+                    <img src="{% static 'images/lendo3.png' %}" style="height: 600px; width: auto; object-fit: cover;">
                 </div>
-
-                <div class="info-card">
-                    <div class="card-div">
-                        <div class="card-icons-holder" id="check-holder">
-                            <img src="{% static 'images/livro.jpg' %}" class="card-icons" id="check-icon">
-                        </div>
-                        <p class="card-text">Projeto que formenta ainda mais o amor no ato de ler.</p>
-                    </div>
+                <div class="col-md-6 segunda_section" style="background-color: black; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+                    <h3 style="color: white; font-size: 32px; margin-bottom: 80px;margin-top: 30px;">PORQUE USAR O BOOKHEADED</h3>
+                    <ul style="list-style: none; padding-left: 0; width: 100%; margin-left: 60px;margin-top: 10px;">
+                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
+                            <img src="{% static 'images/calendar.png' %}" style="width: 64px; margin-right: 20px;">
+                            <span>Agende e crie lembretes</span>
+                        </li>
+                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
+                            <img src="{% static 'images/gestao.png' %}" style="width: 64px; margin-right: 20px;">
+                            <span>Melhore a gestão de membros</span>
+                        </li>
+                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
+                            <img src="{% static 'images/bate-papo.png' %}" alt="Star Icon" style="width: 64px; margin-right: 20px;">
+                            <span>Bate-papo ao vivo</span>
+                        </li>
+                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
+                            <img src="{% static 'images/multidao.png' %}" alt="Community Icon" style="width: 64px; margin-right: 20px;">
+                            <span>Acesso à comunidade</span>
+                        </li>
+                    </ul>
                 </div>
-
-                <div class="info-card">
-                    <div class="card-div">
-                        <div class="card-icons-holder" id="book-holder">
-                            <img src="{% static 'images/clube.jpg' %}" class="card-icons" id="book-icon">
-                        </div>
-                        <p class="card-text">Com possibilidades de criar amizades para o resto da vida.</p>
-                    </div>
-                </div>
-
             </div>
-
-            <section class="hold-mnbh-div"> <!-- Section para segurar a div do MNBH -->
-
-                <div class="mnbh-div">
-
-                    <button class="startnow-btn" id="mnbh-btn">Meet New Bookheads</button>
-
-                </div>
-
-            </section>
-
-
+                   
         </section>
-
+        
+        
+        
+        <section id="crie-login"></section>
+        <section id="exemplos-clubs"></section>
     </main>
-    <style>
-@media (max-width: 600px) {
-    .startnow-btn {
-        width: 100%; /* Botão ocupa 100% em telas pequenas */
-    }
-}
-    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const text = "Conheça nossos<br>Principais clubes";
+            let index = 0;
+            const speed = 30; 
+            const typewriterElement = document.getElementById("typewriter");
 
+            function type() {
+                if (text.charAt(index) === "<") {
+                    const endIndex = text.indexOf(">", index);
+                    typewriterElement.innerHTML += text.substring(index, endIndex + 1);
+                    index = endIndex + 1;
+                } else {
+                    typewriterElement.innerHTML += text.charAt(index);
+                    index++;
+                }
+
+                if (index < text.length) {
+                    setTimeout(type, speed);
+                } else {
+                    blinkCursor();
+                }
+            }
+
+            function blinkCursor() {
+                typewriterElement.innerHTML += '<span id="cursor">_</span>';
+                setInterval(() => {
+                    const cursor = document.getElementById("cursor");
+                    if (cursor) {
+                        cursor.style.visibility = cursor.style.visibility === "hidden" ? "visible" : "hidden";
+                    }
+                }, 500);
+            }
+
+            type();
+        });
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'DM Sans', 'sans-serif';
+        }
+
+        .texto_aparece {
+            font-size: 42px; 
+            font-weight: 600; 
+            line-height: 1.1;
+            color: white;
+        }
+
+        .container-fluid {
+            padding: 0;
+            margin: 0;
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 5%;
+        }
+
+        .carousel-control-prev {
+            left: 20px;
+        }
+
+        .carousel-control-next {
+            right: 20px;
+        }
+
+        .carousel-item {
+            height: 100%;
+        }
+
+        .carousel-inner img {
+            width: 100%; /* Garantir que as imagens não excedam o contêiner */
+            height: auto; /* Manter a proporção */
+            object-fit: cover;
+        }
+
+        .carousel-caption {
+            position: absolute;
+            top: 20px;
+            left: 10%;
+            padding-left: 20px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .carousel-caption h5 {
+            font-size: 2.5rem;
+            margin: 0;
+        }
+
+        .carousel-caption p {
+            font-size: 5vw;
+            text-align: left;
+            line-height: 1;
+        }
+
+        #mini-carousel {
+            z-index: 20; 
+            position: absolute; 
+            bottom: 10px; 
+            left: 74%; 
+            transform: translateX(-50%); 
+            display: flex; /* Exibir o mini carrossel */
+            overflow-x: hidden; /* Habilitar rolagem horizontal se necessário */
+        }
+
+        .card {
+            border-radius: 15px; 
+            overflow: hidden; 
+            transition: transform 0.2s; 
+        }
+
+        .card:hover {
+            transform: scale(1.05); 
+        }
+
+        .card img {
+            width: 100%; 
+            height: auto; 
+            object-fit: cover;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            #texto-lateral {
+                background-color: black !important;
+                color: white !important;
+            }
+            #texto-lateral p{
+                margin-bottom: 2rem;
+            }
+            .texto_aparece {
+                font-size: 14px; 
+                font-weight: 500; 
+                line-height: 1.1;
+                min-height: 30px !important; /* Ajuste a altura mínima da div */
+                max-height: 30px !important; /* Ajuste a altura máxima da div */
+            }
+            /* Ajustar a largura dos cards para mobile */
+            #mini-carousel .card {
+                width: 60px; /* Largura dos cards no mobile */
+                height: auto;
+            }
+            #mini-carousel {
+                z-index: 20; 
+                position: absolute; 
+                bottom: 10px; 
+                left: 50%; 
+                transform: translateX(-50%); 
+                display: flex; /* Exibir o mini carrossel */
+                overflow-x: auto; /* Habilitar rolagem horizontal se necessário */
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            /* Ajustes específicos para tablets */
+            #texto-lateral {
+                background-color: black !important;
+                color: white !important;
+            }
+            #texto-lateral p {
+                font-size: 18px; /* Ajuste a fonte para tablets */
+            }
+            .texto_aparece {
+                font-size: 24px; 
+                font-weight: 600; 
+                line-height: 1.1;
+                min-height: 40px !important; /* Ajuste a altura mínima da div */
+                max-height: 40px !important; /* Ajuste a altura máxima da div */
+            }
+            /* Ajustar a largura dos cards para tablets */
+            #mini-carousel .card {
+                width: 50px; /* Largura dos cards no tablet */
+                height: auto;
+            }
+            #mini-carousel {
+                z-index: 20; 
+                position: absolute; 
+                bottom: 20px; 
+                left: 70%; 
+                transform: translateX(-50%); 
+                display: flex; /* Exibir o mini carrossel */
+                overflow-x: auto; /* Habilitar rolagem horizontal se necessário */
+            }
+        }
+
+        @media (min-width: 1025px) {
+            #texto-lateral {
+                background-image: linear-gradient(rgba(0, 0, 0, 0.838), rgba(0, 0, 0, 0.827)),url("{% static 'images/textura.jpg' %}"); /* Caminho da imagem de fundo */
+                background-size: cover; /* Ajusta a imagem para cobrir toda a área */
+                background-position: center; /* Centraliza a imagem no fundo */
+                background-repeat: no-repeat; /* Evita que a imagem se repita */
+                color: white; /* Mantém o texto branco */
+                padding: 20px; /* Ajusta o espaçamento interno, se necessário */
+            }
+            .texto_aparece {
+                font-size: 42px; 
+                font-weight: 600; 
+                line-height: 1.1;
+                min-height: 80px !important; /* Ajuste a altura mínima da div */
+                max-height: 80px !important; /* Ajuste a altura máxima da div */
+            }
+            .segunda_section{
+                background-image: linear-gradient(rgba(0, 0, 0, 0.838), rgba(0, 0, 0, 0.827)),url("{% static 'images/textura.jpg' %}"); /* Caminho da imagem de fundo */
+                background-size: cover; /* Ajusta a imagem para cobrir toda a área */
+                background-position: center; /* Centraliza a imagem no fundo */
+                background-repeat: no-repeat; /* Evita que a imagem se repita */
+            }
+            #mini-carousel .card {
+                width: 100px; /* Largura dos cards no tablet */
+                height: auto;
+                border:0px;
+                background: none;
+                
+
+            }
+            #mini-carousel {
+                z-index: 20; 
+                position: absolute; 
+                bottom: 20px; 
+                left: 70%; 
+                transform: translateX(-50%); 
+                overflow: hidden;
+                display: flex; /* Exibir o mini carrossel */
+            }
+        }
+    </style>
 </body>
 {% endblock %}
