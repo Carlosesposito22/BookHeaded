@@ -71,7 +71,38 @@
                 </div>
             </div>
         </section>
-        <section id="vantagens-bookheaded"></section>
+        <section id="vantagens-bookheaded">
+            <div class="row" style="display: flex; align-items: stretch;">
+                <div class="col-md-6" style="flex: 1;">
+                    <img src="{% static 'images/lendo3.png' %}" style="height: 600px; width: auto; object-fit: cover;">
+                </div>
+                <div class="col-md-6 segunda_section" style="background-color: black; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+                    <h3 style="color: white; font-size: 32px; margin-bottom: 80px;margin-top: 30px;">PORQUE USAR O BOOKHEADED</h3>
+                    <ul style="list-style: none; padding-left: 0; width: 100%; margin-left: 60px;margin-top: 10px;">
+                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
+                            <img src="{% static 'images/calendar.png' %}" style="width: 64px; margin-right: 20px;">
+                            <span>Agende e crie lembretes</span>
+                        </li>
+                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
+                            <img src="{% static 'images/gestao.png' %}" style="width: 64px; margin-right: 20px;">
+                            <span>Melhore a gestão de membros</span>
+                        </li>
+                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
+                            <img src="{% static 'images/bate-papo.png' %}" alt="Star Icon" style="width: 64px; margin-right: 20px;">
+                            <span>Bate-papo ao vivo</span>
+                        </li>
+                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
+                            <img src="{% static 'images/multidao.png' %}" alt="Community Icon" style="width: 64px; margin-right: 20px;">
+                            <span>Acesso à comunidade</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+                   
+        </section>
+        
+        
+        
         <section id="crie-login"></section>
         <section id="exemplos-clubs"></section>
     </main>
@@ -117,12 +148,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
-            overflow-x: hidden; /* Impedir scroll lateral */
-            overflow-y: hidden;
-            
+            font-family: 'DM Sans', 'sans-serif';
         }
 
         .texto_aparece {
@@ -272,8 +298,12 @@
 
         @media (min-width: 1025px) {
             #texto-lateral {
-                background-color: black !important;
-                color: white !important;
+                background-image: linear-gradient(rgba(0, 0, 0, 0.838), rgba(0, 0, 0, 0.827)),url("{% static 'images/textura.jpg' %}"); /* Caminho da imagem de fundo */
+                background-size: cover; /* Ajusta a imagem para cobrir toda a área */
+                background-position: center; /* Centraliza a imagem no fundo */
+                background-repeat: no-repeat; /* Evita que a imagem se repita */
+                color: white; /* Mantém o texto branco */
+                padding: 20px; /* Ajusta o espaçamento interno, se necessário */
             }
             .texto_aparece {
                 font-size: 42px; 
@@ -281,6 +311,12 @@
                 line-height: 1.1;
                 min-height: 80px !important; /* Ajuste a altura mínima da div */
                 max-height: 80px !important; /* Ajuste a altura máxima da div */
+            }
+            .segunda_section{
+                background-image: linear-gradient(rgba(0, 0, 0, 0.838), rgba(0, 0, 0, 0.827)),url("{% static 'images/textura.jpg' %}"); /* Caminho da imagem de fundo */
+                background-size: cover; /* Ajusta a imagem para cobrir toda a área */
+                background-position: center; /* Centraliza a imagem no fundo */
+                background-repeat: no-repeat; /* Evita que a imagem se repita */
             }
             #mini-carousel .card {
                 width: 100px; /* Largura dos cards no tablet */
