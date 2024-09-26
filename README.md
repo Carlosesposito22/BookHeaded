@@ -25,15 +25,14 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
 <summary>Entrega 1</summary>
 <ul>
   <li>
-## 📑 Jira Backlog
-  <img src="Mídia/imageJiraBacklog.jpg" alt="Jira Baclog"> 
-
-<br>
-
-## 📑 Jira Board 
-  <img src="Mídia/imageJiraBoard.jpg" alt="Jira Board">
-
+<a href="Mídia/imageJiraBacklog.jpg">Imagem do Backlog no Jira</a>
 </li>
+  
+<li>
+    <a  href="Mídia/imageJiraBoard.jpg"
+      >Imagem do Board no Jira</a
+    >
+  </li>
 </ul>
 </details>
 
