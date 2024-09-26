@@ -234,6 +234,7 @@ Detail {{ clube.titulo }}
         </div>
 
         {% include 'modal_delete.html' %}
+        {% include 'modal_avaliar.html' %}
         <div class="data-holder shadow"> 
             <div class="club-data-icons">
                 <h3><strong>Club Data</strong></h3>
@@ -243,6 +244,10 @@ Detail {{ clube.titulo }}
                         <a href="{% url 'updateClube' clube.pk %}"><i class="bi bi-pencil-fill"></i></a>
                         <a href="#" class="bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}"></a>
                     </div>
+                    {% else %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#avaliarModal-{{ clube.id }}">
+                        Avaliar Clube
+                    </button>
                     {% endif %}
                 {% endif %}
             </div> 
@@ -282,25 +287,6 @@ Detail {{ clube.titulo }}
             </div>
         </div>
     </div>
-    <div class="not-adm-items"></div>
-        {% if user != clube.moderador %}
-        <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST" class="my-4">
-            {% csrf_token %}
-            <input type="hidden" name="clube_id" value="{{ clube.pk }}">
-            <label for="rating">Avalie de 1 a 5:</label>
-            <select name="rating" id="rating" required class="form-control w-25">
-                <option value="">Escolha uma avaliação</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-            </select>
-            <button type="submit" class="btn btn-primary btn-sm mt-2">Avaliar</button>
-        </form>
-        {% endif %}
-        <br>
-        
 </div>
 </div>
 

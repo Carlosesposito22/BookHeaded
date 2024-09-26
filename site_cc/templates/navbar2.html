@@ -39,8 +39,8 @@
         <li class="nav-item"><a href="{% url 'about' %}" class="nav-link px-2 text-white">About</a></li>
         {% if user.is_authenticated %}
         {% csrf_token %}
-        <a class="nav-item nav-link px-2 text-black" href=" {% url 'clubs' %}">Clubs</a>
-        <a class="nav-item nav-link px-2 text-black" href=" {% url 'myclubes' %}">My Clubs</a>
+        <a class="nav-item nav-link px-2 text-white" href=" {% url 'clubs' %}">Clubs</a>
+        <a class="nav-item nav-link px-2 text-white" href=" {% url 'myclubes' %}">My Clubs</a>
         {% endif %}
       </ul>
 
