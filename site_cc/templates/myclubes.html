@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block title %}
 Home Page
@@ -242,7 +243,7 @@ Home Page
                 <div class="description-div display-6">
                     <p class="date"><span class="badge text-bg-primary date">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span></p>
                     <hr>
-                    <p class="description text-break">{{ clube.descricao|slice:":100"|safe }}</p>
+                    <p class="description text-break">{{ clube.descricao|cortar_texto:100|safe }}</p> 
                 </div>
             </div>
             {% include 'modal_myclubs.html' %} 

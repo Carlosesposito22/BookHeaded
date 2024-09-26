@@ -23,17 +23,18 @@
   }
 
   .row {
-    background: rgb(247, 247, 247);
+    background: rgb(255, 255, 255);
     width: fit-content;
     max-width: 100%;
     max-height: auto;
     margin: 0;
     border-style: solid;
     border-color: grey;
-    border-width: .1rem;
+    border-width: .15rem;
     border-radius: 1rem;
     padding: 3rem;
     padding-bottom: 2rem;
+    z-index: 99;
   }
 
   .login-items-holder {
@@ -115,7 +116,7 @@
 </a>
 
 <div class="container-fluid centered-container">
-  <div class="row justify-content-center shadow-lg ">
+  <div class="row justify-content-center">
     <div class="col-12 col-md-8 col-lg-6 login-items-holder">
       <form method="POST" action="{% url 'login' %}">
         {% csrf_token %}
@@ -134,8 +135,6 @@
       </form>
     </div>
   </div>
-  <span class="vertical-line"></span>
-  <img src="{% static 'images/image login.png' %}" class="login-drawing">
 </div>
 
 <script>
@@ -159,7 +158,7 @@
   function applyKeyEffect() {
   row.style.transition = 'border-color 0.3s ease, box-shadow 0.3s ease';
   row.style.borderColor = '#0066FF';
-  row.style.boxShadow = '0 0 20px rgba(0, 102, 255, 0.8), 0 0 40px rgba(0, 102, 255, 0.6)';
+  row.style.boxShadow = '0 0 20px rgba(0, 102, 255, 0.8), 0 0 10px rgba(0, 102, 255, 0.1)';
 }
 
 function removeKeyEffect() {
@@ -172,7 +171,7 @@ function handleKeyPress() {
 }
 
 function handleKeyUp() {
-  setTimeout(removeKeyEffect, 300);
+  setTimeout(removeKeyEffect, 200);
 }
 
 usernameInput.addEventListener('keydown', handleKeyPress);
