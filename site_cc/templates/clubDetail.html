@@ -293,61 +293,80 @@ Detail {{ clube.titulo }}
 <script>
     const clubeId = '{{ clube.pk }}';
 
-    document.getElementById('saveProgress').addEventListener('click', function () {
-        const currentCapitulo = document.getElementById('currentcapitulo').value;
-        const totalCapitulos = document.getElementById('totalcapitulo').value;
-    
-        if (!isNaN(currentCapitulo) && !isNaN(totalCapitulos) && totalCapitulos > 0) {
-            const progressPercent = (currentCapitulo / totalCapitulos) * 100;
-            document.getElementById('progressBar').style.width = progressPercent + '%';
-            document.getElementById('progressBar').setAttribute('aria-valuenow', progressPercent);
-            document.getElementById('progressBar').innerText = Math.round(progressPercent) + '%';
-    
-            localStorage.setItem(`progressPercent_${clubeId}`, progressPercent);
-            localStorage.setItem(`currentcapitulo_${clubeId}`, currentCapitulo);
-            localStorage.setItem(`totalcapitulo_${clubeId}`, totalCapitulos);
-    
-            document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
-    
-            const progressModal = bootstrap.Modal.getInstance(document.getElementById('progressModal'));
-            progressModal.hide();
-        }
-    });
-    
-    window.onload = function () {
-        const savedProgress = localStorage.getItem(`progressPercent_${clubeId}`);
-        const savedCurrentCapitulo = localStorage.getItem(`currentcapitulo_${clubeId}`);
-        const savedTotalCapitulos = localStorage.getItem(`totalcapitulo_${clubeId}`);
-    
-        if (savedProgress && savedCurrentCapitulo && savedTotalCapitulos) {
-            document.getElementById('progressBar').style.width = savedProgress + '%';
-            document.getElementById('progressBar').setAttribute('aria-valuenow', savedProgress);
-            document.getElementById('progressBar').innerText = Math.round(savedProgress) + '%';
-    
-            document.getElementById('currentcapitulo').value = savedCurrentCapitulo;
-            document.getElementById('totalcapitulo').value = savedTotalCapitulos;
-    
-            document.getElementById('capituloAtualSpan').innerText = savedCurrentCapitulo;
-        }
-    
-        const comentariosContainer = document.getElementById('comentariosContainer');
-        comentariosContainer.scrollTop = comentariosContainer.scrollHeight;
-    };
-    
-    window.addEventListener('beforeunload', function () {
-        const currentCapitulo = document.getElementById('currentcapitulo').value;
-        const totalCapitulos = document.getElementById('totalcapitulo').value;
-    
-        if (!isNaN(currentCapitulo) && !isNaN(totalCapitulos) && totalCapitulos > 0) {
-            const progressPercent = (currentCapitulo / totalCapitulos) * 100;
-    
-            localStorage.setItem(`progressPercent_${clubeId}`, progressPercent);
-            localStorage.setItem(`currentcapitulo_${clubeId}`, currentCapitulo);
-            localStorage.setItem(`totalcapitulo_${clubeId}`, totalCapitulos);
+document.getElementById('saveProgress').addEventListener('click', function () {
+    const currentCapitulo = document.getElementById('currentcapitulo').value;
+    const totalCapitulos = document.getElementById('totalcapitulo').value;
 
-            document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
+    if (!isNaN(currentCapitulo) && !isNaN(totalCapitulos) && totalCapitulos > 0) {
+        let progressPercent = (currentCapitulo / totalCapitulos) * 100;
+
+        
+        if (progressPercent > 100) {
+            progressPercent = 100;
         }
-    });
+
+        document.getElementById('progressBar').style.width = progressPercent + '%';
+        document.getElementById('progressBar').setAttribute('aria-valuenow', progressPercent);
+        document.getElementById('progressBar').innerText = Math.round(progressPercent) + '%';
+
+        localStorage.setItem(`progressPercent_${clubeId}`, progressPercent);
+        localStorage.setItem(`currentcapitulo_${clubeId}`, currentCapitulo);
+        localStorage.setItem(`totalcapitulo_${clubeId}`, totalCapitulos);
+
+        document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
+
+        const progressModal = bootstrap.Modal.getInstance(document.getElementById('progressModal'));
+        progressModal.hide();
+    }
+});
+
+window.onload = function () {
+    const savedProgress = localStorage.getItem(`progressPercent_${clubeId}`);
+    const savedCurrentCapitulo = localStorage.getItem(`currentcapitulo_${clubeId}`);
+    const savedTotalCapitulos = localStorage.getItem(`totalcapitulo_${clubeId}`);
+
+    if (savedProgress && savedCurrentCapitulo && savedTotalCapitulos) {
+        let progressPercent = parseFloat(savedProgress);
+
+        
+        if (progressPercent > 100) {
+            progressPercent = 100;
+        }
+
+        document.getElementById('progressBar').style.width = progressPercent + '%';
+        document.getElementById('progressBar').setAttribute('aria-valuenow', progressPercent);
+        document.getElementById('progressBar').innerText = Math.round(progressPercent) + '%';
+
+        document.getElementById('currentcapitulo').value = savedCurrentCapitulo;
+        document.getElementById('totalcapitulo').value = savedTotalCapitulos;
+
+        document.getElementById('capituloAtualSpan').innerText = savedCurrentCapitulo;
+    }
+
+    const comentariosContainer = document.getElementById('comentariosContainer');
+    comentariosContainer.scrollTop = comentariosContainer.scrollHeight;
+};
+
+window.addEventListener('beforeunload', function () {
+    const currentCapitulo = document.getElementById('currentcapitulo').value;
+    const totalCapitulos = document.getElementById('totalcapitulo').value;
+
+    if (!isNaN(currentCapitulo) && !isNaN(totalCapitulos) && totalCapitulos > 0) {
+        let progressPercent = (currentCapitulo / totalCapitulos) * 100;
+
+        
+        if (progressPercent > 100) {
+            progressPercent = 100;
+        }
+
+        localStorage.setItem(`progressPercent_${clubeId}`, progressPercent);
+        localStorage.setItem(`currentcapitulo_${clubeId}`, currentCapitulo);
+        localStorage.setItem(`totalcapitulo_${clubeId}`, totalCapitulos);
+
+        document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
+    }
+});
+
 </script>
 
 {% endblock %}

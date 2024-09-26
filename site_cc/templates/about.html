@@ -78,11 +78,64 @@
         gap: 2rem;
     }
 
+    .members{
+        border-radius: 1.5rem;
+        height: 20rem;
+        display: flex;
+        overflow: hidden;
+        border-style: inset solid;
+        border-color: black;
+        border-width: .1rem;
+    }
+
+    .text-div-members{
+        color: black;
+        margin-top: 1.5rem;
+        margin-left: 1.5rem;
+        z-index: 2;
+        width: 25rem;
+        max-width: 80%;
+        text-align: right;
+        height: fit-content;
+    }
+
+    .icons-members{
+        transition: transform 0.4s ease-in-out;
+    }
+
+    .icons-list-members{
+        list-style: none;
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+        width: fit-content;
+        font-size: 20rem;
+        margin-top: -3rem;
+        margin-right: 15rem;
+        align-items: center;
+        background-image: linear-gradient(to bottom, rgba(222, 222, 222, 0.9) 45%, rgba(115, 115, 115, 0) 80%, transparent 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        transform: scale(1);
+    }
+
+    .members:hover .icons-members {
+        transform: scale(1.2);
+    }
+
+    .a-wrapper{
+        display: flex;
+        justify-content: end;
+        padding: 2rem;
+        padding-top: 0rem;
+    }
+
 </style>
 
 <div class="container mt-5 superdiv">
 
-    <div class="container abt-us" >
+    <div class="row abt-us" >
         <a href="{%  url 'introducao' %}">
             <div class="text-div">
                 <h1 class="mb-4 text-break">About</h1>
@@ -96,11 +149,33 @@
                     <ul class="icons-list">
                         <li><i class="bi bi-book-fill"></i></li>
                         <li><i class="bi bi-body-text"></i></li>
-                        <li><i class="bi bi-blockquote-left"></i></li>
-                        <li><i class="bi bi-pen-fill"></i></li>
+                        <li><i class="bi bi-chat-right-quote-fill"></i></li>
                     </ul> 
                 </div>
             </div>
+        </a>
+    </div>
+
+    <div class="row members shadow">
+        <a href="{%  url 'contato' %}" class="a-wrapper">
+            
+            <div class="shadow-div">
+                <div class="icons-members">
+                    <ul class="icons-list-members">
+                        <li><i class="bi bi-people-fill"></i></li>
+                        <li><i class="bi bi-person-lines-fill"></i></li>
+                        <li><i class="bi bi-person-fill-exclamation"></i></li>
+                    </ul> 
+                </div>
+            </div>
+
+            <div class="text-div-members">
+                <h1 class="mb-4 text-break">Our Team</h1>
+                <p class="text-break">There are few more personal things than someone's book taste.
+                Thinking about this, <strong>bookheaded</strong> was developed to properly unite people by books, turning 
+                the management of reading clubs easier and effective.</p>
+            </div>
+            
         </a>
     </div>
 
@@ -108,17 +183,7 @@
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
 
-        <div class="col">
-            <div class="card h-100">
-                <a href="{%  url 'contato' %}">
-                    <img src="{% static 'images/equipe.jpg' %}" class="card-img-top" alt="Equipe">
-                </a>
-                <div class="card-body">
-                    <h5 class="Equipe">Equipe</h5>
-                    <p class="card-text">Saiba mais sobre a Equipe e sua história</p>
-                </div>
-            </div>
-        </div>
+       
         <div class="col">
             <div class="card h-100">
                 <a href="{%  url 'equipe' %}">
