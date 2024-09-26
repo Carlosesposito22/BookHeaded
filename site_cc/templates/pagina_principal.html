@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
 
     body{
@@ -200,7 +200,52 @@
             </div>
         </section>
         
-        <section id="exemplos-clubs"></section>
+        <footer>
+            <div class="container-footer">
+                <div class="row-footer">
+
+                    <div class="footer-col">
+                        <h4 style="margin-bottom: 0;">Bookheaded</h4>
+                        <ul>
+                            <li><a href="#"> Quem somos </a></li>
+                            <li><a href=""> Nossos serviços </a></li>
+                            <li><a href=""> Política de privacidade </a></li>
+                            <li><a href=""> Termos de aceite</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4 style="margin-bottom: 0;">Temas</h4>
+                        <ul>
+                            <li><a href="#">Terror</a></li>
+                            <li><a href="#">Mistério</a></li>
+                            <li><a href="#">Aventura</a></li>
+                            <li><a href="#">Romance</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4 style="margin-bottom: 0;">Modalidades</h4>
+                        <ul>
+                            <li><a href="#">Presencial</a></li>
+                            <li><a href="#">Online</a></li>
+                            <li><a href="#">Hibrido</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4 style="margin-bottom: 0;">Redes sociais</h4>
+                        <div class="medias-socias">
+                            <a href="#"> <i class="fab fa-facebook"></i> </a>
+                            <a href="#"> <i class="fab fa-instagram"></i> </a>
+                            <a href="#"> <i class="fab fa-twitter"></i> </a>
+                            <a href="#"> <i class="fab fa-linkedin"></i> </a>
+                        </div>
+    
+                    </div>
+
+                </div>
+            </div>
+        </footer>
     </main>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -240,6 +285,77 @@
         });
     </script>
     <style>
+        footer{
+            background-color: #000000;
+            padding: 50px 0;
+        }
+        .container-footer{
+            max-width: 1200px;
+            padding: 0 4%;
+            margin: 0 auto;
+        }
+        .row-footer{
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .footer-col{
+            flex-basis: 25%;
+            padding: 10px;
+        }
+        .footer-col h4{
+            font-size: 22px;
+            color: white;
+            margin-bottom: 20px;
+            font-weight: 500;
+            position: relative;
+            text-transform: uppercase;
+        }
+        .footer-col ul{
+            list-style: none;
+        }
+        .footer-col ul li{
+            margin: 10px 0;
+        }
+        .footer-col ul li a{
+            font-size: 16px;
+            text-transform: capitalize;
+            color: white;
+            text-decoration: none;
+            font-weight: 300;
+            display: block;
+            transition: all 0.3s ease;
+        }
+        .footer-col ul li a:hover{
+            color: #cecdcd;
+            padding-left: 10px;
+        }
+        .footer-col .medias-socias{
+            margin-top: 30px;
+        }
+        .footer-col .medias-socias a{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            width: 40px;
+            margin: 0 10px 10px 0;
+            text-decoration: none;
+            border-radius: 50%;
+            color: white;
+            border: 1px solid white;
+            transition: all 0.5s ease;
+        }
+        .footer-col .medias-socias a i{
+            font-size: 20px;
+        }
+
+        .footer-col .medias-socias a:hover{
+            color: #000000;
+            background-color: white;
+        }
+
+
         #vantagens-bookheaded {
             overflow: hidden;
             width: 100%;
@@ -384,6 +500,28 @@
         }
 
         @media (max-width: 768px) {
+            .footer-col ul {
+                flex-basis: 22%;
+                text-align: center;
+                padding: 0!important;
+            }
+            .row-footer {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .footer-col {
+                width: 100%;
+                text-align: center;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            
+            .medias-socias {
+                margin-top: 20px;
+            }
+        
 
             #vantagens-bookheaded ul {
                 text-align: left; /* Alinha o texto à esquerda */
@@ -451,6 +589,27 @@
         }
 
         @media (min-width: 769px) and (max-width: 1024px) {
+            .footer-col ul {
+                flex-basis: 22%;
+                text-align: left;
+                padding: 10px!important;
+            }
+
+            .row-footer {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            
+            .footer-col {
+                flex-basis: 48%;
+                margin-bottom: 20px;
+            }
+            
+            .medias-socias {
+                margin-top: 20px;
+            }
 
             #vantagens-bookheaded ul {
                 text-align: left; /* Alinha o texto à esquerda */
@@ -520,6 +679,22 @@
         }
 
         @media (min-width: 1025px) {
+            .row-footer {
+                display: flex;
+                justify-content: space-between;
+            }
+            
+            .footer-col {
+                flex-basis: 22%;
+                text-align: left;
+            }
+            .footer-col ul {
+                flex-basis: 22%;
+                text-align: left;
+                padding: 10px!important;
+            }
+
+
             #texto-lateral {
                 background-image: linear-gradient(rgba(0, 0, 0, 0.838), rgba(0, 0, 0, 0.827)),url("{% static 'images/textura.jpg' %}"); /* Caminho da imagem de fundo */
                 background-size: cover; /* Ajusta a imagem para cobrir toda a área */
