@@ -138,6 +138,12 @@
         object-fit: cover;
     }
 
+    .item1{
+        height: 100%;
+        width: 100%;
+        background-color: black;
+    }
+
     @media screen and (max-width: 650px) {
         .carousel-inner img {
             object-fit: cover;
@@ -152,7 +158,9 @@
     <div id="carouselExampleAutoplaying" class="carousel slide img-carousel" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="{% static 'images/reading-925589_1280.jpg' %}" class="d-block w-100 photo-carousel" alt="...">
+                <div class="item1">
+
+                </div>
             </div>
             <div class="carousel-item">
                 <img src="{% static 'images/reading-925589_1280.jpg' %}" class="d-block w-100 photo-carousel" alt="...">
