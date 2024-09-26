@@ -62,38 +62,38 @@
             </div>
         </section>
         <section id="vantagens-bookheaded">
-            <div class="row" style="display: flex; align-items: stretch;">
-                <div class="col-md-6" style="flex: 1;">
-                    <img src="{% static 'images/lendo3.png' %}" style="height: 600px; width: auto; object-fit: cover;">
-                </div>
-                <div class="col-md-6 segunda_section" style="background-color: black; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
-                    <h3 style="color: white; font-size: 32px; margin-bottom: 80px;margin-top: 30px;">PORQUE USAR O BOOKHEADED</h3>
-                    <ul style="list-style: none; padding-left: 0; width: 100%; margin-left: 60px;margin-top: 10px;">
-                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
-                            <img src="{% static 'images/calendar.png' %}" style="width: 64px; margin-right: 20px;">
+            <div class="row">
+                <div id="img-lado" class="col-md-6"></div>
+                <div class="col-md-6 segunda_section" id="icones_sec">
+                    <h3>PORQUE USAR O BOOKHEADED</h3>
+                    <ul>
+                        <li>
+                            <img src="{% static 'images/calendar.png' %}">
                             <span>Agende e crie lembretes</span>
                         </li>
-                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
-                            <img src="{% static 'images/gestao.png' %}" style="width: 64px; margin-right: 20px;">
+                        <li>
+                            <img src="{% static 'images/gestao.png' %}">
                             <span>Melhore a gestão de membros</span>
                         </li>
-                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
-                            <img src="{% static 'images/bate-papo.png' %}" alt="Star Icon" style="width: 64px; margin-right: 20px;">
+                        <li>
+                            <img src="{% static 'images/bate-papo.png' %}" alt="Bate-papo ao vivo">
                             <span>Bate-papo ao vivo</span>
                         </li>
-                        <li style="color: white; margin-bottom: 25px; display: flex; align-items: center; font-size: 24px;">
-                            <img src="{% static 'images/multidao.png' %}" alt="Community Icon" style="width: 64px; margin-right: 20px;">
+                        <li>
+                            <img src="{% static 'images/multidao.png' %}" alt="Acesso à comunidade">
                             <span>Acesso à comunidade</span>
                         </li>
                     </ul>
                 </div>
             </div>
-                   
+        </section>
+           
+        <section id="crie-login" style="width: 100%; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center;">
+            <div>
+                <img src="{% static 'images/call4.png' %}" style="max-width: 100%; height: auto;">
+            </div>
         </section>
         
-        
-        
-        <section id="crie-login"></section>
         <section id="exemplos-clubs"></section>
     </main>
     <script>
@@ -134,6 +134,60 @@
         });
     </script>
     <style>
+        #vantagens-bookheaded {
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .row {
+            display: flex;
+            align-items: stretch;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .col-md-6 {
+            flex: 1;
+            padding: 0;
+        }
+
+        .segunda_section {
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            padding-left: 40px;
+        }
+
+        h3 {
+            color: white;
+            font-size: 32px; /* Tamanho para desktop */
+            margin-bottom: 80px;
+            margin-top: 30px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+            width: 100%;
+            margin: 10px 0 0 0;
+        }
+
+        li {
+            color: white;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            font-size: 24px; /* Tamanho para desktop */
+        }
+
+        li img {
+            width: 64px;
+            margin-right: 20px;
+        }
         * {
             margin: 0;
             padding: 0;
@@ -224,6 +278,42 @@
         }
 
         @media (max-width: 768px) {
+
+            #vantagens-bookheaded ul {
+                text-align: left; /* Alinha o texto à esquerda */
+                width: 100%; /* Faz com que a lista ocupe 100% da largura disponível */
+                margin: 0 auto; /* Centraliza a lista dentro do contêiner */
+            }
+            
+            #vantagens-bookheaded li {
+                display: flex; /* Utiliza flexbox para alinhar imagem e texto */
+                align-items: center; /* Alinha verticalmente a imagem e o texto */
+                margin: 10px 0; /* Espaçamento vertical entre os itens */
+            }
+
+            #vantagens-bookheaded img {
+                margin-right: 10px; /* Espaçamento entre a imagem e o texto */
+                max-width: 30px; /* Define uma largura máxima para as imagens */
+                height: auto; /* Mantém a proporção da imagem */
+            }
+        
+            #img-lado{
+                display: none;
+            }
+            
+            h3 {
+                font-size: 20px; /* Tamanho para mobile */
+                margin: 20px;
+            }
+
+            li {
+                font-size: 14px; /* Tamanho reduzido para mobile */
+            }
+
+            li img {
+                width: 32px; /* Tamanho menor para ícones em mobile */
+            }
+
             #texto-lateral {
                 background-color: black !important;
                 color: white !important;
@@ -255,7 +345,44 @@
         }
 
         @media (min-width: 769px) and (max-width: 1024px) {
-            /* Ajustes específicos para tablets */
+
+            #vantagens-bookheaded ul {
+                text-align: left; /* Alinha o texto à esquerda */
+                width: 100%; /* Faz com que a lista ocupe 100% da largura disponível */
+                margin: 0 auto; /* Centraliza a lista dentro do contêiner */
+            }
+            
+            #vantagens-bookheaded li {
+                display: flex; /* Utiliza flexbox para alinhar imagem e texto */
+                align-items: center; /* Alinha verticalmente a imagem e o texto */
+                margin: 10px 0; /* Espaçamento vertical entre os itens */
+            }
+
+            #vantagens-bookheaded img {
+                margin-right: 10px; /* Espaçamento entre a imagem e o texto */
+                max-width: 30px; /* Define uma largura máxima para as imagens */
+                height: auto; /* Mantém a proporção da imagem */
+            }
+
+            .segunda_section {
+                text-align: center;
+            }
+
+            #img-lado{
+                display: none;
+            }
+            h3 {
+                font-size: 40px; /* Ajuste para tablets */
+                margin: 20px;
+            }
+
+            li {
+                font-size: 28px; /* Tamanho adequado para tablets */
+            }
+
+            li img {
+                width: 36px; /* Tamanho ajustado para tablets */
+            }
             #texto-lateral {
                 background-color: black !important;
                 color: white !important;
