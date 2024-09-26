@@ -8,8 +8,10 @@
         font-family: 'DM Sans', 'sans-serif';
     }
 
-    .container {
-        color: black;
+    .superdiv {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
     }
 
     .card-img-top {
@@ -20,22 +22,91 @@
         text-align: center;
     }
 
+    .abt-us{
+        background-color: black;
+        overflow: hidden;
+        color: white;
+        border-radius: 1.5rem;
+        box-shadow: inset;
+        height: 20rem;
+    }
+
+    .abt-us:hover{
+        cursor: pointer;
+        color: white;
+    }
+
+    .abt-us:hover .icons {
+        transform: scale(1.2);
+    }
+
+    .text-div{
+        margin-top: 1.5rem;
+        margin-left: 1.5rem;
+        z-index: 2;
+        font-weight: lighter;
+        width: 25rem;
+        max-width: 80%;
+    }
+
+    .icons{
+        display: flex;
+        justify-content: right;
+        text-align: right;
+        background-image: linear-gradient(to bottom, rgba(50, 50, 50, 0.9) 0%, rgba(0, 0, 0, 0.1) 45%, transparent 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        transform: scale(1);
+        transition: transform 0.4s ease-in-out;
+        margin-top: -5rem;
+        margin-right: 2rem;
+        min-width: 80%;
+        min-height: 5rem;
+    }
+
+    a{
+        text-decoration: none;
+        color: white;
+    }
+
+    .icons-list {
+        display: flex;
+        list-style: none;
+        flex-direction: row;
+        font-size: 13rem;
+        gap: 2rem;
+    }
+
 </style>
 
-<div class="container mt-5">
-    <h1 class="mb-4">About Us</h1>
+<div class="container mt-5 superdiv">
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-            <div class="card h-100 ">
-                <a href="{%  url 'introducao' %}">
-                    <img src="{% static 'images/juntos.jpg' %}" class="card-img-top" alt="Juntos"></a>
-                <div class="card-body">
-                    <h5 class="card-title">Introdução</h5>
-                    <p class="card-text">Conheça mais sobre o projeto <br>BookHeaded</p>
+    <div class="container abt-us" >
+        <a href="{%  url 'introducao' %}">
+            <div class="text-div">
+                <h1 class="mb-4 text-break">About</h1>
+                <p class="text-break">There are few more personal things than someone's book taste.
+                Thinking about this, <strong>bookheaded</strong> was developed to properly unite people by books, turning 
+                the management of reading clubs easier and effective.</p>
+            </div>
+            
+            <div class="shadow-div">
+                <div class="icons">
+                    <ul class="icons-list">
+                        <li><i class="bi bi-book-fill"></i></li>
+                        <li><i class="bi bi-body-text"></i></li>
+                        <li><i class="bi bi-blockquote-left"></i></li>
+                        <li><i class="bi bi-pen-fill"></i></li>
+                    </ul> 
                 </div>
             </div>
-        </div>
+        </a>
+    </div>
+
+    
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
 
         <div class="col">
             <div class="card h-100">
