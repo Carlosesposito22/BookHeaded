@@ -1,3 +1,11 @@
+<style>
+    .div-stars-modal {
+        width: fit-content;
+        font-size: 1.1rem;
+        display: flex;
+    }
+</style>
+
 <div class="modal fade" id="clubeModal-{{ clube.id }}" tabindex="-1"
      aria-labelledby="clubeModalLabel-{{ clube.id }}" aria-hidden="true">
     <div class="modal-dialog">
@@ -8,7 +16,7 @@
             </div>
             <div class="modal-body">
                 <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
-                <p><strong>Rating:&nbsp;&nbsp;</strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+                <p class="div-stars-modal"><strong>Rating:&nbsp;&nbsp;</strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
                 <p><strong>Admin:</strong> {{ clube.moderador }}</p>
                 <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
                 <p><strong>Genre:</strong> {{ clube.categoria }}</p>
