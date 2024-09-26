@@ -9,11 +9,107 @@
         background-color: black;
     }
 
+    .main-100vh{
+        height: 100vh;
+        width: 100%;
+        align-items: center;
+        display: flex;
+    }
+
+    .main-title{
+        color: white;
+        font-weight: bold;
+        font-size: 3rem;
+        width: fit-content;
+        justify-content: space-between;
+    }
+
+    .subtitle{
+        width: 20.5rem;
+        font-size: .8rem;
+        color: antiquewhite;
+        font-weight: lighter;
+    }
+
+    .text-div{
+        width: fit-content;
+        height: fit-content;
+        margin-top: -8rem;
+    }
+
+    .startnow-btn {
+    height: 100px;
+    width: 300px;
+    border-radius: 20px;
+    font-size: 40px;
+    font-weight: bolder;
+    font-family: 'DM Sans', 'sans-serif';
+    color: white;
+    background-color: #0066FF;
+    border: 3px solid #ffffff;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0px 15px 0px 0px rgb(255, 255, 255);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    z-index: 1;
+    position: relative;
+    }
+
+    .startnow-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.5), transparent);
+    border-radius: inherit;
+    z-index: 1;
+}
+
+.startnow-btn:hover {
+    box-shadow: 0px 15px 0px 0px rgb(255, 255, 255);
+}
+
+.startnow-btn:active {
+    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.8), 
+                0px 2px 4px rgba(255, 255, 255, 0.8) inset;
+    transform: translateY(8px);
+}
+
+.startnow-btn:focus {
+    outline: none;
+}
+
 </style>
 
 
 <body>
     <main>
+
+        <section class="container main-100vh">
+
+            <div class="text-n-btn">
+
+                <div class="text-div">
+                    <h1 class="main-title text-break">Manage your book clubs,<br>share your thoughts,<br>meet new friends.</h1>
+                    <p class="subtitle">Bookheaded is the perfect tool to properly operate in your book clubs,
+                        with also being an in-built social media made for you to express your enthusiasm</p>
+                </div>
+                <hr style="color: white;">
+                <button class="startnow-btn" href="{% url 'login' %}">Access Now</button>
+
+            </div>
+
+            <div class="video">
+
+            </div>
+            
+            
+
+        </section>
+
         <section id="banner-principal">
             <div class="container-fluid p-0 d-flex flex-column flex-md-row" style="background-color: black;">
                 <div id="texto-lateral" class="col-12 col-md-4 d-flex align-items-center">
@@ -76,21 +172,21 @@
                 <div id="img-lado" class="col-md-6"></div>
                 <div class="col-md-6 segunda_section" id="icones_sec">
                     <h3>PORQUE USAR O BOOKHEADED</h3>
-                    <ul>
+                    <ul class="why-li">
                         <li>
-                            <img src="{% static 'images/calendar.png' %}">
+                            <i class="bi bi-calendar2-check-fill" style="margin-right: 1rem;"></i>
                             <span>Agende e crie lembretes</span>
                         </li>
                         <li>
-                            <img src="{% static 'images/gestao.png' %}">
+                            <i class="bi bi-diagram-3-fill" style="margin-right: 1rem;"></i>
                             <span>Melhore a gestão de membros</span>
                         </li>
                         <li>
-                            <img src="{% static 'images/bate-papo.png' %}" alt="Bate-papo ao vivo">
+                            <i class="bi bi-chat-right-text-fill" style="margin-right: 1rem;"></i>
                             <span>Bate-papo ao vivo</span>
                         </li>
                         <li>
-                            <img src="{% static 'images/multidao.png' %}" alt="Acesso à comunidade">
+                            <i class="bi bi-people-fill" style="margin-right: 1rem;"></i>
                             <span>Acesso à comunidade</span>
                         </li>
                     </ul>
@@ -179,19 +275,19 @@
             margin-top: 30px;
         }
 
-        ul {
+        .why-li {
             list-style: none;
             padding-left: 0;
             width: 100%;
             margin: 10px 0 0 0;
+            font-size: 24px;
+            margin-bottom: 25px;
         }
 
         li {
             color: white;
-            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            font-size: 24px; /* Tamanho para desktop */
         }
 
         li img {
