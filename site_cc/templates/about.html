@@ -78,11 +78,26 @@
         gap: 2rem;
     }
 
+    .members{
+        border-radius: 1.5rem;
+        overflow: hidden;
+        height: 20rem;
+    }
+
+    .text-div-members{
+        color: black;
+        margin-top: 1.5rem;
+        margin-left: 1.5rem;
+        z-index: 2;
+        width: 25rem;
+        max-width: 80%;
+    }
+
 </style>
 
 <div class="container mt-5 superdiv">
 
-    <div class="container abt-us" >
+    <div class="row abt-us" >
         <a href="{%  url 'introducao' %}">
             <div class="text-div">
                 <h1 class="mb-4 text-break">About</h1>
@@ -93,6 +108,28 @@
             
             <div class="shadow-div">
                 <div class="icons">
+                    <ul class="icons-list">
+                        <li><i class="bi bi-book-fill"></i></li>
+                        <li><i class="bi bi-body-text"></i></li>
+                        <li><i class="bi bi-blockquote-left"></i></li>
+                        <li><i class="bi bi-pen-fill"></i></li>
+                    </ul> 
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="row members shadow">
+        <a href="{%  url 'introducao' %}">
+            <div class="text-div-members">
+                <h1 class="mb-4 text-break">Our Team</h1>
+                <p class="text-break">There are few more personal things than someone's book taste.
+                Thinking about this, <strong>bookheaded</strong> was developed to properly unite people by books, turning 
+                the management of reading clubs easier and effective.</p>
+            </div>
+            
+            <div class="shadow-div">
+                <div class="icons-members">
                     <ul class="icons-list">
                         <li><i class="bi bi-book-fill"></i></li>
                         <li><i class="bi bi-body-text"></i></li>
