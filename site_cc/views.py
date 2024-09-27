@@ -123,7 +123,7 @@ def avaliacao_view(request, pk):
             Avaliacao.objects.update_or_create(
                 clube=clube, usuario=request.user, defaults={'valor': rating}
             )
-        return HttpResponseRedirect(reverse('clubDetail', args=[clube.id]))
+        return HttpResponseRedirect(reverse('club-Detail', args=[clube.id]))
 
 @login_required
 def meus_clubes_view(request):
@@ -186,7 +186,7 @@ def clube_create_view(request):
             sobre=sobre,
             privado=privado
         )
-        return redirect('clubDetail', pk=clube.pk)
+        return redirect('club-Detail', pk=clube.pk)
 
     modalidades = Modalidade.objects.all()
     categorias = Categoria.objects.all()
