@@ -7,46 +7,84 @@ Criar conta
 
 {% block content %}
 <style>
-    html,
     body {
-        height: 100%;
+        padding: 24px;
+        font-family: 'DM Sans', 'sans-serif';
         margin: 0;
-        padding: 0;
-        overflow: hidden;
-        background: white;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .container-div {
-        background: rgb(247, 247, 247);
-        width: fit-content;
-        border-style: solid;
-        border-color: grey;
-        border-width: .1rem;
-        border-radius: 1rem;
-        padding: 3rem;
-        justify-self: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 900px;
+        height: 500px;
+        margin: auto;
+        gap: 1rem;
+        border-width: .2rem;
+        border-radius: 2rem;
+        padding: 1rem;
+
     }
 
-    .div2 {
-        width: fit-content;
-        color: black;
-        background-color: rgb(255, 255, 255);
+    .l {
+        background-color: #0066FF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 50%;
         border-radius: 1rem;
-        padding: 1rem;
-        border: .1rem;
-        border-color: grey;
+        overflow: hidden;
+    }
+
+    .personagem {
+        height: 80%;
+        width: auto;
+        max-height: 100%;
+    }
+
+    .asa {
+        width: 50%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-left: 1rem;
+        box-sizing: border-box;
+        position: relative;
         border-style: solid;
+        border-width: .05rem;
+        border-right: none;
+        border-top: none;
+        border-bottom: none;
+        border-color: rgb(177, 177, 177);
+    }
+
+    .alr-registered {
+        color: black;
+        font-family: 'DM Sans', 'sans-serif';
+        width: 100%;
     }
 
     h1 {
-        font-family: 'DM Sans', 'sans-serif';
-        margin-bottom: 2rem;
-        z-index: 99;
+        color: white;
+        text-align: left;
+        margin-left: .5rem;
+    }
+
+    .form-group {
+        width: 100%;
     }
 
     .register-btn {
         height: 100%;
-        width: fit-content;
+        width: 100%;
         min-height: 100%;
         min-width: fit-content;
         border-radius: 1rem;
@@ -62,56 +100,22 @@ Criar conta
         background-color: #004bbc;
     }
 
-    .form-group {
-        font-family: 'DM Sans', 'sans-serif';
-    }
-
     .helptext {
         font-size: .8rem;
         max-height: 100%;
         max-width: 100%;
     }
 
-    ul li {
-        font-size: .8rem;
-        width: fit-content;
-        list-style: none;
-        color: black;
-    }
-
-    li:before {
-        content: "\2713";
-    }
-
     label {
         font-weight: bold;
     }
 
-    .alr-registered {
-        margin-top: 2rem;
-        color: black;
-        font-family: 'DM Sans', 'sans-serif';
-    }
 
     .img-logo {
         width: 15rem;
         height: auto;
         padding: 2rem;
         padding-left: 0rem;
-    }
-
-    .supercontainer {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh; 
-    }
-
-    .hold-title-logo {
-        display: flex;
-        flex-direction: column;
-        justify-content:left;
     }
 
     @media screen and (max-width: 650px) {
@@ -122,42 +126,165 @@ Criar conta
             min-height: auto;
         }
     }
+
+    @keyframes subtle-elastic-distort {
+
+        0%,
+        100% {
+            transform: translateY(0) scale(1);
+        }
+
+        30% {
+            transform: translateY(-1px) scale(1.01, 0.99);
+        }
+
+        50% {
+            transform: translateY(-2px) scale(0.99, 1.01);
+        }
+
+        70% {
+            transform: translateY(-1px) scale(1.01, 0.99);
+        }
+    }
+
+    @keyframes elastic-transition {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.2);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .personagem {
+        margin-top: 8rem;
+        z-index: 99;
+        display: flex;
+        position: relative;
+        animation: subtle-elastic-distort 2s infinite;
+    }
+
+    #personagem-img {
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        will-change: transform, opacity;
+    }
+
+    .morph {
+        animation: elastic 0.5s ease forwards;
+    }
+
+    .certified-bkh {
+        position: absolute;
+        height: 5rem;
+        width: auto;
+        transition: height 0.3s ease, transform 0.3s ease;
+    }
+
+    .certified-bkh.dragging {
+        transform: translate(-2rem, -8rem) rotate(-15deg);
+        transition: transform 0.3s ease;
+    }
+
+    @keyframes elastic {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        50% {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
 </style>
 
-<div class="container d-flex min-vh-100 supercontainer">
-    <div class="hold-title-logo">
-        <a href="http://localhost:8000/">
-            <img src="{% static 'images/bookheadedlogo.svg' %}" class="img-logo">
-        </a>
-        <div class="container shadow-lg p-4 container-div">
-            <h1 class="text-left text-black display-5 fw-bold">Become a certified<br>bookhead right now</h1>
-            <div class="row justify-content-left div1">
-                <div class="col-md-8 div2">
-                    <div class="form-group p-2">
-                        <form method="POST">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Nome de Usuário:</label>
-                                <input type="text" id="username" name="username" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password1" class="form-label">Senha:</label>
-                                <input type="password" id="password1" name="password1" class="form-control" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="password2" class="form-label">Confirme a Senha:</label>
-                                <input type="password" id="password2" name="password2" class="form-control" required>
-                            </div>
-                            <button class="btn btn-secondary register-btn" type="submit">Create Account</button>
-                        </form>
-                    </div>
+<div class="container-div shadow-lg">
+    <div class="l">
+        <img src="{% static 'images/boneco1.svg' %}" class="personagem" id="personagem-img">
+        <img src="{% static 'images/certified-bookhead.svg' %}" class="certified-bkh">
+    </div>
+    <div class="asa">
+        <h1 class="text-black text-break fw-bold">Become a certified<br>bookhead right now</h1>
+        <div class="form-group p-2">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Nome de Usuário:</label>
+                    <input type="text" id="username" name="username" class="form-control" required>
                 </div>
-            </div>
+                <div class="mb-3">
+                    <label for="password1" class="form-label">Senha:</label>
+                    <input type="password" id="password1" name="password1" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password2" class="form-label">Confirme a Senha:</label>
+                    <input type="password" id="password2" name="password2" class="form-control" required>
+                </div>
+                <button class="btn btn-secondary register-btn" type="submit">Create Account</button>
+            </form>
+            <hr>
             <p class="alr-registered">Already have an account? <a href="{% url 'login' %}"
                     class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Login</a>
             </p>
         </div>
     </div>
 </div>
+
+<script>
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password1');
+    const passwordConfirmInput = document.getElementById('password2');
+    const personagemImg = document.getElementById('personagem-img');
+    const certifiedBkhImg = document.querySelector('.certified-bkh');
+
+    function checkInputs() {
+        const isUsernameFilled = usernameInput.value;
+        const isPasswordFilled = passwordInput.value;
+
+        if (isPasswordFilled) {
+            personagemImg.classList.add('morph');
+            personagemImg.src = "{% static 'images/personagem2.svg' %}";
+            certifiedBkhImg.classList.add('dragging');
+            certifiedBkhImg.style.height = '8rem';
+            certifiedBkhImg.style.transform = 'translate(-2rem, -10rem) rotate(-15deg)';
+            setTimeout(() => {
+                certifiedBkhImg.classList.remove('dragging');
+            }, 300);
+        } else {
+            personagemImg.classList.remove('morph');
+            personagemImg.src = "{% static 'images/boneco1.svg' %}";
+            certifiedBkhImg.classList.remove('dragging');
+            certifiedBkhImg.style.height = '5rem';
+            certifiedBkhImg.style.transform = 'translate(0, 0) rotate(0deg)';
+        }
+    }
+
+    usernameInput.addEventListener('input', checkInputs);
+    passwordInput.addEventListener('input', checkInputs);
+    passwordConfirmInput.addEventListener('focus', () => {
+        if (passwordInput.value) {
+            personagemImg.classList.add('morph');
+            personagemImg.src = "{% static 'images/personagem2.svg' %}";
+            certifiedBkhImg.classList.add('dragging');
+            certifiedBkhImg.style.height = '8rem';
+            certifiedBkhImg.style.transform = 'translate(-2rem, -8rem) rotate(-15deg)';
+            setTimeout(() => {
+                certifiedBkhImg.classList.remove('dragging');
+            }, 300);
+        }
+    });
+
+    passwordConfirmInput.addEventListener('blur', checkInputs);
+</script>
 
 {% endblock %}
