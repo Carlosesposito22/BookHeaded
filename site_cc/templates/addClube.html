@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Criando
+Criando
 {% endblock title %}
 
 {% block content %}
@@ -12,14 +12,107 @@
     body {
         font-family: 'DM Sans', 'sans-serif';
         background-color: white;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
     }
 
-    .row {
-        height: fit-content;
-        width: 30rem;
+    .superholder {
         display: flex;
-        position: relative;
+        justify-content: center;
+        align-items: center;
+        height: 90%;
+    }
+
+    .h1 {
+        color: #0056b3;
+    }
+
+    .holder1 {
+        display: flex;
+        flex-direction: row;
+        width: 70%;
+        height: 90%;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-radius: 2rem;
+        overflow: hidden;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .holder2 {
+        background-color: #0056b3;
+        display: flex;
         flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        border-radius: 1.5rem;
+        margin-right: 1.5rem;
+        overflow: hidden;
+    }
+
+    .emo {
+        margin-top: 13rem;
+        height: 25rem;
+        position: relative;
+        z-index: 99;
+        animation: subtle-elastic-distort 2s infinite;
+    }
+
+    .velho {
+        position: absolute;
+        z-index: 0;
+        height: 12rem;
+        margin-top: 13rem;
+        transition: transform 0.3s ease, height 0.3s ease;
+    }
+
+    .velho.dragging {
+        transition: transform 0.3s ease;
+        transform: translate(-9rem, -6rem) rotate(-30deg);
+        height: 22rem;
+    }
+
+    .reading-club {
+        font-size: 3rem;
+        margin-top: -.5rem;
+        line-height: 1.2;
+    }
+
+    .form-group {
+        background-color: white;
+        padding: 1rem;
+        box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+        padding: .5rem;
+    }
+
+    .form-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .form-row label,
+    .form-row input,
+    .form-row select {
+        width: 48%;
     }
 
     label {
@@ -28,172 +121,203 @@
         font-weight: bold;
     }
 
-    .holder1 {
-        height: fit-content;
-        width: fit-content;
+    .mod-cat{
         display: flex;
         flex-direction: row;
-        gap: 10rem;
+        gap: 1rem;
     }
 
-    .form-check-input {
-        border-style: solid;
-        border-width: .1rem;
-        border-color: rgb(202, 202, 202);
+    .mod-cat-title{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .form-check {
+        display: flex;
+        align-items: center;
+    }
+
+    .form-check label {
+        margin-left: 0.5rem;
+    }
+
+    #descricao{
+        height: 7rem;
     }
 
     .create-btn {
-        display: flex;
-        position: relative;
-    }
-
-    .form-img {
-        margin-top: 2rem;
-        height: 20rem;
-        width: 20rem;
-    }
-
-    .holder2 {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .reading-club {
-        font-size: 4rem;
-        margin-top: -.8rem;
-    }
-
-    .superholder {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 4rem;
-    }
-
-    textarea {
-        height: 6rem;
+        margin-top: 1rem;
         width: 100%;
+        padding: 0.75rem;
+        background-color: #007bff;
+        color: white;
+        font-size: 1.25rem;
+        border: none;
+        border-radius: 5rem;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
     }
 
-    .form-group {
-        border-style: solid;
-        border-color: rgb(202, 202, 202);
-        padding-top: .5rem;
-        padding-bottom: 1rem;
-        border-radius: 1rem;
-        margin-bottom: 1rem;
+    .create-btn:disabled {
+        background-color: #ccc;
     }
 
-    .error-message {
-        color: red;
-        font-size: 0.9rem;
-        display: none;
+    .create-btn:hover:enabled {
+        background-color: #0056b3;
     }
 
+    @keyframes subtle-elastic-distort {
+
+        0%,
+        100% {
+            transform: translateY(0) scale(1);
+        }
+
+        30% {
+            transform: translateY(-1px) scale(1.01, 0.99);
+        }
+
+        50% {
+            transform: translateY(-2px) scale(0.99, 1.01);
+        }
+
+        70% {
+            transform: translateY(-1px) scale(1.01, 0.99);
+        }
+    }
+
+
+
+    @media (max-width: 768px) {
+        .holder1 {
+            flex-direction: column;
+            height: 95%;
+            width: 95%;
+        }
+
+        .holder2 {
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .form-group {
+            width: 100%;
+        }
+    }
 </style>
 
 {% if user.is_authenticated %}
 
-    <div class="superholder">
-        <div class="holder1">
+<div class="container superholder">
+    <div class="holder1">
+        <div class="form-group shadow-lg">
             <div class="holder2">
-                <h1 class="text-start text-black">Create your new <p class="h1 fw-bold reading-club">reading club</p></h1>
-                <img src="{% static 'images/create-club-pic.png' %}" class="form-img">
+                <img src="{% static 'images/emo.svg' %}" class="emo" alt="Imagem do avatar">
+                <img src="{% static 'images/velho.svg' %}" class="velho" alt="Imagem do avatar">
             </div>
-            <div class="container-start">
-                <div class="row">
-                    <div class="form-group shadow-lg">
-                        <form method="post" id="create-club-form">
-                            {% csrf_token %}
-                            
-                            <label for="titulo">Título:</label>
-                            <input type="text" name="titulo" id="titulo" required>
-
-                            <label for="modalidade">Modalidade:</label>
-                            <select name="modalidade" id="modalidade" required>
-                                <option value="">Selecione uma modalidade</option>
-                                {% for modalidade in modalidades %}
-                                    <option value="{{ modalidade.id }}">{{ modalidade.nome }}</option>
-                                {% endfor %}
-                            </select>
-
-                            <label for="categoria">Categoria:</label>
-                            <select name="categoria" id="categoria" required>
-                                <option value="">Selecione uma categoria</option>
-                                {% for categoria in categorias %}
-                                    <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
-                                {% endfor %}
-                            </select>
-
-                            <label for="descricao">Descrição:</label>
-                            <textarea name="descricao" id="descricao" required></textarea>
-
-                            <label for="sobre">Sobre:</label>
-                            <textarea name="sobre" id="sobre" required></textarea>
-
-                            <div>
-                                <input type="checkbox" name="privado" id="privado">
-                                <label for="privado">Privado</label>
-                            </div>
-
-                            <input type="hidden" id="moderador" name="moderador">
-
-                            <button class="btn btn-primary btn-lg create-btn" id="create-btn" disabled>Criar</button>
-                        </form>
-                    </div>
+            <form method="post" id="create-club-form">
+                <h1 class="text-start text-black">Create your new <p class="h1 fw-bold reading-club">reading club</p>
+                </h1>
+                {% csrf_token %}
+                <label for="titulo">Título:</label>
+                <input type="text" name="titulo" id="titulo" required>
+                <div class="mod-cat-title">
+                    <label for="modalidade">Modalidade:</label>
+                    <label for="categoria">Categoria:</label>
                 </div>
-            </div>
+                <div class="mod-cat">
+                    <select name="modalidade" id="modalidade" required>
+                        <option value="">Selecione uma modalidade</option>
+                        {% for modalidade in modalidades %}
+                        <option value="{{ modalidade.id }}">{{ modalidade.nome }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="categoria" id="categoria" required>
+                        <option value="">Selecione uma categoria</option>
+                        {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <label for="descricao">Descrição:</label>
+                <textarea name="descricao" id="descricao" required></textarea>
+
+                <div class="form-check">
+                    <input type="checkbox" name="privado" id="privado">
+                    <label for="privado">Privado</label>
+                </div>
+
+                <input type="hidden" id="moderador" name="moderador">
+
+                <button class="create-btn" id="create-btn" disabled>Create Club</button>
+            </form>
         </div>
     </div>
+</div>
 
-    <script>
-        function validateField(field) {
-            const value = field.value.trim();
-            if (field.type === "checkbox") {
-                return true; 
-            }
-            return value !== '';
+<script>
+    function validateField(field) {
+        const value = field.value.trim();
+        if (field.type === "checkbox") {
+            return true;
         }
+        return value !== '';
+    }
 
-        function validateForm() {
-            const form = document.getElementById("create-club-form");
-            const fields = form.querySelectorAll("input, textarea, select");
-            let allValid = true;
+    function validateForm() {
+        const form = document.getElementById("create-club-form");
+        const fields = form.querySelectorAll("input, textarea, select");
+        let allValid = true;
 
-            fields.forEach(field => {
-                if (!(field.type === "checkbox" && field.id === "privado")) {
-                    if (!validateField(field)) {
-                        allValid = false;
-                    }
+        fields.forEach(field => {
+            if (!(field.type === "checkbox" && field.id === "privado")) {
+                if (!validateField(field)) {
+                    allValid = false;
                 }
-            });
-
-            return allValid;
-        }
-
-        function toggleSubmitButton() {
-            const button = document.getElementById("create-btn");
-            if (validateForm()) {
-                button.removeAttribute("disabled");
-            } else {
-                button.setAttribute("disabled", "true");
-            }
-        }
-
-        document.querySelectorAll("input, textarea, select").forEach(input => {
-            input.addEventListener("input", toggleSubmitButton);
-            if (input.type === "checkbox") {
-                input.addEventListener("change", toggleSubmitButton);
             }
         });
 
-        var name = "{{ user.id }}";
-        document.getElementById("moderador").value = name;
-    </script>
+        return allValid;
+    }
+
+    function toggleSubmitButton() {
+        const button = document.getElementById("create-btn");
+        if (validateForm()) {
+            button.removeAttribute("disabled");
+        } else {
+            button.setAttribute("disabled", "true");
+        }
+    }
+
+    document.querySelectorAll("input, textarea, select").forEach(input => {
+        input.addEventListener("input", toggleSubmitButton);
+        if (input.type === "checkbox") {
+            input.addEventListener("change", toggleSubmitButton);
+        }
+    });
+
+    var name = "{{ user.id }}";
+    document.getElementById("moderador").value = name;
+
+
+
+    document.getElementById("titulo").addEventListener("input", function () {
+        const velho = document.querySelector(".velho");
+
+        if (this.value.trim() !== "") {
+            velho.classList.add("dragging");
+        } else {
+            velho.classList.remove("dragging");
+        }
+    });
+
+
+</script>
 
 {% else %}
-    Você não tem permissão para criar um Clube
+Você não tem permissão para criar um Clube
 {% endif %}
 
 {% endblock %}
