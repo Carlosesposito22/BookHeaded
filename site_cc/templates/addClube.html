@@ -19,9 +19,10 @@ Criando
 
     .superholder {
         display: flex;
-        justify-content: center;
         align-items: center;
         height: 90%;
+        width: 100%;
+        justify-content: center;
     }
 
     .h1 {
@@ -31,12 +32,11 @@ Criando
     .holder1 {
         display: flex;
         flex-direction: row;
-        width: 70%;
+        width: 60rem;
         height: 90%;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         border-radius: 2rem;
         overflow: hidden;
-        justify-content: center;
         align-items: center;
     }
 
@@ -46,7 +46,7 @@ Criando
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 100%;
+        width: 40%;
         border-radius: 1.5rem;
         margin-right: 1.5rem;
         overflow: hidden;
@@ -107,6 +107,7 @@ Criando
         flex-direction: row;
         justify-content: space-between;
         gap: 1rem;
+        width: 100rem;
     }
 
     .form-row label,
@@ -125,6 +126,7 @@ Criando
         display: flex;
         flex-direction: row;
         gap: 1rem;
+        width: 100%;
     }
 
     .mod-cat-title{
@@ -221,32 +223,32 @@ Criando
                 <h1 class="text-start text-black">Create your new <p class="h1 fw-bold reading-club">reading club</p>
                 </h1>
                 {% csrf_token %}
-                <label for="titulo">Título:</label>
-                <input type="text" name="titulo" id="titulo" required>
+                <label for="titulo">Title:</label>
+                <input type="text" name="titulo" id="titulo" class="form-control" required>
                 <div class="mod-cat-title">
-                    <label for="modalidade">Modalidade:</label>
-                    <label for="categoria">Categoria:</label>
+                    <label for="modalidade">Modality:</label>
+                    <label for="categoria">Genre:</label>
                 </div>
                 <div class="mod-cat">
-                    <select name="modalidade" id="modalidade" required>
-                        <option value="">Selecione uma modalidade</option>
+                    <select name="modalidade" id="modalidade" class="form-control" required>
+                        <option value="">Select a modality</option>
                         {% for modalidade in modalidades %}
-                        <option value="{{ modalidade.id }}">{{ modalidade.nome }}</option>
+                        <option value="{{ modalidade.id }}" class="form-control">{{ modalidade.nome }}</option>
                         {% endfor %}
                     </select>
-                    <select name="categoria" id="categoria" required>
-                        <option value="">Selecione uma categoria</option>
+                    <select name="categoria" id="categoria" class="form-control" required>
+                        <option value="">Select a genre</option>
                         {% for categoria in categorias %}
-                        <option value="{{ categoria.id }}">{{ categoria.nome }}</option>
+                        <option value="{{ categoria.id }}" class="form-control">{{ categoria.nome }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <label for="descricao">Descrição:</label>
-                <textarea name="descricao" id="descricao" required></textarea>
+                <label for="descricao">Description:</label>
+                <textarea name="descricao" id="descricao" class="form-control" required></textarea>
 
                 <div class="form-check">
                     <input type="checkbox" name="privado" id="privado">
-                    <label for="privado">Privado</label>
+                    <label for="privado">Private</label>
                 </div>
 
                 <input type="hidden" id="moderador" name="moderador">
