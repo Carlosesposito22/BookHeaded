@@ -2,12 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .models import Clube, Categoria, Avaliacao, Membro, Comentario
-
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Q
-
 from .models import Clube, Categoria, Modalidade, Comentario
 
 def pagina_principal(request):
@@ -48,6 +46,117 @@ def clubes_view(request):
     }
     return render(request, 'clubs.html', context)
 
+@login_required
+def meus_clubes_view(request):
+    clubes = Clube.objects.filter(
+        Q(moderador=request.user) | 
+        Q(membros__usuario=request.user, membros__aprovado=True) |
+        Q(privado=False, membros__usuario=request.user)
+    ).distinct()
+
+    nome_clube = request.GET.get('nome')
+    if nome_clube:
+        clubes = clubes.filter(titulo__icontains=nome_clube)
+
+    context = {'object_list': clubes.order_by('-dataDeCriacao')}
+    return render(request, 'myclubes.html', context)
+
+@login_required
+def add_categoria_view(request):
+    if request.method == 'POST':
+        nome_categoria = request.POST.get('nome')
+        Categoria.objects.create(nome=nome_categoria)
+        return redirect('addClube')
+
+    return render(request, 'addCategoria.html')
+
+@login_required
+def add_club_view(request):
+    return clube_create_view(request)
+
+@login_required
+def add_comentario_view(request, pk):
+    return comentario_create_view(request, pk)
+
+@login_required
+def update_club_view(request, pk):
+    return clube_update_view(request, pk)
+
+@login_required
+def clube_create_view(request):
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        modalidade_id = request.POST.get('modalidade')
+        categoria_id = request.POST.get('categoria')
+        descricao = request.POST.get('descricao')
+        sobre = request.POST.get('sobre')
+        privado = request.POST.get('privado') == 'on'
+
+        modalidade = Modalidade.objects.get(id=modalidade_id) if modalidade_id else None
+        categoria = Categoria.objects.get(id=categoria_id) if categoria_id else None
+
+        clube = Clube.objects.create(
+            moderador=request.user,
+            titulo=titulo,
+            modalidade=modalidade,
+            categoria=categoria,
+            descricao=descricao,
+            sobre=sobre,
+            privado=privado
+        )
+        return redirect('club-Detail', pk=clube.pk)
+
+    modalidades = Modalidade.objects.all()
+    categorias = Categoria.objects.all()
+
+    return render(request, 'addClube.html', {
+        'modalidades': modalidades,
+        'categorias': categorias,
+    })
+
+@login_required
+def clube_update_view(request, pk):
+    clube = Clube.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        clube.titulo = request.POST.get('titulo')
+        modalidade_id = request.POST.get('modalidade')
+        categoria_id = request.POST.get('categoria')
+        clube.descricao = request.POST.get('descricao')
+        clube.sobre = request.POST.get('sobre')
+        clube.privado = request.POST.get('privado') == 'on'
+
+        clube.modalidade = Modalidade.objects.get(id=modalidade_id) if modalidade_id else None
+        clube.categoria = Categoria.objects.get(id=categoria_id) if categoria_id else None
+
+        clube.save()
+        return redirect('club-Detail', pk=clube.pk)
+
+    modalidades = Modalidade.objects.all()
+    categorias = Categoria.objects.all()
+
+    return render(request, 'updateClube.html', {
+        'clube': clube,
+        'modalidades': modalidades,
+        'categorias': categorias,
+    })
+
+@login_required
+def comentario_create_view(request, clube_id):
+    clube = Clube.objects.get(pk=clube_id)
+
+    if request.method == 'POST':
+        comentario_texto = request.POST.get('comentario')
+        nome_usuario = request.user.username  
+        Comentario.objects.create(
+            clube=clube,
+            nome=nome_usuario, 
+            comentario=comentario_texto  
+        )
+        return redirect('club-Detail', pk=clube.pk)
+
+    return render(request, 'addComentario.html', {'clube': clube})
+
 def login_user(request):
     if request.method == "POST":
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
@@ -84,28 +193,6 @@ def club_detail_view(request, pk):
     }
     return render(request, 'clubDetail.html', context)
 
-@login_required
-def add_categoria_view(request):
-    if request.method == 'POST':
-        nome_categoria = request.POST.get('nome')
-        Categoria.objects.create(nome=nome_categoria)
-        return redirect('addClube')
-
-    return render(request, 'addCategoria.html')
-
-
-@login_required
-def add_club_view(request):
-    return clube_create_view(request)
-
-@login_required
-def add_comentario_view(request, pk):
-    return comentario_create_view(request, pk)
-
-@login_required
-def update_club_view(request, pk):
-    return clube_update_view(request, pk)
-
 def delete_club_view(request, pk):
     clube = get_object_or_404(Clube, pk=pk)
     if request.method == 'POST':
@@ -125,20 +212,6 @@ def avaliacao_view(request, pk):
             )
         return HttpResponseRedirect(reverse('club-Detail', args=[clube.id]))
 
-@login_required
-def meus_clubes_view(request):
-    clubes = Clube.objects.filter(
-        Q(moderador=request.user) | 
-        Q(membros__usuario=request.user, membros__aprovado=True) |
-        Q(privado=False, membros__usuario=request.user)
-    ).distinct()
-
-    nome_clube = request.GET.get('nome')
-    if nome_clube:
-        clubes = clubes.filter(titulo__icontains=nome_clube)
-
-    context = {'object_list': clubes.order_by('-dataDeCriacao')}
-    return render(request, 'myclubes.html', context)
 def aprovar_membro(request, clube_id, membro_id):
     clube = get_object_or_404(Clube, id=clube_id)
     membro = get_object_or_404(Membro, id=membro_id, clube=clube)
@@ -164,75 +237,3 @@ def adicionar_membro_publico(request, clube_id):
     if not clube.privado:
         Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': True})
     return redirect('clubs')
-@login_required
-def clube_create_view(request):
-    if request.method == 'POST':
-        titulo = request.POST.get('titulo')
-        modalidade_id = request.POST.get('modalidade')
-        categoria_id = request.POST.get('categoria')
-        descricao = request.POST.get('descricao')
-        sobre = request.POST.get('sobre')
-        privado = request.POST.get('privado') == 'on'
-
-        modalidade = Modalidade.objects.get(id=modalidade_id) if modalidade_id else None
-        categoria = Categoria.objects.get(id=categoria_id) if categoria_id else None
-
-        clube = Clube.objects.create(
-            moderador=request.user,
-            titulo=titulo,
-            modalidade=modalidade,
-            categoria=categoria,
-            descricao=descricao,
-            sobre=sobre,
-            privado=privado
-        )
-        return redirect('club-Detail', pk=clube.pk)
-
-    modalidades = Modalidade.objects.all()
-    categorias = Categoria.objects.all()
-
-    return render(request, 'addClube.html', {
-        'modalidades': modalidades,
-        'categorias': categorias,
-    })
-@login_required
-def clube_update_view(request, pk):
-    clube = Clube.objects.get(pk=pk)
-
-    if request.method == 'POST':
-        clube.titulo = request.POST.get('titulo')
-        modalidade_id = request.POST.get('modalidade')
-        categoria_id = request.POST.get('categoria')
-        clube.descricao = request.POST.get('descricao')
-        clube.sobre = request.POST.get('sobre')
-        clube.privado = request.POST.get('privado') == 'on'
-
-        clube.modalidade = Modalidade.objects.get(id=modalidade_id) if modalidade_id else None
-        clube.categoria = Categoria.objects.get(id=categoria_id) if categoria_id else None
-
-        clube.save()
-        return redirect('club-Detail', pk=clube.pk)
-
-    modalidades = Modalidade.objects.all()
-    categorias = Categoria.objects.all()
-
-    return render(request, 'updateClube.html', {
-        'clube': clube,
-        'modalidades': modalidades,
-        'categorias': categorias,
-    })
-@login_required
-def comentario_create_view(request, clube_id):
-    clube = Clube.objects.get(pk=clube_id)
-
-    if request.method == 'POST':
-        comentario_texto = request.POST.get('comentario')
-        nome_usuario = request.user.username  
-        Comentario.objects.create(
-            clube=clube,
-            nome=nome_usuario, 
-            comentario=comentario_texto  
-        )
-        return redirect('club-Detail', pk=clube.pk)
-
-    return render(request, 'addComentario.html', {'clube': clube})
