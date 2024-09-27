@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib import messages
 from .models import Clube, Categoria, Avaliacao, Membro, Comentario
-from .forms import ClubeForm, ClubeEditForm, ComentarioForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Q
+from .models import Clube, Categoria, Modalidade, Comentario
+import json
 
 def pagina_principal(request):
     return render(request, 'pagina_principal.html')
@@ -25,34 +24,139 @@ def equipe(request):
 def contato(request):
     return render(request, 'contato.html')
 
-class clubesView(LoginRequiredMixin, ListView):
-    model = Clube
-    template_name = 'clubs.html'
-    ordering = ['-dataDeCriacao']
+@login_required
+def clubes_view(request):
+    nome = request.GET.get('nome', '')
+    clubes = Clube.objects.all()
+    if nome:
+        clubes = clubes.filter(Q(titulo__icontains=nome))
 
-    def get_queryset(self):
-        nome = self.request.GET.get('nome', '')
-        clubes = Clube.objects.all()
-        if nome:
-            clubes = clubes.filter(Q(titulo__icontains=nome))
-        return clubes.order_by('-dataDeCriacao')
+    user = request.user
+    clubes_context = [
+        {
+            'clube': clube,
+            'user_is_member': Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists(),
+            'user_request_pending': Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists(),
+        }
+        for clube in clubes.order_by('-dataDeCriacao')
+    ]
 
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        user = self.request.user
-        clubes_context = [
-            {
-                'clube': clube,
-                'user_is_member': Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists(),
-                'user_request_pending': Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists(),
-            }
-            for clube in self.get_queryset()
-        ]
-        context.update({
-            'clubes_context': clubes_context,
-            'cat_menu': Categoria.objects.all(),
-        })
-        return context
+    context = {
+        'clubes_context': clubes_context,
+        'cat_menu': Categoria.objects.all(),
+    }
+    return render(request, 'clubs.html', context)
+
+@login_required
+def meus_clubes_view(request):
+    clubes = Clube.objects.filter(
+        Q(moderador=request.user) | 
+        Q(membros__usuario=request.user, membros__aprovado=True) |
+        Q(privado=False, membros__usuario=request.user)
+    ).distinct()
+
+    nome_clube = request.GET.get('nome')
+    if nome_clube:
+        clubes = clubes.filter(titulo__icontains=nome_clube)
+
+    context = {'object_list': clubes.order_by('-dataDeCriacao')}
+    return render(request, 'myclubes.html', context)
+
+@login_required
+def add_categoria_view(request):
+    if request.method == 'POST':
+        nome_categoria = request.POST.get('nome')
+        Categoria.objects.create(nome=nome_categoria)
+        return redirect('addClube')
+
+    return render(request, 'addCategoria.html')
+
+@login_required
+def add_club_view(request):
+    return clube_create_view(request)
+
+@login_required
+def add_comentario_view(request, pk):
+    return comentario_create_view(request, pk)
+
+@login_required
+def update_club_view(request, pk):
+    return clube_update_view(request, pk)
+
+@login_required
+def clube_create_view(request):
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        modalidade_id = request.POST.get('modalidade')
+        categoria_id = request.POST.get('categoria')
+        descricao = request.POST.get('descricao')
+        sobre = request.POST.get('sobre')
+        privado = request.POST.get('privado') == 'on'
+
+        modalidade = Modalidade.objects.get(id=modalidade_id) if modalidade_id else None
+        categoria = Categoria.objects.get(id=categoria_id) if categoria_id else None
+
+        clube = Clube.objects.create(
+            moderador=request.user,
+            titulo=titulo,
+            modalidade=modalidade,
+            categoria=categoria,
+            descricao=descricao,
+            sobre=sobre,
+            privado=privado
+        )
+        return redirect('club-Detail', pk=clube.pk)
+
+    modalidades = Modalidade.objects.all()
+    categorias = Categoria.objects.all()
+
+    return render(request, 'addClube.html', {
+        'modalidades': modalidades,
+        'categorias': categorias,
+    })
+
+@login_required
+def clube_update_view(request, pk):
+    clube = Clube.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        clube.titulo = request.POST.get('titulo')
+        modalidade_id = request.POST.get('modalidade')
+        categoria_id = request.POST.get('categoria')
+        clube.descricao = request.POST.get('descricao')
+        clube.sobre = request.POST.get('sobre')
+        clube.privado = request.POST.get('privado') == 'on'
+
+        clube.modalidade = Modalidade.objects.get(id=modalidade_id) if modalidade_id else None
+        clube.categoria = Categoria.objects.get(id=categoria_id) if categoria_id else None
+
+        clube.save()
+        return redirect('club-Detail', pk=clube.pk)
+
+    modalidades = Modalidade.objects.all()
+    categorias = Categoria.objects.all()
+
+    return render(request, 'updateClube.html', {
+        'clube': clube,
+        'modalidades': modalidades,
+        'categorias': categorias,
+    })
+
+@login_required
+def comentario_create_view(request, clube_id):
+    clube = Clube.objects.get(pk=clube_id)
+
+    if request.method == 'POST':
+        comentario_texto = request.POST.get('comentario')
+        nome_usuario = request.user.username  
+        Comentario.objects.create(
+            clube=clube,
+            nome=nome_usuario, 
+            comentario=comentario_texto  
+        )
+        return redirect('club-Detail', pk=clube.pk)
+
+    return render(request, 'addComentario.html', {'clube': clube})
 
 def login_user(request):
     if request.method == "POST":
@@ -74,98 +178,43 @@ def CategoriaView(request, cats):
     categoria_clube = Clube.objects.filter(categoria__nome=cats.replace('-', ' '))
     return render(request, 'categorias.html', {'cats': cats.replace('-', ' '), 'categoria_clube': categoria_clube})
 
-class HomePageView(ListView):
-    model = Clube
-    template_name = 'pagina_principal.html'
-    ordering = ['-dataDeCriacao']
+def home_page_view(request):
+    clubes = Clube.objects.all().order_by('-dataDeCriacao')
+    return render(request, 'pagina_principal.html', {'object_list': clubes})
 
-class ClubDetailView(DetailView):
-    model = Clube
-    template_name = 'clubDetail.html'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        clube = self.object
-        user = self.request.user
-        context.update({
-            'total_avaliacoes': clube.total_avaliacoes(),
-            'media_avaliacoes': clube.calcular_media_avaliacoes(),
-            'user_is_member': Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists(),
-            'user_request_pending': Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists(),
-        })
-        return context
+def club_detail_view(request, pk):
+    clube = get_object_or_404(Clube, id=pk)
+    user = request.user
+    progresso_percentual = (clube.progresso_atual / clube.total_capitulos * 100) if clube.total_capitulos > 0 else 0
 
-class AddCategoriaView(CreateView):
-    model = Categoria
-    template_name = 'addCategoria.html'
-    fields = '__all__'
-    success_url = reverse_lazy('addClube')
+    context = {
+        'clube': clube,
+        'total_avaliacoes': clube.total_avaliacoes(),
+        'media_avaliacoes': clube.calcular_media_avaliacoes(),
+        'progresso_percentual': round(progresso_percentual),
+        'user_is_member': Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists(),
+        'user_request_pending': Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists(),
+    }
+    return render(request, 'clubDetail.html', context)
 
-class AddClubView(CreateView):
-    model = Clube
-    form_class = ClubeForm
-    template_name = 'addClube.html'
+def delete_club_view(request, pk):
+    clube = get_object_or_404(Clube, pk=pk)
+    if request.method == 'POST':
+        clube.delete()
+        return redirect('pagina_principal')
 
-    def form_valid(self, form):
-        clube = form.save()
-        return redirect('club-Detail', pk=clube.pk)
+    context = {'clube': clube}
+    return render(request, 'deleteClube.html', context)
 
-class AddComentarioView(CreateView):
-    model = Comentario
-    template_name = 'addComentario.html'
-    form_class = ComentarioForm 
-
-    def form_valid(self, form):
-        comentario = form.save(commit=False)
-        comentario.nome = self.request.user.username
-        clube_id = self.kwargs.get('pk')
-        if clube_id:
-            comentario.clube = get_object_or_404(Clube, id=clube_id)
-            comentario.save()
-            return redirect('club-Detail', pk=comentario.clube.pk)
-        form.add_error(None, 'Clube não encontrado.')
-        return self.form_invalid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['clube_id'] = self.kwargs.get('pk')
-        return context
-
-class UpdateClubView(UpdateView):
-    model = Clube
-    template_name = 'updateClube.html'
-    form_class = ClubeEditForm
-
-class DeleteClubView(DeleteView):
-    model = Clube
-    template_name = 'deleteClube.html'
-    success_url = reverse_lazy('pagina_principal')
-
-def AvaliacaoView(request, pk):
+def avaliacao_view(request, pk):
     if request.method == "POST":
         clube = get_object_or_404(Clube, id=pk)
         rating = int(request.POST.get('rating'))
         if 1 <= rating <= 5:
-            avaliacao, created = Avaliacao.objects.update_or_create(
+            Avaliacao.objects.update_or_create(
                 clube=clube, usuario=request.user, defaults={'valor': rating}
             )
         return HttpResponseRedirect(reverse('club-Detail', args=[clube.id]))
-
-class meusclubesDetailView(ListView):
-    model = Clube
-    template_name = 'myclubes.html'
-    ordering = ['-dataDeCriacao']
-
-    def get_queryset(self):
-        clubes = Clube.objects.filter(
-            Q(moderador=self.request.user) | 
-            Q(membros__usuario=self.request.user, membros__aprovado=True) |
-            Q(privado=False, membros__usuario=self.request.user)
-        )
-        nome_clube = self.request.GET.get('nome')
-        if nome_clube:
-            clubes = clubes.filter(titulo__icontains=nome_clube)
-        return clubes.distinct().order_by('-dataDeCriacao')
 
 def aprovar_membro(request, clube_id, membro_id):
     clube = get_object_or_404(Clube, id=clube_id)
@@ -192,3 +241,25 @@ def adicionar_membro_publico(request, clube_id):
     if not clube.privado:
         Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': True})
     return redirect('clubs')
+
+
+
+def atualizar_progresso(request, clube_id):
+    if request.method == 'POST' and request.user.is_authenticated:
+        clube = get_object_or_404(Clube, pk=clube_id)
+
+        if request.user == clube.moderador:
+            data = json.loads(request.body)  
+
+            current_capitulo = int(data.get('current_capitulo', 0))
+            total_capitulos = int(data.get('total_capitulos', 1)) 
+
+            clube.progresso_atual = current_capitulo
+            clube.total_capitulos = total_capitulos
+            clube.save()
+
+            progresso_percentual = (clube.progresso_atual / clube.total_capitulos * 100) if clube.total_capitulos > 0 else 0
+            return JsonResponse({'success': True, 'redirect_url': clube.get_absolute_url(), 'progress_percent': progresso_percentual})
+
+    return JsonResponse({'success': False})
+

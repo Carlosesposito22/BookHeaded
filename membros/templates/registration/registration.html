@@ -75,7 +75,6 @@ Criar conta
     ul li {
         font-size: .8rem;
         width: fit-content;
-       
         list-style: none;
         color: black;
     }
@@ -97,7 +96,6 @@ Criar conta
     .img-logo {
         width: 15rem;
         height: auto;
-       
         padding: 2rem;
         padding-left: 0rem;
     }
@@ -105,7 +103,6 @@ Criar conta
     .supercontainer {
         display: flex;
         flex-direction: column;
-      
         justify-content: center;
         align-items: center;
         min-height: 100vh; 
@@ -114,13 +111,10 @@ Criar conta
     .hold-title-logo {
         display: flex;
         flex-direction: column;
-        
         justify-content:left;
-      
-        
     }
 
-    @media screen and(max-width:650px) {
+    @media screen and (max-width: 650px) {
         .img-logo {
             max-width: 10rem;
             min-width: 5rem;
@@ -131,8 +125,6 @@ Criar conta
 </style>
 
 <div class="container d-flex min-vh-100 supercontainer">
-    
-
     <div class="hold-title-logo">
         <a href="http://localhost:8000/">
             <img src="{% static 'images/bookheadedlogo.svg' %}" class="img-logo">
@@ -142,10 +134,21 @@ Criar conta
             <div class="row justify-content-left div1">
                 <div class="col-md-8 div2">
                     <div class="form-group p-2">
-                        <form method="post">
+                        <form method="POST">
                             {% csrf_token %}
-                            {{ form.as_p }}
-                            <button class="btn btn-secondary register-btn">Create Account</button>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Nome de Usuário:</label>
+                                <input type="text" id="username" name="username" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password1" class="form-label">Senha:</label>
+                                <input type="password" id="password1" name="password1" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password2" class="form-label">Confirme a Senha:</label>
+                                <input type="password" id="password2" name="password2" class="form-control" required>
+                            </div>
+                            <button class="btn btn-secondary register-btn" type="submit">Create Account</button>
                         </form>
                     </div>
                 </div>
@@ -156,6 +159,5 @@ Criar conta
         </div>
     </div>
 </div>
-
 
 {% endblock %}
