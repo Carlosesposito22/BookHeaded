@@ -132,6 +132,12 @@ Detail {{ clube.titulo }}
         margin-left: 1rem;
     }
 
+    .div-stars {
+        width: fit-content;
+        font-size: 1.05rem;
+        display: flex;
+    }
+
     @media (max-width: 700px) {
         .data-progress-holder {
             flex-direction: column;
@@ -172,17 +178,6 @@ Detail {{ clube.titulo }}
     <div class="hold-evr">
         <div class="data-progress-holder">
             <h1>{{ clube.titulo }}</h1>
-            {% if user.is_authenticated %}
-                {% if user == clube.moderador %}
-                    <small>
-                        {% if clube.privado %}
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#pedidosModal">Solicitações</button>
-                            {% include 'pedidos.html' %}
-                        {% endif %}
-                    </small>
-                {% endif %}
-            {% endif %}
-
             <div class="btn-progress-bar">
                 <div class="my-3 progressbar-holder">
                     <div class="progress progressbar">
@@ -235,6 +230,7 @@ Detail {{ clube.titulo }}
 
         {% include 'modal_delete.html' %}
         {% include 'modal_avaliar.html' %}
+        {% include 'pedidos.html' %}
         <div class="data-holder shadow"> 
             <div class="club-data-icons">
                 <h3><strong>Club Data</strong></h3>
@@ -243,6 +239,9 @@ Detail {{ clube.titulo }}
                     <div class="del-edt-icons">
                         <a href="{% url 'updateClube' clube.pk %}"><i class="bi bi-pencil-fill"></i></a>
                         <a href="#" class="bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}"></a>
+                        {% if clube.privado %}
+                            <a href="#" class="bi bi-briefcase-fill" data-bs-toggle="modal" data-bs-target="#pedidosModal"></a>
+                        {% endif %}
                     </div>
                     {% else %}
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#avaliarModal-{{ clube.id }}">
@@ -257,7 +256,7 @@ Detail {{ clube.titulo }}
             <p class="text-break description-text"><strong>Description: </strong>{{ clube.descricao|safe }}</p>
             <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
             <p><strong>Total Ratings:</strong> {{ total_avaliacoes }}</p>
-            <p><strong>Rating: </strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+            <p class="div-stars"><strong>Rating:&nbsp;</strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
         </div>
     </div>
 
