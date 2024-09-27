@@ -32,7 +32,7 @@ Criar conta
 
     }
 
-    .l {
+    .characterholder {
         background-color: #0066FF;
         display: flex;
         justify-content: center;
@@ -49,7 +49,7 @@ Criar conta
         max-height: 100%;
     }
 
-    .asa {
+    .holdallform {
         width: 50%;
         height: 100%;
         display: flex;
@@ -70,12 +70,16 @@ Criar conta
         color: black;
         font-family: 'DM Sans', 'sans-serif';
         width: 100%;
+        text-align: center;
     }
 
     h1 {
         color: white;
         text-align: left;
         margin-left: .5rem;
+        margin-bottom: 1rem;
+        margin-top: 1rem;
+        line-height: 0.9;
     }
 
     .form-group {
@@ -209,11 +213,11 @@ Criar conta
 </style>
 
 <div class="container-div shadow-lg">
-    <div class="l">
+    <div class="characterholder">
         <img src="{% static 'images/boneco1.svg' %}" class="personagem" id="personagem-img">
         <img src="{% static 'images/certified-bookhead.svg' %}" class="certified-bkh">
     </div>
-    <div class="asa">
+    <div class="holdallform">
         <h1 class="text-black text-break fw-bold">Become a certified<br>bookhead right now</h1>
         <div class="form-group p-2">
             <form method="POST">
