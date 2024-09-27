@@ -27,6 +27,14 @@ class Clube(models.Model):
     privado = models.BooleanField(default=False)
     favoritado = models.BooleanField(default=False)
     dataDeCriacao = models.DateTimeField(auto_now_add=True)
+    progresso_atual = models.IntegerField(default=0)
+    total_capitulos = models.IntegerField(default=50)
+
+    def calcular_progresso(self):
+        return (self.progresso_atual / self.total_capitulos) * 100 if self.total_capitulos else 0
+    
+    def get_absolute_url(self):
+        return reverse('club-Detail', args=[self.pk])
 
     def __str__(self):
         return f'{self.titulo} | {self.moderador} | {self.dataDeCriacao.strftime("%d/%m/%Y %H:%M")}'

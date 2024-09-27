@@ -104,23 +104,20 @@ Detail {{ clube.titulo }}
         max-width: 80%;
     }
 
-    .btn-progress-bar {
-        display: flex;
-        flex-direction: column;
-        height: fit-content;
-        width: 100%;
-        padding: 0;
-    }
-
     small {
         display: flex;
         align-items: center;
     }
-
-    .progressbar {
-        margin-top: -1rem;
+    .progress {
+        width: 100%; 
+        background-color: #000000; 
+        border-radius: 0.25rem; 
     }
-
+    
+    .progress-bar {
+        transition: width 0.6s ease; 
+        background-color: #4169E1; 
+    }
     .club-data-icons {
         display: flex;
         flex-direction: row;
@@ -180,11 +177,13 @@ Detail {{ clube.titulo }}
             <h1>{{ clube.titulo }}</h1>
             <div class="btn-progress-bar">
                 <div class="my-3 progressbar-holder">
-                    <div class="progress progressbar">
-                        <div id="progressBar" class="progress-bar" role="progressbar"
-                            style="width: 0%; background-color:#4169E1;" aria-valuenow="0" aria-valuemin="0"
-                            aria-valuemax="100">
-                            0%
+                    <div class="progress">
+                        <div class="progress">
+                            <div id="progressBar" class="progress-bar" role="progressbar"
+                                 style="width: {{ progresso_percentual }}%; background-color: #4169E1;"
+                                 aria-valuenow="{{ progresso_percentual }}" aria-valuemin="0" aria-valuemax="100">
+                                 {{ progresso_percentual }}%
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -194,8 +193,7 @@ Detail {{ clube.titulo }}
 
             <div class="capitulo-container" style="background-color: #e0e0e0; padding: 10px;border-top-left-radius: 8px;border-top-right-radius: 8px; margin-top: 1rem;">
                 <div class="my-3 d-flex justify-content-between align-items-center">
-                    <span>Capítulo atual: <span id="capituloAtualSpan">0</span></span>
-                    {% if user.is_authenticated and user == clube.moderador %}
+                    <span>Capítulo atual: <span id="capituloAtualSpan">{{ clube.progresso_atual }}</span></span>                    {% if user.is_authenticated and user == clube.moderador %}
                         <button id="setProgress" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#progressModal">Marcar progresso</button>
                     {% endif %}
                 </div>
@@ -271,7 +269,7 @@ Detail {{ clube.titulo }}
                     <form id="progressForm">
                         <div class="mb-3">
                             <label for="currentPage" class="form-label">Capítulo Atual</label>
-                            <input type="number" class="form-control" id="currentcapitulo" required>
+                            <input type="number" class="form-control" id="currentcapitulo" value="{{ clube.progresso_atual }}" required>
                         </div>
                         <div class="mb-3">
                             <label for="totalPages" class="form-label">Total de Capítulos</label>
@@ -289,83 +287,43 @@ Detail {{ clube.titulo }}
 </div>
 </div>
 
-<script>
-    const clubeId = '{{ clube.pk }}';
-
-document.getElementById('saveProgress').addEventListener('click', function () {
-    const currentCapitulo = document.getElementById('currentcapitulo').value;
-    const totalCapitulos = document.getElementById('totalcapitulo').value;
-
-    if (!isNaN(currentCapitulo) && !isNaN(totalCapitulos) && totalCapitulos > 0) {
-        let progressPercent = (currentCapitulo / totalCapitulos) * 100;
-
+    <script>
+        document.getElementById('saveProgress').addEventListener('click', function () {
+            const currentCapitulo = document.getElementById('currentcapitulo').value;
+            const totalCapitulos = document.getElementById('totalcapitulo').value;
         
-        if (progressPercent > 100) {
-            progressPercent = 100;
-        }
-
-        document.getElementById('progressBar').style.width = progressPercent + '%';
-        document.getElementById('progressBar').setAttribute('aria-valuenow', progressPercent);
-        document.getElementById('progressBar').innerText = Math.round(progressPercent) + '%';
-
-        localStorage.setItem(`progressPercent_${clubeId}`, progressPercent);
-        localStorage.setItem(`currentcapitulo_${clubeId}`, currentCapitulo);
-        localStorage.setItem(`totalcapitulo_${clubeId}`, totalCapitulos);
-
-        document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
-
-        const progressModal = bootstrap.Modal.getInstance(document.getElementById('progressModal'));
-        progressModal.hide();
-    }
-});
-
-window.onload = function () {
-    const savedProgress = localStorage.getItem(`progressPercent_${clubeId}`);
-    const savedCurrentCapitulo = localStorage.getItem(`currentcapitulo_${clubeId}`);
-    const savedTotalCapitulos = localStorage.getItem(`totalcapitulo_${clubeId}`);
-
-    if (savedProgress && savedCurrentCapitulo && savedTotalCapitulos) {
-        let progressPercent = parseFloat(savedProgress);
-
+            if (!isNaN(currentCapitulo) && !isNaN(totalCapitulos) && totalCapitulos > 0 && currentCapitulo >= 0 && currentCapitulo <= totalCapitulos) {
+                fetch(`{% url 'atualizar_progresso' clube.pk %}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        current_capitulo: currentCapitulo,
+                        total_capitulos: totalCapitulos
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); 
+                    if (data.success) {
+                        const progressPercent = (currentCapitulo / totalCapitulos) * 100;
+                        document.getElementById('progressBar').style.width = progressPercent + '%';
+                        document.getElementById('progressBar').setAttribute('aria-valuenow', progressPercent);
+                        document.getElementById('progressBar').innerText = Math.round(progressPercent) + '%';
         
-        if (progressPercent > 100) {
-            progressPercent = 100;
-        }
-
-        document.getElementById('progressBar').style.width = progressPercent + '%';
-        document.getElementById('progressBar').setAttribute('aria-valuenow', progressPercent);
-        document.getElementById('progressBar').innerText = Math.round(progressPercent) + '%';
-
-        document.getElementById('currentcapitulo').value = savedCurrentCapitulo;
-        document.getElementById('totalcapitulo').value = savedTotalCapitulos;
-
-        document.getElementById('capituloAtualSpan').innerText = savedCurrentCapitulo;
-    }
-
-    const comentariosContainer = document.getElementById('comentariosContainer');
-    comentariosContainer.scrollTop = comentariosContainer.scrollHeight;
-};
-
-window.addEventListener('beforeunload', function () {
-    const currentCapitulo = document.getElementById('currentcapitulo').value;
-    const totalCapitulos = document.getElementById('totalcapitulo').value;
-
-    if (!isNaN(currentCapitulo) && !isNaN(totalCapitulos) && totalCapitulos > 0) {
-        let progressPercent = (currentCapitulo / totalCapitulos) * 100;
-
+                        document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
         
-        if (progressPercent > 100) {
-            progressPercent = 100;
-        }
-
-        localStorage.setItem(`progressPercent_${clubeId}`, progressPercent);
-        localStorage.setItem(`currentcapitulo_${clubeId}`, currentCapitulo);
-        localStorage.setItem(`totalcapitulo_${clubeId}`, totalCapitulos);
-
-        document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
-    }
-});
-
-</script>
-
+                        $('#progressModal').modal('hide');
+                    } else {
+                        alert('Erro ao salvar progresso.');
+                    }
+                });
+            } else {
+                alert('Por favor, insira valores válidos para os capítulos.');
+            }
+        });
+        
+    </script>
 {% endblock %}

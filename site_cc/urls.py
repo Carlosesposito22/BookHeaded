@@ -39,4 +39,6 @@ urlpatterns = [
     path('introducao/', views.introducao, name='introducao'),
     path('equipe/', views.equipe, name='equipe'),
     path('contato/', views.contato, name='contato'),
+    path('clube/<int:clube_id>/atualizar_progresso/',views.atualizar_progresso, name='atualizar_progresso'),
+
 ]

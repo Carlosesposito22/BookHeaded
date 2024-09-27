@@ -7,6 +7,7 @@ from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Q
 from .models import Clube, Categoria, Modalidade, Comentario
+import json
 
 def pagina_principal(request):
     return render(request, 'pagina_principal.html')
@@ -184,10 +185,13 @@ def home_page_view(request):
 def club_detail_view(request, pk):
     clube = get_object_or_404(Clube, id=pk)
     user = request.user
+    progresso_percentual = (clube.progresso_atual / clube.total_capitulos * 100) if clube.total_capitulos > 0 else 0
+
     context = {
         'clube': clube,
         'total_avaliacoes': clube.total_avaliacoes(),
         'media_avaliacoes': clube.calcular_media_avaliacoes(),
+        'progresso_percentual': round(progresso_percentual),
         'user_is_member': Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists(),
         'user_request_pending': Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists(),
     }
@@ -237,3 +241,25 @@ def adicionar_membro_publico(request, clube_id):
     if not clube.privado:
         Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': True})
     return redirect('clubs')
+
+
+
+def atualizar_progresso(request, clube_id):
+    if request.method == 'POST' and request.user.is_authenticated:
+        clube = get_object_or_404(Clube, pk=clube_id)
+
+        if request.user == clube.moderador:
+            data = json.loads(request.body)  
+
+            current_capitulo = int(data.get('current_capitulo', 0))
+            total_capitulos = int(data.get('total_capitulos', 1)) 
+
+            clube.progresso_atual = current_capitulo
+            clube.total_capitulos = total_capitulos
+            clube.save()
+
+            progresso_percentual = (clube.progresso_atual / clube.total_capitulos * 100) if clube.total_capitulos > 0 else 0
+            return JsonResponse({'success': True, 'redirect_url': clube.get_absolute_url(), 'progress_percent': progresso_percentual})
+
+    return JsonResponse({'success': False})
+
