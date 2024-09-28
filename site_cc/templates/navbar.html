@@ -31,7 +31,6 @@
         {% if user.is_authenticated %}
         {% csrf_token %}
         <a class="nav-item nav-link px-2 text-black" href=" {% url 'clubs' %}">Clubs</a>
-        <a class="nav-item nav-link px-2 text-black" href=" {% url 'myclubes' %}">My Clubs</a>
         {% endif %}
       </ul>
 
@@ -44,7 +43,7 @@
             <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/original/user-icon-on-transparent-background-free-png.png" alt="foto de usuário" width="60px">
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item text-black" href=" {% url 'myclubes' %}">My Clubs</a></li>
             <li><a class="dropdown-item" href="#">Another action</a></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
             <li><hr class="dropdown-divider"></li>
