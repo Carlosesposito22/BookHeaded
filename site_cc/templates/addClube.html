@@ -123,14 +123,14 @@ Criando
         font-weight: bold;
     }
 
-    .mod-cat{
+    .mod-cat {
         display: flex;
         flex-direction: row;
         gap: 1rem;
         width: 100%;
     }
 
-    .mod-cat-title{
+    .mod-cat-title {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -145,11 +145,11 @@ Criando
         margin-left: 0.5rem;
     }
 
-    #descricao{
+    #descricao {
         height: 7rem;
     }
 
-    #create-club-form{
+    #create-club-form {
         width: 45rem;
     }
 
@@ -195,22 +195,28 @@ Criando
         }
     }
 
+    @media (max-width: 767px) {
 
-
-    @media (max-width: 768px) {
         .holder1 {
             flex-direction: column;
-            height: 95%;
+            height: auto;
             width: 95%;
         }
 
         .holder2 {
-            width: 100%;
-            padding: 1rem;
+            display: none;
         }
 
         .form-group {
             width: 100%;
+        }
+
+        .superholder {
+            margin-top: -5rem;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     }
 </style>

@@ -210,6 +210,52 @@ Criar conta
             opacity: 1;
         }
     }
+
+    @media (max-width: 767px) {
+
+        .characterholder {
+            display: none;
+        }
+
+        .container-div {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+            width: 100%;
+            padding: 1rem;
+            border-width: 0.1rem;
+            border-radius: 1rem;
+        }
+
+        .holdallform {
+            width: 100%;
+            height: auto;
+            padding-left: 0;
+            border-style: none;
+        }
+
+        .form-group {
+            padding: 1rem;
+            width: 100%;
+        }
+
+        .register-btn {
+            width: 100%;
+            min-width: unset;
+            font-size: 1.2rem;
+            height: 3rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #0066FF;
+        }
+
+        .alr-registered {
+            margin-top: 1rem;
+        }
+    }
 </style>
 
 <div class="container-div shadow-lg">
@@ -218,7 +264,7 @@ Criar conta
         <img src="{% static 'images/certified-bookhead.svg' %}" class="certified-bkh">
     </div>
     <div class="holdallform">
-        <h1 class="text-black text-break fw-bold">Become a certified<br>bookhead right now</h1>
+        <h1 class="text-black fw-bold">Become a certified<br>bookhead right now</h1>
         <div class="form-group p-2">
             <form method="POST">
                 {% csrf_token %}
