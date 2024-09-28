@@ -35,7 +35,7 @@ Detail {{ clube.titulo }}
     .data-progress-holder {
         display: flex;
         flex-direction: column;
-        width: 70%;
+        width: 65%;
     }
 
     .progressbar-holder {
@@ -116,8 +116,9 @@ Detail {{ clube.titulo }}
     
     .progress-bar {
         transition: width 0.6s ease; 
-        background-color: #4169E1; 
+        background-color: #4169E1;
     }
+
     .club-data-icons {
         display: flex;
         flex-direction: row;
@@ -125,14 +126,15 @@ Detail {{ clube.titulo }}
         justify-content: space-between;
     }
 
-    .bi-trash-fill {
-        margin-left: 1rem;
-    }
-
     .div-stars {
         width: fit-content;
         font-size: 1.05rem;
         display: flex;
+    }
+
+    .delete-club{
+        width: 90%;
+        margin-left: 0.5rem;
     }
 
     @media (max-width: 700px) {
@@ -178,12 +180,10 @@ Detail {{ clube.titulo }}
             <div class="btn-progress-bar">
                 <div class="my-3 progressbar-holder">
                     <div class="progress">
-                        <div class="progress">
-                            <div id="progressBar" class="progress-bar" role="progressbar"
-                                 style="width: {{ progresso_percentual }}%; background-color: #4169E1;"
-                                 aria-valuenow="{{ progresso_percentual }}" aria-valuemin="0" aria-valuemax="100">
-                                 {{ progresso_percentual }}%
-                            </div>
+                        <div id="progressBar" class="progress-bar" role="progressbar"
+                             style="width: {{ progresso_percentual }}%; background-color: #4169E1;"
+                             aria-valuenow="{{ progresso_percentual }}" aria-valuemin="0" aria-valuemax="100">
+                             {{ progresso_percentual }}%
                         </div>
                     </div>
                 </div>
@@ -235,12 +235,18 @@ Detail {{ clube.titulo }}
                 {% if user.is_authenticated %}
                     {% if user == clube.moderador %}
                     <div class="del-edt-icons">
-                        <a href="{% url 'updateClube' clube.pk %}"><i class="bi bi-pencil-fill"></i></a>
-                        <a href="#" class="bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}"></a>
-                        {% if clube.privado %}
-                            <a href="#" class="bi bi-briefcase-fill" data-bs-toggle="modal" data-bs-target="#pedidosModal"></a>
-                        {% endif %}
                     </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown"><i class="bi bi-gear-wide-connected"></i></button>
+                        <ul class="dropdown-menu">
+                          <li><a href="{% url 'updateClube' clube.pk %}" class="dropdown-item">Edit Club</a></li>
+                            {% if clube.privado %}
+                                <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
+                            {% endif %}
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a href="#" class="btn btn-danger delete-club" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}">Delete Club</a></li>
+                        </ul>
+                      </div>
                     {% else %}
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#avaliarModal-{{ clube.id }}">
                         Avaliar Clube
@@ -288,6 +294,7 @@ Detail {{ clube.titulo }}
 </div>
 
 <script>
+    
     document.getElementById('saveProgress').addEventListener('click', function () {
         const currentCapitulo = parseInt(document.getElementById('currentcapitulo').value);
         const totalCapitulos = parseInt(document.getElementById('totalcapitulo').value);
@@ -327,6 +334,59 @@ Detail {{ clube.titulo }}
         } else {
             alert('Por favor, insira valores positivos para os capítulos.');
         }
-    });        
+    });
+
+    document.getElementById('saveProgress').addEventListener('click', function () {
+    const currentCapitulo = parseInt(document.getElementById('currentcapitulo').value);
+    const totalCapitulos = parseInt(document.getElementById('totalcapitulo').value);
+
+    if (currentCapitulo > 0 && totalCapitulos > 0) {
+        if (currentCapitulo > totalCapitulos) {
+            alert('O capítulo atual não pode ser maior que o total de capítulos.');
+        } else {
+            fetch(`{% url 'atualizar_progresso' clube.pk %}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    current_capitulo: currentCapitulo,
+                    total_capitulos: totalCapitulos
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.success) {
+                    const progressPercent = (currentCapitulo / totalCapitulos) * 100;
+                    const progressBar = document.getElementById('progressBar');
+                    
+                    progressBar.style.width = progressPercent + '%';
+                    progressBar.setAttribute('aria-valuenow', progressPercent);
+                    progressBar.innerText = Math.round(progressPercent) + '%';
+
+                    document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
+
+                    // Se a barra de progresso atingir 100%, alterar para verde com animação
+                    if (progressPercent === 100) {
+                        progressBar.classList.add('progress-bar-green');
+                    } else {
+                        // Remover a classe verde caso não esteja em 100%
+                        progressBar.classList.remove('progress-bar-green');
+                        progressBar.style.backgroundColor = '#4169E1'; // Azul padrão
+                    }
+
+                    $('#progressModal').modal('hide');
+                } else {
+                    alert('Erro ao salvar progresso.');
+                }
+            });
+        }
+    } else {
+        alert('Por favor, insira valores positivos para os capítulos.');
+    }
+});
+
 </script>
 {% endblock %}
