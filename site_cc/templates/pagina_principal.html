@@ -306,6 +306,45 @@
 
     .figures{
         background-color: #0066FF;
+        height: 30rem;
+        width: 45rem;
+        position: absolute;
+        z-index: -1;
+        margin-left: 38rem;
+        margin-top: -4rem;
+        border-radius: 3rem;
+        overflow: hidden;
+    }
+
+    .variosbonecos{
+        margin-top: 8rem;
+        height: 22rem;
+        margin-left: 1.3rem;
+        position: relative;
+    } 
+
+    .barraimagem{
+        position: absolute;
+        z-index: 0;
+        height: 7rem;
+        margin-left: 2rem;
+        margin-top: 2rem;
+    }
+
+    .estrelas{
+        position: absolute;
+        z-index: 0;
+        margin-top: 2.1rem;
+        height: 2rem;
+        margin-left: 27rem;
+    }
+
+    .falas{
+        position: absolute;
+        z-index: 0;
+        height: 23rem;
+        margin-top: 10rem;
+        margin-left: 0.5rem;
     }
 
 
@@ -567,8 +606,14 @@
             </div>
 
             <div class="figures">
-                <img src="{% static 'images/variosbonecos.svg' %}">
+                <img src="{% static 'images\falas.svg' %}" class="falas">
+                <img src="{% static 'images\readingclub1branco.svg' %}" class="barraimagem">
+                <img src="{% static 'images\estrelasbrancas.svg' %}" class="estrelas">
+                <img src="{% static 'images\variosbonecos.svg' %}" class="variosbonecos">
+
             </div>
+
+            
 
         </section>
         <hr style="margin-left: 5rem; margin-right: 5rem;">
