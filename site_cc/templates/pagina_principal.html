@@ -4,84 +4,547 @@
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
-
-    body{
-        background-color: black;
+    body {
+        background-color: white;
     }
 
-    .main-100vh{
+    .main-100vh {
         height: 100vh;
         width: 100%;
         align-items: center;
         display: flex;
     }
 
-    .main-title{
-        color: white;
+    .main-title {
+        color: rgb(0, 0, 0);
         font-weight: bold;
         font-size: 3rem;
         width: fit-content;
         justify-content: space-between;
     }
 
-    .subtitle{
+    .subtitle {
         width: 20.5rem;
         font-size: .8rem;
-        color: antiquewhite;
-        font-weight: lighter;
+        color: rgb(0, 0, 0);
+        font-weight: normal;
     }
 
-    .text-div{
+    .text-div {
         width: fit-content;
         height: fit-content;
         margin-top: -8rem;
     }
 
     .startnow-btn {
-    height: 100px;
-    width: 300px;
-    border-radius: 20px;
-    font-size: 40px;
-    font-weight: bolder;
-    font-family: 'DM Sans', 'sans-serif';
-    color: white;
-    background-color: #0066FF;
-    border: 3px solid #ffffff;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0px 15px 0px 0px rgb(255, 255, 255);
-    transition: all 0.3s ease-in-out;
-    cursor: pointer;
-    z-index: 1;
-    position: relative;
+        height: 100px;
+        width: 300px;
+        border-radius: 20px;
+        font-size: 40px;
+        font-weight: bolder;
+        font-family: 'DM Sans', 'sans-serif';
+        color: rgb(255, 255, 255);
+        background-color: #0066FF;
+        border: 3px solid #000000;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0px 15px 0px 0px rgb(0, 0, 0);
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+        z-index: 1;
+        position: relative;
     }
 
     .startnow-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.5), transparent);
-    border-radius: inherit;
-    z-index: 1;
-}
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.5), transparent);
+        border-radius: inherit;
+        z-index: 1;
+    }
 
-.startnow-btn:hover {
-    box-shadow: 0px 15px 0px 0px rgb(255, 255, 255);
-}
+    .startnow-btn:hover {
+        box-shadow: 0px 15px 0px 0px rgb(0, 0, 0);
+    }
 
-.startnow-btn:active {
-    box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.8), 
-                0px 2px 4px rgba(255, 255, 255, 0.8) inset;
-    transform: translateY(8px);
-}
+    .startnow-btn:active {
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.8),
+            0px 2px 4px rgba(0, 0, 0, 0.8) inset;
+        transform: translateY(8px);
+    }
 
-.startnow-btn:focus {
-    outline: none;
-}
+    .startnow-btn:focus {
+        outline: none;
+    }
 
+    footer {
+        background-color: #ffffff;
+        padding: 50px 0;
+    }
+
+    .container-footer {
+        max-width: 1200px;
+        padding: 0 4%;
+        margin: 0 auto;
+    }
+
+    .row-footer {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .footer-col {
+        flex-basis: 25%;
+        padding: 10px;
+    }
+
+    .footer-col h4 {
+        font-size: 22px;
+        color: rgb(0, 0, 0);
+        margin-bottom: 20px;
+        font-weight: bold;
+        position: relative;
+        text-transform: uppercase;
+    }
+
+    .footer-col ul {
+        list-style: none;
+    }
+
+    .footer-col ul li {
+        margin: 10px 0;
+    }
+
+    .footer-col ul li a {
+        font-size: 16px;
+        text-transform: capitalize;
+        color: rgb(0, 0, 0);
+        text-decoration: none;
+        font-weight: 300;
+        display: block;
+        transition: all 0.3s ease;
+    }
+
+    .footer-col ul li a:hover {
+        color: #cecdcd;
+        padding-left: 10px;
+    }
+
+    .footer-col .medias-socias {
+        margin-top: 30px;
+    }
+
+    .footer-col .medias-socias a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        width: 40px;
+        margin: 0 10px 10px 0;
+        text-decoration: none;
+        border-radius: 50%;
+        color: rgb(0, 0, 0);
+        border: 1px solid white;
+        transition: all 0.5s ease;
+    }
+
+    .footer-col .medias-socias a i {
+        font-size: 20px;
+    }
+
+    .footer-col .medias-socias a:hover {
+        color: #000000;
+        background-color: white;
+    }
+
+
+    #vantagens-bookheaded {
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .row {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .col-md-6 {
+        flex: 1;
+        padding: 0;
+    }
+
+    .segunda_section {
+        background-color: rgb(255, 255, 255);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        padding-left: 40px;
+    }
+
+    h3 {
+        color: rgb(0, 0, 0);
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 80px;
+        margin-top: 30px;
+    }
+
+    .why-li {
+        list-style: none;
+        padding-left: 0;
+        width: 100%;
+        margin: 10px 0 0 0;
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+
+    li {
+        color: rgb(0, 0, 0);
+        display: flex;
+        align-items: center;
+    }
+
+    li img {
+        width: 64px;
+        margin-right: 20px;
+    }
+
+    * {
+        box-sizing: border-box;
+        font-family: 'DM Sans', 'sans-serif';
+    }
+
+    .texto_aparece {
+        font-size: 4rem;
+        font-weight: bold;
+        line-height: 1.1;
+        color: rgb(0, 0, 0);
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 5%;
+    }
+
+    .carousel-control-prev {
+        left: 20px;
+    }
+
+    .carousel-control-next {
+        right: 20px;
+    }
+
+    .carousel-item {
+        height: 100%;
+    }
+
+    .carousel-inner{
+        border-radius: 1rem;
+    }
+
+    .carousel-inner img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .carousel-caption {
+        position: absolute;
+        top: 20px;
+        left: 10%;
+        padding-left: 20px;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .carousel-caption h5 {
+        font-size: 2.5rem;
+        margin: 0;
+    }
+
+    .carousel-caption p {
+        font-size: 5vw;
+        text-align: left;
+        line-height: 1;
+    }
+
+    #mini-carousel {
+        z-index: 20;
+        position: absolute;
+        bottom: 10px;
+        left: 74%;
+        transform: translateX(-50%);
+        display: flex;
+        overflow-x: hidden;
+    }
+
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    .card img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        overflow: hidden;
+    }
+
+    .figures{
+        background-color: #0066FF;
+    }
+
+
+
+    @media (max-width: 768px) {
+        .footer-col ul {
+            flex-basis: 22%;
+            text-align: center;
+            padding: 0 !important;
+        }
+
+        .row-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-col {
+            width: 100%;
+            text-align: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .medias-socias {
+            margin-top: 20px;
+        }
+
+
+        #vantagens-bookheaded ul {
+            text-align: left;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        #vantagens-bookheaded li {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        #vantagens-bookheaded img {
+            margin-right: 10px;
+            max-width: 30px;
+            height: auto;
+        }
+
+        #img-lado {
+            display: none;
+        }
+
+        h3 {
+            font-size: 20px;
+            margin: 20px;
+        }
+
+        li {
+            font-size: 14px;
+        }
+
+        li img {
+            width: 32px;
+        }
+
+        #texto-lateral {
+            background-color: rgb(255, 255, 255) !important;
+            color: rgb(0, 0, 0) !important;
+        }
+
+        #texto-lateral p {
+            margin-bottom: 2rem;
+        }
+
+        .texto_aparece {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.1;
+            min-height: 30px !important;
+            max-height: 30px !important;
+        }
+
+        #mini-carousel .card {
+            width: 60px;
+            height: auto;
+        }
+
+        #mini-carousel {
+            z-index: 20;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            overflow-x: auto;
+        }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .footer-col ul {
+            flex-basis: 22%;
+            text-align: left;
+            padding: 10px !important;
+        }
+
+        .row-footer {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .footer-col {
+            flex-basis: 48%;
+            margin-bottom: 20px;
+        }
+
+        .medias-socias {
+            margin-top: 20px;
+        }
+
+        #vantagens-bookheaded ul {
+            text-align: left;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        #vantagens-bookheaded li {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        #vantagens-bookheaded img {
+            margin-right: 10px;
+            max-width: 30px;
+            height: auto;
+        }
+
+        .segunda_section {
+            text-align: center;
+        }
+
+        #img-lado {
+            display: none;
+        }
+
+        h3 {
+            font-size: 40px;
+            margin: 20px;
+        }
+
+        li {
+            font-size: 28px;
+        }
+
+        li img {
+            width: 36px;
+        }
+
+        #texto-lateral {
+            background-color: rgb(255, 255, 255) !important;
+            color: white !important;
+        }
+
+        #texto-lateral p {
+            font-size: 18px;
+        }
+
+        .texto_aparece {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.1;
+            min-height: 40px !important;
+            max-height: 40px !important;
+        }
+
+        #mini-carousel .card {
+            width: 50px;
+            height: auto;
+        }
+
+        #mini-carousel {
+            z-index: 20;
+            position: absolute;
+            bottom: 20px;
+            left: 70%;
+            transform: translateX(-50%);
+            display: flex;
+            overflow-x: auto;
+        }
+    }
+
+    @media (min-width: 1025px) {
+        .row-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer-col {
+            flex-basis: 22%;
+            text-align: left;
+        }
+
+        .footer-col ul {
+            flex-basis: 22%;
+            text-align: left;
+            padding: 10px !important;
+        }
+
+        .texto_aparece {
+            font-size: 4rem;
+            font-weight: 600;
+            line-height: 1.1;
+            min-height: 80px !important;
+            max-height: 80px !important;
+        }
+
+        .segunda_section {
+            background-color: white;
+            color: black;
+        }
+
+        #mini-carousel .card {
+            width: 100px;
+            height: auto;
+            border: 0px;
+            background: none;
+        }
+
+        #mini-carousel {
+            z-index: 20;
+            position: absolute;
+            bottom: 20px;
+            left: 70%;
+            transform: translateX(-50%);
+            overflow: hidden;
+            display: flex;
+        }
+    }
 </style>
 
 
@@ -93,52 +556,57 @@
             <div class="text-n-btn">
 
                 <div class="text-div">
-                    <h1 class="main-title text-break">Manage your book clubs,<br>share your thoughts,<br>meet new friends.</h1>
+                    <h1 class="main-title text-break">Manage your book clubs,<br>share your thoughts,<br>meet new
+                        friends.</h1>
                     <p class="subtitle">Bookheaded is the perfect tool to properly operate in your book clubs,
                         with also being an in-built social media made for you to express your enthusiasm</p>
                 </div>
-                <hr style="color: white;">
+                <hr style="color: rgb(0, 0, 0);">
                 <button class="startnow-btn" href="{% url 'login' %}">Access Now</button>
 
             </div>
 
-            <div class="video">
-
+            <div class="figures">
+                <img src="{% static 'images/variosbonecos.svg' %}">
             </div>
-            
-            
 
         </section>
-
+        <hr style="margin-left: 5rem; margin-right: 5rem;">
         <section id="banner-principal">
-            <div class="container-fluid p-0 d-flex flex-column flex-md-row" style="background-color: black;">
+            <div class="container-fluid p-4 d-flex flex-column flex-md-row" style="background-color: white;">
                 <div id="texto-lateral" class="col-12 col-md-4 d-flex align-items-center">
-                    <p id="typewriter" class="text-left p-3 texto_aparece"></p>
+                    <p id="typewriter" class="text-left texto_aparece"></p>
                 </div>
                 <div id="carousel-container" class="col-12 col-md-8" style="position: relative;">
                     <div id="carouselExampleAutoplaying" class="carousel slide img-carousel" data-bs-ride="carousel">
                         <div class="carousel-inner">
                             <div class="carousel-item active">
-                                <img src="{% static 'images/duna.png' %}" class="d-block w-100 photo-carousel" alt="...">
+                                <img src="{% static 'images/duna.png' %}" class="d-block w-100 photo-carousel"
+                                    alt="...">
                             </div>
                             <div class="carousel-item">
                                 <img src="{% static 'images/hp.png' %}" class="d-block w-100 photo-carousel" alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="{% static 'images/romance.png' %}" class="d-block w-100 photo-carousel" alt="...">
+                                <img src="{% static 'images/romance.png' %}" class="d-block w-100 photo-carousel"
+                                    alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="{% static 'images/cesar.png' %}" class="d-block w-100 photo-carousel" alt="...">
+                                <img src="{% static 'images/cesar.png' %}" class="d-block w-100 photo-carousel"
+                                    alt="...">
                             </div>
                             <div class="carousel-item">
-                                <img src="{% static 'images/agatha.png' %}" class="d-block w-100 photo-carousel" alt="...">
-                            </div>            
+                                <img src="{% static 'images/agatha.png' %}" class="d-block w-100 photo-carousel"
+                                    alt="...">
+                            </div>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+                            data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+                            data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
@@ -147,31 +615,38 @@
                         </div>
                     </div>
 
-                    <div id="mini-carousel" class="d-flex justify-content-center" style="position: absolute; bottom: 10px; transform: translateX(-50%); z-index: 20;">
-                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="0" style="cursor: pointer;">
+                    <div id="mini-carousel" class="d-flex justify-content-center"
+                        style="position: absolute; bottom: 10px; transform: translateX(-50%); z-index: 20;">
+                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="0"
+                            style="cursor: pointer;">
                             <img src="{% static 'images/duna.png' %}" class="card-img-top" alt="...">
                         </div>
-                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="1" style="cursor: pointer;">
+                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="1"
+                            style="cursor: pointer;">
                             <img src="{% static 'images/hp.png' %}" class="card-img-top" alt="...">
                         </div>
-                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="2" style="cursor: pointer;">
+                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="2"
+                            style="cursor: pointer;">
                             <img src="{% static 'images/romance.png' %}" class="card-img-top" alt="...">
                         </div>
-                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="3" style="cursor: pointer;">
+                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="3"
+                            style="cursor: pointer;">
                             <img src="{% static 'images/cesar.png' %}" class="card-img-top" alt="...">
                         </div>
-                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="4" style="cursor: pointer;">
+                        <div class="card mx-1" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="4"
+                            style="cursor: pointer;">
                             <img src="{% static 'images/agatha.png' %}" class="card-img-top" alt="...">
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        <hr style="margin-left: 5rem; margin-right: 5rem;">
         <section id="vantagens-bookheaded">
             <div class="row">
                 <div id="img-lado" class="col-md-6"></div>
                 <div class="col-md-6 segunda_section" id="icones_sec">
-                    <h3>PORQUE USAR O BOOKHEADED</h3>
+                    <h3>Why Bookheaded?</h3>
                     <ul class="why-li">
                         <li>
                             <i class="bi bi-calendar2-check-fill" style="margin-right: 1rem;"></i>
@@ -193,13 +668,7 @@
                 </div>
             </div>
         </section>
-           
-        <section id="crie-login" style="width: 100%; margin: 0; padding: 0; display: flex; align-items: center; justify-content: center;">
-            <div>
-                <img src="{% static 'images/call4.png' %}" style="max-width: 100%; height: auto;">
-            </div>
-        </section>
-        
+
         <footer>
             <div class="container-footer">
                 <div class="row-footer">
@@ -240,7 +709,7 @@
                             <a href="#"> <i class="fab fa-twitter"></i> </a>
                             <a href="#"> <i class="fab fa-linkedin"></i> </a>
                         </div>
-    
+
                     </div>
 
                 </div>
@@ -248,10 +717,10 @@
         </footer>
     </main>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const text = "Conheça nossos<br>Principais clubes";
+        document.addEventListener("DOMContentLoaded", function () {
+            const text = "Meet our<br>main clubs";
             let index = 0;
-            const speed = 30; 
+            const speed = 30;
             const typewriterElement = document.getElementById("typewriter");
 
             function type() {
@@ -284,456 +753,6 @@
             type();
         });
     </script>
-    <style>
-        footer{
-            background-color: #000000;
-            padding: 50px 0;
-        }
-        .container-footer{
-            max-width: 1200px;
-            padding: 0 4%;
-            margin: 0 auto;
-        }
-        .row-footer{
-            display: flex;
-            flex-wrap: wrap;
-        }
 
-        .footer-col{
-            flex-basis: 25%;
-            padding: 10px;
-        }
-        .footer-col h4{
-            font-size: 22px;
-            color: white;
-            margin-bottom: 20px;
-            font-weight: 500;
-            position: relative;
-            text-transform: uppercase;
-        }
-        .footer-col ul{
-            list-style: none;
-        }
-        .footer-col ul li{
-            margin: 10px 0;
-        }
-        .footer-col ul li a{
-            font-size: 16px;
-            text-transform: capitalize;
-            color: white;
-            text-decoration: none;
-            font-weight: 300;
-            display: block;
-            transition: all 0.3s ease;
-        }
-        .footer-col ul li a:hover{
-            color: #cecdcd;
-            padding-left: 10px;
-        }
-        .footer-col .medias-socias{
-            margin-top: 30px;
-        }
-        .footer-col .medias-socias a{
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            height: 40px;
-            width: 40px;
-            margin: 0 10px 10px 0;
-            text-decoration: none;
-            border-radius: 50%;
-            color: white;
-            border: 1px solid white;
-            transition: all 0.5s ease;
-        }
-        .footer-col .medias-socias a i{
-            font-size: 20px;
-        }
-
-        .footer-col .medias-socias a:hover{
-            color: #000000;
-            background-color: white;
-        }
-
-
-        #vantagens-bookheaded {
-            overflow: hidden;
-            width: 100%;
-        }
-
-        .row {
-            display: flex;
-            align-items: stretch;
-            width: 100%;
-            padding: 0;
-            margin: 0;
-        }
-
-        .col-md-6 {
-            flex: 1;
-            padding: 0;
-        }
-
-        .segunda_section {
-            background-color: black;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            padding-left: 40px;
-        }
-
-        h3 {
-            color: white;
-            font-size: 32px; /* Tamanho para desktop */
-            margin-bottom: 80px;
-            margin-top: 30px;
-        }
-
-        .why-li {
-            list-style: none;
-            padding-left: 0;
-            width: 100%;
-            margin: 10px 0 0 0;
-            font-size: 24px;
-            margin-bottom: 25px;
-        }
-
-        li {
-            color: white;
-            display: flex;
-            align-items: center;
-        }
-
-        li img {
-            width: 64px;
-            margin-right: 20px;
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'DM Sans', 'sans-serif';
-        }
-
-        .texto_aparece {
-            font-size: 42px; 
-            font-weight: 600; 
-            line-height: 1.1;
-            color: white;
-        }
-
-        .container-fluid {
-            padding: 0;
-            margin: 0;
-        }
-
-        .carousel-control-prev,
-        .carousel-control-next {
-            width: 5%;
-        }
-
-        .carousel-control-prev {
-            left: 20px;
-        }
-
-        .carousel-control-next {
-            right: 20px;
-        }
-
-        .carousel-item {
-            height: 100%;
-        }
-
-        .carousel-inner img {
-            width: 100%; /* Garantir que as imagens não excedam o contêiner */
-            height: auto; /* Manter a proporção */
-            object-fit: cover;
-        }
-
-        .carousel-caption {
-            position: absolute;
-            top: 20px;
-            left: 10%;
-            padding-left: 20px;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        }
-
-        .carousel-caption h5 {
-            font-size: 2.5rem;
-            margin: 0;
-        }
-
-        .carousel-caption p {
-            font-size: 5vw;
-            text-align: left;
-            line-height: 1;
-        }
-
-        #mini-carousel {
-            z-index: 20; 
-            position: absolute; 
-            bottom: 10px; 
-            left: 74%; 
-            transform: translateX(-50%); 
-            display: flex; /* Exibir o mini carrossel */
-            overflow-x: hidden; /* Habilitar rolagem horizontal se necessário */
-        }
-
-        .card {
-            border-radius: 15px; 
-            overflow: hidden; 
-            transition: transform 0.2s; 
-        }
-
-        .card:hover {
-            transform: scale(1.05); 
-        }
-
-        .card img {
-            width: 100%; 
-            height: auto; 
-            object-fit: cover;
-            overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            .footer-col ul {
-                flex-basis: 22%;
-                text-align: center;
-                padding: 0!important;
-            }
-            .row-footer {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .footer-col {
-                width: 100%;
-                text-align: center;
-                align-items: center;
-                margin-bottom: 20px;
-            }
-            
-            .medias-socias {
-                margin-top: 20px;
-            }
-        
-
-            #vantagens-bookheaded ul {
-                text-align: left; /* Alinha o texto à esquerda */
-                width: 100%; /* Faz com que a lista ocupe 100% da largura disponível */
-                margin: 0 auto; /* Centraliza a lista dentro do contêiner */
-            }
-            
-            #vantagens-bookheaded li {
-                display: flex; /* Utiliza flexbox para alinhar imagem e texto */
-                align-items: center; /* Alinha verticalmente a imagem e o texto */
-                margin: 10px 0; /* Espaçamento vertical entre os itens */
-            }
-
-            #vantagens-bookheaded img {
-                margin-right: 10px; /* Espaçamento entre a imagem e o texto */
-                max-width: 30px; /* Define uma largura máxima para as imagens */
-                height: auto; /* Mantém a proporção da imagem */
-            }
-        
-            #img-lado{
-                display: none;
-            }
-            
-            h3 {
-                font-size: 20px; /* Tamanho para mobile */
-                margin: 20px;
-            }
-
-            li {
-                font-size: 14px; /* Tamanho reduzido para mobile */
-            }
-
-            li img {
-                width: 32px; /* Tamanho menor para ícones em mobile */
-            }
-
-            #texto-lateral {
-                background-color: black !important;
-                color: white !important;
-            }
-            #texto-lateral p{
-                margin-bottom: 2rem;
-            }
-            .texto_aparece {
-                font-size: 14px; 
-                font-weight: 500; 
-                line-height: 1.1;
-                min-height: 30px !important; /* Ajuste a altura mínima da div */
-                max-height: 30px !important; /* Ajuste a altura máxima da div */
-            }
-            /* Ajustar a largura dos cards para mobile */
-            #mini-carousel .card {
-                width: 60px; /* Largura dos cards no mobile */
-                height: auto;
-            }
-            #mini-carousel {
-                z-index: 20; 
-                position: absolute; 
-                bottom: 10px; 
-                left: 50%; 
-                transform: translateX(-50%); 
-                display: flex; /* Exibir o mini carrossel */
-                overflow-x: auto; /* Habilitar rolagem horizontal se necessário */
-            }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .footer-col ul {
-                flex-basis: 22%;
-                text-align: left;
-                padding: 10px!important;
-            }
-
-            .row-footer {
-                display: flex;
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: space-between;
-            }
-            
-            .footer-col {
-                flex-basis: 48%;
-                margin-bottom: 20px;
-            }
-            
-            .medias-socias {
-                margin-top: 20px;
-            }
-
-            #vantagens-bookheaded ul {
-                text-align: left; /* Alinha o texto à esquerda */
-                width: 100%; /* Faz com que a lista ocupe 100% da largura disponível */
-                margin: 0 auto; /* Centraliza a lista dentro do contêiner */
-            }
-            
-            #vantagens-bookheaded li {
-                display: flex; /* Utiliza flexbox para alinhar imagem e texto */
-                align-items: center; /* Alinha verticalmente a imagem e o texto */
-                margin: 10px 0; /* Espaçamento vertical entre os itens */
-            }
-
-            #vantagens-bookheaded img {
-                margin-right: 10px; /* Espaçamento entre a imagem e o texto */
-                max-width: 30px; /* Define uma largura máxima para as imagens */
-                height: auto; /* Mantém a proporção da imagem */
-            }
-
-            .segunda_section {
-                text-align: center;
-            }
-
-            #img-lado{
-                display: none;
-            }
-            h3 {
-                font-size: 40px; /* Ajuste para tablets */
-                margin: 20px;
-            }
-
-            li {
-                font-size: 28px; /* Tamanho adequado para tablets */
-            }
-
-            li img {
-                width: 36px; /* Tamanho ajustado para tablets */
-            }
-            #texto-lateral {
-                background-color: black !important;
-                color: white !important;
-            }
-            #texto-lateral p {
-                font-size: 18px; /* Ajuste a fonte para tablets */
-            }
-            .texto_aparece {
-                font-size: 24px; 
-                font-weight: 600; 
-                line-height: 1.1;
-                min-height: 40px !important; /* Ajuste a altura mínima da div */
-                max-height: 40px !important; /* Ajuste a altura máxima da div */
-            }
-            /* Ajustar a largura dos cards para tablets */
-            #mini-carousel .card {
-                width: 50px; /* Largura dos cards no tablet */
-                height: auto;
-            }
-            #mini-carousel {
-                z-index: 20; 
-                position: absolute; 
-                bottom: 20px; 
-                left: 70%; 
-                transform: translateX(-50%); 
-                display: flex; /* Exibir o mini carrossel */
-                overflow-x: auto; /* Habilitar rolagem horizontal se necessário */
-            }
-        }
-
-        @media (min-width: 1025px) {
-            .row-footer {
-                display: flex;
-                justify-content: space-between;
-            }
-            
-            .footer-col {
-                flex-basis: 22%;
-                text-align: left;
-            }
-            .footer-col ul {
-                flex-basis: 22%;
-                text-align: left;
-                padding: 10px!important;
-            }
-
-
-            #texto-lateral {
-                background-image: linear-gradient(rgba(0, 0, 0, 0.838), rgba(0, 0, 0, 0.827)),url("{% static 'images/textura.jpg' %}"); /* Caminho da imagem de fundo */
-                background-size: cover; /* Ajusta a imagem para cobrir toda a área */
-                background-position: center; /* Centraliza a imagem no fundo */
-                background-repeat: no-repeat; /* Evita que a imagem se repita */
-                color: white; /* Mantém o texto branco */
-                padding: 20px; /* Ajusta o espaçamento interno, se necessário */
-            }
-            .texto_aparece {
-                font-size: 42px; 
-                font-weight: 600; 
-                line-height: 1.1;
-                min-height: 80px !important; /* Ajuste a altura mínima da div */
-                max-height: 80px !important; /* Ajuste a altura máxima da div */
-            }
-            .segunda_section{
-                background-image: linear-gradient(rgba(0, 0, 0, 0.838), rgba(0, 0, 0, 0.827)),url("{% static 'images/textura.jpg' %}"); /* Caminho da imagem de fundo */
-                background-size: cover; /* Ajusta a imagem para cobrir toda a área */
-                background-position: center; /* Centraliza a imagem no fundo */
-                background-repeat: no-repeat; /* Evita que a imagem se repita */
-            }
-            #mini-carousel .card {
-                width: 100px; /* Largura dos cards no tablet */
-                height: auto;
-                border:0px;
-                background: none;
-                
-
-            }
-            #mini-carousel {
-                z-index: 20; 
-                position: absolute; 
-                bottom: 20px; 
-                left: 70%; 
-                transform: translateX(-50%); 
-                overflow: hidden;
-                display: flex; /* Exibir o mini carrossel */
-            }
-        }
-    </style>
 </body>
 {% endblock %}
