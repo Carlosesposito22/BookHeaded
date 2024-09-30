@@ -88,7 +88,7 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
 ### Tutorial em vídeo 🎥
 <p style="text-align: center; text-decoration: none;">
   <a href="https://www.youtube.com/watch?v=PGZQ2U1BcUk" style="text-decoration: none;">
-  <span>🧷 Passo a Passo de como utilizar o BookHeaded </span>
+  <span>🧷 Screencast </span>
   </a>
 </p>
 
