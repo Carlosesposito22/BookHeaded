@@ -85,10 +85,6 @@ Posso participar de mais de um clube? 🔄
 Claro! Você pode participar de quantos clubes quiser e gerenciar suas participações na seção de "My Clubs".
 <br><br>
 
-### Login do administrador
-username: admin
-senha: bookheaded123
-
 ### Tutorial em vídeo 🎥
 <p style="text-align: center; text-decoration: none;">
   <a href="https://www.youtube.com/watch?v=PGZQ2U1BcUk" style="text-decoration: none;">
