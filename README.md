@@ -22,6 +22,87 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
 
 - **Organização**:<br>![Jira](https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
 
+## 🔍 Como Acessar e Usar o BookHeaded?
+Seja bem-vindo ao BookHeaded! Siga este guia para entender como acessar sua conta, explorar clubes de leitura e participar da comunidade.
+
+### 1. Acessando o Site 🖥️
+Página Inicial: Quando você visita o BookHeaded, a primeira coisa que verá é a página inicial com uma breve introdução sobre o site e os clubes de leitura mais populares.
+
+Login ou Cadastro: Se você já possui uma conta, clique no botão Login no canto superior direito. Se ainda não tiver uma conta, clique em Register para criar uma nova.
+
+### 2. Como Fazer Login 🔑
+
+Acesse a Página de Login:
+
+Insira o seu nome de usuário e digite sua senha no campo apropriado.
+
+Se as informações estiverem corretas, você será redirecionado para a sua página inicial de usuário.
+
+Não Tem Conta? Cadastre-se: 📝
+
+Para novos usuários, preencha um pequeno formulário com nome, senha e reconfirmando a senha.
+
+Depois de cadastrado, você pode fazer o login e começar a explorar o site.
+
+### 3. Explorando Clubes de Leitura 📖
+No BookHeaded, os clubes de leitura são o coração da experiência, permitindo que você se conecte com outras pessoas que compartilham interesses de leitura semelhantes.
+
+Como Funciona:
+No menu principal, clique em Clubs para ver uma lista de clubes disponíveis.
+Explorar Clubes:
+
+Use a barra de pesquisa ou explore as categorias para encontrar clubes de acordo com seus interesses, como ficção científica, literatura clássica, ou autores contemporâneos.
+Juntar-se a um Clube 🤝:
+
+Para participar de um clube, clique em Entrar no perfil do clube escolhido. Você será automaticamente adicionado à lista de membros do clube e poderá participar das discussões.
+Acompanhar Atividades 📆:
+
+Dentro do clube, você verá as discussões em andamento, o progresso do clube e o capítulo atual, além de ver mais informações do clube como a quantidade de membros, quantas pessoas classificaram e qual a classificação média entre 1 e 5 ⭐.
+
+### 4. Participando de Discussões 💬
+Uma vez que você esteja em um clube, participar das discussões é simples:
+
+Acesse o Fórum do Clube:
+
+Cada clube tem um fórum onde os membros podem comentar, discutir livros ou compartilhar resenhas.
+
+Adicionar à Sua Lista de Leitura ➕:
+
+Ao clicar em um Clube e Entrar, você pode adicioná-lo à sua lista de leitura pessoal, "My clubs" onde poderá acompanhar o progresso da leitura e compartilhar resenhas depois de terminar.
+Recomendar Livros ✨:
+
+Como membro de um clube, você pode sugerir novos livros para a lista de leitura do grupo na área de comentários.
+
+### Dúvidas Frequentes ❓
+Posso criar meu próprio clube de leitura?
+
+Sim! Basta clicar em "New Club" e preencher as informações necessárias. Você poderá gerenciar o clube e convidar outros leitores para participar.
+Como posso encontrar novos livros? 📖
+
+Explore as recomendações dos membros em cada clube ou veja a seção de Destaques da Comunidade, onde livros populares são apresentados com base na interação da comunidade.
+Posso participar de mais de um clube? 🔄
+
+Claro! Você pode participar de quantos clubes quiser e gerenciar suas participações na seção de "My Clubs".
+<br><br>
+
+### Tutorial em vídeo 🎥
+<p style="text-align: center; text-decoration: none;">
+  <a href="https://www.youtube.com/watch?v=PGZQ2U1BcUk" style="text-decoration: none;">
+  <span>🧷 Passo a Passo de como utilizar o BookHeaded </span>
+  </a>
+</p>
+
+<br>
+
+### Link para o site
+<p style="text-align: center; text-decoration: none;">
+  <a href="https://bookheaded.azurewebsites.net" style="text-decoration: none;">
+  <span>🧷 BookHeaded</span>
+  </a>
+</p>
+
+<br>
+
 
 ## ✅ Entregas
 
@@ -49,7 +130,7 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
 
   <li>
     <a  href="https://www.youtube.com/watch?v=toAvguviqcI"
-      >Prototipação Lo-Fi</a
+      >Screencast</a
     >
   </li>
 </ul>
