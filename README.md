@@ -46,6 +46,12 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
       >Imagem do Board no Jira</a
     >
   </li>
+
+  <li>
+    <a  href="https://www.youtube.com/watch?v=toAvguviqcI"
+      >Prototipação Lo-Fi</a
+    >
+  </li>
 </ul>
 </details>
 
@@ -54,12 +60,17 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
 <summary>Entrega 2</summary>
 <ul>
   <li>
-<a href="Mídia/Jiraboard.jpg">Imagem do Backlog no Jira</a>
+<a href="Mídia/backlog.jpg">Imagem do Backlog no Jira</a>
 </li>
   
 <li>
-    <a  href="Mídia/Jirabacklog.jpg"
+    <a  href="Mídia/quadro.jpg"
       >Imagem do Board no Jira</a
+    >
+  </li>
+    <li>
+    <a  href="https://www.youtube.com/watch?v=PGZQ2U1BcUk"
+      >Screencast</a
     >
   </li>
 </ul>
@@ -71,15 +82,6 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
   <a href="https://www.figma.com/design/647wQMhbLuuVg614lNbp5g/Untitled?node-id=0-1&t=NoCqAA1pU0jS4wmj-1" style="text-decoration: none;">
   <span>🧷 Figma</span>
   </a>
-</p>
-
-<br>
-
-## 📹 Screencast do Protótipo
-<p style="text-align: center; text-decoration: none;">
-  <a href="https://www.youtube.com/watch?v=toAvguviqcI" style="text-decoration: none;">
-  <span>🧷 Screencast do protótipo Lo-Fi (1)</span>
-</a>
 </p>
 
 <br>
