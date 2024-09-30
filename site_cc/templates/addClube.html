@@ -51,6 +51,7 @@ Criando
         border-radius: 1.5rem;
         margin-right: 1.5rem;
         overflow: hidden;
+        position: relative;
     }
 
     .emo {
@@ -63,16 +64,73 @@ Criando
 
     .velho {
         position: absolute;
-        z-index: 0;
+        z-index: 1;
         height: 12rem;
         margin-top: 13rem;
         transition: transform 0.3s ease, height 0.3s ease;
     }
 
+
     .velho.dragging {
         transition: transform 0.3s ease;
         transform: translate(-9rem, -6rem) rotate(-30deg);
         height: 22rem;
+    }
+
+    .menina {
+        position: absolute;
+        z-index: 2;
+        height: 12rem;
+        margin-top: 10rem;
+        transition: transform 0.3s ease, height 0.3s ease;
+    }
+
+    .menina.dragging {
+        transition: transform 0.3s ease;
+        transform: translate(6rem, -6rem) rotate(30deg);
+        height: 22rem;
+    }
+
+    .cabelao {
+        position: absolute;
+        z-index: 3;
+        height: 4rem;
+        margin-top: 5rem;
+        transition: transform 0.3s ease, height 0.3s ease;
+    }
+
+    .cabelao.dragging {
+        transition: transform 0.3s ease;
+        transform: translate(6rem, -6rem);
+        height: 22rem;
+    }
+
+    .mlkderoxo {
+        position: absolute;
+        z-index: 0;
+        height: 10rem;
+        margin-top: 10rem;
+        transition: transform 0.3s ease, height 0.3s ease;
+    }
+
+    .mlkderoxo.dragging {
+        transition: transform 0.3s ease;
+        transform: translate(0rem, -8rem);
+        height: 19rem;
+    }
+
+    .tranca {
+        position: absolute;
+        height: 12rem;
+        margin-top: 45.2rem;
+        margin-left: 12rem;
+        transition: transform 0.3s ease, height 0.3s ease;
+        z-index: 100;
+    }
+
+    .tranca.dragging {
+        transition: transform 0.3s ease;
+        transform: translate(0rem, -10rem);
     }
 
     .reading-club {
@@ -229,6 +287,9 @@ Criando
             <div class="holder2">
                 <img src="{% static 'images/emo.svg' %}" class="emo" alt="Imagem do avatar">
                 <img src="{% static 'images/velho.svg' %}" class="velho" alt="Imagem do avatar">
+                <img src="{% static 'images/casaco-menina.svg' %}" class="menina" alt="Imagem do avatar">
+                <img src="{% static 'images/tranca.svg' %}" class="tranca" alt="Imagem do avatar">
+                <img src="{% static 'images/mlkderoxo.svg' %}" class="mlkderoxo" alt="Imagem do avatar">
             </div>
             <form method="post" id="create-club-form">
                 <h1 class="text-start text-black">Create your new <p class="h1 fw-bold reading-club">reading club</p>
@@ -326,7 +387,49 @@ Criando
         }
     });
 
+    document.getElementById("modalidade").addEventListener("change", function () {
+        const menina = document.querySelector(".menina");
+        const selectedValue = this.value.trim();
 
+        if (selectedValue === "1" || selectedValue === "2" || selectedValue === "3") {
+            menina.classList.add("dragging");
+        } else {
+            menina.classList.remove("dragging");
+        }
+
+        document.getElementById("categoria").addEventListener("change", function () {
+            const cabelao = document.querySelector(".cabelao");
+            const selectedValue = this.value.trim();
+            console.log("Selected Value:", selectedValue);
+            if (selectedValue >= "1" && selectedValue <= "11") {
+                cabelao.classList.add("dragging");
+                console.log("Adding dragging class to cabelao");
+            } else {
+                cabelao.classList.remove("dragging");
+                console.log("Removing dragging class from cabelao");
+            }
+        });
+    });
+
+    document.getElementById("descricao").addEventListener("input", function () {
+        const mlkderoxo = document.querySelector(".mlkderoxo");
+
+        // Check if there is any text in the textarea
+        if (this.value.trim() !== "") {
+            mlkderoxo.classList.add("dragging"); // Add the dragging class if there is text
+        } else {
+            mlkderoxo.classList.remove("dragging"); // Remove the dragging class if empty
+        }
+    });
+
+    document.getElementById("privado").addEventListener("change", function () {
+        const tranca = document.querySelector(".tranca");
+        if (this.checked) {
+            tranca.classList.add("dragging");
+        } else {
+            tranca.classList.remove("dragging");
+        }
+    });
 </script>
 
 {% else %}
