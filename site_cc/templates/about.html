@@ -10,8 +10,10 @@
 
     .superdiv {
         display: flex;
-        flex-direction: column;
+        flex-wrap: wrap;
         gap: 2rem;
+        justify-content: center;
+        align-items: center;
     }
 
     .card-img-top {
@@ -29,6 +31,7 @@
         border-radius: 1.5rem;
         box-shadow: inset;
         height: 20rem;
+        width: 45%;
     }
 
     .abt-us:hover{
@@ -86,6 +89,7 @@
         border-style: inset solid;
         border-color: black;
         border-width: .1rem;
+        width: 45%;
     }
 
     .text-div-members{
@@ -135,7 +139,7 @@
 
 <div class="container mt-5 superdiv">
 
-    <div class="row abt-us" >
+    <div class="abt-us" >
         <a href="{%  url 'introducao' %}">
             <div class="text-div">
                 <h1 class="mb-4 text-break">About</h1>
@@ -170,31 +174,12 @@
             </div>
 
             <div class="text-div-members">
-                <h1 class="mb-4 text-break">Our Team</h1>
+                <h1 class="mb-4">Our Team</h1>
                 <p class="text-break">There are few more personal things than someone's book taste.
                 Thinking about this, <strong>bookheaded</strong> was developed to properly unite people by books, turning 
                 the management of reading clubs easier and effective.</p>
             </div>
-            
         </a>
-    </div>
-
-    
-
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-
-       
-        <div class="col">
-            <div class="card h-100">
-                <a href="{%  url 'equipe' %}">
-                    <img src="{% static 'images/github.png' %}" class="card-img-top" alt="Contato">
-                </a>
-                <div class="card-body">
-                    <h5 class="card-title">Contato</h5>
-                    <p class="card-text">Conecte-se com a Equipe por Trás do BookHeaded</p>
-                </div>
-            </div>
-        </div>
     </div>
 
 </div>

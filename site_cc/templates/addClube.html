@@ -255,10 +255,14 @@ Criando
 
     @media (max-width: 767px) {
 
+        .h1{
+            font-size: 2rem;
+        }
+
         .holder1 {
             flex-direction: column;
-            height: auto;
-            width: 95%;
+            height: fit-content;
+            width: auto;
         }
 
         .holder2 {
@@ -270,12 +274,54 @@ Criando
         }
 
         .superholder {
-            margin-top: -5rem;
+            margin-top: -4rem;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
+    }
+
+    @keyframes entrada {
+        0% {
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .carlos {
+        position: absolute;
+        z-index: 1;
+        height: 12rem;
+        margin-top: 13rem;
+    }
+
+    .carlos.dragging {
+        transition: transform 0.3s ease;
+        transform: translate(9rem, 0rem);
+        height: 22rem;
+    }
+
+    .mateus {
+        position: absolute;
+        z-index: 1;
+        height: 12rem;
+        margin-top: 13rem;
+    }
+
+    .mateus.dragging {
+        transition: transform 0.3s ease;
+        transform: translate(10rem, 0rem);
+        height: 22rem;
+    }
+
+    .hidden {
+        opacity: 0;
+        transition: opacity 0.5s ease;
     }
 </style>
 
@@ -290,6 +336,8 @@ Criando
                 <img src="{% static 'images/casaco-menina.svg' %}" class="menina" alt="Imagem do avatar">
                 <img src="{% static 'images/tranca.svg' %}" class="tranca" alt="Imagem do avatar">
                 <img src="{% static 'images/mlkderoxo.svg' %}" class="mlkderoxo" alt="Imagem do avatar">
+                <img src="{% static 'images/carlos.svg' %}" class="carlos" alt="Imagem do avatar">
+                <img src="{% static 'images/mateus.svg' %}" class="mateus" alt="Imagem do avatar">
             </div>
             <form method="post" id="create-club-form">
                 <h1 class="text-start text-black">Create your new <p class="h1 fw-bold reading-club">reading club</p>
@@ -396,29 +444,38 @@ Criando
         } else {
             menina.classList.remove("dragging");
         }
+    });
 
-        document.getElementById("categoria").addEventListener("change", function () {
-            const cabelao = document.querySelector(".cabelao");
-            const selectedValue = this.value.trim();
-            console.log("Selected Value:", selectedValue);
-            if (selectedValue >= "1" && selectedValue <= "11") {
-                cabelao.classList.add("dragging");
-                console.log("Adding dragging class to cabelao");
-            } else {
-                cabelao.classList.remove("dragging");
-                console.log("Removing dragging class from cabelao");
-            }
-        });
+    document.getElementById("categoria").addEventListener("change", function () {
+        const mlkderoxo = document.querySelector(".mlkderoxo");
+        const selectedValue = this.value.trim();
+        console.log("Selected Value:", selectedValue);
+        if (selectedValue == "1" || selectedValue == "2" || selectedValue == "3" || selectedValue == "4" || selectedValue == "5" ||
+        selectedValue == "6" || selectedValue == "7" || selectedValue == "8" || selectedValue == "9" || selectedValue == "10" ||
+        selectedValue == "11")  {
+            mlkderoxo.classList.add("dragging");
+            console.log("Adding dragging class to cabelao");
+        } else {
+            mlkderoxo.classList.remove("dragging");
+            console.log("Removing dragging class from cabelao");
+        }
     });
 
     document.getElementById("descricao").addEventListener("input", function () {
-        const mlkderoxo = document.querySelector(".mlkderoxo");
+        const carlos = document.querySelector(".carlos");
+        const mateus = document.querySelector(".mateus");
 
-        // Check if there is any text in the textarea
-        if (this.value.trim() !== "") {
-            mlkderoxo.classList.add("dragging"); // Add the dragging class if there is text
+        if (this.value.trim() == "carlos") {
+            carlos.classList.add("dragging");
+        } else if (this.value.trim() !== "carlos"){
+            carlos.classList.remove("dragging");
+        }
+
+        if (this.value.trim() == "mateus") {
+
+            mateus.classList.add("dragging");
         } else {
-            mlkderoxo.classList.remove("dragging"); // Remove the dragging class if empty
+            mateus.classList.remove("dragging");
         }
     });
 
@@ -430,6 +487,7 @@ Criando
             tranca.classList.remove("dragging");
         }
     });
+
 </script>
 
 {% else %}
