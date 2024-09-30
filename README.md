@@ -134,17 +134,6 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
     >
   </li>
 
-<ul>
-  <li>
-    <a href="Mídia/1.jpg" target="_blank">
-      <a href="Mídia/2.jpg" target="_blank">
-        <a href="Mídia/3.jpg" target="_blank">
-          Prototipação Lo-Fi
-        </a>
-      </a>
-    </a>
-  </li>
-</ul>
 </details>
 
 </details>
@@ -164,6 +153,16 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
     <a  href="https://www.youtube.com/watch?v=PGZQ2U1BcUk"
       >Screencast</a
     >
+  </li>
+
+  <li>
+    <a href="Mídia/1.jpg" target="_blank">
+      <a href="Mídia/2.jpg" target="_blank">
+        <a href="Mídia/3.jpg" target="_blank">
+          Prototipação Lo-Fi
+        </a>
+      </a>
+    </a>
   </li>
 </ul>
 </details>
