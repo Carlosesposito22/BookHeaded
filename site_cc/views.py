@@ -117,7 +117,7 @@ def clube_create_view(request):
 
 @login_required
 def clube_update_view(request, pk):
-    clube = Clube.objects.get(pk=pk)
+    clube = get_object_or_404(Clube, pk=pk)
 
     if request.method == 'POST':
         clube.titulo = request.POST.get('titulo')
