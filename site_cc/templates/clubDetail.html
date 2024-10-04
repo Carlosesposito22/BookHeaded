@@ -12,13 +12,10 @@ Detail {{ clube.titulo }}
     }
 
     .data-holder {
-        background-color: rgb(248, 248, 248);
+        background-color: rgb(255, 255, 255);
         width: fit-content;
         padding: .8rem;
         border-radius: 1rem;
-        border-style: solid;
-        border-width: .1rem;
-        border-color: #d1d1d1;
         z-index: 99;
         max-width: fit-content;
         height: fit-content;
@@ -60,7 +57,7 @@ Detail {{ clube.titulo }}
     }
 
     h1 {
-        font-size: 4rem;
+        font-size: clamp(16px, 4rem, 6rem);
     }
 
     .not-adm-items {
@@ -111,12 +108,14 @@ Detail {{ clube.titulo }}
     .progress {
         width: 100%; 
         background-color: #000000; 
-        border-radius: 0.25rem; 
+        border-radius: 10rem;
+        height: 2rem;
     }
     
     .progress-bar {
-        transition: width 0.6s ease; 
-        background-color: #4169E1;
+        transition: width 0.6s ease;
+        background-color: #0066FF;
+        font-weight: bold;
     }
 
     .club-data-icons {
@@ -142,6 +141,14 @@ Detail {{ clube.titulo }}
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            width: 100%;
+        }
+
+        .btn-progress-bar{
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            display: flex;
         }
 
         .hold-evr-exc-admt {
@@ -170,6 +177,11 @@ Detail {{ clube.titulo }}
             flex-direction: column;
             align-items: flex-start;
         }
+
+        .comentarioholder, .capitulo-container, .comentarios-container, .data-holder {
+            width: 100%;
+        }
+
     }
 </style>
 
@@ -181,7 +193,7 @@ Detail {{ clube.titulo }}
                 <div class="my-3 progressbar-holder">
                     <div class="progress">
                         <div id="progressBar" class="progress-bar" role="progressbar"
-                             style="width: {{ progresso_percentual }}%; background-color: #4169E1;"
+                             style="width: {{ progresso_percentual }}%;"
                              aria-valuenow="{{ progresso_percentual }}" aria-valuemin="0" aria-valuemax="100">
                              {{ progresso_percentual }}%
                         </div>
@@ -215,7 +227,7 @@ Detail {{ clube.titulo }}
                 {% endfor %}
                 {% endif %}
             </div>
-            <div style="background-color: #e0e0e0; padding: 4ypx; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">
+            <div class="comentarioholder" style="background-color: #e0e0e0; padding: 4ypx; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">
                 <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4 d-flex align-items-center">
                     {% csrf_token %}
                     <input type="hidden" name="clube_id" value="{{ clube.pk }}">
@@ -235,20 +247,16 @@ Detail {{ clube.titulo }}
                 <h3><strong>Club Data</strong></h3>
                 {% if user.is_authenticated %}
                     {% if user == clube.moderador %}
-                    <div class="del-edt-icons">
-                    </div>
                     <div class="btn-group">
                         <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown"><i class="bi bi-gear-wide-connected"></i></button>
                         <ul class="dropdown-menu">
-                          <li><a href="{% url 'updateClube' clube.pk %}" class="dropdown-item">Edit Club</a></li>
-                            <!--Teste de modal para edital clube -->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}">teste de modal</button>
-                            <!--Teste de modal para edital clube -->
-                            {% if clube.privado %}
-                                <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
-                            {% endif %}
-                          <li><hr class="dropdown-divider"></li>
-                          <li><a href="#" class="btn btn-danger delete-club" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}">Delete Club</a></li>
+                            <li><a href="{% url 'updateClube' clube.pk %}" class="dropdown-item">Edit Club</a></li>
+                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}">teste de modal</a></li>
+                                {% if clube.privado %}
+                                    <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
+                                {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a href="#" class="btn btn-danger delete-club" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}">Delete Club</a></li>
                         </ul>
                       </div>
                     {% else %}

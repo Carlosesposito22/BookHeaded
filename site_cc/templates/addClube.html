@@ -26,7 +26,7 @@ Criando
     }
 
     .h1 {
-        color: #0056b3;
+        color: #0066FF;
     }
 
     .holder1 {
@@ -42,7 +42,7 @@ Criando
     }
 
     .holder2 {
-        background-color: #0056b3;
+        background-color: #0066FF;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -215,7 +215,7 @@ Criando
         margin-top: 1rem;
         width: 100%;
         padding: 0.75rem;
-        background-color: #007bff;
+        background-color: #0066FF;
         color: white;
         font-size: 1.25rem;
         border: none;
@@ -230,7 +230,7 @@ Criando
     }
 
     .create-btn:hover:enabled {
-        background-color: #0056b3;
+        background-color: #0066FF;
     }
 
     @keyframes subtle-elastic-distort {
@@ -282,165 +282,62 @@ Criando
         }
     }
 
-    @media screen and (min-height: 1080px) {
-
-        .emo, .mlkderoxo, .cabelao, .mateus, .carlos, .velho, .menina{
-            margin-bottom: -15rem;
+    @media (min-width: 768px) and (max-width: 1023px){
+        .holder2{
+            height: 32rem;
         }
 
-        .emo{
-            height: 37rem;
-        }
-
-        .tranca{
-            margin-right: -6rem;
-        }
-
-        h1{
-            font-size: 4rem;
-            line-height: 2.5rem;
-            margin-top: 0.6rem;
-        }
-
-        .reading-club{
-            font-size: 5rem;
-        }
-
-
-        #create-club-form{
-            margin-top: 8rem;
+        .form-group{
             height: fit-content;
         }
 
-        .mlkderoxo.dragging, .mateus.dragging, .carlos.dragging, .velho.dragging, .menina.dragging{
-            height: 33rem;
+        .holder1{
+            height: fit-content;
+        }
+    }
+
+    @media (min-width: 1024px) and (max-width: 1279px){
+        .holder2{
+            height: 32rem;
         }
 
-        .tranca{
-            margin-bottom: -20rem;
+        .form-group{
+            height: fit-content;
         }
 
         .holder1{
-            width: 90%;
+            height: fit-content;
+        }
+    }
+
+    @media (min-width: 1280px){
+        
+        .holder2{
+            height: 32rem;
+        }
+
+        .form-group{
+            height: fit-content;
+        }
+
+        .holder1{
+            height: fit-content;
+        }
+
+        body{
+            background: linear-gradient(270deg, #0066FF, #ffffff, #0066FF, #ffffff);
+            background-size: 200% 200%;
+            animation: gradienteAnimado 20s ease infinite;
         }
 
     }
 
-    @media screen and (height: 1600px) {
-
-        .emo, .mlkderoxo, .cabelao, .mateus, .carlos, .velho, .menina{
-            margin-bottom: -31rem;
+    @keyframes gradienteAnimado {
+        0% {
+        background-position: 0% 50%;
         }
-
-        .emo{
-            height: 37rem;
-        }
-
-        .tranca{
-            margin-right: -6rem;
-            margin-top: 73rem;
-        }
-
-        h1{
-            font-size: 4rem;
-            line-height: 2.5rem;
-            margin-top: 0.6rem;
-        }
-
-        .reading-club{
-            font-size: 5rem;
-        }
-
-
-        #create-club-form{
-            margin-top: 8rem;
-            height: fit-content;
-        }
-
-        .mlkderoxo.dragging, .mateus.dragging, .carlos.dragging, .velho.dragging, .menina.dragging{
-            height: 33rem;
-        }
-
-        .tranca{
-            margin-bottom: -20rem;
-        }
-
-        .holder1{
-            width: 90%;
-        }
-
-    }
-
-    @media screen and (min-width: 2560px) {
-        .holder1 {
-            width: 180rem;
-            height: 90%;
-        }
-
-        .holder2 {
-            width: 120rem; /* Aumentando para ocupar 90% da tela */
-            height: 100%;
-            margin-right: 0;
-        }
-
-        .emo {
-            margin-top: 13rem;
-            height: 50rem;
-        }
-
-        .velho,
-        .menina,
-        .mlkderoxo,
-        .cabelao {
-            height: 22rem;
-        }
-
-        .mlkderoxo.dragging, .mateus.dragging, .carlos.dragging, .velho.dragging, .menina.dragging{
-            height: 43rem;
-        }
-
-        .velho.dragging{
-            margin-left: -15rem;
-        }
-
-        .menina.dragging{
-            margin-right: -8rem;
-        }
-
-        .mlkderoxo.dragging{
-            margin-top: -11rem;
-        }
-
-        .tranca {
-            height: 15rem;
-            margin-left: 15rem;
-            margin-bottom: -23rem;
-        }
-
-        .reading-club {
-            font-size: 4rem;
-            margin-top: -.5rem;
-        }
-
-        #create-club-form {
-            width: 90%;
-            padding: 2rem;
-        }
-
-        input[type="text"],
-        select,
-        textarea {
-            font-size: 1.5rem;
-            padding: 1rem;
-        }
-
-        .form-row {
-            width: 55rem;
-        }
-
-        .create-btn {
-            font-size: 1.5rem;
-            padding: 1rem;
+        100% {
+            background-position: 100% 50%;
         }
     }
 

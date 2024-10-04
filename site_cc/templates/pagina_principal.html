@@ -17,6 +17,7 @@
         display: flex;
         flex-direction: column;
         justify-content: left;
+
     }
 
     .main-100vh{
@@ -161,14 +162,17 @@
     #vantagens-bookheaded {
         overflow: hidden;
         width: 100%;
+        display: flex;
+        align-items: center;
+
     }
 
     .segunda_section {
         background-color: rgb(255, 255, 255);
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        text-align: left;
+        width: 100%;
     }
 
     h3 {
@@ -283,8 +287,6 @@
         object-fit: cover;
         overflow: hidden;
     }
-
-    
 
     @media (max-width: 767px) {
 
@@ -600,9 +602,8 @@
             <hr>
         </section>
 
-        <section id="vantagens-bookheaded">
+        <section id="vantagens-bookheaded" class="container">
             <div class="row">
-                <div id="img-lado" class="col-md-6"></div>
                 <div class="col-md-6 segunda_section" id="icones_sec">
                     <h3>Why Bookheaded?</h3>
                     <ul class="why-li">
