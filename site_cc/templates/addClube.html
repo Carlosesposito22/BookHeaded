@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base3.html' %}
 
 {% block title %}
 Criando
@@ -52,6 +52,12 @@ Criando
         margin-right: 1.5rem;
         overflow: hidden;
         position: relative;
+    }
+
+    #descricao{
+        overflow-y: scroll;
+        overflow-x: hidden;
+        resize: none;
     }
 
     .emo {
@@ -322,12 +328,6 @@ Criando
 
         .holder1{
             height: fit-content;
-        }
-
-        body{
-            background: linear-gradient(270deg, #0066FF, #ffffff, #0066FF, #ffffff);
-            background-size: 200% 200%;
-            animation: gradienteAnimado 20s ease infinite;
         }
 
     }
