@@ -11,8 +11,8 @@ def create_categories_and_modalities(sender, **kwargs):
             "Romance", "Ciência", "Tecnologia", "Autoajuda"
         ]
         modalidades = [
-            "online", "presencial", 
-            "hibrido"
+            "Online", "presencial", 
+            "Hibrid"
         ]
         
         for categoria in categorias:

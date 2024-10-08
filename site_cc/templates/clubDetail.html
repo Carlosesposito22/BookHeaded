@@ -99,6 +99,8 @@ Detail {{ clube.titulo }}
         border-radius: 8px;
         margin-right: auto;
         max-width: 80%;
+        width: fit-content;
+        max-height: fit-content;
     }
 
     small {
@@ -134,6 +136,24 @@ Detail {{ clube.titulo }}
     .delete-club{
         width: 90%;
         margin-left: 0.5rem;
+    }
+
+    .comment-n-date{
+        display: flex;
+        flex-direction: row;
+        justify-content: left;
+        height: fit-content;
+        align-items: center;
+        gap: 3rem;
+    }
+
+    #pdocomentario{
+        margin: 0;
+    }
+
+    .comment-n-date.right-align {
+        justify-content: flex-end;
+        text-align: right;
     }
 
     @media (max-width: 700px) {
@@ -219,10 +239,16 @@ Detail {{ clube.titulo }}
                 {% for comentario in clube.comentarios.all|slice:"-8:" %}
                 <div
                     class="comentario-item {% if comentario.nome == user.username %}meu-comentario{% else %}outro-comentario{% endif %}">
-                    <strong>{{ comentario.nome }} - {{ comentario.data }}</strong>
-                    <br>
-                    {{ comentario.comentario }}
-                    <br>
+                    <strong>{{ comentario.nome }}</strong>
+                    <div class="comment-n-date {% if comentario.nome == user.username %}right-align{% endif %}">
+                        {% if comentario.nome == user.username %}
+                            <p id="pdocomentario" class="datap">{{ comentario.data|date:"m/d/Y H:i" }}</p>
+                            <p id="pdocomentario">{{ comentario.comentario }}</p>
+                        {% else %}
+                            <p id="pdocomentario">{{ comentario.comentario }}</p>
+                            <p id="pdocomentario" class="datap">{{ comentario.data|date:"m/d/Y H:i" }}</p>
+                        {% endif %}
+                    </div>
                 </div>
                 {% endfor %}
                 {% endif %}
@@ -380,13 +406,11 @@ Detail {{ clube.titulo }}
 
                     document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
 
-                    // Se a barra de progresso atingir 100%, alterar para verde com animação
                     if (progressPercent === 100) {
                         progressBar.classList.add('progress-bar-green');
                     } else {
-                        // Remover a classe verde caso não esteja em 100%
                         progressBar.classList.remove('progress-bar-green');
-                        progressBar.style.backgroundColor = '#4169E1'; // Azul padrão
+                        progressBar.style.backgroundColor = '#4169E1';
                     }
 
                     $('#progressModal').modal('hide');
