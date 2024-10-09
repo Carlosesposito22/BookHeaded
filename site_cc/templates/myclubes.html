@@ -51,9 +51,16 @@ Home Page
     ul {
         list-style: none;
         padding: 0;
-        display:inline-flex;
+        display: flex;
         flex-direction: row;
         gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    li{
+        flex-grow: 1;
+        flex-basis: 200;
+        margin-bottom: -1rem;
     }
 
     .club-title {
