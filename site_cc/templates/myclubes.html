@@ -57,7 +57,7 @@ Home Page
         flex-wrap: wrap;
     }
 
-    li{
+    .list-cards{
         flex-grow: 1;
         flex-basis: 200;
         margin-bottom: -1rem;
@@ -266,7 +266,7 @@ Home Page
 
     <ul>
         {% for clube in object_list %}
-        <li>
+        <li class="list-cards">
             <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
                 <div class="hold-title-icons">
                     <div class="title-date-div">

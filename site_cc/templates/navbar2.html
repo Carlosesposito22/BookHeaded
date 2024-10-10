@@ -33,6 +33,24 @@
     background-color: rgb(233, 233, 233);
   }
 
+  #register-btn{
+    background-color: #0066FF;
+    font-weight: bold;
+    color: white;
+  }
+
+  #register-btn:hover{
+    background-color: #004bbb;
+  }
+
+  #login-btn{
+    background: none;
+  }
+
+  #login-btn:hover{
+    background-color: rgb(237, 237, 237);
+  }
+
 </style>
 
 <header class="p-3">
@@ -67,8 +85,8 @@
           </ul>
         </div>
         {% else %}
-        <a class="btn login-register" href=" {% url 'register' %}">Register</a>
-        <a class="btn login-register" href="{% url 'login' %}">Login</a>
+        <a class="btn login-register" id="register-btn" href=" {% url 'register' %}">Register</a>
+        <a class="btn login-register" id="login-btn" href="{% url 'login' %}">Login</a>
         {% endif %}
       </div>
     </div>
