@@ -321,18 +321,6 @@ Criar conta
 
     usernameInput.addEventListener('input', checkInputs);
     passwordInput.addEventListener('input', checkInputs);
-    passwordConfirmInput.addEventListener('focus', () => {
-        if (passwordInput.value) {
-            personagemImg.classList.add('morph');
-            personagemImg.src = "{% static 'images/personagem2.svg' %}";
-            certifiedBkhImg.classList.add('dragging');
-            certifiedBkhImg.style.height = '8rem';
-            certifiedBkhImg.style.transform = 'translate(-2rem, -8rem) rotate(-15deg)';
-            setTimeout(() => {
-                certifiedBkhImg.classList.remove('dragging');
-            }, 300);
-        }
-    });
 
     passwordConfirmInput.addEventListener('blur', checkInputs);
 </script>
