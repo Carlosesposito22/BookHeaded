@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+
+    .superholder{
+        background-color: red;
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+    }
+
+    .hold{
+        background-color: green;
+        width: 60%;
+    }
+
+    .pfp-holder{
+        background-color: black;
+        height: 7rem;
+        width: 7rem;
+        border-radius: 100%;
+        margin-top: -3rem;
+    }
+
+    .banner{
+        background-color: pink;
+        height: 10rem;
+        border-top-right-radius: 2rem;
+        border-top-left-radius: 2rem;
+    }
+
+    .rest{
+        background-color: blue;
+        height: 20rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        padding-top: 1rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .biodiv{
+        background-color: grey;
+        max-width: 60%;
+        padding-left: .5rem;
+        margin-top: 1rem;
+    }
+
+    .user-data{
+        background-color: aqua;
+        width: fit-content;
+    }
+
+    .follow{
+        background-color: #0066FF;
+        border-style: none;
+        border-radius: 2rem;
+        padding-right: 1rem;
+        padding-left: 0.5rem;
+        padding-top: 0rem;
+        padding-bottom: 0rem;
+        color: white;
+        font-weight: bold;
+    }
+
+    .follow:hover{
+        background-color: #004bbb;
+        color: white;
+    }
+
+    strong{
+        display: flex;
+        flex-direction: row;
+        gap: .5rem;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+</style>
+
+<div class="container my-5 superholder">
+    <div class="col hold shadow-lg">
+        <div class="banner"></div>
+        <div class="rest">
+            <div class="img-user-bio">
+                <div class="img-user">
+                    <div class="pfp-holder">
+                        <img src="" alt="">
+                    </div>
+                    <strong class="username">@NomeDeUsuario<button class="btn follow"><i class="bi bi-plus"></i>Follow</button></strong>
+                </div>
+                <div class="biodiv">
+                    <p class="bio">oi</p>
+                </div>
+            </div>  
+            <div class="user-data">
+                <p class="user-info">User Info</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

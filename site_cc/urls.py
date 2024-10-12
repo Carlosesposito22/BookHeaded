@@ -40,5 +40,6 @@ urlpatterns = [
     path('equipe/', views.equipe, name='equipe'),
     path('contato/', views.contato, name='contato'),
     path('clube/<int:clube_id>/atualizar_progresso/',views.atualizar_progresso, name='atualizar_progresso'),
+    path('profile/', views.profile, name='profile'),
 
 ]

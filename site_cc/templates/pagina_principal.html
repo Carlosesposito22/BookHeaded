@@ -8,11 +8,11 @@
         background-color: white;
     }
 
-    main{
+    main {
         margin-top: 3rem;
     }
 
-    .text-column{
+    .text-column {
         height: fit-content;
         display: flex;
         flex-direction: column;
@@ -20,22 +20,25 @@
 
     }
 
-    .main-100vh{
+    .main-100vh {
         height: 90vh;
     }
 
-    hr{
+    hr {
         margin-top: 5.5rem;
     }
 
-    .holdermainvh{
+    .holdermainvh {
         display: flexbox;
         align-items: center;
         flex-direction: row;
         margin-top: 4rem;
+        justify-content: space-between;
+        padding-left: 4rem;
+        padding-right: 4rem;
     }
 
-    .startnow{
+    .startnow {
         width: fit-content;
         height: fit-content;
         padding: 0.5rem;
@@ -48,16 +51,29 @@
 
     }
 
-    .column1{
-        background-color: #0066FF;
-        border-radius: 2rem;
-        overflow: hidden;
+    .column1 {
         height: fit-content;
-        max-width: 100%;
-        padding-top: 1.5rem;
+        max-width: 50%;
+        width: fit-content;
+        display: flex;
+        flex-direction: column;
+        margin-top: -2rem;
     }
 
-    .title{
+    .figurelp {
+        height: 30rem;
+        width: fit-content;
+        animation: floatAnimation2 6s infinite cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .figure2lp {
+        height: 12rem;
+        margin-bottom: -11rem;
+        width: fit-content;
+        animation: floatAnimation 6s infinite cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .title {
         font-weight: 600;
         font-size: 4rem;
         width: 32rem;
@@ -66,19 +82,19 @@
         text-align: left;
     }
 
-    .hold-btn-minitext{
+    .hold-btn-minitext {
         display: flex;
         flex-direction: row;
         align-items: center;
     }
 
-    .variosbonecos{
+    .variosbonecos {
         padding-top: 4rem;
         padding-left: 1rem;
         padding-right: 1rem;
     }
 
-    .vantagens-bookheaded{
+    .vantagens-bookheaded {
         height: fit-content;
     }
 
@@ -162,29 +178,50 @@
         background-color: white;
     }
 
-
-    #vantagens-bookheaded {
-        overflow: hidden;
-        width: 100%;
+    .segunda-section {
+        margin-top: 10rem;
         display: flex;
+        flex-direction: row;
+        justify-content: center;
+        text-align: right;
         align-items: center;
-
+        gap: 15rem;
     }
 
-    .segunda_section {
-        background-color: rgb(255, 255, 255);
-        display: flex;
-        flex-direction: column;
-        text-align: left;
-        width: 100%;
+    .segunda-section-text {
+        width: 32rem;
     }
 
     h3 {
-        color: rgb(0, 0, 0);
-        font-size: 3rem;
-        font-weight: bold;
-        margin-bottom: 80px;
-        margin-top: 30px;
+        color: #0066FF;
+        font-size: 4rem;
+        font-weight: 900;
+    }
+
+    .segunda-section-figures {
+        height: fit-content;
+    }
+
+    .figure3lp {
+        height: 25rem;
+    }
+
+    .segunda-section2 {
+        margin-top: 10rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        text-align: left;
+        align-items: center;
+        gap: 15rem;
+    }
+
+    .segunda-section2-text {
+        width: 32rem;
+    }
+
+    .segunda-section2-figures {
+        height: fit-content;
     }
 
     .why-li {
@@ -235,7 +272,7 @@
         height: 100%;
     }
 
-    .carousel-inner{
+    .carousel-inner {
         border-radius: 1rem;
     }
 
@@ -292,39 +329,67 @@
         overflow: hidden;
     }
 
+    @keyframes floatAnimation {
+        0% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-2rem);
+        }
+
+        100% {
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes floatAnimation2 {
+        0% {
+            transform: translateY(-1rem);
+        }
+
+        50% {
+            transform: translateY(0);
+        }
+
+        100% {
+            transform: translateY(-1rem);
+        }
+    }
+
     @media (max-width: 767px) {
 
-        .main-100vh{
+        .main-100vh {
             height: fit-content;
         }
 
-        .column1{
+        .column1 {
             display: none;
         }
 
-        hr{
+        hr {
             display: flex;
             margin-top: 3rem;
         }
 
-        .title{
+        .title {
             font-size: 2rem;
             line-height: 2rem;
             margin-bottom: -0.5rem;
         }
 
-        .startnow{
+        .startnow {
             height: 3rem;
             width: 10rem;
             font-size: 0.9rem;
         }
 
-        .main-100vh{
+        .main-100vh {
             text-align: center;
             height: fit-content;
         }
 
-        .figures{
+        .figures {
             margin-top: 4rem;
             border-radius: 0;
         }
@@ -431,17 +496,18 @@
             padding: 10px !important;
         }
 
-        .main-100vh{
+        .main-100vh {
             height: fit-content;
+            align-self: center;
         }
 
-        .title{
+        .title {
             font-size: 2rem;
             line-height: 2rem;
             margin-bottom: -0.5rem;
         }
 
-        .startnow{
+        .startnow {
             height: 3rem;
             width: 10rem;
             font-size: 0.9rem;
@@ -529,11 +595,20 @@
             display: flex;
             overflow-x: auto;
         }
+
+        .figure2lp {
+            max-height: 6rem;
+        }
+
+        .figurelp {
+            margin-top: 4rem;
+            max-height: 15rem;
+        }
     }
 
     @media (min-width: 1025px) {
 
-        .main-100vh{
+        .main-100vh {
             height: fit-content;
         }
 
@@ -583,48 +658,56 @@
             display: flex;
         }
     }
+
+    #bluestrong {
+        color: #0066FF;
+    }
 </style>
 
 
 <body>
-    <main class="container my-5">
+    <main class="maincontainer container my-5">
 
         <section class="container main-100vh">
             <div class="row holdermainvh">
                 <span class="col-md-6 text-column">
-                    <p class="text-black title">book clubs made <strong style="color:#0066FF;">better</strong> and <strong style="color:#0066FF;">easier</strong> to immerse in.</p>
-                    <button class="btn btn-primary startnow" href="{% url 'login' %}">Access Now</button>   
+                    <p class="text-black title">book clubs made <strong style="color:#0066FF;">better</strong> and
+                        <strong style="color:#0066FF;">easier</strong> to immerse in.
+                    </p>
+                    <button class="btn btn-primary startnow" href="{% url 'login' %}">Access Now</button>
                 </span>
-                <span class="col-md-6 shadow-lg column1">
-                    <img src="{% static 'images\bonecosebarra.svg' %}">
-                </span> 
+                <span class="col-md-6 column1">
+                    <img class="figure2lp" src="{% static 'images\meninacaindo.svg' %}">
+                    <img class="figurelp" src="{% static 'images\livroecaralp.svg' %}">
+                </span>
             </div>
-            <hr>
         </section>
 
-        <section id="vantagens-bookheaded" class="container">
-            <div class="row">
-                <div class="col-md-6 segunda_section" id="icones_sec">
-                    <h3>Why Bookheaded?</h3>
-                    <ul class="why-li">
-                        <li>
-                            <i class="bi bi-calendar2-check-fill" style="margin-right: 1rem;"></i>
-                            <span>Agende e crie lembretes</span>
-                        </li>
-                        <li>
-                            <i class="bi bi-diagram-3-fill" style="margin-right: 1rem;"></i>
-                            <span>Melhore a gestão de membros</span>
-                        </li>
-                        <li>
-                            <i class="bi bi-chat-right-text-fill" style="margin-right: 1rem;"></i>
-                            <span>Bate-papo ao vivo</span>
-                        </li>
-                        <li>
-                            <i class="bi bi-people-fill" style="margin-right: 1rem;"></i>
-                            <span>Acesso à comunidade</span>
-                        </li>
-                    </ul>
-                </div>
+        <section class="segunda-section">
+            <div class="segunda-section-figures">
+                <img class="figure3lp" src="{% static 'images\calendar2.svg' %}">
+            </div>
+            <div class="segunda-section-text">
+                <h3>Schedule and create reminders</h3>
+                <br>
+                <strong>With <strong id="bluestrong">bookheaded</strong>, you have the power to <strong
+                        id="bluestrong">dynamize</strong> your book clubs agenda. Make it <strong
+                        id="bluestrong">easy</strong> for your clubs'
+                    integrants to aknowledge the current reading situation.</strong>
+            </div>
+        </section>
+        <section class="segunda-section2">
+            <div class="segunda-section2-text">
+                <h3>Improve your clubs' members management</h3>
+                <br>
+                <strong>It was <strong id="bluestrong">very hard</strong> to manage the members of book clubs before,
+                    but now, it is <strong id="bluestrong">as simple as pushing
+                        a button</strong>. You won't have problems in your club, as you'll have <strong
+                        id="bluestrong">insights</strong> of your club members and can easily remove integrants, invite
+                    and <strong id="bluestrong">much more</strong>.</strong>
+            </div>
+            <div class="segunda-section2-figures">
+                <img class="figure3lp" src="{% static 'images\calendar.svg' %}">
             </div>
         </section>
 

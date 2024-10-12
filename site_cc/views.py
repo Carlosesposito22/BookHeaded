@@ -263,3 +263,6 @@ def atualizar_progresso(request, clube_id):
 
     return JsonResponse({'success': False})
 
+def profile(request):
+    return render(request, 'profile.html')
+
