@@ -115,9 +115,8 @@
                     </div>
                     <!-- Exibe o nome do perfil visualizado (por exemplo, 'adm') -->
                     <strong class="username">@{{ profile.user.username }}
-                        <!-- Se o usuário logado está visualizando seu próprio perfil -->
-                        {% if request.user == profile.user %}
-                            <div class="biodiv">
+                        <div class="biodiv">
+                            {% if request.user == profile.user %}
                                 {% if profile.bio %}
                                     <p class="bio">{{ profile.bio }}</p>
                                 {% else %}
@@ -127,14 +126,16 @@
                                         <button type="submit">Salvar Bio</button>
                                     </form>
                                 {% endif %}
-                            </div>
-                        <!-- Se o usuário logado está visualizando o perfil de outra pessoa -->
-                        {% else %}
-                            <!-- Verifica se o usuário logado já está seguindo o perfil visualizado -->
+                            {% else %}
+                                {% if profile.bio %}
+                                    <p class="bio">{{ profile.bio }}</p> <!-- Exibe a bio apenas se existir -->
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        {% if request.user != profile.user %}
                             {% if request.user in profile.seguindo.all %}
                                 <span class="following-text">Você está seguindo</span>
                             {% else %}
-                                <!-- Formulário para seguir o perfil visualizado -->
                                 <form method="post" action="{% url 'seguir_usuario' profile.user.id %}" style="display:inline;">
                                     {% csrf_token %}
                                     <button type="submit" class="btn follow">
