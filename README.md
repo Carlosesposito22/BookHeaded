@@ -1,4 +1,4 @@
-<img src="static\images\bannerAnimado.svg" style="height: fit-content; align-self: center;">
+<img src="static\images\bannerAnimado.svg" style="height: 10rem; align-self: center;">
 
 # 📖 BookHeaded
 
