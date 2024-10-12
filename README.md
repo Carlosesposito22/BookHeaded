@@ -1,4 +1,4 @@
-<img src="static\images\banner.svg" style="height: 25rem; align-self: center;">
+<img src="static\images\banner.gif" style="height: 25rem; align-self: center;">
 
 # 📖 BookHeaded
 
