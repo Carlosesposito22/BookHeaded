@@ -267,7 +267,7 @@
         height: 2.5rem;
         margin-top: 9rem;
         margin-right: -2rem;
-        animation: floatAnimation 12s infinite cubic-bezier(0.25, 0.1, 0.25, 1);
+        animation: otherfloatAnimation 3s infinite cubic-bezier(0.25, 0.1, 0.25, 1);
     }
 
     .figure8lp {
@@ -395,19 +395,31 @@
         }
     }
 
-
-
     @keyframes floatAnimation2 {
         0% {
-            transform: translateY(-1rem);
+            transform: translateY(-2rem);
         }
 
         50% {
-            transform: translateY(0);
+            transform: translateY(0rem);
         }
 
         100% {
-            transform: translateY(-1rem);
+            transform: translateY(-2rem);
+        }
+    }
+
+    @keyframes otherfloatAnimation {
+        0% {
+            transform: translateY(-1rem) rotate(-20deg);
+        }
+
+        50% {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        100% {
+            transform: translateY(-1rem) rotate(-20deg);
         }
     }
 
