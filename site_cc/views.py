@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Q
-from .models import Clube, Categoria, Modalidade, Comentario
+from .models import Clube, Categoria, Modalidade, Comentario,Profile
 import json
 
 def pagina_principal(request):
@@ -263,6 +263,19 @@ def atualizar_progresso(request, clube_id):
 
     return JsonResponse({'success': False})
 
-def profile(request):
-    return render(request, 'profile.html')
 
+
+@login_required
+def profile(request):
+    user = request.user
+    
+    profile, created = Profile.objects.get_or_create(user=user)
+
+    if request.method == 'POST':
+        bio = request.POST.get('bio', '')  
+        if bio:
+            profile.bio = bio  
+            profile.save() 
+            return redirect('profile')
+
+    return render(request, 'profile.html', {'profile': profile})
