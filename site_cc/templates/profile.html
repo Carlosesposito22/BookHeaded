@@ -114,8 +114,18 @@
                         <img src="" alt="">
                     </div>
                     <strong class="username">@{{ profile.user.username }}
-                        {% if request.user == user %}
-                            <!-- Não exibe botão se for o próprio usuário -->
+                        {% if request.user == profile.user %}
+                            <div class="biodiv">
+                                {% if profile.bio %}
+                                    <p class="bio">{{ profile.bio }}</p>
+                                {% else %}
+                                    <form class="bio-form" method="post">
+                                        {% csrf_token %}
+                                        <textarea name="bio" placeholder="Digite sua bio aqui..."></textarea>
+                                        <button type="submit">Salvar Bio</button>
+                                    </form>
+                            {% endif %}
+                        </div>
                         {% elif user in profile.seguindo.all %}
                             <span class="following-text">Você está seguindo</span>
                         {% else %}
@@ -129,17 +139,7 @@
                         {% endif %}
                     </strong>
                 </div>
-                <div class="biodiv">
-                    {% if profile.bio %}
-                        <p class="bio">{{ profile.bio }}</p>
-                    {% else %}
-                        <form class="bio-form" method="post">
-                            {% csrf_token %}
-                            <textarea name="bio" placeholder="Digite sua bio aqui..."></textarea>
-                            <button type="submit">Salvar Bio</button>
-                        </form>
-                    {% endif %}
-                </div>
+                
             </div>
             <div class="user-data">
                 <p class="user-info">User Info</p>
