@@ -1,4 +1,4 @@
-<img src="static\images\banner.svg">
+<img src="static\images\banner.svg" style="height: 15rem">
 
 # 📖 BookHeaded
 
