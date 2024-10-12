@@ -113,7 +113,9 @@
                     <div class="pfp-holder">
                         <img src="" alt="">
                     </div>
+                    <!-- Exibe o nome do perfil visualizado (por exemplo, 'adm') -->
                     <strong class="username">@{{ profile.user.username }}
+                        <!-- Se o usuário logado está visualizando seu próprio perfil -->
                         {% if request.user == profile.user %}
                             <div class="biodiv">
                                 {% if profile.bio %}
@@ -124,22 +126,26 @@
                                         <textarea name="bio" placeholder="Digite sua bio aqui..."></textarea>
                                         <button type="submit">Salvar Bio</button>
                                     </form>
-                            {% endif %}
-                        </div>
-                        {% elif user in profile.seguindo.all %}
-                            <span class="following-text">Você está seguindo</span>
+                                {% endif %}
+                            </div>
+                        <!-- Se o usuário logado está visualizando o perfil de outra pessoa -->
                         {% else %}
-                            <form method="post" action="{% url 'seguir_usuario' user.id %}" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn follow">
-                                    <i class="bi bi-plus"></i>
-                                    Follow
-                                </button>
-                            </form>
+                            <!-- Verifica se o usuário logado já está seguindo o perfil visualizado -->
+                            {% if request.user in profile.seguindo.all %}
+                                <span class="following-text">Você está seguindo</span>
+                            {% else %}
+                                <!-- Formulário para seguir o perfil visualizado -->
+                                <form method="post" action="{% url 'seguir_usuario' profile.user.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn follow">
+                                        <i class="bi bi-plus"></i>
+                                        Follow
+                                    </button>
+                                </form>
+                            {% endif %}
                         {% endif %}
                     </strong>
                 </div>
-                
             </div>
             <div class="user-data">
                 <p class="user-info">User Info</p>

@@ -290,15 +290,17 @@ def profile(request, user_id):
 
 @login_required
 def seguir_usuario(request, user_id):
-    user = request.user
-    usuario_a_seguir = get_object_or_404(User, id=user_id)
-    
-    profile, created = Profile.objects.get_or_create(user=user)
+    if request.method == 'POST':
+        perfil = get_object_or_404(Profile, user__id=user_id)
 
-    if usuario_a_seguir not in profile.seguindo.all():
-        profile.seguindo.add(usuario_a_seguir)
-        profile.save()
-    return redirect('profile', user_id=usuario_a_seguir.id)
+        
+        if request.user not in perfil.seguindo.all():
+            perfil.seguindo.add(request.user)
+            perfil.save()
+
+        
+        return redirect('profile', user_id=user_id)
+   
 def lista_usuarios(request):
     
     nome = request.GET.get('nome', '')
