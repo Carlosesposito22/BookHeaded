@@ -192,6 +192,64 @@
             object-fit: cover;
         }
     }
+
+.category-btn {
+    background-color: white;
+    color: black;
+    border-color: #007bff;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.categoria-ficção:hover, .categoria-ficção.active {
+    background-color: #000080; 
+    color: white;
+}
+
+.categoria-fantasia:hover, .categoria-fantasia.active {
+    background-color: #4682B4; 
+    color: white;
+}
+
+.categoria-romance:hover, .categoria-romance.active {
+    background-color: #87CEEB; 
+    color: white;
+}
+
+.categoria-historia:hover, .categoria-historia.active {
+    background-color: #1E90FF; 
+    color: white;
+}
+
+.categoria-biografia:hover, .categoria-biografia.active {
+    background-color: #4169E1; 
+    color: white;
+}
+
+.categoria-não-ficção:hover, .categoria-não-ficção.active {
+    background-color: #0000FF; 
+    color: white;
+}
+
+.categoria-mistério:hover, .categoria-mistério.active {
+    background-color: #00BFFF; 
+    color: white;
+}
+
+.categoria-ciência:hover, .categoria-ciência.active {
+    background-color: #008B8B;
+    color: white;
+}
+
+.categoria-tecnologia:hover, .categoria-tecnologia.active {
+    background-color: #7FFFD4; 
+    color: white;
+}
+
+.categoria-autoajuda:hover, .categoria-autoajuda.active {
+    background-color: #00CED1; 
+    color: white;
+}
+
 </style>
 
 <div class="container my-5">
@@ -248,14 +306,16 @@
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body collapse-body">
                         {% for categoria in cat_menu %}
-                            <button type="button" class="btn btn-sm btn-outline-primary category-btn" 
-                                    data-categoria="{{ categoria.nome }}"  
-                                    onclick="filterByCategory('{{ categoria.nome }}')">
+                            <button type="button" class="btn btn-sm category-btn 
+                                {% if categoria.nome == 'Ficção' %}categoria-ficção{% elif categoria.nome == 'Autoajuda' %}categoria-autoajuda{% elif categoria.nome == 'Tecnologia' %}categoria-tecnologia{% elif categoria.nome == 'Ciência' %}categoria-ciência{% elif categoria.nome == 'Mistério' %}categoria-mistério{% elif categoria.nome == 'Fantasia' %}categoria-fantasia{% elif categoria.nome == 'Romance' %}categoria-romance{% elif categoria.nome == 'História' %}categoria-historia{% elif categoria.nome == 'Biografia' %}categoria-biografia{% elif categoria.nome == 'Não-ficção' %}categoria-não-ficção{% endif %}" 
+                                data-categoria="{{ categoria.nome }}"  
+                                onclick="filterByCategory('{{ categoria.nome }}')">
                                 {{ categoria.nome }}
                             </button>
                         {% endfor %}
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -327,6 +387,14 @@ function updateCarousel() {
 }
 
 function filterByCategory(categoria) {
+    const buttons = document.querySelectorAll('.category-btn');
+    buttons.forEach(button => {
+        button.classList.remove('active');
+    });
+
+    const button = document.querySelector(`[data-categoria="${categoria}"]`);
+    button.classList.add('active');
+
     const url = new URL(window.location.href);
     url.searchParams.set('categoria', categoria);  
     window.location.href = url;  
