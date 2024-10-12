@@ -1,4 +1,4 @@
-<img src="BookHeaded\static\images\banner.svg">
+<img src="static\images\banner.svg">
 
 # 📖 BookHeaded
 
