@@ -192,6 +192,33 @@
             object-fit: cover;
         }
     }
+
+    .category-btn {
+        background-color: white;
+        color: black;
+        border-color: #007bff;
+        border-radius: 2rem;
+        transition: background-color 0.3s, color 0.3s;
+        font-weight: 500;
+    }
+
+    .category-btn:hover{
+        background-color: #007bff;
+        color: white;
+    }
+
+    .category-btn.active {
+        background-color: blue; /* Define a cor de fundo azul */
+        color: white; /* Opcional: cor do texto para contraste */
+    }
+
+    .category-btn.active {
+        background-color: blue; /* Cor de fundo azul */
+        color: white; /* Cor do texto */
+    }
+    
+    
+
 </style>
 
 <div class="container my-5">
@@ -248,9 +275,10 @@
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body collapse-body">
                         {% for categoria in cat_menu %}
-                            <button type="button" class="btn btn-sm btn-outline-primary category-btn" 
-                                    data-categoria="{{ categoria.nome }}"  
-                                    onclick="filterByCategory('{{ categoria.nome }}')">
+                            <button type="button" class="btn btn-sm category-btn 
+                                {% if categoria.nome == 'Ficção' %}categoria-ficção{% elif categoria.nome == 'Autoajuda' %}categoria-autoajuda{% elif categoria.nome == 'Tecnologia' %}categoria-tecnologia{% elif categoria.nome == 'Ciência' %}categoria-ciência{% elif categoria.nome == 'Mistério' %}categoria-mistério{% elif categoria.nome == 'Fantasia' %}categoria-fantasia{% elif categoria.nome == 'Romance' %}categoria-romance{% elif categoria.nome == 'História' %}categoria-historia{% elif categoria.nome == 'Biografia' %}categoria-biografia{% elif categoria.nome == 'Não-ficção' %}categoria-não-ficção{% endif %}" 
+                                data-categoria="{{ categoria.nome }}"  
+                                onclick="filterByCategory('{{ categoria.nome }}')">
                                 {{ categoria.nome }}
                             </button>
                         {% endfor %}
@@ -331,6 +359,18 @@ function filterByCategory(categoria) {
     url.searchParams.set('categoria', categoria);  
     window.location.href = url;  
 }
+
+window.addEventListener('load', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoriaSelecionada = urlParams.get('categoria');
+
+    if (categoriaSelecionada) {
+        const button = document.querySelector(`[data-categoria="${categoriaSelecionada}"]`);
+        if (button) {
+            button.classList.add('active');
+        }
+    }
+});
 
 </script>
 

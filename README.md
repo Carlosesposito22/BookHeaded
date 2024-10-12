@@ -1,3 +1,5 @@
+<img src="static\images\banner.svg" style="height: 25rem; align-self: center;">
+
 # 📖 BookHeaded
 
 Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está sendo desenvolvida como parte da disciplina de Fundamentos de Software (FDS) para criar uma comunidade interativa entre os leitores, permitindo que eles compartilhem e discutam suas leituras de forma mais envolvente. Este novo projeto, chamado **Bookheaded**, visa principalmente aprimorar e promover conexões significativas através do amor pela leitura.
