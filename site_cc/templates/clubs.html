@@ -43,6 +43,7 @@
         align-items: center;
         margin-top: 20px;
         width: 100%;
+        gap: 1rem;
     }
 
     .search-input {
@@ -86,13 +87,21 @@
     }
 
     .card-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    height: 3rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+        font-size: 1.5rem;
+        font-weight: bold;
+        height: 3rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .collapse-body {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        width: fit-content;
+        height: fit-content;
+    }
 
     .titles {
         text-decoration: none;
@@ -217,14 +226,34 @@
     <div>
         <br>
         <div>
-            <h2>Pesquise um clube:</h2>
-            <div class="search-container">
-                <form method="get" class="d-flex">
-                    <input type="text" name="nome" class="form-control search-input" placeholder="Search Clubs" aria-label="Search Clubs" value="{{ request.GET.nome }}">
-                    <button class="btn btn-outline-primary search-btn" type="submit">
-                        <i class="bi bi-search"></i>
-                    </button>
-                </form>
+            <br>
+            <div class="search-bar-n-text">
+                <h2>Search for clubs made for you</h2>
+                <div class="search-container">
+                    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button"
+                        aria-expanded="false" aria-controls="collapseExample">
+                        <i class="bi bi-funnel-fill"></i>
+                    </a>
+                    <form method="get" class="d-flex">
+                        <input type="text" name="nome" class="form-control search-input" placeholder="Search Clubs"
+                            aria-label="Search Clubs" value="{{ request.GET.nome }}">
+                        <button class="btn btn-outline-primary search-btn" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </form>
+                </div>
+                <p class="d-inline-flex gap-1">
+    
+                </p>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body collapse-body">
+                        <button type="button" class="btn btn-sm btn-outline-primary category-btn">Adventure</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary category-btn">Horror</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary category-btn">Romance</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary category-btn">Bible</button>
+                        <button type="button" class="btn btn-sm btn-outline-primary category-btn">Carlos é gay</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

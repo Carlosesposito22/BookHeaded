@@ -17,7 +17,6 @@
         display: flex;
         flex-direction: column;
         justify-content: left;
-
     }
 
     .main-100vh {
@@ -186,6 +185,8 @@
         text-align: right;
         align-items: center;
         gap: 15rem;
+        display: flex;
+        flex-wrap: wrap;
     }
 
     .segunda-section-text {
@@ -203,7 +204,7 @@
     }
 
     .figure3lp {
-        height: 25rem;
+        height: 20rem;
     }
 
     .segunda-section2 {
@@ -214,6 +215,8 @@
         text-align: left;
         align-items: center;
         gap: 10rem;
+        display: flex;
+        flex-wrap: wrap;
     }
 
     .segunda-section2-text {
@@ -222,18 +225,31 @@
 
     .segunda-section2-figures {
         height: fit-content;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
     }
 
-    .figure4lp{
-        height: 4rem;
-        margin-right: 2rem;
-        margin-top: -15rem;
+    .figure4lp {
+        height: 6rem;
+        filter: drop-shadow(0px .5rem 0px rgb(0, 124, 35));
     }
 
-    .figure5lp{
-        height: 1rem;
-        margin-left: 2rem;
-        margin-bottom: -15rem;
+    .figure4lp:hover {
+        filter: none;
+        transform: translateY(0.5rem);
+        transition: transform 0.3s, filter 0.3s;
+    }
+
+    .figure5lp {
+        height: 6rem;
+        filter: drop-shadow(0px .5rem 0px rgb(124, 0, 0));
+        transition: transform 0.3s, filter 0.3s;
+    }
+
+    .figure5lp:hover {
+        filter: none;
+        transform: translateY(0.5rem);
     }
 
     .why-li {
@@ -373,6 +389,15 @@
 
         .main-100vh {
             height: fit-content;
+            margin-top: 0;
+        }
+
+        .text-column {
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .column1 {
@@ -388,6 +413,7 @@
             font-size: 2rem;
             line-height: 2rem;
             margin-bottom: -0.5rem;
+            text-align: center;
         }
 
         .startnow {
@@ -498,6 +524,34 @@
             transform: translateX(-50%);
             display: flex;
             overflow-x: auto;
+        }
+
+        .segunda-section {
+            gap: 0rem;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .segunda-section-text {
+            width: 15rem;
+            order: 1;
+        }
+
+        h3 {
+            color: #0066FF;
+            font-size: 2rem;
+            font-weight: 900;
+            text-align: center;
+        }
+
+        .segunda-section-figures {
+            display: none;
+        }
+
+        .figure3lp {
+            display: none;
         }
     }
 
@@ -719,9 +773,8 @@
                     and <strong id="bluestrong">much more</strong>.</strong>
             </div>
             <div class="segunda-section2-figures">
-                <img class="figure4lp" src="{% static 'images\+.svg' %}">
-                <img class="figure3lp" src="{% static 'images\entrandonotelefone.svg' %}">
-                <img class="figure5lp" src="{% static 'images\-.svg' %}">
+                <img class="figure4lp" src="{% static 'images\wantstojoin.svg' %}">
+                <img class="figure5lp" src="{% static 'images\removedfromclub.svg' %}">
             </div>
         </section>
         <section class="segunda-section">
@@ -729,12 +782,11 @@
                 <img class="figure3lp" src="{% static 'images\calendar2.svg' %}">
             </div>
             <div class="segunda-section-text">
-                <h3>Schedule and create reminders</h3>
+                <h3>Live Chatting</h3>
                 <br>
-                <strong>With <strong id="bluestrong">bookheaded</strong>, you have the power to <strong
-                        id="bluestrong">dynamize</strong> your book clubs agenda. Make it <strong
-                        id="bluestrong">easy</strong> for your clubs'
-                    integrants to aknowledge the current reading situation.</strong>
+                <strong>Here, you can share your thoughts and enthusiasm, as you have real-time chatting rooms, so you
+                    can discuss about the books you've read, or the chapters, or... everything. You're not only able to
+                    chat with your club-mates, but also with other people online.</strong>
             </div>
         </section>
         <section class="segunda-section2">
@@ -748,9 +800,7 @@
                     and <strong id="bluestrong">much more</strong>.</strong>
             </div>
             <div class="segunda-section2-figures">
-                <img class="figure4lp" src="{% static 'images\+.svg' %}">
                 <img class="figure3lp" src="{% static 'images\entrandonotelefone.svg' %}">
-                <img class="figure5lp" src="{% static 'images\-.svg' %}">
             </div>
         </section>
 
