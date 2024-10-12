@@ -247,11 +247,13 @@
                 </p>
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body collapse-body">
-                        <button type="button" class="btn btn-sm btn-outline-primary category-btn">Adventure</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary category-btn">Horror</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary category-btn">Romance</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary category-btn">Bible</button>
-                        <button type="button" class="btn btn-sm btn-outline-primary category-btn">Carlos é gay</button>
+                        {% for categoria in cat_menu %}
+                            <button type="button" class="btn btn-sm btn-outline-primary category-btn" 
+                                    data-categoria="{{ categoria.nome }}"  
+                                    onclick="filterByCategory('{{ categoria.nome }}')">
+                                {{ categoria.nome }}
+                            </button>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -324,6 +326,12 @@ function updateCarousel() {
     document.getElementById('carousel').style.transform = `translateX(${offset}rem)`;
 }
 
+function filterByCategory(categoria) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('categoria', categoria);  
+    window.location.href = url;  
+}
 
 </script>
+
 {% endblock %}
