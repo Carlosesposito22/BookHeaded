@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Q
 from .models import Clube, Categoria, Modalidade, Comentario,Profile
 import json
+from django.contrib.auth.models import User
 
 def pagina_principal(request):
     return render(request, 'pagina_principal.html')
@@ -266,9 +267,8 @@ def atualizar_progresso(request, clube_id):
 
 
 @login_required
-def profile(request):
-    user = request.user
-    
+def profile(request, user_id):
+    user = get_object_or_404(User, id=user_id)  # Obtenha o usuário pelo user_id
     profile, created = Profile.objects.get_or_create(user=user)
 
     if request.method == 'POST':
@@ -276,6 +276,23 @@ def profile(request):
         if bio:
             profile.bio = bio  
             profile.save() 
-            return redirect('profile')
+            return redirect('profile', user_id=user.id)  # Redirecionar para o próprio perfil
 
-    return render(request, 'profile.html', {'profile': profile})
+    return render(request, 'profile.html', {'profile': profile})  
+    
+
+@login_required
+def seguir_usuario(request, user_id):
+    user = request.user
+    usuario_a_seguir = get_object_or_404(User, id=user_id)
+    
+    profile, created = Profile.objects.get_or_create(user=user)
+
+    if usuario_a_seguir not in profile.seguindo.all():
+        profile.seguindo.add(usuario_a_seguir)
+        profile.save()
+    return redirect('profile', user_id=usuario_a_seguir.id)
+    
+
+  
+

@@ -113,13 +113,24 @@
                     <div class="pfp-holder">
                         <img src="" alt="">
                     </div>
-                    <strong class="username">@{{ user.username }}<button class="btn follow"><i class="bi bi-plus"></i>Follow</button></strong>
+                    <strong class="username">@{{ user.username }}
+                        {% if user in profile.seguindo.all %}
+                            <span class="following-text">Você está seguindo</span>
+                        {% else %}
+                            <form method="post" action="{% url 'seguir_usuario' user.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn follow">
+                                    <i class="bi bi-plus"></i>
+                                    Follow
+                                </button>
+                            </form>
+                        {% endif %}
+                    </strong>
                 </div>
                 <div class="biodiv">
                     {% if profile.bio %}
                         <p class="bio">{{ profile.bio }}</p>
                     {% else %}
-                        
                         <form class="bio-form" method="post">
                             {% csrf_token %}
                             <textarea name="bio" placeholder="Digite sua bio aqui..."></textarea>
@@ -134,5 +145,7 @@
         </div>
     </div>
 </div>
+
+      
 
 {% endblock %}

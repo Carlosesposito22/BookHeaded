@@ -43,7 +43,7 @@
             <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/original/user-icon-on-transparent-background-free-png.png" alt="foto de usuário" width="60px">
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href=" {% url 'profile' %}">Profile</a></li>
+            <li><a class="dropdown-item" href="{% url 'profile' user_id=user.id %}">Profile</a></li>
             <li><a class="dropdown-item text-black" href=" {% url 'myclubes' %}">My Clubs</a></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
             <li><hr class="dropdown-divider"></li>
