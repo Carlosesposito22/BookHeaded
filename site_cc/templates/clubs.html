@@ -360,7 +360,6 @@ function filterByCategory(categoria) {
     window.location.href = url;  
 }
 
-// Função para aplicar a classe "active" com base na URL ao carregar a página
 window.addEventListener('load', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const categoriaSelecionada = urlParams.get('categoria');
