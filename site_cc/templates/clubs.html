@@ -207,6 +207,18 @@
         color: white;
     }
 
+    .category-btn.active {
+        background-color: blue; /* Define a cor de fundo azul */
+        color: white; /* Opcional: cor do texto para contraste */
+    }
+
+    .category-btn.active {
+        background-color: blue; /* Cor de fundo azul */
+        color: white; /* Cor do texto */
+    }
+    
+    
+
 </style>
 
 <div class="container my-5">
@@ -272,7 +284,6 @@
                         {% endfor %}
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -344,18 +355,23 @@ function updateCarousel() {
 }
 
 function filterByCategory(categoria) {
-    const buttons = document.querySelectorAll('.category-btn');
-    buttons.forEach(button => {
-        button.classList.remove('active');
-    });
-
-    const button = document.querySelector(`[data-categoria="${categoria}"]`);
-    button.classList.add('active');
-
     const url = new URL(window.location.href);
     url.searchParams.set('categoria', categoria);  
     window.location.href = url;  
 }
+
+// Função para aplicar a classe "active" com base na URL ao carregar a página
+window.addEventListener('load', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoriaSelecionada = urlParams.get('categoria');
+
+    if (categoriaSelecionada) {
+        const button = document.querySelector(`[data-categoria="${categoriaSelecionada}"]`);
+        if (button) {
+            button.classList.add('active');
+        }
+    }
+});
 
 </script>
 
