@@ -275,7 +275,7 @@ def atualizar_progresso(request, clube_id):
 
 @login_required
 def profile(request, user_id):
-    user = get_object_or_404(User, id=user_id)  # Obtenha o usuário pelo user_id
+    user = get_object_or_404(User, id=user_id)  
     profile, created = Profile.objects.get_or_create(user=user)
 
     if request.method == 'POST':
@@ -283,7 +283,7 @@ def profile(request, user_id):
         if bio:
             profile.bio = bio  
             profile.save() 
-            return redirect('profile', user_id=user.id)  # Redirecionar para o próprio perfil
+            return redirect('profile', user_id=user.id)  
 
     return render(request, 'profile.html', {'profile': profile})  
     
@@ -299,7 +299,16 @@ def seguir_usuario(request, user_id):
         profile.seguindo.add(usuario_a_seguir)
         profile.save()
     return redirect('profile', user_id=usuario_a_seguir.id)
+def lista_usuarios(request):
     
+    nome = request.GET.get('nome', '')
 
+    
+    if nome:
+        usuarios = User.objects.filter(username__icontains=nome)
+    else:
+        usuarios = User.objects.all()
+
+    return render(request, 'lista_usuarios.html', {'usuarios': usuarios, 'nome': nome})
   
 

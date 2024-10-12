@@ -16,6 +16,8 @@ from .views import (
     avaliacao_view,
     add_comentario_view,
     seguir_usuario,
+    lista_usuarios,
+    profile
 )
 
 urlpatterns = [
@@ -41,7 +43,8 @@ urlpatterns = [
     path('equipe/', views.equipe, name='equipe'),
     path('contato/', views.contato, name='contato'),
     path('clube/<int:clube_id>/atualizar_progresso/',views.atualizar_progresso, name='atualizar_progresso'),
-    path('perfil/<int:user_id>/', views.profile, name='profile'),
+    path('perfil/<int:user_id>/', profile, name='profile'),
     path('seguir/<int:user_id>/', seguir_usuario, name='seguir_usuario'),
+    path('usuarios/', lista_usuarios, name='lista_usuarios'),
 
 ]

@@ -113,8 +113,10 @@
                     <div class="pfp-holder">
                         <img src="" alt="">
                     </div>
-                    <strong class="username">@{{ user.username }}
-                        {% if user in profile.seguindo.all %}
+                    <strong class="username">@{{ profile.user.username }}
+                        {% if request.user == user %}
+                            <!-- Não exibe botão se for o próprio usuário -->
+                        {% elif user in profile.seguindo.all %}
                             <span class="following-text">Você está seguindo</span>
                         {% else %}
                             <form method="post" action="{% url 'seguir_usuario' user.id %}" style="display:inline;">
@@ -145,6 +147,7 @@
         </div>
     </div>
 </div>
+
 
       
 
