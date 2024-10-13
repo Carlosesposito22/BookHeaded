@@ -24,25 +24,6 @@
         text-align: center;
     }
 
-    .abt-us{
-        background-color: black;
-        overflow: hidden;
-        color: white;
-        border-radius: 1.5rem;
-        box-shadow: inset;
-        height: 20rem;
-        width: 45%;
-    }
-
-    .abt-us:hover{
-        cursor: pointer;
-        color: white;
-    }
-
-    .abt-us:hover .icons {
-        transform: scale(1.2);
-    }
-
     .text-div{
         margin-top: 1.5rem;
         margin-left: 1.5rem;
@@ -52,33 +33,11 @@
         max-width: 80%;
     }
 
-    .icons{
-        display: flex;
-        justify-content: right;
-        text-align: right;
-        background-image: linear-gradient(to bottom, rgba(50, 50, 50, 0.9) 0%, rgba(0, 0, 0, 0.1) 45%, transparent 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        transform: scale(1);
-        transition: transform 0.4s ease-in-out;
-        margin-top: -5rem;
-        margin-right: 2rem;
-        min-width: 80%;
-        min-height: 5rem;
-    }
+
 
     a{
         text-decoration: none;
         color: white;
-    }
-
-    .icons-list {
-        display: flex;
-        list-style: none;
-        flex-direction: row;
-        font-size: 13rem;
-        gap: 2rem;
     }
 
     .members{
@@ -103,31 +62,6 @@
         height: fit-content;
     }
 
-    .icons-members{
-        transition: transform 0.4s ease-in-out;
-    }
-
-    .icons-list-members{
-        list-style: none;
-        display: flex;
-        flex-direction: row;
-        gap: 2rem;
-        width: fit-content;
-        font-size: 20rem;
-        margin-top: -3rem;
-        margin-right: 15rem;
-        align-items: center;
-        background-image: linear-gradient(to bottom, rgba(222, 222, 222, 0.9) 45%, rgba(115, 115, 115, 0) 80%, transparent 100%);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        transform: scale(1);
-    }
-
-    .members:hover .icons-members {
-        transform: scale(1.2);
-    }
-
     .a-wrapper{
         display: flex;
         justify-content: end;
@@ -138,27 +72,6 @@
 </style>
 
 <div class="container mt-5 superdiv">
-
-    <div class="abt-us" >
-        <a href="{%  url 'introducao' %}">
-            <div class="text-div">
-                <h1 class="mb-4 text-break">About</h1>
-                <p class="text-break">There are few more personal things than someone's book taste.
-                Thinking about this, <strong>bookheaded</strong> was developed to properly unite people by books, turning 
-                the management of reading clubs easier and effective.</p>
-            </div>
-            
-            <div class="shadow-div">
-                <div class="icons">
-                    <ul class="icons-list">
-                        <li><i class="bi bi-book-fill"></i></li>
-                        <li><i class="bi bi-body-text"></i></li>
-                        <li><i class="bi bi-chat-right-quote-fill"></i></li>
-                    </ul> 
-                </div>
-            </div>
-        </a>
-    </div>
 
     <div class="row members shadow">
         <a href="{%  url 'contato' %}" class="a-wrapper">

@@ -4,15 +4,15 @@
 
 <style>
     .superholder {
-        background-color: red;
         display: flex;
         flex-direction: row;
         gap: 2rem;
     }
 
     .hold {
-        background-color: green;
         width: 60%;
+        border-top-right-radius: 2rem;
+        border-top-left-radius: 2rem;
     }
 
     .pfp-holder {
@@ -31,7 +31,6 @@
     }
 
     .rest {
-        background-color: blue;
         height: 20rem;
         padding-left: 2rem;
         padding-right: 2rem;
@@ -42,10 +41,17 @@
     }
 
     .biodiv {
-        background-color: grey;
-        max-width: 60%;
-        padding-left: .5rem;
+        background-color: rgb(223, 223, 223);
+        max-width: 100%;
+        padding: 0.5rem;
         margin-top: 1rem;
+        border-radius: 2rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .bio{
+        margin: 0;
     }
 
     .user-data {
@@ -76,7 +82,6 @@
         gap: .5rem;
         align-items: center;
         justify-content: center;
-        margin-top: 1rem;
     }
 
     .bio-form {
@@ -102,6 +107,18 @@
         padding: .5rem 1rem;
         border-radius: .5rem;
     }
+
+    .username-n-btn{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-top: 1rem;
+        gap: 0.5rem;
+    }
+
+    .following-text:hover{
+        color: rgb(164, 0, 0);
+    }
 </style>
 
 <div class="container my-5 superholder">
@@ -113,29 +130,38 @@
                     <div class="pfp-holder">
                         <img src="" alt="">
                     </div>
-                    <strong class="username">@{{ user.username }}
-                        {% if user in profile.seguindo.all %}
-                            <span class="following-text">Você está seguindo</span>
+                    <div class="username-n-btn">
+                        <strong class="username">@{{ profile.user.username }}</strong>
+                        {% if request.user != profile.user %}
+                        {% if request.user in profile.seguindo.all %}
+                        <span class="following-text">Following</span>
                         {% else %}
-                            <form method="post" action="{% url 'seguir_usuario' user.id %}" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn follow">
-                                    <i class="bi bi-plus"></i>
-                                    Follow
-                                </button>
-                            </form>
+                        <form method="post" action="{% url 'seguir_usuario' profile.user.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn follow">
+                                <i class="bi bi-plus"></i>
+                                Follow
+                            </button>
+                        </form>
                         {% endif %}
-                    </strong>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="biodiv">
+                    {% if request.user == profile.user %}
                     {% if profile.bio %}
-                        <p class="bio">{{ profile.bio }}</p>
+                    <p class="bio">{{ profile.bio }}</p>
                     {% else %}
-                        <form class="bio-form" method="post">
-                            {% csrf_token %}
-                            <textarea name="bio" placeholder="Digite sua bio aqui..."></textarea>
-                            <button type="submit">Salvar Bio</button>
-                        </form>
+                    <form class="bio-form" method="post">
+                        {% csrf_token %}
+                        <textarea name="bio" placeholder="Write your bio here"></textarea>
+                        <button type="submit">Save Bio</button>
+                    </form>
+                    {% endif %}
+                    {% else %}
+                    {% if profile.bio %}
+                    <p class="bio">{{ profile.bio }}</p>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>
@@ -146,6 +172,7 @@
     </div>
 </div>
 
-      
+
+
 
 {% endblock %}

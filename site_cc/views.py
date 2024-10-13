@@ -284,7 +284,7 @@ def atualizar_progresso(request, clube_id):
 
 @login_required
 def profile(request, user_id):
-    user = get_object_or_404(User, id=user_id)  # Obtenha o usuário pelo user_id
+    user = get_object_or_404(User, id=user_id)  
     profile, created = Profile.objects.get_or_create(user=user)
 
     if request.method == 'POST':
@@ -292,23 +292,37 @@ def profile(request, user_id):
         if bio:
             profile.bio = bio  
             profile.save() 
-            return redirect('profile', user_id=user.id)  # Redirecionar para o próprio perfil
+            return redirect('profile', user_id=user.id)  
 
     return render(request, 'profile.html', {'profile': profile})  
     
 
 @login_required
 def seguir_usuario(request, user_id):
-    user = request.user
-    usuario_a_seguir = get_object_or_404(User, id=user_id)
-    
-    profile, created = Profile.objects.get_or_create(user=user)
+    if request.method == 'POST':
+        perfil = get_object_or_404(Profile, user__id=user_id)
 
-    if usuario_a_seguir not in profile.seguindo.all():
-        profile.seguindo.add(usuario_a_seguir)
-        profile.save()
-    return redirect('profile', user_id=usuario_a_seguir.id)
+        
+        if request.user not in perfil.seguindo.all():
+            perfil.seguindo.add(request.user)
+            perfil.save()
+
+        
+        return redirect('profile', user_id=user_id)
+   
+def lista_usuarios(request):
     
+    nome = request.GET.get('nome', '')
+
+    
+    if nome:
+        usuarios = User.objects.filter(username__icontains=nome)
+    else:
+        usuarios = User.objects.all()
+
+    return render(request, 'lista_usuarios.html', {'usuarios': usuarios, 'nome': nome})
+  
+
 @login_required
 def favoritar_clube(request, clube_id):
     clube = get_object_or_404(Clube, id=clube_id)

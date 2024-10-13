@@ -157,6 +157,10 @@ Detail {{ clube.titulo }}
         text-align: right;
     }
 
+    .capitulo-atual{
+        background-color: #0066FF;
+    }
+
     @media (max-width: 700px) {
         .data-progress-holder {
             flex-direction: column;
@@ -226,7 +230,7 @@ Detail {{ clube.titulo }}
 
             <div class="capitulo-container" style="background-color: #e0e0e0; padding: 10px;border-top-left-radius: 8px;border-top-right-radius: 8px; margin-top: 1rem;">
                 <div class="my-3 d-flex justify-content-between align-items-center">
-                    <span>Capítulo atual: <span id="capituloAtualSpan">{{ clube.progresso_atual }}</span></span>                    {% if user.is_authenticated and user == clube.moderador %}
+                    <span class="capitulo-atual">Capítulo atual: <span id="capituloAtualSpan">{{ clube.progresso_atual }}</span></span>                    {% if user.is_authenticated and user == clube.moderador %}
                         <button id="setProgress" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#progressModal">Marcar progresso</button>
                     {% endif %}
                 </div>
@@ -343,7 +347,6 @@ Detail {{ clube.titulo }}
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <script>

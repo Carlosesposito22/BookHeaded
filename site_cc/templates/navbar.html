@@ -31,6 +31,16 @@
         {% if user.is_authenticated %}
         {% csrf_token %}
         <a class="nav-item nav-link px-2 text-black" href=" {% url 'clubs' %}">Clubs</a>
+        
+        <form method="get" action="{% url 'lista_usuarios' %}" class="d-flex">
+          <input type="text" name="nome" class="form-control " placeholder="Search Bookheads"
+                 aria-label="Buscar Usuários" value="{{ request.GET.nome }}">
+          <button class="btn btn-outline-primary " type="submit">
+              <i class="bi bi-search"></i>
+          </button>
+      </form>
+      
+
         {% endif %}
       </ul>
 
@@ -47,11 +57,13 @@
             <li><a class="dropdown-item text-black" href=" {% url 'myclubes' %}">My Clubs</a></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>
             <li><hr class="dropdown-divider"></li>
+          
             <form method="post" action="{% url 'logout' %}" style="display:inline;" class="logout-btn-div">
             {% csrf_token %}
             <button class="btn btn-danger logout-btn" type="submit">Logout</button>
             </form>
           </ul>
+         
         </div>
         {% else %}
         <a class="btn btn-light" href=" {% url 'register' %}">Register</a>
