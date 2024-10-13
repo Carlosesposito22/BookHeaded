@@ -252,7 +252,6 @@ Detail {{ clube.titulo }}
                     <div class="comentario-wrapper">
                         
                         {% if comentario.nome == user.username %}
-
                             <div class="comentario-item meu-comentario">
                                 <div class="comentario-conteudo">
                                     <strong>{{ comentario.nome }}</strong>
@@ -266,9 +265,8 @@ Detail {{ clube.titulo }}
                                 <img src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto de usuário" width="40rem">
                             </div>
                         {% else %}
-
                             <div class="comentario-foto foto-esquerda">
-                                <img src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto de usuário" width="40rem">
+                                <img src="{% if comentario.user.profile.icone %}{% static comentario.user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto de usuário" width="40rem">
                             </div>
                             <div class="comentario-item outro-comentario">
                                 <div class="comentario-conteudo">
