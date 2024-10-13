@@ -43,7 +43,6 @@ Home Page
         border-radius: 1rem;
         padding: 1rem;
         background-color: rgb(247, 247, 247);
-        margin-top: 1rem;
         border-color: #ced4da;
         border-style: solid;
     }
@@ -76,14 +75,6 @@ Home Page
         align-items: center;
         margin-top: -1rem;
         
-    }
-
-    i {
-        color: #0d6efd;
-    }
-
-    i:hover {
-        color: #0050c8;
     }
 
     .container1 {
@@ -271,16 +262,11 @@ Home Page
         color: #ffffff;
         background-color: #0066FF;
         width: fit-content;
-        padding: 1rem 2rem;
+        padding: 1rem;
         border-radius: 1rem;
         font-size: 1.5rem;
         position: relative;
         transition: transform 0.3s ease-in-out;
-    }   
-
-    .favoritosheader:hover {
-        background-color: rgb(255, 200, 0);
-        transition: all 0.5s ease-in-out;
     }
 
     .favoritosheader::before {
@@ -293,22 +279,27 @@ Home Page
         background: linear-gradient(120deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 70%);
         transform: skewX(-25deg);
         opacity: 0;
-        transition: all 0.5s ease-in-out;
+        animation: brilho 2s ease-in-out infinite;
+        animation-delay: 2s;
     }
 
-    .favoritosheader:hover::before {
-        left: 150%;
-        opacity: 1;
-        transition: all 0.5s ease-in-out;
+    @keyframes brilho {
+        0% {
+            left: -150%;
+            opacity: 0;
+        }
+        50% {
+            left: 150%;
+            opacity: 1;
+        }
+        100% {
+            left: 150%;
+            opacity: 0;
+        }
     }
 
     .favoritar-btn1{
         border: none;
-    }
-
-    .favoritar-btn1:hover{
-        background-color: rgb(255, 200, 0);
-        transition: all 0.5s ease-in-out;
     }
 
     .star-from-btn{
@@ -319,6 +310,17 @@ Home Page
         color: white;
     }
 
+    #favoritos-list{
+        background-color: #0066FF;
+        height: fit-content;
+        width: fit-content;
+        border-radius: 1rem;
+        padding: 1rem;
+    }
+
+    .bi-caret-down-fill{
+        font-size: 0.8rem;
+    }
 
 </style>
 
@@ -339,54 +341,59 @@ Home Page
     <!-- fim da merda! pode mudar -->
 
     <!-- Seção: Clubes Não Favoritados -->
-    <h2 class="favoritosheader">
-        <i class="bi bi-star-fill" style="color: white;"></i> Favorites
-    </h2>
-    <ul id="favoritos-list">
-        {% if clubes_favoritos.exists %}
-            {% for clube in clubes_favoritos %}
-            <li class="list-cards">
-                <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow">
-                    <div class="hold-title-icons">
-                        <div class="title-date-div">
-                            <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot"></i></a>
-                            <div class="div-stars">
-                                &nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
+    <p class="d-inline-flex gap-1">
+        <h2 class="favoritosheader" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <i class="bi bi-star-fill" style="color: white;"></i>Favorites<i class="bi bi-caret-down-fill" id="caret-icon"></i>
+        </h2>
+    </p>
+    <div class="collapse" id="collapseExample">
+        <ul id="favoritos-list">
+            {% if clubes_favoritos.exists %}
+                {% for clube in clubes_favoritos %}
+                <li class="list-cards">
+                    <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow">
+                        <div class="hold-title-icons">
+                            <div class="title-date-div">
+                                <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot"></i></a>
+                                <div class="div-stars">
+                                    &nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
+                                </div>
+                            </div>
+                            <div class="icons-div">
+                                <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary favoritar-btn1" data-clube-id="{{ clube.id }}">
+                                    {% if user in clube.favoritos.all %}
+                                        <i class="bi bi-star-fill star-from-btn"></i>
+                                    {% else %}
+                                        <i class="bi bi-star star-from-btn"></i>
+                                    {% endif %}
+                                </button>
+                                
+                                {% if user.is_authenticated and user.id == clube.moderador.id %}  
+                                <a href="{% url 'updateClube' clube.pk %}" class="dl-edt-btn"><i class="bi bi-pencil-fill"></i></a>
+                                <a href="#" class="bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}"></a>
+                                {% include 'modal_delete.html' %}
+                                {% endif %}
                             </div>
                         </div>
-                        <div class="icons-div">
-                            <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary favoritar-btn1" data-clube-id="{{ clube.id }}">
-                                {% if user in clube.favoritos.all %}
-                                    <i class="bi bi-star-fill star-from-btn"></i>
-                                {% else %}
-                                    <i class="bi bi-star star-from-btn"></i>
-                                {% endif %}
-                            </button>
-                            
-                            {% if user.is_authenticated and user.id == clube.moderador.id %}  
-                            <a href="{% url 'updateClube' clube.pk %}" class="dl-edt-btn"><i class="bi bi-pencil-fill"></i></a>
-                            <a href="#" class="bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}"></a>
-                            {% include 'modal_delete.html' %}
-                            {% endif %}
+    
+                        <div class="description-div display-6">
+                            <p class="date"><span class="badge text-bg-primary date">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span></p>
+                            <hr>
+                            <p class="description text-break">{{ clube.descricao|cortar_texto:100|safe }}</p> 
                         </div>
                     </div>
-
-                    <div class="description-div display-6">
-                        <p class="date"><span class="badge text-bg-primary date">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span></p>
-                        <hr>
-                        <p class="description text-break">{{ clube.descricao|cortar_texto:100|safe }}</p> 
-                    </div>
-                </div>
-                {% include 'modal_myclubs.html' %}
-            </li>
-            {% endfor %}
-        {% else %}
-            <p>Você ainda não favoritou nenhum clube.</p>
-        {% endif %}
-    </ul>
-
+                    {% include 'modal_myclubs.html' %}
+                </li>
+                {% endfor %}
+            {% else %}
+                <p>Você ainda não favoritou nenhum clube.</p>
+            {% endif %}
+        </ul>
+    </div>
+    
     <!-- Seção: Clubes Não Favoritados -->
-    <h2 class="text-dark fw-bold">Clubes Inscritos</h2>
+    <br>
+    <h2 class="text-dark fw-bold">All clubs</h2>
     <ul id="nao-favoritos-list">
         {% if object_list.exists %}
             {% for clube in object_list %}
@@ -401,14 +408,12 @@ Home Page
                         </div>
                         
                         <div class="icons-div">
-                            <button id="favoritar-btn-{{ clube.id }}" class="favorite-btn" data-clube-id="{{ clube.id }}">
-                                <div class="div-stars">
+                            <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary favoritar-btn1" data-clube-id="{{ clube.id }}">
                                     {% if user in clube.favoritos.all %}
-                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill star-from-btn"></i>
                                     {% else %}
-                                        <i class="bi bi-star"></i>
+                                        <i class="bi bi-star star-from-btn"></i>
                                     {% endif %}
-                                </div>
                             </button>
 
                             {% if user.is_authenticated and user.id == clube.moderador.id %}  
@@ -482,10 +487,10 @@ Home Page
                 }
 
                 window.location.reload();
+                });
             });
         });
     });
-});
 </script>
 
 {% endblock %}
