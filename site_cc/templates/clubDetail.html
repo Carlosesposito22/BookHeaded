@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}
 Detail {{ clube.titulo }}
 {% endblock title %}
@@ -206,8 +208,14 @@ Detail {{ clube.titulo }}
         .comentarioholder, .capitulo-container, .comentarios-container, .data-holder {
             width: 100%;
         }
-
     }
+
+    .comentario-wrapper{
+        display: flex;
+        flex-direction: row;
+        gap: .8rem;
+    }
+
 </style>
 
 <div class="container">
@@ -235,29 +243,50 @@ Detail {{ clube.titulo }}
                     {% endif %}
                 </div>
             </div>
-            
 
             <div class="comentarios-container" id="comentariosContainer">
                 {% if not clube.comentarios.all %}
-                Nenhuma conversa foi iniciada no clube!
+                    Nenhuma conversa foi iniciada no clube!
                 {% else %}
-                {% for comentario in clube.comentarios.all|slice:"-8:" %}
-                <div
-                    class="comentario-item {% if comentario.nome == user.username %}meu-comentario{% else %}outro-comentario{% endif %}">
-                    <strong>{{ comentario.nome }}</strong>
-                    <div class="comment-n-date {% if comentario.nome == user.username %}right-align{% endif %}">
+                    {% for comentario in clube.comentarios.all|slice:"-8:" %}
+                    <div class="comentario-wrapper">
+                        
                         {% if comentario.nome == user.username %}
-                            <p id="pdocomentario" class="datap">{{ comentario.data|date:"H:i" }} at {{ comentario.data|date:"d/m" }}</p>
-                            <p id="pdocomentario">{{ comentario.comentario }}</p>
+                            <div class="comentario-item meu-comentario">
+                                <div class="comentario-conteudo">
+                                    <strong>{{ comentario.nome }}</strong>
+                                    <div class="comment-n-date right-align">
+                                        <p id="pdocomentario" class="datap">{{ comentario.data|date:"H:i" }} at {{ comentario.data|date:"d/m" }}</p>
+                                        <p id="pdocomentario">{{ comentario.comentario }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comentario-foto foto-direita">
+                                <img src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto de usuário" width="40rem">
+                            </div>
                         {% else %}
-                            <p id="pdocomentario">{{ comentario.comentario }}</p>
-                            <p id="pdocomentario" class="datap">{{ comentario.data|date:"H:i" }} at {{ comentario.data|date:"d/m" }}</p>
+                            <div class="comentario-foto foto-esquerda">
+                                <img src="{% if comentario.user.profile.icone %}{% static comentario.user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto de usuário" width="40rem">
+                            </div>
+                            <div class="comentario-item outro-comentario">
+                                <div class="comentario-conteudo">
+                                    <strong>{{ comentario.nome }}</strong>
+                                    <div class="comment-n-date">
+                                        <p id="pdocomentario">{{ comentario.comentario }}</p>
+                                        <p id="pdocomentario" class="datap">{{ comentario.data|date:"H:i" }} at {{ comentario.data|date:"d/m" }}</p>
+                                    </div>
+                                </div>
+                            </div>
                         {% endif %}
                     </div>
-                </div>
-                {% endfor %}
+                    {% endfor %}
                 {% endif %}
             </div>
+            
+            
+            
+            
+            
             <div class="comentarioholder" style="background-color: #e0e0e0; padding: 4ypx; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">
                 <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4 d-flex align-items-center">
                     {% csrf_token %}
