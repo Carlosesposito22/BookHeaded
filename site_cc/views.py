@@ -97,10 +97,6 @@ def add_comentario_view(request, pk):
     return comentario_create_view(request, pk)
 
 @login_required
-def update_club_view(request, pk):
-    return clube_update_view(request, pk)
-
-@login_required
 def clube_create_view(request):
     if request.method == 'POST':
         titulo = request.POST.get('titulo')
@@ -153,11 +149,19 @@ def clube_update_view(request, pk):
     modalidades = Modalidade.objects.all()
     categorias = Categoria.objects.all()
 
-    return render(request, 'updateClube.html', {
+    return render(request, 'clubDetail.html', {
         'clube': clube,
         'modalidades': modalidades,
-        'categorias': categorias,
+        'categorias': categorias
     })
+
+def get_modalidades(request):
+    modalidades = Modalidade.objects.all().values('id', 'nome')
+    return JsonResponse(list(modalidades), safe=False)
+
+def get_categorias(request):
+    categorias = Categoria.objects.all().values('id', 'nome')
+    return JsonResponse(list(categorias), safe=False)
 
 @login_required
 def comentario_create_view(request, clube_id):
