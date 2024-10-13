@@ -282,10 +282,6 @@ Detail {{ clube.titulo }}
                 {% endif %}
             </div>
             
-            
-            
-            
-            
             <div class="comentarioholder" style="background-color: #e0e0e0; padding: 4ypx; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">
                 <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4 d-flex align-items-center">
                     {% csrf_token %}
