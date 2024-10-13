@@ -302,6 +302,23 @@ Home Page
         transition: all 0.5s ease-in-out;
     }
 
+    .favoritar-btn1{
+        border: none;
+    }
+
+    .favoritar-btn1:hover{
+        background-color: rgb(255, 200, 0);
+        transition: all 0.5s ease-in-out;
+    }
+
+    .star-from-btn{
+        color: white;
+    }
+
+    .star-from-btn:hover {
+        color: white;
+    }
+
 
 </style>
 
@@ -338,14 +355,12 @@ Home Page
                             </div>
                         </div>
                         <div class="icons-div">
-                            <button id="favoritar-btn-{{ clube.id }}" class="" data-clube-id="{{ clube.id }}">
-                                <div class="div-stars">
-                                    {% if user in clube.favoritos.all %}
-                                        <i class="bi bi-star-fill"></i>
-                                    {% else %}
-                                        <i class="bi bi-star"></i>
-                                    {% endif %}
-                                </div>
+                            <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary favoritar-btn1" data-clube-id="{{ clube.id }}">
+                                {% if user in clube.favoritos.all %}
+                                    <i class="bi bi-star-fill star-from-btn"></i>
+                                {% else %}
+                                    <i class="bi bi-star star-from-btn"></i>
+                                {% endif %}
                             </button>
                             
                             {% if user.is_authenticated and user.id == clube.moderador.id %}  
@@ -386,7 +401,7 @@ Home Page
                         </div>
                         
                         <div class="icons-div">
-                            <button id="favoritar-btn-{{ clube.id }}" class="" data-clube-id="{{ clube.id }}">
+                            <button id="favoritar-btn-{{ clube.id }}" class="favorite-btn" data-clube-id="{{ clube.id }}">
                                 <div class="div-stars">
                                     {% if user in clube.favoritos.all %}
                                         <i class="bi bi-star-fill"></i>
