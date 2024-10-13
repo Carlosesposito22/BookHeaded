@@ -154,11 +154,11 @@
                 <div class="img-user">
                     {% if request.user == profile.user %}
                         <div class="img-user" onclick="openModal()">
-                            <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon1.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
+                            <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
                         </div>
                     {% else %}
                         <div class="img-user">
-                            <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon1.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
+                            <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
                         </div>
                     {% endif %}
                     <strong class="username">@{{ profile.user.username }}
