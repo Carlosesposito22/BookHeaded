@@ -12,88 +12,56 @@
         display: flex;
         flex-wrap: wrap;
         gap: 2rem;
-        justify-content: center;
+        justify-content: left;
         align-items: center;
+        max-width: 95%;
     }
 
-    .card-img-top {
-        object-fit: cover;
-    }
-
-    .card-body {
-        text-align: center;
-    }
-
-    .text-div{
-        margin-top: 1.5rem;
-        margin-left: 1.5rem;
-        z-index: 2;
-        font-weight: lighter;
-        width: 25rem;
-        max-width: 80%;
-    }
-
-
-
-    a{
-        text-decoration: none;
-        color: white;
-    }
-
-    .members{
-        border-radius: 1.5rem;
-        height: 20rem;
+    .textbox-1{
+        text-align: left;
+        min-width: 50%;
+        max-width: 95%;
         display: flex;
-        overflow: hidden;
-        border-style: inset solid;
-        border-color: black;
-        border-width: .1rem;
-        width: 45%;
+        flex-direction: column;
     }
 
-    .text-div-members{
-        color: black;
-        margin-top: 1.5rem;
-        margin-left: 1.5rem;
-        z-index: 2;
-        width: 25rem;
-        max-width: 80%;
-        text-align: right;
-        height: fit-content;
+    p{
+        min-width: 70%;
+        max-width: 95%;
     }
 
-    .a-wrapper{
-        display: flex;
-        justify-content: end;
-        padding: 2rem;
-        padding-top: 0rem;
+    h1{
+        font-weight: bold;
+        font-size: 4rem;
+        max-width: 95%;
     }
-
 </style>
 
 <div class="container mt-5 superdiv">
 
-    <div class="row members shadow">
-        <a href="{%  url 'contato' %}" class="a-wrapper">
-            
-            <div class="shadow-div">
-                <div class="icons-members">
-                    <ul class="icons-list-members">
-                        <li><i class="bi bi-people-fill"></i></li>
-                        <li><i class="bi bi-person-lines-fill"></i></li>
-                        <li><i class="bi bi-person-fill-exclamation"></i></li>
-                    </ul> 
-                </div>
-            </div>
-
-            <div class="text-div-members">
-                <h1 class="mb-4">Our Team</h1>
-                <p class="text-break">There are few more personal things than someone's book taste.
-                Thinking about this, <strong>bookheaded</strong> was developed to properly unite people by books, turning 
-                the management of reading clubs easier and effective.</p>
-            </div>
-        </a>
+    <div class="textbox-1">
+        <h1>Our Purpose</h1>
+        <br>
+        <p> With the ongoing advance of technology, we noticed that the book culture went on a skyhill down.<br><br>Such a
+            mistake made <a>our team</a> think: "Why don't we ally this book thing with the internet?", and then,
+            bookheaded
+            was born.<br><br>
+            Our goal is to make reading books entertaining again, by creating the perfect network for people to manage
+            their
+            book clubs, and make it easier to immerge into this culture. You can also interact with other enthusiasts,
+            discuss your readings, make friends with similar tastes as you, and much more.
+        </p>
+        <br>
+        <hr>
+        <br>
+        <h1>Our Team</h1>
     </div>
+
+    <hr>
+
+
+
+
 
 </div>
 
