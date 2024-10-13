@@ -16,9 +16,10 @@ from .views import (
     avaliacao_view,
     add_comentario_view,
     seguir_usuario,
+    favoritar_clube,
     lista_usuarios,
-    profile
-    
+    profile,
+
 )
 
 urlpatterns = [
@@ -46,6 +47,7 @@ urlpatterns = [
     path('clube/<int:clube_id>/atualizar_progresso/',views.atualizar_progresso, name='atualizar_progresso'),
     path('perfil/<int:user_id>/', profile, name='profile'),
     path('seguir/<int:user_id>/', seguir_usuario, name='seguir_usuario'),
+    path('clube/favoritar/<int:clube_id>/', views.favoritar_clube, name='favoritar_clube'),
     path('usuarios/', lista_usuarios, name='lista_usuarios'),
     
 
