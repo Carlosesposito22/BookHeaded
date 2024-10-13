@@ -131,18 +131,22 @@
         flex-wrap: wrap;
         gap: 1rem;
         justify-content: center;
+        background-color: #dddddd;
+        border-radius: 1rem;
+        padding: 1rem;
     }
 
     .icon {
         cursor: pointer;
-        border: 1px solid #ccc;
-        padding: 10px;
-        border-radius: 5px;
     }
 
     .icon img {
-        width: 50px;
-        height: 50px;
+        height: 4rem;
+        width: auto;
+    }
+
+    .icon img:hover {
+        
     }
 </style>
 
@@ -207,6 +211,7 @@
     <div class="modal-content">
         <span class="close">&times;</span>
         <h2>Escolha seu ícone</h2>
+        <br>
         <div class="icon-options">
             <div class="icon" onclick="chooseIcon('images/icon1.svg')">
                 <img src="{% static 'images/icon1.svg' %}" alt="Icon 1">

@@ -275,15 +275,10 @@ Home Page
         border-radius: 1rem;
         font-size: 1.5rem;
         position: relative;
-        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-        box-shadow: 0 6px 0 #0041B3,
-                0 0px 0px rgba(0, 0, 0, 0.4);
+        transition: transform 0.3s ease-in-out;
     }   
 
     .favoritosheader:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 0 rgb(255, 166, 2),
-                    0 12px 20px rgba(0, 0, 0, 0.3);
         background-color: rgb(255, 200, 0);
         transition: all 0.5s ease-in-out;
     }
@@ -304,7 +299,7 @@ Home Page
     .favoritosheader:hover::before {
         left: 150%;
         opacity: 1;
-        
+        transition: all 0.5s ease-in-out;
     }
 
 
