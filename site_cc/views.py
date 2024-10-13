@@ -319,15 +319,15 @@ def seguir_usuario(request, user_id):
    
 def lista_usuarios(request):
     
-    nome = request.GET.get('nome', '')
+    nomes = request.GET.get('nomes', '')
 
     
-    if nome:
-        usuarios = User.objects.filter(username__icontains=nome)
+    if nomes:
+        usuarios = User.objects.filter(username__icontains=nomes)
     else:
         usuarios = User.objects.all()
 
-    return render(request, 'lista_usuarios.html', {'usuarios': usuarios, 'nome': nome})
+    return render(request, 'lista_usuarios.html', {'usuarios': usuarios, 'nomes': nomes})
 
 
 @login_required
