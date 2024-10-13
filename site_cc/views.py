@@ -30,14 +30,14 @@ def contato(request):
 def clubes_view(request):
     nome = request.GET.get('nome', '')
     clubes = Clube.objects.all()
-    categoria = request.GET.get('categoria')
+    categorias = request.GET.getlist('categoria') 
 
     if nome:
         clubes = clubes.filter(Q(titulo__icontains=nome))
     
-    if categoria and categoria != 'null': 
-        clubes = clubes.filter(categoria__nome=categoria) 
-     
+    if categorias: 
+        clubes = clubes.filter(categoria__nome__in=categorias)  
+
     user = request.user
     clubes_context = [
         {

@@ -356,20 +356,31 @@ function updateCarousel() {
 
 function filterByCategory(categoria) {
     const url = new URL(window.location.href);
-    url.searchParams.set('categoria', categoria);  
+    const categoriasAtuais = new Set(url.searchParams.getAll('categoria'));
+
+    if (categoriasAtuais.has(categoria)) {
+        categoriasAtuais.delete(categoria);  
+    } else {
+        categoriasAtuais.add(categoria); 
+    }
+
+    url.searchParams.delete('categoria'); 
+
+    categoriasAtuais.forEach(cat => url.searchParams.append('categoria', cat));
+
     window.location.href = url;  
 }
 
 window.addEventListener('load', () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const categoriaSelecionada = urlParams.get('categoria');
+    const categoriasSelecionadas = urlParams.getAll('categoria');
 
-    if (categoriaSelecionada) {
-        const button = document.querySelector(`[data-categoria="${categoriaSelecionada}"]`);
+    categoriasSelecionadas.forEach(categoria => {
+        const button = document.querySelector(`[data-categoria="${categoria}"]`);
         if (button) {
             button.classList.add('active');
         }
-    }
+    });
 });
 
 </script>
