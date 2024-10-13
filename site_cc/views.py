@@ -30,14 +30,14 @@ def contato(request):
 def clubes_view(request):
     nome = request.GET.get('nome', '')
     clubes = Clube.objects.all()
-    categoria = request.GET.get('categoria')
+    categorias = request.GET.getlist('categoria') 
 
     if nome:
         clubes = clubes.filter(Q(titulo__icontains=nome))
     
-    if categoria and categoria != 'null': 
-        clubes = clubes.filter(categoria__nome=categoria) 
-     
+    if categorias: 
+        clubes = clubes.filter(categoria__nome__in=categorias)  
+
     user = request.user
     clubes_context = [
         {
@@ -319,15 +319,15 @@ def seguir_usuario(request, user_id):
    
 def lista_usuarios(request):
     
-    nome = request.GET.get('nome', '')
+    nomes = request.GET.get('nomes', '')
 
     
-    if nome:
-        usuarios = User.objects.filter(username__icontains=nome)
+    if nomes:
+        usuarios = User.objects.filter(username__icontains=nomes)
     else:
         usuarios = User.objects.all()
 
-    return render(request, 'lista_usuarios.html', {'usuarios': usuarios, 'nome': nome})
+    return render(request, 'lista_usuarios.html', {'usuarios': usuarios, 'nomes': nomes})
 
 
 @login_required
