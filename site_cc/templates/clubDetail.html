@@ -247,11 +247,11 @@ Detail {{ clube.titulo }}
                     <strong>{{ comentario.nome }}</strong>
                     <div class="comment-n-date {% if comentario.nome == user.username %}right-align{% endif %}">
                         {% if comentario.nome == user.username %}
-                            <p id="pdocomentario" class="datap">{{ comentario.data|date:"m/d/Y H:i" }}</p>
+                            <p id="pdocomentario" class="datap">{{ comentario.data|date:"H:i" }} at {{ comentario.data|date:"d/m" }}</p>
                             <p id="pdocomentario">{{ comentario.comentario }}</p>
                         {% else %}
                             <p id="pdocomentario">{{ comentario.comentario }}</p>
-                            <p id="pdocomentario" class="datap">{{ comentario.data|date:"m/d/Y H:i" }}</p>
+                            <p id="pdocomentario" class="datap">{{ comentario.data|date:"H:i" }} at {{ comentario.data|date:"d/m" }}</p>
                         {% endif %}
                     </div>
                 </div>
@@ -269,6 +269,50 @@ Detail {{ clube.titulo }}
             </div>         
         </div>
 
+        <!-- Modal para vizualizar os melhores livros -->
+        <div class="modal fade" id="topLivrosModal-{{ clube.id }}" tabindex="-1" aria-labelledby="topLivrosLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="topLivrosLabel">Favoritos do Clube:</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="topLivrosContent-{{ clube.id }}">
+                            <p>Carregando os livros...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim -->
+
+        <!-- Modal para adicionar Top Livros -->
+        <div class="modal fade" id="addTopLivrosModal-{{ clube.id }}" tabindex="-1" aria-labelledby="addTopLivrosModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addTopLivrosModalLabel">Editar Favoritos do Clube</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post" action="{% url 'add_top_livros' clube.id %}">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="topLivros" class="form-label">Adicione os Livros (separe por linha)</label>
+                                <textarea class="form-control" id="topLivros" name="top_livros" rows="3" required>{{ clube.top_livros }}</textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Fim -->
+
         {% include 'modal_delete.html' %}
         {% include 'modal_avaliar.html' %}
         {% include 'pedidos.html' %}
@@ -277,6 +321,9 @@ Detail {{ clube.titulo }}
             <div class="club-data-icons">
                 <h3><strong>Club Data</strong></h3>
                 {% if user.is_authenticated %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topLivrosModal-{{ clube.id }}">
+                        <i class="bi bi-journal-bookmark-fill"></i>
+                    </button>
                     {% if user == clube.moderador %}
                     <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary" data-clube-id="{{ clube.id }}">
                         {% if user in clube.favoritos.all %}
@@ -289,6 +336,7 @@ Detail {{ clube.titulo }}
                         <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown"><i class="bi bi-gear-wide-connected"></i></button>
                         <ul class="dropdown-menu">
                             <li><a href="{% url 'updateClube' clube.pk %}" class="dropdown-item">Edit Club</a></li>
+                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTopLivrosModal-{{ clube.id }}">Editar Favoritos</a></li>
                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}">teste de modal</a></li>
                                 {% if clube.privado %}
                                     <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
@@ -442,33 +490,49 @@ Detail {{ clube.titulo }}
     }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('[id^="favoritar-btn-"]').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            var clubeId = this.getAttribute('data-clube-id');
-            var url = `/clube/favoritar/${clubeId}/`;
-            var buttonElement = this;
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[id^="favoritar-btn-"]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var clubeId = this.getAttribute('data-clube-id');
+                var url = `/clube/favoritar/${clubeId}/`;
+                var buttonElement = this;
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json',
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.favoritado) {
-                    buttonElement.innerHTML = '<i class="bi bi-star-fill"></i>';
-                    moveClube(clubeId, true);
-                } else {
-                    buttonElement.innerHTML = '<i class="bi bi-star"></i>';
-                    moveClube(clubeId, false);
-                }
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.favoritado) {
+                        buttonElement.innerHTML = '<i class="bi bi-star-fill"></i>';
+                        moveClube(clubeId, true);
+                    } else {
+                        buttonElement.innerHTML = '<i class="bi bi-star"></i>';
+                        moveClube(clubeId, false);
+                    }
+                });
             });
         });
     });
-});
+
+    document.querySelectorAll('[id^="topLivrosModal-"]').forEach(function (modal) {
+        modal.addEventListener('show.bs.modal', function (event) {
+            const clubeId = event.target.getAttribute('id').split('-')[1];
+            const modalContent = document.getElementById(`topLivrosContent-${clubeId}`);
+            
+            fetch(`/clube/${clubeId}/top-livros/`)
+                .then(response => response.text())
+                .then(html => {
+                    modalContent.innerHTML = html;
+                })
+                .catch(err => {
+                    modalContent.innerHTML = '<p>Erro ao carregar os top livros.</p>';
+                });
+        });
+    });
 
 </script>
 {% endblock %}

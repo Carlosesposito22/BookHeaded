@@ -342,3 +342,25 @@ def favoritar_clube(request, clube_id):
         favoritado = True
 
     return JsonResponse({'favoritado': favoritado})
+
+@login_required
+def top_livros(request, clube_id):
+    clube = get_object_or_404(Clube, id=clube_id)
+    top_livros = clube.top_livros.split('\n') if clube.top_livros else []
+
+    return render(request, 'modal_livros.html', {'clube': clube, 'top_livros': top_livros})
+
+@login_required
+def add_top_livros(request, clube_id):
+    clube = get_object_or_404(Clube, id=clube_id)
+
+    if request.user != clube.moderador:
+        return JsonResponse({'error': 'Você não tem permissão para modificar os livros deste clube'}, status=403)
+
+    if request.method == 'POST':
+        top_livros = request.POST.get('top_livros', '').strip()
+        clube.top_livros = top_livros
+        clube.save()
+        return redirect('club-Detail', pk=clube_id)
+    
+    return JsonResponse({'error': 'Método inválido'}, status=400)
