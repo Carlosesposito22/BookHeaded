@@ -250,11 +250,10 @@ Detail {{ clube.titulo }}
                 {% else %}
                     {% for comentario in clube.comentarios.all|slice:"-8:" %}
                     <div class="comentario-wrapper">
-                        
-                        {% if comentario.nome == user.username %}
+                        {% if comentario.user == user %}
                             <div class="comentario-item meu-comentario">
                                 <div class="comentario-conteudo">
-                                    <strong>{{ comentario.nome }}</strong>
+                                    <strong>{{ comentario.user.username }}</strong>  
                                     <div class="comment-n-date right-align">
                                         <p id="pdocomentario" class="datap">{{ comentario.data|date:"H:i" }} at {{ comentario.data|date:"d/m" }}</p>
                                         <p id="pdocomentario">{{ comentario.comentario }}</p>
@@ -270,7 +269,7 @@ Detail {{ clube.titulo }}
                             </div>
                             <div class="comentario-item outro-comentario">
                                 <div class="comentario-conteudo">
-                                    <strong>{{ comentario.nome }}</strong>
+                                    <strong>{{ comentario.user.username }}</strong>  
                                     <div class="comment-n-date">
                                         <p id="pdocomentario">{{ comentario.comentario }}</p>
                                         <p id="pdocomentario" class="datap">{{ comentario.data|date:"H:i" }} at {{ comentario.data|date:"d/m" }}</p>
@@ -298,7 +297,7 @@ Detail {{ clube.titulo }}
             </div>         
         </div>
 
-        <!-- Modal para vizualizar os melhores livros -->
+        
         <div class="modal fade" id="topLivrosModal-{{ clube.id }}" tabindex="-1" aria-labelledby="topLivrosLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -314,9 +313,9 @@ Detail {{ clube.titulo }}
                 </div>
             </div>
         </div>
-        <!-- Fim -->
+        
 
-        <!-- Modal para adicionar Top Livros -->
+        
         <div class="modal fade" id="addTopLivrosModal-{{ clube.id }}" tabindex="-1" aria-labelledby="addTopLivrosModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

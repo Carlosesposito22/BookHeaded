@@ -169,10 +169,10 @@ def comentario_create_view(request, clube_id):
 
     if request.method == 'POST':
         comentario_texto = request.POST.get('comentario')
-        nome_usuario = request.user.username  
+        
         Comentario.objects.create(
             clube=clube,
-            nome=nome_usuario, 
+            user=request.user,  # Associating the comment with the logged-in user
             comentario=comentario_texto  
         )
         return redirect('club-Detail', pk=clube.pk)
