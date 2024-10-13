@@ -63,12 +63,21 @@ def meus_clubes_view(request):
         Q(privado=False, membros__usuario=request.user)
     ).distinct()
 
+    clubes_favoritos = request.user.clubes_favoritos.all()
+
+    clubes_nao_favoritados = clubes.exclude(favoritos=request.user)
+
     nome_clube = request.GET.get('nome')
     if nome_clube:
-        clubes = clubes.filter(titulo__icontains=nome_clube)
+        clubes_favoritos = clubes_favoritos.filter(titulo__icontains=nome_clube)
+        clubes_nao_favoritados = clubes_nao_favoritados.filter(titulo__icontains=nome_clube)
 
-    context = {'object_list': clubes.order_by('-dataDeCriacao')}
+    context = {
+        'object_list': clubes_nao_favoritados.order_by('-dataDeCriacao'),
+        'clubes_favoritos': clubes_favoritos.order_by('-dataDeCriacao'),
+    }
     return render(request, 'myclubes.html', context)
+
 
 @login_required
 def add_categoria_view(request):
@@ -314,3 +323,15 @@ def lista_usuarios(request):
     return render(request, 'lista_usuarios.html', {'usuarios': usuarios, 'nome': nome})
   
 
+@login_required
+def favoritar_clube(request, clube_id):
+    clube = get_object_or_404(Clube, id=clube_id)
+
+    if request.user in clube.favoritos.all():
+        clube.favoritos.remove(request.user)
+        favoritado = False
+    else:
+        clube.favoritos.add(request.user)
+        favoritado = True
+
+    return JsonResponse({'favoritado': favoritado})
