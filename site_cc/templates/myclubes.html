@@ -367,12 +367,6 @@ Home Page
                                         <i class="bi bi-star star-from-btn"></i>
                                     {% endif %}
                                 </button>
-                                
-                                {% if user.is_authenticated and user.id == clube.moderador.id %}  
-                                <a href="{% url 'updateClube' clube.pk %}" class="dl-edt-btn"><i class="bi bi-pencil-fill"></i></a>
-                                <a href="#" class="bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}"></a>
-                                {% include 'modal_delete.html' %}
-                                {% endif %}
                             </div>
                         </div>
     
@@ -415,12 +409,6 @@ Home Page
                                         <i class="bi bi-star star-from-btn"></i>
                                     {% endif %}
                             </button>
-
-                            {% if user.is_authenticated and user.id == clube.moderador.id %}  
-                            <a href="{% url 'updateClube' clube.pk %}" class="dl-edt-btn"><i class="bi bi-pencil-fill"></i></a>
-                            <a href="#" class="bi bi-trash-fill" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}"></a>
-                            {% include 'modal_delete.html' %}
-                            {% endif %}
                         </div>
                     </div>
 
