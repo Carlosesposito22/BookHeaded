@@ -34,7 +34,7 @@
         <a class="nav-item nav-link px-2 text-black" href=" {% url 'clubs' %}">Clubs</a>
         
         <form method="get" action="{% url 'lista_usuarios' %}" class="d-flex">
-          <input type="text" name="nome" class="form-control " placeholder="Search Bookheads"
+          <input type="text" name="nomes" class="form-control " placeholder="Search Bookheads"
                  aria-label="Buscar Usuários" value="{{ request.GET.nome }}">
           <button class="btn btn-outline-primary " type="submit">
               <i class="bi bi-search"></i>
