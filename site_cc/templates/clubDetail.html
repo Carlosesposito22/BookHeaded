@@ -274,6 +274,13 @@ Detail {{ clube.titulo }}
                 <h3><strong>Club Data</strong></h3>
                 {% if user.is_authenticated %}
                     {% if user == clube.moderador %}
+                    <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary" data-clube-id="{{ clube.id }}">
+                        {% if user in clube.favoritos.all %}
+                        <i class="bi bi-star-fill"></i>
+                        {% else %}
+                        <i class="bi bi-star"></i>
+                        {% endif %}
+                    </button>
                     <div class="btn-group">
                         <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown"><i class="bi bi-gear-wide-connected"></i></button>
                         <ul class="dropdown-menu">
@@ -287,6 +294,13 @@ Detail {{ clube.titulo }}
                         </ul>
                       </div>
                     {% else %}
+                    <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary" data-clube-id="{{ clube.id }}">
+                        {% if user in clube.favoritos.all %}
+                        <i class="bi bi-star-fill"></i>
+                        {% else %}
+                        <i class="bi bi-star"></i>
+                        {% endif %}
+                    </button>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#avaliarModal-{{ clube.id }}">
                         Avaliar Clube
                     </button>
@@ -423,6 +437,34 @@ Detail {{ clube.titulo }}
     } else {
         alert('Por favor, insira valores positivos para os capítulos.');
     }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[id^="favoritar-btn-"]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var clubeId = this.getAttribute('data-clube-id');
+            var url = `/clube/favoritar/${clubeId}/`;
+            var buttonElement = this;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.favoritado) {
+                    buttonElement.innerHTML = '<i class="bi bi-star-fill"></i>';
+                    moveClube(clubeId, true);
+                } else {
+                    buttonElement.innerHTML = '<i class="bi bi-star"></i>';
+                    moveClube(clubeId, false);
+                }
+            });
+        });
+    });
 });
 
 </script>
