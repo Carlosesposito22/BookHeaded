@@ -21,6 +21,8 @@ from .views import (
     favoritar_clube,
     top_livros,
     add_top_livros,
+    get_modalidades,
+    get_categorias,
 
 )
 
@@ -32,6 +34,8 @@ urlpatterns = [
     path('clube/<int:pk>/', club_detail_view, name='club-Detail'),
     path('addClube/', add_club_view, name='addClube'),
     path('clube/edit/<int:pk>/', clube_update_view, name='updateClube'),
+    path('api/modalidades/', views.get_modalidades, name='api_modalidades'),
+    path('api/categorias/', views.get_categorias, name='api_categorias'),
     path('clube/delete/<int:pk>/', delete_club_view, name='deleteClube'),
     path('clubs/', clubes_view, name='clubs'),
     path('addCategoria/', add_categoria_view, name='addCategoria'),

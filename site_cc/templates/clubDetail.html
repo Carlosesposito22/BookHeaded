@@ -344,6 +344,68 @@ Detail {{ clube.titulo }}
         </div>
         <!-- Fim -->
 
+        <!-- Modal para editar o clube-->
+        <div class="modal fade" id="updateModal-{{ clube.id }}" tabindex="-1" aria-labelledby="updateModalLabel-{{ clube.id }}" aria-hidden="true" data-modalidade-id="{{ clube.modalidade.id }}" data-categoria-id="{{ clube.categoria.id }}">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% if user.is_authenticated and user.id == clube.moderador.id %}
+                        <div class="container">
+                            <div class="holder">
+                                <h1 class="text-center">Editar Detalhes do Clube</h1>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <form method="post" action="{% url 'updateClube' clube.pk %}">
+                                                {% csrf_token %}
+                                                <label for="titulo">Título:</label>
+                                                <input type="text" id="titulo" name="titulo" value="{{ clube.titulo }}" class="form-control" required>
+
+                                                <label for="modalidade">Modalidade:</label>
+                                                <select id="modalidade" name="modalidade" class="form-control">
+                                                    <option value="">Selecione uma modalidade</option>
+                                                    {% for modalidade in modalidades %}
+                                                        <option value="{{ modalidade.id }}" {% if clube.modalidade and clube.modalidade.id == modalidade.id %}selected{% endif %}>
+                                                            {{ modalidade.nome }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+
+                                                <label for="categoria">Categoria:</label>
+                                                <select id="categoria" name="categoria" class="form-control">
+                                                    <option value="">Selecione uma categoria</option>
+                                                    {% for categoria in categorias %}
+                                                        <option value="{{ categoria.id }}" {% if clube.categoria and clube.categoria.id == categoria.id %}selected{% endif %}>
+                                                            {{ categoria.nome }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+
+                                                <label for="descricao">Descrição:</label>
+                                                <textarea id="descricao" name="descricao" class="form-control" required>{{ clube.descricao }}</textarea>
+
+                                                <label for="privado">Privado:</label>
+                                                <input type="checkbox" id="privado" name="privado" {% if clube.privado %}checked{% endif %}>
+
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-primary btn-sm" type="submit">Atualizar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim -->
+
         {% include 'modal_delete.html' %}
         {% include 'modal_avaliar.html' %}
         {% include 'pedidos.html' %}
@@ -564,6 +626,50 @@ Detail {{ clube.titulo }}
                 });
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[id^="updateModal-"]').forEach(function (modal) {
+        modal.addEventListener('show.bs.modal', function (event) {
+            const clubeId = event.target.getAttribute('id').split('-')[1];
+            const modalidadeSelect = modal.querySelector('#modalidade');
+            const categoriaSelect = modal.querySelector('#categoria');
+
+            fetch('/api/modalidades/')
+                .then(response => response.json())
+                .then(modalidades => {
+                    modalidadeSelect.innerHTML = '<option value="">Selecione uma modalidade</option>';
+                    modalidades.forEach(modalidade => {
+                        const option = document.createElement('option');
+                        option.value = modalidade.id;
+                        option.textContent = modalidade.nome;
+                        
+                        if (modalidade.id == modal.getAttribute('data-modalidade-id')) {
+                            option.selected = true;
+                        }
+                        modalidadeSelect.appendChild(option);
+                    });
+                })
+                .catch(err => console.error('Erro ao carregar modalidades:', err));
+
+            fetch('/api/categorias/')
+                .then(response => response.json())
+                .then(categorias => {
+                    categoriaSelect.innerHTML = '<option value="">Selecione uma categoria</option>';
+                    categorias.forEach(categoria => {
+                        const option = document.createElement('option');
+                        option.value = categoria.id;
+                        option.textContent = categoria.nome;
+                        
+                        if (categoria.id == modal.getAttribute('data-categoria-id')) {
+                            option.selected = true;
+                        }
+                        categoriaSelect.appendChild(option);
+                    });
+                })
+                .catch(err => console.error('Erro ao carregar categorias:', err));
+        });
+    });
+});
 
 </script>
 {% endblock %}
