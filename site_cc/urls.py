@@ -18,6 +18,7 @@ from .views import (
     seguir_usuario,
     lista_usuarios,
     profile
+    
 )
 
 urlpatterns = [
@@ -46,5 +47,6 @@ urlpatterns = [
     path('perfil/<int:user_id>/', profile, name='profile'),
     path('seguir/<int:user_id>/', seguir_usuario, name='seguir_usuario'),
     path('usuarios/', lista_usuarios, name='lista_usuarios'),
+    
 
 ]

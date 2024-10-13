@@ -272,21 +272,28 @@ def atualizar_progresso(request, clube_id):
     return JsonResponse({'success': False})
 
 
-
 @login_required
 def profile(request, user_id):
-    user = get_object_or_404(User, id=user_id)  
+    user = get_object_or_404(User, id=user_id)
     profile, created = Profile.objects.get_or_create(user=user)
 
     if request.method == 'POST':
         bio = request.POST.get('bio', '')  
-        if bio:
-            profile.bio = bio  
-            profile.save() 
-            return redirect('profile', user_id=user.id)  
+        icone = request.POST.get('icone', '')
 
-    return render(request, 'profile.html', {'profile': profile})  
-    
+        if bio:  
+            profile.bio = bio
+            profile.save()
+            return redirect('profile', user_id=user.id)
+
+        if icone:  
+            profile.icone = icone  
+            profile.save()
+            return JsonResponse({'message': 'Ícone atualizado com sucesso!'})
+
+    return render(request, 'profile.html', {'profile': profile})
+
+
 
 @login_required
 def seguir_usuario(request, user_id):
@@ -312,5 +319,5 @@ def lista_usuarios(request):
         usuarios = User.objects.all()
 
     return render(request, 'lista_usuarios.html', {'usuarios': usuarios, 'nome': nome})
-  
+
 
