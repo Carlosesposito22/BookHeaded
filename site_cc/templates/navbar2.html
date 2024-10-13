@@ -1,3 +1,4 @@
+{% load static %}
 <style>
   *{
     font-family: 'DM Sans', 'sans-serif';
@@ -70,7 +71,7 @@
         <a class="btn bnt-sm btn-primary newclub-btn" href="{% url 'addClube' %}" style="font-weight: bold;">New Club</a>
         <div class="btn-group btn-n-pfp">
           <button type="button" class="btn dropdown-toggle btn-profile-div" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://static.vecteezy.com/system/resources/previews/019/879/186/original/user-icon-on-transparent-background-free-png.png" alt="foto de usuário" width="60px">
+            <img src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto de usuário" width="40rem">
           </button>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{% url 'profile' user_id=user.id %}">Profile</a></li>
