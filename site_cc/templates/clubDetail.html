@@ -406,7 +406,6 @@ Detail {{ clube.titulo }}
         {% include 'modal_delete.html' %}
         {% include 'modal_avaliar.html' %}
         {% include 'pedidos.html' %}
-        {% include 'modal_update.html' with clube=clube modalidades=modalidades categorias=categorias %}
         <div class="data-holder shadow"> 
             <div class="club-data-icons">
                 <h3><strong>Club Data</strong></h3>
@@ -425,9 +424,8 @@ Detail {{ clube.titulo }}
                     <div class="btn-group">
                         <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown"><i class="bi bi-gear-wide-connected"></i></button>
                         <ul class="dropdown-menu">
-                            <li><a href="{% url 'updateClube' clube.pk %}" class="dropdown-item">Edit Club</a></li>
+                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}">Edit Club</a></li>
                             <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTopLivrosModal-{{ clube.id }}">Editar Favoritos</a></li>
-                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}">teste de modal</a></li>
                                 {% if clube.privado %}
                                     <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
                                 {% endif %}
