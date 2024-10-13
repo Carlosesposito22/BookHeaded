@@ -157,6 +157,11 @@ Home Page
         display: flex;
     }
 
+    .holder2{
+        display: flex;
+        flex-direction: row;
+    }
+
     @media screen and (max-width: 650px) {
         .title-date-div {
             flex-direction: column;
@@ -258,6 +263,51 @@ Home Page
         margin-left: 1rem;
     }
 
+    .favoritosheader {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+        color: #ffffff;
+        background-color: #0066FF;
+        width: fit-content;
+        padding: 1rem 2rem;
+        border-radius: 1rem;
+        font-size: 1.5rem;
+        position: relative;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        box-shadow: 0 6px 0 #0041B3,
+                0 0px 0px rgba(0, 0, 0, 0.4);
+    }   
+
+    .favoritosheader:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 0 rgb(255, 166, 2),
+                    0 12px 20px rgba(0, 0, 0, 0.3);
+        background-color: rgb(255, 200, 0);
+        transition: all 0.5s ease-in-out;
+    }
+
+    .favoritosheader::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -150%;
+        width: 200%;
+        height: 100%;
+        background: linear-gradient(120deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 70%);
+        transform: skewX(-25deg);
+        opacity: 0;
+        transition: all 0.5s ease-in-out;
+    }
+
+    .favoritosheader:hover::before {
+        left: 150%;
+        opacity: 1;
+        
+    }
+
+
 </style>
 
 <div class="container my-5 clubs-container">
@@ -277,7 +327,9 @@ Home Page
     <!-- fim da merda! pode mudar -->
 
     <!-- Seção: Clubes Não Favoritados -->
-    <h2 class="text-dark fw-bold">Clubes Favoritos</h2>
+    <h2 class="favoritosheader">
+        <i class="bi bi-star-fill" style="color: white;"></i> Favorites
+    </h2>
     <ul id="favoritos-list">
         {% if clubes_favoritos.exists %}
             {% for clube in clubes_favoritos %}
