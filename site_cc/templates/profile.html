@@ -145,8 +145,13 @@
         width: auto;
     }
 
-    .icon img:hover {
-        
+    .img-user{
+        width: fit-content;
+        height: fit-content;
+    }
+
+    .img-user:hover img {
+        filter: brightness(70%);
     }
 </style>
 
@@ -155,7 +160,7 @@
         <div class="banner"></div>
         <div class="rest">
             <div class="img-user-bio">
-                <div class="img-user">
+                <div class="img-user-div">
                     {% if request.user == profile.user %}
                         <div class="img-user" onclick="openModal()">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
