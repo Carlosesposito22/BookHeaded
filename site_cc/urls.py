@@ -16,6 +16,7 @@ from .views import (
     avaliacao_view,
     add_comentario_view,
     seguir_usuario,
+    criar_maratona_view,
     profile,
     lista_usuarios,
     favoritar_clube,
@@ -23,6 +24,8 @@ from .views import (
     add_top_livros,
     get_modalidades,
     get_categorias,
+    detalhes_maratona_view,
+    finalizar_maratona_view,
 
 )
 
@@ -57,5 +60,10 @@ urlpatterns = [
     path('clube/<int:clube_id>/top-livros/', views.top_livros, name='top_livros'),
     path('clube/<int:clube_id>/add-top-livros/', views.add_top_livros, name='add_top_livros'),
     path('usuarios/', lista_usuarios, name='lista_usuarios'),
+    path('clube/<int:clube_id>/criar_maratona/', views.criar_maratona_view, name='criar_maratona'),
+    path('clube/<int:clube_id>/detalhes_maratona/', detalhes_maratona_view, name='detalhes_maratona'),
+    path('clube/<int:clube_id>/finalizar_maratona/', views.finalizar_maratona_view, name='finalizar_maratona'),
+
+
 
 ]

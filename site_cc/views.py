@@ -9,6 +9,9 @@ from django.db.models import Q
 from .models import Clube, Categoria, Modalidade, Comentario,Profile, Membro
 import json
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
 
 def pagina_principal(request):
     return render(request, 'pagina_principal.html')
@@ -368,3 +371,87 @@ def add_top_livros(request, clube_id):
         return redirect('club-Detail', pk=clube_id)
     
     return JsonResponse({'error': 'Método inválido'}, status=400)
+
+from django.http import JsonResponse
+import json
+from datetime import datetime
+from django.utils import timezone
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def criar_maratona_view(request, clube_id):
+    clube = get_object_or_404(Clube, pk=clube_id)
+
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        nome_maratona = data.get('nome_maratona')
+        data_fim_str = data.get('data_fim')
+        capitulo_final = data.get('capitulo_final')
+
+        try:
+            data_fim = datetime.strptime(data_fim_str, '%Y-%m-%d').date()
+
+            # Atualiza a maratona existente
+            clube.maratona_ativa = True
+            clube.data_fim_maratona = data_fim
+            clube.capitulo_final_maratona = capitulo_final
+            clube.nome_maratona = nome_maratona  # Salvar o nome da maratona
+            clube.save()  # Salvar no banco
+
+            return JsonResponse({'success': True, 'message': 'Maratona atualizada com sucesso!'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+    # Se a requisição não for POST, retorne os dados da maratona (GET)
+    if clube.maratona_ativa:
+        return JsonResponse({
+            'success': True,
+            'nome_maratona': clube.nome_maratona,
+            'data_fim': clube.data_fim_maratona.strftime('%Y-%m-%d'),
+            'capitulo_final': clube.capitulo_final_maratona,
+        })
+    else:
+        return JsonResponse({'success': False, 'message': 'Nenhuma maratona ativa'}, status=404)
+
+
+@receiver(post_save, sender=Clube)
+def verificar_maratona(sender, instance, **kwargs):
+    if instance.maratona_ativa and instance.data_fim_maratona and instance.data_fim_maratona < timezone.now().date():
+        # Atualizar o capítulo atual para o capítulo final da maratona
+        instance.progresso_atual = instance.capitulo_final_maratona
+        instance.maratona_ativa = False
+        instance.save()
+@login_required
+def detalhes_maratona_view(request, clube_id):
+    clube = get_object_or_404(Clube, pk=clube_id)
+    
+    if clube.maratona_ativa:
+        return JsonResponse({
+            'success': True,
+            'maratona_ativa': True,
+            'nome_maratona': clube.nome_maratona,
+            'data_fim': clube.data_fim_maratona.strftime('%Y-%m-%d'),
+            'capitulo_final': clube.capitulo_final_maratona,
+        })
+    else:
+        return JsonResponse({'success': True, 'maratona_ativa': False})
+
+@login_required
+def finalizar_maratona_view(request, clube_id):
+    clube = get_object_or_404(Clube, pk=clube_id)
+    
+    if request.method == 'POST' and clube.maratona_ativa:
+        try:
+            # Atualiza o progresso atual para o capítulo final da maratona
+            clube.progresso_atual = clube.capitulo_final_maratona
+            clube.maratona_ativa = False
+            clube.save()  # Salva as alterações no banco
+
+            return JsonResponse({'success': True, 'message': 'Maratona finalizada com sucesso!'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': str(e)}, status=500)
+
+    return JsonResponse({'success': False, 'message': 'Método inválido'}, status=400)
+
+

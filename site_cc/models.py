@@ -30,6 +30,10 @@ class Clube(models.Model):
     total_capitulos = models.IntegerField(default=50)
     favoritos = models.ManyToManyField(User, related_name='clubes_favoritos', blank=True)
     top_livros = models.TextField(blank=True, null=True)
+    maratona_ativa = models.BooleanField(default=False)
+    data_fim_maratona = models.DateField(null=True, blank=True)
+    capitulo_final_maratona = models.IntegerField(null=True, blank=True)
+    nome_maratona = models.CharField(max_length=100, null=True, blank=True)
 
     def calcular_progresso(self):
         return (self.progresso_atual / self.total_capitulos) * 100 if self.total_capitulos else 0
