@@ -524,3 +524,20 @@ def listar_historico_maratona_view(request, clube_id):
     ]
 
     return JsonResponse({'success': True, 'historico': historico_data})
+
+@login_required
+def sair_do_clube(request, clube_id):
+    clube = get_object_or_404(Clube, id=clube_id)
+    membro = Membro.objects.filter(clube=clube, usuario=request.user).first()
+
+    if membro:
+        membro.delete()
+
+        if request.user in clube.favoritos.all():
+            clube.favoritos.remove(request.user)
+
+        messages.success(request, f'Você saiu do clube "{clube.titulo}"')
+    else:
+        messages.error(request, 'Você não faz parte deste clube.')
+
+    return redirect('myclubes')
