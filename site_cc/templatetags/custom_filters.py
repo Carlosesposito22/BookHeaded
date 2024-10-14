@@ -10,3 +10,9 @@ def cortar_texto(texto, limite):
     if corte == -1:
         return texto[:limite] + ' ...'
     return texto[:corte] + ' ...'
+
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)

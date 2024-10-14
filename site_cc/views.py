@@ -175,7 +175,7 @@ def comentario_create_view(request, clube_id):
         
         Comentario.objects.create(
             clube=clube,
-            user=request.user,  # Associating the comment with the logged-in user
+            user=request.user, 
             comentario=comentario_texto  
         )
         return redirect('club-Detail', pk=clube.pk)
@@ -317,17 +317,17 @@ def profile(request, user_id):
         bio = request.POST.get('bio', '')
         icone = request.POST.get('icone', '')
 
-        # Atualiza a bio e o ícone se não estiverem vazios
+        
         if bio:
             profile.bio = bio
 
         if icone:  
             profile.icone = icone  
 
-        profile.save()  # Salva as mudanças de uma vez só
-        return redirect('profile', user_id=user.id)  # Redireciona para a página de perfil
+        profile.save()  
+        return redirect('profile', user_id=user.id)  
 
-    return render(request, 'profile.html', {'profile': profile, 'icons': icons})  # Inclua icons na renderização
+    return render(request, 'profile.html', {'profile': profile, 'icons': icons})  
 
 
 
@@ -345,16 +345,30 @@ def seguir_usuario(request, user_id):
         return redirect('profile', user_id=user_id)
    
 def lista_usuarios(request):
-    
     nomes = request.GET.get('nomes', '')
 
-    
     if nomes:
         usuarios = User.objects.filter(username__icontains=nomes)
     else:
         usuarios = User.objects.all()
 
-    return render(request, 'lista_usuarios.html', {'usuarios': usuarios, 'nomes': nomes})
+    last_searches = request.session.get('last_searches', [])
+
+    if nomes:
+        if nomes not in last_searches:
+            last_searches.insert(0, nomes)
+        last_searches = last_searches[:5]
+        request.session['last_searches'] = last_searches
+
+    
+    user_links = {user.username: user for user in User.objects.filter(username__in=last_searches)}
+
+    return render(request, 'lista_usuarios.html', {
+        'usuarios': usuarios,
+        'nomes': nomes,
+        'last_searches': last_searches,
+        'user_links': user_links,
+    })
 
 
 @login_required
@@ -412,18 +426,18 @@ def criar_maratona_view(request, clube_id):
         try:
             data_fim = datetime.strptime(data_fim_str, '%Y-%m-%d').date()
 
-            # Atualiza a maratona existente
+          
             clube.maratona_ativa = True
             clube.data_fim_maratona = data_fim
             clube.capitulo_final_maratona = capitulo_final
-            clube.nome_maratona = nome_maratona  # Salvar o nome da maratona
-            clube.save()  # Salvar no banco
+            clube.nome_maratona = nome_maratona  
+            clube.save()  
 
             return JsonResponse({'success': True, 'message': 'Maratona atualizada com sucesso!'})
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
-    # Se a requisição não for POST, retorne os dados da maratona (GET)
+    
     if clube.maratona_ativa:
         return JsonResponse({
             'success': True,
@@ -438,7 +452,7 @@ def criar_maratona_view(request, clube_id):
 @receiver(post_save, sender=Clube)
 def verificar_maratona(sender, instance, **kwargs):
     if instance.maratona_ativa and instance.data_fim_maratona and instance.data_fim_maratona < timezone.now().date():
-        # Atualizar o capítulo atual para o capítulo final da maratona
+        
         instance.progresso_atual = instance.capitulo_final_maratona
         instance.maratona_ativa = False
         instance.save()
@@ -465,7 +479,7 @@ def finalizar_maratona_view(request, clube_id):
         try:
             clube.progresso_atual = clube.capitulo_final_maratona
             clube.maratona_ativa = False
-            clube.total_maratona_finalizadas += 1  # Incrementa o total de maratonas finalizadas
+            clube.total_maratona_finalizadas += 1  
             clube.save()
 
             return JsonResponse({'success': True, 'message': 'Maratona finalizada com sucesso!'})
@@ -473,5 +487,9 @@ def finalizar_maratona_view(request, clube_id):
             return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
     return JsonResponse({'success': False, 'message': 'Método inválido'}, status=400)
+
+from django.shortcuts import render
+from .models import User  
+
 
 
