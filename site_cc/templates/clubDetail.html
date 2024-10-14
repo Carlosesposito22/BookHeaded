@@ -510,10 +510,12 @@ Detail {{ clube.titulo }}
             </div> 
 
             <hr>
-            <p><strong>Foundation:</strong> {{ clube.dataDeCriacao }}</p>
             <p class="text-break description-text"><strong>Description: </strong>{{ clube.descricao|safe }}</p>
+            <p><strong>Foundation:  </strong>{{ clube.dataDeCriacao|date:"d/m/Y" }}</p>
+            <p><strong>Genre:</strong> {{ clube.categoria.nome }}</p>
+            <p><strong>Modality:</strong> {{ clube.modalidade.nome }}</p>
+            <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
             <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
-            <p><strong>Total Ratings:</strong> {{ total_avaliacoes }}</p>
             <p class="div-stars"><strong>Rating:&nbsp;</strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
             <p>
                 <strong>Total Marathons:</strong> {{ total_maratona_finalizadas }} 
@@ -621,6 +623,189 @@ Detail {{ clube.titulo }}
     
 </div>
 <script>
+
+document.getElementById('saveProgress').addEventListener('click', function () {
+        const currentCapitulo = parseInt(document.getElementById('currentcapitulo').value);
+        const totalCapitulos = parseInt(document.getElementById('totalcapitulo').value);
+    
+        if (currentCapitulo > 0 && totalCapitulos > 0) {
+            if (currentCapitulo > totalCapitulos) {
+                alert('O capítulo atual não pode ser maior que o total de capítulos.');
+            } else {
+                fetch(`{% url 'atualizar_progresso' clube.pk %}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        current_capitulo: currentCapitulo,
+                        total_capitulos: totalCapitulos
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); 
+                    if (data.success) {
+                        const progressPercent = (currentCapitulo / totalCapitulos) * 100;
+                        document.getElementById('progressBar').style.width = progressPercent + '%';
+                        document.getElementById('progressBar').setAttribute('aria-valuenow', progressPercent);
+                        document.getElementById('progressBar').innerText = Math.round(progressPercent) + '%';
+    
+                        document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
+    
+                        $('#progressModal').modal('hide');
+                    } else {
+                        alert('Erro ao salvar progresso.');
+                    }
+                });
+            }
+        } else {
+            alert('Por favor, insira valores positivos para os capítulos.');
+        }
+    });
+
+    document.getElementById('saveProgress').addEventListener('click', function () {
+    const currentCapitulo = parseInt(document.getElementById('currentcapitulo').value);
+    const totalCapitulos = parseInt(document.getElementById('totalcapitulo').value);
+
+    if (currentCapitulo > 0 && totalCapitulos > 0) {
+        if (currentCapitulo > totalCapitulos) {
+            alert('O capítulo atual não pode ser maior que o total de capítulos.');
+        } else {
+            fetch(`{% url 'atualizar_progresso' clube.pk %}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    current_capitulo: currentCapitulo,
+                    total_capitulos: totalCapitulos
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.success) {
+                    const progressPercent = (currentCapitulo / totalCapitulos) * 100;
+                    const progressBar = document.getElementById('progressBar');
+                    
+                    progressBar.style.width = progressPercent + '%';
+                    progressBar.setAttribute('aria-valuenow', progressPercent);
+                    progressBar.innerText = Math.round(progressPercent) + '%';
+
+                    document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
+
+                    if (progressPercent === 100) {
+                        progressBar.classList.add('progress-bar-green');
+                    } else {
+                        progressBar.classList.remove('progress-bar-green');
+                        progressBar.style.backgroundColor = '#4169E1';
+                    }
+
+                    $('#progressModal').modal('hide');
+                } else {
+                    alert('Erro ao salvar progresso.');
+                }
+            });
+        }
+    } else {
+        alert('Por favor, insira valores positivos para os capítulos.');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[id^="favoritar-btn-"]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var clubeId = this.getAttribute('data-clube-id');
+            var url = `/clube/favoritar/${clubeId}/`;
+            var buttonElement = this;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.favoritado) {
+                    buttonElement.innerHTML = '<i class="bi bi-star-fill"></i>';
+                    moveClube(clubeId, true);
+                } else {
+                    buttonElement.innerHTML = '<i class="bi bi-star"></i>';
+                    moveClube(clubeId, false);
+                }
+            });
+        });
+    });
+});
+
+document.querySelectorAll('[id^="topLivrosModal-"]').forEach(function (modal) {
+    modal.addEventListener('show.bs.modal', function (event) {
+        const clubeId = event.target.getAttribute('id').split('-')[1];
+        const modalContent = document.getElementById(`topLivrosContent-${clubeId}`);
+        
+        fetch(`/clube/${clubeId}/top-livros/`)
+            .then(response => response.text())
+            .then(html => {
+                modalContent.innerHTML = html;
+            })
+            .catch(err => {
+                modalContent.innerHTML = '<p>Erro ao carregar os top livros.</p>';
+            });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+document.querySelectorAll('[id^="updateModal-"]').forEach(function (modal) {
+    modal.addEventListener('show.bs.modal', function (event) {
+        const clubeId = event.target.getAttribute('id').split('-')[1];
+        const modalidadeSelect = modal.querySelector('#modalidade');
+        const categoriaSelect = modal.querySelector('#categoria');
+
+        fetch('/api/modalidades/')
+            .then(response => response.json())
+            .then(modalidades => {
+                modalidadeSelect.innerHTML = '<option value="">Selecione uma modalidade</option>';
+                modalidades.forEach(modalidade => {
+                    const option = document.createElement('option');
+                    option.value = modalidade.id;
+                    option.textContent = modalidade.nome;
+                    
+                    if (modalidade.id == modal.getAttribute('data-modalidade-id')) {
+                        option.selected = true;
+                    }
+                    modalidadeSelect.appendChild(option);
+                });
+            })
+            .catch(err => console.error('Erro ao carregar modalidades:', err));
+
+        fetch('/api/categorias/')
+            .then(response => response.json())
+            .then(categorias => {
+                categoriaSelect.innerHTML = '<option value="">Selecione uma categoria</option>';
+                categorias.forEach(categoria => {
+                    const option = document.createElement('option');
+                    option.value = categoria.id;
+                    option.textContent = categoria.nome;
+                    
+                    if (categoria.id == modal.getAttribute('data-categoria-id')) {
+                        option.selected = true;
+                    }
+                    categoriaSelect.appendChild(option);
+                });
+            })
+            .catch(err => console.error('Erro ao carregar categorias:', err));
+    });
+});
+});
+
+// Adiciona o JS da maratona daqui pra baixo, viu Mateus. 3 horas só pra descobrir que era só colocar meu código na parte de cima. A vida não é um morango. PS: Carlos
+//Ps de novo: Porrrrraa.
+
 document.getElementById('listarHistorico').addEventListener('click', function() {
     const clubeId = this.getAttribute('data-clube-id');
     listarHistorico(clubeId);
@@ -809,184 +994,6 @@ window.onload = function() {
                 document.getElementById('dataInicio').value = today;
             });
     
-    document.getElementById('saveProgress').addEventListener('click', function () {
-        const currentCapitulo = parseInt(document.getElementById('currentcapitulo').value);
-        const totalCapitulos = parseInt(document.getElementById('totalcapitulo').value);
-    
-        if (currentCapitulo > 0 && totalCapitulos > 0) {
-            if (currentCapitulo > totalCapitulos) {
-                alert('O capítulo atual não pode ser maior que o total de capítulos.');
-            } else {
-                fetch(`{% url 'atualizar_progresso' clube.pk %}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    body: JSON.stringify({
-                        current_capitulo: currentCapitulo,
-                        total_capitulos: totalCapitulos
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data); 
-                    if (data.success) {
-                        const progressPercent = (currentCapitulo / totalCapitulos) * 100;
-                        document.getElementById('progressBar').style.width = progressPercent + '%';
-                        document.getElementById('progressBar').setAttribute('aria-valuenow', progressPercent);
-                        document.getElementById('progressBar').innerText = Math.round(progressPercent) + '%';
-    
-                        document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
-    
-                        $('#progressModal').modal('hide');
-                    } else {
-                        alert('Erro ao salvar progresso.');
-                    }
-                });
-            }
-        } else {
-            alert('Por favor, insira valores positivos para os capítulos.');
-        }
-    });
-
-    document.getElementById('saveProgress').addEventListener('click', function () {
-    const currentCapitulo = parseInt(document.getElementById('currentcapitulo').value);
-    const totalCapitulos = parseInt(document.getElementById('totalcapitulo').value);
-
-    if (currentCapitulo > 0 && totalCapitulos > 0) {
-        if (currentCapitulo > totalCapitulos) {
-            alert('O capítulo atual não pode ser maior que o total de capítulos.');
-        } else {
-            fetch(`{% url 'atualizar_progresso' clube.pk %}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify({
-                    current_capitulo: currentCapitulo,
-                    total_capitulos: totalCapitulos
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                if (data.success) {
-                    const progressPercent = (currentCapitulo / totalCapitulos) * 100;
-                    const progressBar = document.getElementById('progressBar');
-                    
-                    progressBar.style.width = progressPercent + '%';
-                    progressBar.setAttribute('aria-valuenow', progressPercent);
-                    progressBar.innerText = Math.round(progressPercent) + '%';
-
-                    document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
-
-                    if (progressPercent === 100) {
-                        progressBar.classList.add('progress-bar-green');
-                    } else {
-                        progressBar.classList.remove('progress-bar-green');
-                        progressBar.style.backgroundColor = '#4169E1';
-                    }
-
-                    $('#progressModal').modal('hide');
-                } else {
-                    alert('Erro ao salvar progresso.');
-                }
-            });
-        }
-    } else {
-        alert('Por favor, insira valores positivos para os capítulos.');
-    }
-});
-
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('[id^="favoritar-btn-"]').forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                var clubeId = this.getAttribute('data-clube-id');
-                var url = `/clube/favoritar/${clubeId}/`;
-                var buttonElement = this;
-
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                        'Content-Type': 'application/json',
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.favoritado) {
-                        buttonElement.innerHTML = '<i class="bi bi-star-fill"></i>';
-                        moveClube(clubeId, true);
-                    } else {
-                        buttonElement.innerHTML = '<i class="bi bi-star"></i>';
-                        moveClube(clubeId, false);
-                    }
-                });
-            });
-        });
-    });
-
-    document.querySelectorAll('[id^="topLivrosModal-"]').forEach(function (modal) {
-        modal.addEventListener('show.bs.modal', function (event) {
-            const clubeId = event.target.getAttribute('id').split('-')[1];
-            const modalContent = document.getElementById(`topLivrosContent-${clubeId}`);
-            
-            fetch(`/clube/${clubeId}/top-livros/`)
-                .then(response => response.text())
-                .then(html => {
-                    modalContent.innerHTML = html;
-                })
-                .catch(err => {
-                    modalContent.innerHTML = '<p>Erro ao carregar os top livros.</p>';
-                });
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('[id^="updateModal-"]').forEach(function (modal) {
-        modal.addEventListener('show.bs.modal', function (event) {
-            const clubeId = event.target.getAttribute('id').split('-')[1];
-            const modalidadeSelect = modal.querySelector('#modalidade');
-            const categoriaSelect = modal.querySelector('#categoria');
-
-            fetch('/api/modalidades/')
-                .then(response => response.json())
-                .then(modalidades => {
-                    modalidadeSelect.innerHTML = '<option value="">Selecione uma modalidade</option>';
-                    modalidades.forEach(modalidade => {
-                        const option = document.createElement('option');
-                        option.value = modalidade.id;
-                        option.textContent = modalidade.nome;
-                        
-                        if (modalidade.id == modal.getAttribute('data-modalidade-id')) {
-                            option.selected = true;
-                        }
-                        modalidadeSelect.appendChild(option);
-                    });
-                })
-                .catch(err => console.error('Erro ao carregar modalidades:', err));
-
-            fetch('/api/categorias/')
-                .then(response => response.json())
-                .then(categorias => {
-                    categoriaSelect.innerHTML = '<option value="">Selecione uma categoria</option>';
-                    categorias.forEach(categoria => {
-                        const option = document.createElement('option');
-                        option.value = categoria.id;
-                        option.textContent = categoria.nome;
-                        
-                        if (categoria.id == modal.getAttribute('data-categoria-id')) {
-                            option.selected = true;
-                        }
-                        categoriaSelect.appendChild(option);
-                    });
-                })
-                .catch(err => console.error('Erro ao carregar categorias:', err));
-        });
-    });
-});
 
 </script>
 {% endblock %}
