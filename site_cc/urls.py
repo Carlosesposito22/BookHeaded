@@ -26,7 +26,7 @@ from .views import (
     get_categorias,
     detalhes_maratona_view,
     finalizar_maratona_view,
-
+    listar_historico_maratona_view,
 )
 
 urlpatterns = [
@@ -63,7 +63,5 @@ urlpatterns = [
     path('clube/<int:clube_id>/criar_maratona/', views.criar_maratona_view, name='criar_maratona'),
     path('clube/<int:clube_id>/detalhes_maratona/', detalhes_maratona_view, name='detalhes_maratona'),
     path('clube/<int:clube_id>/finalizar_maratona/', views.finalizar_maratona_view, name='finalizar_maratona'),
-
-
-
+    path('clube/<int:clube_id>/listar_historico_maratona/', listar_historico_maratona_view, name='listar_historico_maratona'),
 ]

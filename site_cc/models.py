@@ -110,3 +110,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+class HistoricoMaratona(models.Model):
+    clube = models.ForeignKey(Clube, on_delete=models.CASCADE)
+    nome_maratona = models.CharField(max_length=255)
+    data_fim = models.DateField()
+    capitulo_final = models.CharField(max_length=255)
+    data_registro = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.nome_maratona} - {self.data_fim}"

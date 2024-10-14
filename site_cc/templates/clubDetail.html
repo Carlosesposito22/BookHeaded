@@ -221,7 +221,6 @@ Detail {{ clube.titulo }}
     }
 
 </style>
-
 <div class="container">
     <div class="hold-evr">
         <div class="data-progress-holder">
@@ -266,7 +265,7 @@ Detail {{ clube.titulo }}
                                 <div class="comentario-conteudo">
                                     <strong>{{ comentario.user.username }}</strong>  
                                     <div class="comment-n-date right-align">
-                                        <p id="pdocomentario" class="datap">{{ comentario.data|date:"H:i" }} at {{ comentario.data|date:"d/m" }}</p>
+                                        <p id="pdocomentario" class="datap">{{ comentario.data|date:"d/m" }} at {{ comentario.data|date:"H:i" }}</p>
                                         <p id="pdocomentario">{{ comentario.comentario }}</p>
                                     </div>
                                 </div>
@@ -287,7 +286,7 @@ Detail {{ clube.titulo }}
                                     <strong>{{ comentario.user.username }}</strong>  
                                     <div class="comment-n-date">
                                         <p id="pdocomentario">{{ comentario.comentario }}</p>
-                                        <p id="pdocomentario" class="datap">{{ comentario.data|date:"H:i" }} at {{ comentario.data|date:"d/m" }}</p>
+                                        <p id="pdocomentario" class="datap">{{ comentario.data|date:"d/m" }} at {{ comentario.data|date:"H:i" }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -465,7 +464,10 @@ Detail {{ clube.titulo }}
             <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
             <p><strong>Total Ratings:</strong> {{ total_avaliacoes }}</p>
             <p class="div-stars"><strong>Rating:&nbsp;</strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
-            <p><strong>Total Marathons:</strong> {{ total_maratona_finalizadas }} <i class="bi bi-eye-fill"></i></p>
+            <p>
+                <strong>Total Marathons:</strong> {{ total_maratona_finalizadas }} 
+                <i class="bi bi-eye-fill" id="listarHistorico" data-clube-id="{{ clube.id }}" style="cursor: pointer;"></i>
+            </p>
         </div>
     </div>
 
@@ -534,11 +536,87 @@ Detail {{ clube.titulo }}
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="historicoMaratonasModal" tabindex="-1" aria-labelledby="historicoMaratonasModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="historicoMaratonasModalLabel">Histórico de Maratonas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" id="historicoTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nome da Maratona</th>
+                                <th scope="col">Data de Início</th>
+                                <th scope="col">Data de Término</th>
+                                <th scope="col">Capítulo Final</th>
+                                <th scope="col">Data de Registro</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historicoBody">
+                            <!-- Os dados serão inseridos aqui via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     
 </div>
-
 <script>
+document.getElementById('listarHistorico').addEventListener('click', function() {
+    const clubeId = this.getAttribute('data-clube-id');
+    listarHistorico(clubeId);
+});
+
+function listarHistorico(clubeId) {
+    fetch(`/clube/${clubeId}/listar_historico_maratona/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const historicoBody = document.getElementById('historicoBody');
+            historicoBody.innerHTML = ''; // Limpa o corpo da tabela antes de adicionar novos dados
+
+            if (data.success) {
+                if (data.historico.length === 0) {
+                    historicoBody.innerHTML = '<tr><td colspan="5">Nenhum histórico encontrado.</td></tr>';
+                } else {
+                    data.historico.forEach(historico => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${historico.nome_maratona}</td>
+                            <td>${historico.data_inicio}</td>
+                            <td>${historico.data_fim}</td>
+                            <td>${historico.capitulo_final}</td>
+                            <td>${historico.data_registro}</td>
+                        `;
+                        historicoBody.appendChild(row);
+                    });
+                }
+
+                // Exibe o modal após carregar os dados
+                const modal = new bootstrap.Modal(document.getElementById('historicoMaratonasModal'));
+                modal.show();
+            } else {
+                historicoBody.innerHTML = '<tr><td colspan="5">Nenhum histórico encontrado.</td></tr>';
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+        });
+}
+
+
     document.getElementById('finalizarMaratona').addEventListener('click', function() {
     const createButton = document.getElementById('createMaratona');
     const clubeId = createButton.getAttribute('data-clube-id');
