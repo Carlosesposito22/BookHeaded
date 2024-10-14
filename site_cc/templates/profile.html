@@ -96,8 +96,6 @@
         resize: none;
     }
 
-
-    /* Estilos do Modal */
     .modal {
         display: none;
         position: fixed;
@@ -127,6 +125,8 @@
         font-size: 28px;
         font-weight: bold;
         cursor: pointer;
+        text-align: right;
+        height: fit-content;
     }
 
 
@@ -140,10 +140,14 @@
         display: flex;
         flex-wrap: wrap;
         gap: 1rem;
-        justify-content: center;
-        background-color: #dddddd;
+        justify-content: space-around;
         border-radius: 1rem;
+        padding: 0;
         padding: 1rem;
+        border-style: solid;
+        border-color: #d8d8d8;
+        border-width: 0.05rem;
+        align-items: center;
     }
 
 
@@ -194,6 +198,19 @@
         color: #c00000;
     }
 
+    .modaltitle-close{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    #bio-form-modal{
+        margin-top: 2rem;
+    }
+
+    #modal-icon:hover{
+        opacity: 50%;
+    }
 
 </style>
 
@@ -252,27 +269,40 @@
     </div>
 </div>
 
-<!-- Modal para escolher ícone -->
+<!-- Modal para alterar o perfil -->
 <div id="iconModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Profile Settings</h2>
-        <br>
-        <div class="icon-options">
-            {% for icon in icons %}
-            <div class="icon" onclick="chooseIcon('{{ icon }}')">
-                <img src="{% static icon %}" alt="Ícone">
-            </div>
-            {% endfor %}
-        </div>
+        <span class="modaltitle-close">
+            <h2><strong>Edit Profile</strong></h2>
+            <span class="close">&times;</span>
+        </span>
 
-        <form class="bio-form" method="post" action="{% url 'profile' profile.user.id %}">
+        <form class="bio-form" id="bio-form-modal" method="post" action="{% url 'profile' profile.user.id %}">
             {% csrf_token %}
             <input type="hidden" name="icone" id="icone-input" value="{{ profile.icone }}">
-            <h3>Edit Bio</h3>
+            <label style="width: fit-content; color: #494949; font-weight: 500;">Bio:</label>
             <textarea name="bio" placeholder="Write your bio here...">{{ profile.bio }}</textarea>
-            <button type="submit" class="btn btn-primary fw-bold save-bio" style="border-radius: 0.6rem;">Save Bio</button>
+            <button class="btn btn-primary fw-bold save-bio" id="save-bio-modal" style="border-radius: 1rem;">Save Changes</button>
         </form>
+        
+        <br>
+
+        <div class="icons-n-label">
+            <label style="width: fit-content; color: #494949; font-weight: 500;">Profile icon</label>
+            <div class="icon-options">
+                {% for icon in icons %}
+                <button type="submit" class="icon" id="modal-icon" onclick="chooseIcon('{{ icon }}')" style="border-style: none; border-radius: 100%;">
+                    <img src="{% static icon %}" alt="Ícone">
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+        
+
+        <br>
+
+        
+
     </div>
 </div>
 
