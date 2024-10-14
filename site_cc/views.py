@@ -416,20 +416,25 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def criar_maratona_view(request, clube_id):
     clube = get_object_or_404(Clube, pk=clube_id)
+    
 
     if request.method == 'POST':
         data = json.loads(request.body)
         nome_maratona = data.get('nome_maratona')
         data_fim_str = data.get('data_fim')
         capitulo_final = data.get('capitulo_final')
+        capitulo_atual = data.get('capitulo_atual')
+        data_inicio_str = data.get('data_inicio')
 
         try:
             data_fim = datetime.strptime(data_fim_str, '%Y-%m-%d').date()
+            data_inicio = datetime.strptime(data_inicio_str, '%Y-%m-%d').date()
 
-          
+            clube.data_inicio_maratona = data_inicio
             clube.maratona_ativa = True
             clube.data_fim_maratona = data_fim
             clube.capitulo_final_maratona = capitulo_final
+            clube.capitulo_atual_maratona = capitulo_atual
             clube.nome_maratona = nome_maratona  
             clube.save()  
 
@@ -443,7 +448,9 @@ def criar_maratona_view(request, clube_id):
             'success': True,
             'nome_maratona': clube.nome_maratona,
             'data_fim': clube.data_fim_maratona.strftime('%Y-%m-%d'),
+            'data_inicio': clube.data_inicio_maratona.strftime('%Y-%m-%d'),
             'capitulo_final': clube.capitulo_final_maratona,
+            'capitulo_atual': clube.capitulo_atual_maratona,
         })
     else:
         return JsonResponse({'success': False, 'message': 'Nenhuma maratona ativa'}, status=404)
@@ -466,7 +473,9 @@ def detalhes_maratona_view(request, clube_id):
             'maratona_ativa': True,
             'nome_maratona': clube.nome_maratona,
             'data_fim': clube.data_fim_maratona.strftime('%Y-%m-%d'),
+            'data_inicio': clube.data_inicio_maratona.strftime('%Y-%m-%d'),
             'capitulo_final': clube.capitulo_final_maratona,
+            'capitulo_atual': clube.capitulo_atual_maratona,
         })
     else:
         return JsonResponse({'success': True, 'maratona_ativa': False})
@@ -477,15 +486,15 @@ def finalizar_maratona_view(request, clube_id):
     
     if request.method == 'POST' and clube.maratona_ativa:
         try:
-            # Cria uma entrada no histórico da maratona
             HistoricoMaratona.objects.create(
                 clube=clube,
                 nome_maratona=clube.nome_maratona,
                 data_fim=clube.data_fim_maratona,
-                capitulo_final=clube.capitulo_final_maratona
+                data_inicio=clube.data_inicio_maratona,
+                capitulo_final=clube.capitulo_final_maratona,
+                capitulo_atual=clube.capitulo_atual_maratona,
             )
 
-            # Finaliza a maratona
             clube.progresso_atual = clube.capitulo_final_maratona
             clube.maratona_ativa = False
             clube.total_maratona_finalizadas += 1  
@@ -506,7 +515,9 @@ def listar_historico_maratona_view(request, clube_id):
         {
             'nome_maratona': h.nome_maratona,
             'data_fim': h.data_fim.strftime('%Y-%m-%d'),
+            'data_inicio': h.data_inicio.strftime('%Y-%m-%d'),
             'capitulo_final': h.capitulo_final,
+            'capitulo_atual': h.capitulo_atual,
             'data_registro': h.data_registro.strftime('%Y-%m-%d %H:%M:%S')
         }
         for h in historico
