@@ -220,7 +220,58 @@ Detail {{ clube.titulo }}
         cursor: pointer;
     }
 
+.btn.reluzir {
+    border: none;
+    border-radius: 1rem;
+    font-size: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-weight: 500;
+}
+
+/* Transformação ao passar o mouse (hover) */
+.btn.reluzir:hover {
+    background-color: rgb(241, 186, 7);
+    transform: translateY(-3px); /* Eleva o botão ao hover */
+    box-shadow: 0 6px 0 rgb(177, 104, 0), /* A sombra sólida permanece no hover */
+    0 12px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Efeito de brilho */
+.btn.reluzir::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+    transform: rotate(45deg);
+    transition: all 0.5s ease;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none; /* Não interfere nas ações do botão */
+}
+
+/* Aparecer o brilho ao passar o mouse */
+.btn.reluzir:hover::before {
+    opacity: 1;
+    left: 100%;
+    top: 100%;
+}
+
+/* Estilo adicional para garantir que o texto e o conteúdo fiquem acima do brilho */
+.btn.reluzir span {
+    position: relative;
+    z-index: 2;
+}
+
 </style>
+
+
 <div class="container">
     <div class="hold-evr">
         <div class="data-progress-holder">
@@ -248,15 +299,15 @@ Detail {{ clube.titulo }}
                     {% endif %}
                     
                     {% if user.is_authenticated and user == clube.moderador %}
-                        <button id="createMaratona" data-clube-id="{{ clube.id }}" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#maratonaModal">Criar Maratona</button>
-                        <button id="setProgress" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#progressModal">Marcar Progresso</button>
+                    <button id="createMaratona" data-clube-id="{{ clube.id }}" class="btn btn-primary btn-sm reluzir" data-bs-toggle="modal" data-bs-target="#maratonaModal">Start Spree</button>
+                        <button id="setProgress" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#progressModal">Mark Progress</button>
                     {% endif %}
                 </div>
             </div>
             
             <div class="comentarios-container" id="comentariosContainer">
                 {% if not clube.comentarios.all %}
-                    Nenhuma conversa foi iniciada no clube!
+                    No chat was started yet...
                 {% else %}
                     {% for comentario in clube.comentarios.all|slice:"-8:" %}
                     <div class="comentario-wrapper">
