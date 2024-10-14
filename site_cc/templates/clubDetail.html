@@ -236,13 +236,21 @@ Detail {{ clube.titulo }}
 
             <hr>
 
-            <div class="capitulo-container" style="background-color: #e0e0e0; padding: 10px;border-top-left-radius: 8px;border-top-right-radius: 8px; margin-top: 1rem;">
+            <div class="capitulo-container" style="background-color: #e0e0e0; padding: 10px; border-top-left-radius: 8px; border-top-right-radius: 8px; margin-top: 1rem;">
                 <div class="my-3 d-flex justify-content-between align-items-center">
-                    <span class="capitulo-atual">Capítulo atual: <span id="capituloAtualSpan">{{ clube.progresso_atual }}</span></span>                    {% if user.is_authenticated and user == clube.moderador %}
-                        <button id="setProgress" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#progressModal">Marcar progresso</button>
+                    {% if clube.maratona_ativa %}
+                        <span class="capitulo-atual">Capítulo atual: <span id="capituloAtualSpan">Em maratona</span></span>
+                    {% else %}
+                        <span class="capitulo-atual">Capítulo atual: <span id="capituloAtualSpan">{{ clube.progresso_atual }}</span></span>
+                    {% endif %}
+                    
+                    {% if user.is_authenticated and user == clube.moderador %}
+                        <button id="createMaratona" data-clube-id="{{ clube.id }}" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#maratonaModal">Criar Maratona</button>
+                        <button id="setProgress" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#progressModal">Marcar Progresso</button>
                     {% endif %}
                 </div>
             </div>
+            
 
             <div class="comentarios-container" id="comentariosContainer">
                 {% if not clube.comentarios.all %}
@@ -281,10 +289,6 @@ Detail {{ clube.titulo }}
                     {% endfor %}
                 {% endif %}
             </div>
-            
-            
-            
-            
             
             <div class="comentarioholder" style="background-color: #e0e0e0; padding: 4ypx; border-bottom-left-radius: 8px;border-bottom-right-radius: 8px;">
                 <form action="{% url 'add_comentario' clube.pk %}" method="POST" class="my-4 d-flex align-items-center">
@@ -483,9 +487,186 @@ Detail {{ clube.titulo }}
             </div>
         </div>
     </div>
+    <div class="modal fade" id="maratonaModal" tabindex="-1" aria-labelledby="maratonaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="maratonaModalLabel">Criar Maratona</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="maratonaForm">
+                        <div class="mb-3">
+                            <label for="nomeMaratona" class="form-label">Nome da Maratona</label>
+                            <input type="text" class="form-control" id="nomeMaratona" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dataInicio" class="form-label">Data de Início</label>
+                            <input type="date" class="form-control" id="dataInicio" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dataFim" class="form-label">Data de Término</label>
+                            <input type="date" class="form-control" id="dataFim" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="capituloAtual" class="form-label">Capítulo Atual</label>
+                            <input type="number" class="form-control" id="capituloAtual" value="{{ clube.progresso_atual }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="capituloFinal" class="form-label">Capítulo Final da Maratona</label>
+                            <input type="number" class="form-control" id="capituloFinal" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="finalizarMaratona">Finalizar Maratona</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="saveMaratona">Salvar Maratona</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
 </div>
 
 <script>
+    document.getElementById('finalizarMaratona').addEventListener('click', function() {
+    const createButton = document.getElementById('createMaratona');
+    const clubeId = createButton.getAttribute('data-clube-id');
+
+    fetch(`/clube/${clubeId}/finalizar_maratona/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Maratona finalizada com sucesso!');
+            // Aqui você pode atualizar a UI se necessário
+        } else {
+            alert('Erro ao finalizar maratona.');
+            console.error('Erro:', data);
+        }
+    })
+    .catch(error => {
+        console.error('Erro na requisição:', error);
+    });
+});
+
+
+// Função para obter o CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Função para carregar dados da maratona
+function carregarDadosMaratona(clubeId) {
+    fetch(`/clube/${clubeId}/detalhes_maratona/`)
+        .then(response => {
+            console.log("Resposta do servidor:", response);
+            return response.json();
+        })
+        .then(data => {
+            console.log("Dados da maratona:", data);
+            if (data.success) {
+                if (data.maratona_ativa) {
+                    document.getElementById('nomeMaratona').value = data.nome_maratona;
+                    document.getElementById('dataFim').value = data.data_fim;
+                    document.getElementById('capituloFinal').value = data.capitulo_final;
+                } else {
+                    document.getElementById('nomeMaratona').value = '';
+                    document.getElementById('dataFim').value = '';
+                    document.getElementById('capituloFinal').value = '';
+                }
+            } else {
+                alert('Erro ao carregar dados da maratona.');
+                console.error('Erro:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+        });
+}
+
+// Registrar o listener do botão 'saveMaratona'
+document.getElementById('saveMaratona').addEventListener('click', function() {
+    const createButton = document.getElementById('createMaratona');
+    const clubeId = createButton.getAttribute('data-clube-id');
+    
+    const nomeMaratona = document.getElementById('nomeMaratona').value;
+    const dataFim = document.getElementById('dataFim').value;
+    const capituloFinal = document.getElementById('capituloFinal').value;
+
+    fetch(`/clube/${clubeId}/criar_maratona/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({
+            nome_maratona: nomeMaratona,
+            data_fim: dataFim,
+            capitulo_final: capituloFinal,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Maratona salva com sucesso!');
+            carregarDadosMaratona(clubeId); // Recarregar dados após salvar
+        } else {
+            alert('Erro ao salvar maratona.');
+            console.error('Erro:', data);
+        }
+    })
+    .catch(error => {
+        console.error('Erro na requisição:', error);
+    });
+});
+
+// Evento para abrir o modal e carregar dados da maratona existente
+document.getElementById('createMaratona').addEventListener('click', function(event) {
+    const createButton = event.currentTarget;
+    const clubeId = createButton.getAttribute('data-clube-id');
+
+    if (!clubeId) {
+        console.error('Clube ID não encontrado.');
+        return;
+    }
+
+    carregarDadosMaratona(clubeId); // Carregar dados ao abrir o modal
+});
+
+// Carregar dados da maratona ao carregar a página
+window.onload = function() {
+    const createButton = document.getElementById('createMaratona');
+    const clubeId = createButton.getAttribute('data-clube-id');
+    if (clubeId) {
+        carregarDadosMaratona(clubeId);
+    }
+};
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('dataInicio').value = today;
+            });
     
     document.getElementById('saveProgress').addEventListener('click', function () {
         const currentCapitulo = parseInt(document.getElementById('currentcapitulo').value);
