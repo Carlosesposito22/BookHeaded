@@ -934,6 +934,7 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
     
     const nomeMaratona = document.getElementById('nomeMaratona').value;
     const dataFim = document.getElementById('dataFim').value;
+    const dataInicio = document.getElementById('dataInicio').value;
     const capituloFinal = document.getElementById('capituloFinal').value;
 
     fetch(`/clube/${clubeId}/criar_maratona/`, {
@@ -945,6 +946,7 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
         body: JSON.stringify({
             nome_maratona: nomeMaratona,
             data_fim: dataFim,
+            data_inicio: dataInicio,
             capitulo_final: capituloFinal,
         }),
     })
@@ -954,7 +956,7 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
             carregarDadosMaratona(clubeId); // Recarregar dados após salvar
             location.reload(true);
         } else {
-            alert('Erro ao salvar maratona.');
+            alert('Erro ao salvar maratona.'+ data.message);
             console.error('Erro:', data);
         }
     })

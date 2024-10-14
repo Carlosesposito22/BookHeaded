@@ -32,6 +32,7 @@ class Clube(models.Model):
     top_livros = models.TextField(blank=True, null=True)
     maratona_ativa = models.BooleanField(default=False)
     data_fim_maratona = models.DateField(null=True, blank=True)
+    data_inicio_maratona = models.DateField(null=True, blank=True)
     capitulo_final_maratona = models.IntegerField(null=True, blank=True)
     nome_maratona = models.CharField(max_length=100, null=True, blank=True)
     total_maratona_finalizadas = models.IntegerField(default=0)
@@ -115,8 +116,9 @@ class HistoricoMaratona(models.Model):
     clube = models.ForeignKey(Clube, on_delete=models.CASCADE)
     nome_maratona = models.CharField(max_length=255)
     data_fim = models.DateField()
+    data_inicio = models.DateField(null=True, blank=True)
     capitulo_final = models.CharField(max_length=255)
     data_registro = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.nome_maratona} - {self.data_fim}"
+        return f"{self.nome_maratona} - {self.data_fim} - {self.data_inicio}"
