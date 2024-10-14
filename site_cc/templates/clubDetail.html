@@ -485,7 +485,7 @@ Detail {{ clube.titulo }}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" id="saveProgress">Salvar Progresso</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveProgress">Salvar Progresso</button>
                 </div>
             </div>
         </div>
@@ -522,9 +522,9 @@ Detail {{ clube.titulo }}
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="finalizarMaratona">Finalizar Maratona</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="finalizarMaratona">Finalizar Maratona</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" id="saveMaratona">Salvar Maratona</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveMaratona">Salvar Maratona</button>
                 </div>
             </div>
         </div>
@@ -549,6 +549,7 @@ Detail {{ clube.titulo }}
     .then(data => {
         if (data.success) {
             alert('Maratona finalizada com sucesso!');
+            location.reload(true);
             // Aqui você pode atualizar a UI se necessário
         } else {
             alert('Erro ao finalizar maratona.');
@@ -558,6 +559,7 @@ Detail {{ clube.titulo }}
     .catch(error => {
         console.error('Erro na requisição:', error);
     });
+
 });
 
 
@@ -630,7 +632,6 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert('Maratona salva com sucesso!');
             carregarDadosMaratona(clubeId); // Recarregar dados após salvar
         } else {
             alert('Erro ao salvar maratona.');
@@ -640,6 +641,8 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
     .catch(error => {
         console.error('Erro na requisição:', error);
     });
+    location.reload(true);
+
 });
 
 // Evento para abrir o modal e carregar dados da maratona existente
