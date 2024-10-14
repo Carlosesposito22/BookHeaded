@@ -2,7 +2,6 @@
 {% load static %}
 
 {% block content %}
-
 <style>
     .superholder {
         display: flex;
@@ -10,11 +9,13 @@
         gap: 2rem;
     }
 
+
     .hold {
         width: 60%;
         border-top-right-radius: 2rem;
         border-top-left-radius: 2rem;
     }
+
 
     .pfp-holder {
         height: 7rem;
@@ -24,12 +25,14 @@
         cursor: pointer;
     }
 
+
     .banner {
         background-color: #0066FF;
         height: 10rem;
         border-top-right-radius: 2rem;
         border-top-left-radius: 2rem;
     }
+
 
     .rest {
         background-color: white;
@@ -40,6 +43,7 @@
         justify-content: space-between;
     }
 
+
     .biodiv {
         background-color: rgb(236, 236, 236);
         max-width: 30rem;
@@ -48,14 +52,17 @@
         border-radius: 1rem;
     }
 
+
     .bio{
         margin: 0;
     }
+
 
     .user-data {
         background-color: aqua;
         width: fit-content;
     }
+
 
     .follow {
         background-color: #0066FF;
@@ -66,16 +73,19 @@
         font-weight: bold;
     }
 
+
     .follow:hover {
         background-color: #004bbb;
         color: white;
     }
+
 
     .bio-form {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
     }
+
 
     .bio-form textarea {
         width: 100%;
@@ -85,6 +95,7 @@
         border: 1px solid #ccc;
         resize: none;
     }
+
 
     /* Estilos do Modal */
     .modal {
@@ -98,6 +109,7 @@
         background-color: rgba(0, 0, 0, 0.5);
     }
 
+
     .modal-content {
         background-color: #fefefe;
         margin: 15% auto;
@@ -108,6 +120,7 @@
         text-align: center;
     }
 
+
     .close {
         color: #aaa;
         float: right;
@@ -116,10 +129,12 @@
         cursor: pointer;
     }
 
+
     .close:hover,
     .close:focus {
         color: black;
     }
+
 
     .icon-options {
         display: flex;
@@ -131,23 +146,28 @@
         padding: 1rem;
     }
 
+
     .icon {
         cursor: pointer;
     }
+
 
     .icon img {
         height: 4rem;
         width: auto;
     }
 
+
     .img-user{
         width: fit-content;
         height: fit-content;
     }
 
+
     .img-user:hover img {
         filter: brightness(70%);
     }
+
 
     .user-n-follow{
         display: flex;
@@ -158,12 +178,14 @@
         gap: 0.5rem;
     }
 
+
     #following-text{
         background: none;
         box-shadow: inset 0 0 0 2.5px #0066FF;
         border: none;
         color: #0066FF;
     }
+
 
     #following-text:hover{
         background: none;
@@ -172,7 +194,10 @@
         color: #c00000;
     }
 
+
 </style>
+
+
 
 <div class="container my-5 superholder">
     <div class="col hold shadow-lg">
@@ -210,12 +235,7 @@
                             {% if profile.bio %}
                                 <p class="text-break bio">{{ profile.bio }}</p>
                             {% else %}
-                                <p>Ola!,sou um novo bookheaded</p>
-                                <form class="bio-form" method="post">
-                                    {% csrf_token %}
-                                    <textarea name="bio" placeholder="Write your bio here..."></textarea>
-                                    <button type="submit" class="btn btn-primary fw-bold save-bio" style="border-radius: 0.6rem;">Save Bio</button>
-                                </form>
+                                <p>Olá, sou um novo bookheaded</p>
                             {% endif %}
                         {% else %}
                             {% if profile.bio %}
@@ -236,101 +256,56 @@
 <div id="iconModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>Profile icons</h2>
+        <h2>Profile Settings</h2>
         <br>
         <div class="icon-options">
-            <div class="icon" onclick="chooseIcon('images/icon1.svg')">
-                <img src="{% static 'images/icon1.svg' %}" alt="Icon 1">
+            {% for icon in icons %}
+            <div class="icon" onclick="chooseIcon('{{ icon }}')">
+                <img src="{% static icon %}" alt="Ícone">
             </div>
-            <div class="icon" onclick="chooseIcon('images/icon2.svg')">
-                <img src="{% static 'images/icon2.svg' %}" alt="Icon 2">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon3.svg')">
-                <img src="{% static 'images/icon3.svg' %}" alt="Icon 3">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon4.svg')">
-                <img src="{% static 'images/icon4.svg' %}" alt="Icon 4">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon5.svg')">
-                <img src="{% static 'images/icon5.svg' %}" alt="Icon 5">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon6.svg')">
-                <img src="{% static 'images/icon6.svg' %}" alt="Icon 6">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon7.svg')">
-                <img src="{% static 'images/icon7.svg' %}" alt="Icon 7">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon8.svg')">
-                <img src="{% static 'images/icon8.svg' %}" alt="Icon 8">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon9.svg')">
-                <img src="{% static 'images/icon9.svg' %}" alt="Icon 9">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon10.svg')">
-                <img src="{% static 'images/icon10.svg' %}" alt="Icon 10">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon11.svg')">
-                <img src="{% static 'images/icon11.svg' %}" alt="Icon 11">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon12.svg')">
-                <img src="{% static 'images/icon12.svg' %}" alt="Icon 12">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon13.svg')">
-                <img src="{% static 'images/icon13.svg' %}" alt="Icon 13">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon14.svg')">
-                <img src="{% static 'images/icon14.svg' %}" alt="Icon 14">
-            </div>
-            <div class="icon" onclick="chooseIcon('images/icon15.svg')">
-                <img src="{% static 'images/icon15.svg' %}" alt="Icon 15">
-            </div>
-
+            {% endfor %}
         </div>
+
+        <form class="bio-form" method="post" action="{% url 'profile' profile.user.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="icone" id="icone-input" value="{{ profile.icone }}">
+            <h3>Edit Bio</h3>
+            <textarea name="bio" placeholder="Write your bio here...">{{ profile.bio }}</textarea>
+            <button type="submit" class="btn btn-primary fw-bold save-bio" style="border-radius: 0.6rem;">Save Bio</button>
+        </form>
     </div>
 </div>
 
 <script>
     function openModal() {
-        document.getElementById('iconModal').style.display = 'block';
+    document.getElementById('iconModal').style.display = 'block';
+}
+
+document.querySelector('.close').addEventListener('click', function() {
+    document.getElementById('iconModal').style.display = 'none';
+});
+
+window.onclick = function(event) {
+    const modal = document.getElementById('iconModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
     }
+};
 
-    document.querySelector('.close').addEventListener('click', function() {
-        document.getElementById('iconModal').style.display = 'none';
-    });
+let selectedIcon = '';
 
-    window.onclick = function(event) {
-        const modal = document.getElementById('iconModal');
-        if (event.target == modal) {
-            modal.style.display = 'none';
-        }
-    };
+function chooseIcon(iconSrc) {
+    selectedIcon = iconSrc; // Armazena o ícone selecionado
+}
 
-    function chooseIcon(iconSrc) {
-        const newSrc = '{% static '' %}' + iconSrc;
-        document.querySelector('.pfp-holder').src = newSrc;
-
-        const formData = new FormData();
-        formData.append('icone', iconSrc);
-
-        fetch("{% url 'profile' profile.user.id %}", {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: formData
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Ícone salvo com sucesso!');
-            } else {
-                console.error('Erro ao salvar ícone.');
-            }
-        })
-        .catch(error => console.error('Erro na requisição:', error));
-
-        document.getElementById('iconModal').style.display = 'none';
+document.querySelector('.bio-form').addEventListener('submit', function() {
+    if (selectedIcon) {
+        const newSrc = '{% static '' %}' + selectedIcon;
+        document.querySelector('.pfp-holder').src = newSrc; // Atualiza a imagem do ícone
+        document.getElementById('icone-input').value = selectedIcon; // Atualiza o campo oculto
     }
+});
 
-    const followButton = document.getElementById('following-text');
+    
 </script>
 {% endblock %}

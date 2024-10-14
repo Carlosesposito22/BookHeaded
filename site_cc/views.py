@@ -295,21 +295,39 @@ def profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
     profile, created = Profile.objects.get_or_create(user=user)
 
+    icons = [
+        'images/icon1.svg',
+        'images/icon2.svg',
+        'images/icon3.svg',
+        'images/icon4.svg',
+        'images/icon5.svg',
+        'images/icon6.svg',
+        'images/icon7.svg',
+        'images/icon8.svg',
+        'images/icon9.svg',
+        'images/icon10.svg',
+        'images/icon11.svg',
+        'images/icon12.svg',
+        'images/icon13.svg',
+        'images/icon14.svg',
+        'images/icon15.svg',
+    ]
+
     if request.method == 'POST':
-        bio = request.POST.get('bio', '')  
+        bio = request.POST.get('bio', '')
         icone = request.POST.get('icone', '')
 
-        if bio:  
+        # Atualiza a bio e o ícone se não estiverem vazios
+        if bio:
             profile.bio = bio
-            profile.save()
-            return redirect('profile', user_id=user.id)
 
         if icone:  
             profile.icone = icone  
-            profile.save()
-            return JsonResponse({'message': 'Ícone atualizado com sucesso!'})
 
-    return render(request, 'profile.html', {'profile': profile})
+        profile.save()  # Salva as mudanças de uma vez só
+        return redirect('profile', user_id=user.id)  # Redireciona para a página de perfil
+
+    return render(request, 'profile.html', {'profile': profile, 'icons': icons})  # Inclua icons na renderização
 
 
 
