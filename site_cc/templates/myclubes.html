@@ -73,8 +73,7 @@ Home Page
         display: flex;
         flex-direction: row;
         align-items: center;
-        margin-top: -1rem;
-        
+        margin-top: -1rem; 
     }
 
     .container1 {
@@ -394,9 +393,85 @@ Home Page
     }
 
     #collapseExample{
-        background-color: #f2ad00;
+        background-color: #dfdfdf;
         border-radius: 1rem;
     }
+
+    #fav-super-div {
+        position: relative;
+        background-color: #f2ad00;
+        border-width: 0.2rem;
+        border-color: #e18b00;
+        overflow: hidden;
+        box-shadow: 0 6px 0 #925a00,
+            0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #fav-super-div:hover {
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    #fav-super-div::before {
+        content: '';
+        position: absolute;
+        top: -20%; 
+        left: -100%;
+        width: 300%; 
+        height: 200%;
+        background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+        transform: rotate(45deg);
+        transition: all 0.75s ease;
+        z-index: 0;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    #fav-super-div:hover::before {
+        opacity: 1;
+        left: 150%; 
+        top: 150%;
+    }
+
+
+    #fav-super-div * {
+        position: relative;
+        z-index: 2;
+    }
+
+    #fav-club-title {
+        color: #ffffff;
+    }
+
+    #fav-div-stars {
+        color: #ffffff;
+    }
+
+    #fav-date {
+        background-color: #e18b00;
+    }
+
+    .fav-favoritar-btn {
+        background-color: #f2ad00;
+        border-color: #e18b00;
+        border-width: 0.15rem;
+        box-shadow: 0 2px 0 #e18b00;
+    }
+
+    .fav-favoritar-btn:hover {
+        background-color: #e18b00;
+        border-color: #925a00;
+        border-width: 0.15rem;
+    }
+
+    #fav-bi-dot{
+        color: white;
+    }
+
+    #fav-description{
+        color: white;
+    }
+
 
 </style>
 
@@ -427,6 +502,36 @@ Home Page
             {% if clubes_favoritos.exists %}
                 {% for clube in clubes_favoritos %}
                 <li class="list-cards">
+                    {% if user in clube.favoritos.all %}
+
+                    <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow" id="fav-super-div">
+                        <div class="hold-title-icons" id="fav-hold-title-icons">
+                            <div class="title-date-div" id="fav-title-date-div">
+                                <a class="club-title" id="fav-club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot" id="fav-bi-dot"></i></a>
+                                <div class="div-stars" id="fav-div-stars">
+                                    &nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
+                                </div>
+                            </div>
+                            <div class="icons-div" id="fav-icons-div">
+                                <button id="favoritar-btn-{{ clube.id }}" class="btn fav-favoritar-btn" data-clube-id="{{ clube.id }}">
+                                    {% if user in clube.favoritos.all %}
+                                        <i class="bi bi-star-fill star-from-btn"></i>
+                                    {% else %}
+                                        <i class="bi bi-star star-from-btn"></i>
+                                    {% endif %}
+                                </button>
+                            </div>
+                        </div>
+    
+                        <div class="description-div display-6">
+                            <p class="date"><span class="badge date"  id="fav-date">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span></p>
+                            <hr>
+                            <p class="description text-break" id="fav-description">{{ clube.descricao|cortar_texto:100|safe }}</p> 
+                        </div>
+                    </div>
+
+                    {% else %}
+
                     <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow">
                         <div class="hold-title-icons">
                             <div class="title-date-div">
@@ -452,6 +557,8 @@ Home Page
                             <p class="description text-break">{{ clube.descricao|cortar_texto:100|safe }}</p> 
                         </div>
                     </div>
+
+                    {% endif %}
                     {% include 'modal_myclubs.html' %}
                 </li>
                 {% endfor %}
