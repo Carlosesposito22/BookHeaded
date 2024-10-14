@@ -282,8 +282,7 @@
             <input type="hidden" name="icone" id="icone-input" value="{{ profile.icone }}">
             <label style="width: fit-content; color: #494949; font-weight: 500;">Bio:</label>
             <textarea name="bio" placeholder="Write your bio here...">{{ profile.bio }}</textarea>
-            <button class="btn btn-primary fw-bold save-bio" id="save-bio-modal" style="border-radius: 1rem;">Save Changes</button>
-        </form>
+        
         
         <br>
 
@@ -291,18 +290,18 @@
             <label style="width: fit-content; color: #494949; font-weight: 500;">Profile icon</label>
             <div class="icon-options">
                 {% for icon in icons %}
-                <button type="submit" class="icon" id="modal-icon" onclick="chooseIcon('{{ icon }}')" style="border-style: none; border-radius: 100%;">
+                <button type="button" class="icon" id="modal-icon" onclick="chooseIcon('{{ icon }}')" style="border-style: none; border-radius: 100%;">
                     <img src="{% static icon %}" alt="Ícone">
                 </button>
                 {% endfor %}
             </div>
         </div>
-        
 
         <br>
 
+        <button class="btn btn-primary fw-bold save-bio" id="save-bio-modal" style="border-radius: 1rem;">Save Changes</button>
+        </form>
         
-
     </div>
 </div>
 
