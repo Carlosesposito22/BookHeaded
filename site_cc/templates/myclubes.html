@@ -316,6 +316,7 @@ Home Page
         width: fit-content;
         border-radius: 1rem;
         padding: 1rem;
+        margin: 0;
     }
 
     .bi-caret-down-fill{
@@ -340,7 +341,7 @@ Home Page
     </div>
     <!-- fim da merda! pode mudar -->
 
-    <!-- Seção: Clubes Não Favoritados -->
+    <!-- Seção: Clubes Favoritados -->
     <p class="d-inline-flex gap-1">
         <h2 class="favoritosheader" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
             <i class="bi bi-star-fill" style="color: white;"></i>Favorites<i class="bi bi-caret-down-fill" id="caret-icon"></i>
@@ -380,7 +381,7 @@ Home Page
                 </li>
                 {% endfor %}
             {% else %}
-                <p style="color: white;">You have no favourite clubs...</p>
+                <p style="color: white; margin: 0;">You have no favourite clubs...</p>
             {% endif %}
         </ul>
     </div>

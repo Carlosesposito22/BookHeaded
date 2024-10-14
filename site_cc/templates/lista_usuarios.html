@@ -1,15 +1,79 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
+<style>
+    .users-ul{
+        list-style: none;
+        margin-top: 2rem;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        width: 30%;
+    }
+
+    .users-li{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        padding: 0.5rem;
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
+        border-radius: 3rem;
+        align-items: center;
+    }
+
+    .pfp-holder{
+        height: fit-content;
+    }
+
+    .pfp{
+        height: 3rem;
+    }
+
+    .bio{
+        background-color: rgb(224, 224, 224);
+        margin: 0;
+        padding: 0.2rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        width: fit-content;
+        border-radius: 2rem;
+    }
+
+    .user-n-bio{
+        display: flex;
+        flex-direction: column;
+        justify-content: left;
+        gap: 0.5rem;
+        margin: 0;
+    }
+
+    .username{
+        text-decoration: none;
+        font-weight: 500 ;
+    }
+
+
+</style>
+
 <div class="container my-5">
-    <h1>Lista de Usuários</h1>
-    <ul>
+    <h1>Search results for: </h1>
+
+    <ul class="users-ul">
         {% for usuario in usuarios %}
-            <li>
-                <a href="{% url 'profile' usuario.id %}">
-                    {{ usuario.username }}
-                </a>
+            <li class="users-li">
+                <a class="pfp-holder" href="{% url 'profile' usuario.id %}"><img class="pfp" src="{% static 'images\icon1.svg' %}"></a>
+                <span class="user-n-bio">
+                    <a class="username" href="{% url 'profile' usuario.id %}">
+                        {{ usuario.username }}
+                    </a>
+                    <p class="bio">ola</p> <!-- Aqui tu coloca a classe da bio da pessoa aonde tem 'ola' blz? -->
+                </span>
             </li>
+            <hr>
         {% endfor %}
     </ul>
 </div>

@@ -96,11 +96,17 @@
     }
 
     .collapse-body {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
         width: fit-content;
         height: fit-content;
+    }
+
+    .categories-ul{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin: 0rem;
+        gap: 1rem;
+        padding: 0;
     }
 
     .titles {
@@ -191,6 +197,24 @@
         .carousel-inner img {
             object-fit: cover;
         }
+
+        .categories-ul{
+            width: 100%;
+        }
+
+        .categories-li{
+            width: 100%;
+            box-sizing: border-box;
+            justify-content: space-around;
+
+        }
+
+        .category-btn{
+            width: 100%;
+            flex: 1 1;
+            box-sizing: border-box;
+        }
+
     }
 
     .category-btn {
@@ -200,6 +224,7 @@
         border-radius: 2rem;
         transition: background-color 0.3s, color 0.3s;
         font-weight: 500;
+        width: 6rem;
     }
 
     .category-btn:hover{
@@ -274,14 +299,19 @@
                 </p>
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body collapse-body">
-                        {% for categoria in cat_menu %}
-                            <button type="button" class="btn btn-sm category-btn 
-                                {% if categoria.nome == 'Ficção' %}categoria-ficção{% elif categoria.nome == 'Autoajuda' %}categoria-autoajuda{% elif categoria.nome == 'Tecnologia' %}categoria-tecnologia{% elif categoria.nome == 'Ciência' %}categoria-ciência{% elif categoria.nome == 'Mistério' %}categoria-mistério{% elif categoria.nome == 'Fantasia' %}categoria-fantasia{% elif categoria.nome == 'Romance' %}categoria-romance{% elif categoria.nome == 'História' %}categoria-historia{% elif categoria.nome == 'Biografia' %}categoria-biografia{% elif categoria.nome == 'Não-ficção' %}categoria-não-ficção{% endif %}" 
-                                data-categoria="{{ categoria.nome }}"  
-                                onclick="filterByCategory('{{ categoria.nome }}')">
-                                {{ categoria.nome }}
-                            </button>
-                        {% endfor %}
+                        <ul class="categories-ul">
+                            {% for categoria in cat_menu %}
+                            <li class="categories-li">
+                                <button type="button" class="btn btn-sm category-btn 
+                                    {% if categoria.nome == 'Ficção' %}categoria-ficção{% elif categoria.nome == 'Autoajuda' %}categoria-autoajuda{% elif categoria.nome == 'Tecnologia' %}categoria-tecnologia{% elif categoria.nome == 'Ciência' %}categoria-ciência{% elif categoria.nome == 'Mistério' %}categoria-mistério{% elif categoria.nome == 'Fantasia' %}categoria-fantasia{% elif categoria.nome == 'Romance' %}categoria-romance{% elif categoria.nome == 'História' %}categoria-historia{% elif categoria.nome == 'Biografia' %}categoria-biografia{% elif categoria.nome == 'Não-ficção' %}categoria-não-ficção{% endif %}" 
+                                    data-categoria="{{ categoria.nome }}"  
+                                    onclick="filterByCategory('{{ categoria.nome }}')">
+                                    {{ categoria.nome }}
+                                </button>
+                            </li>  
+                            {% endfor %}
+                            <li class="btn btn-primary categories-li" style="border-radius: 2rem; font-weight: bold;">Filter <i class="bi bi-filter"></i></li>
+                        </ul>
                     </div>
                 </div>
             </div>
