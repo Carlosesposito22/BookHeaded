@@ -250,10 +250,6 @@ Home Page
         font-size: 1rem;
     }
 
-    .bi-trash-fill{
-        margin-left: 1rem;
-    }
-
     .favoritosheader {
         display: flex;
         flex-direction: row;
@@ -311,7 +307,15 @@ Home Page
     }
 
     #favoritos-list{
-        background-color: #0066FF;
+        /*background-color: #0066FF; --> com essa cor o admin não consegue saber se é moderador*/ 
+        height: fit-content;
+        width: fit-content;
+        border-radius: 1rem;
+        padding: 1rem;
+        margin: 0;
+    }
+
+    .N-favoritos-list{
         height: fit-content;
         width: fit-content;
         border-radius: 1rem;
@@ -326,7 +330,6 @@ Home Page
 </style>
 
 <div class="container my-5 clubs-container">
-    <!-- fiz merda aq viu mamede! pode mudar -->
     <div class="holder1">
         <h1 class="text-dark fw-bold">My Clubs</h1>
         <div class="holder2">
@@ -339,7 +342,6 @@ Home Page
             <a class="btn btn-primary btn-lg addclub-btn" href="{% url 'addClube' %}">Create Club</a>
         </div>
     </div>
-    <!-- fim da merda! pode mudar -->
 
     <!-- Seção: Clubes Favoritados -->
     <p class="d-inline-flex gap-1">
@@ -381,56 +383,62 @@ Home Page
                 </li>
                 {% endfor %}
             {% else %}
-                <p style="color: white; margin: 0;">You have no favourite clubs...</p>
+                <p style="color: rgb(0, 0, 0); margin: 0;">You have no favourite clubs...</p>
             {% endif %}
         </ul>
     </div>
+    <!-- FIM -->
     
     <!-- Seção: Clubes Não Favoritados -->
     <br>
     <h2 class="text-dark fw-bold">All clubs</h2>
-    <ul id="nao-favoritos-list">
-        {% if object_list.exists %}
-            {% for clube in object_list %}
-            <li class="list-cards">
-                <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow">
-                    <div class="hold-title-icons">
-                        <div class="title-date-div">
-                            <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot"></i></a>
-                            <div class="div-stars">
-                                &nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
+    <div class="N-favoritos-list">
+        <ul id="nao-favoritos-list">
+            {% if object_list.exists %}
+                {% for clube in object_list %}
+                <li class="list-cards">
+                    <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow">
+                        <div class="hold-title-icons">
+                            <div class="title-date-div">
+                                <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot"></i></a>
+                                <div class="div-stars">
+                                    &nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
+                                </div>
+                            </div>
+                            
+                            <div class="icons-div">
+                                <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary favoritar-btn1" data-clube-id="{{ clube.id }}">
+                                        {% if user in clube.favoritos.all %}
+                                            <i class="bi bi-star-fill star-from-btn"></i>
+                                        {% else %}
+                                            <i class="bi bi-star star-from-btn"></i>
+                                        {% endif %}
+                                </button>
                             </div>
                         </div>
-                        
-                        <div class="icons-div">
-                            <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary favoritar-btn1" data-clube-id="{{ clube.id }}">
-                                    {% if user in clube.favoritos.all %}
-                                        <i class="bi bi-star-fill star-from-btn"></i>
-                                    {% else %}
-                                        <i class="bi bi-star star-from-btn"></i>
-                                    {% endif %}
-                            </button>
+    
+                        <div class="description-div display-6">
+                            <p class="date"><span class="badge text-bg-primary date">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span></p>
+                            <hr>
+                            <p class="description text-break">{{ clube.descricao|cortar_texto:100|safe }}</p> 
                         </div>
                     </div>
-
-                    <div class="description-div display-6">
-                        <p class="date"><span class="badge text-bg-primary date">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span></p>
-                        <hr>
-                        <p class="description text-break">{{ clube.descricao|cortar_texto:100|safe }}</p> 
-                    </div>
-                </div>
-                {% include 'modal_myclubs.html' %}
-            </li>
-            {% endfor %}
-        {% else %}
-            {% if request.GET.nome %}
-                <p id="no-clubs-message">No clubs found with this name.</p>
+                    {% include 'modal_myclubs.html' %}
+                </li>
+                {% endfor %}
             {% else %}
-                <p id="no-clubs-message">Uau, todos os Clubes favoritados! Parabéns, meu jovem, você conseguiu trocar seis por meia dúzia 👏👏👏</p>
+                {% if request.GET.nome %}
+                    <p id="no-clubs-message">No clubs found with this name.</p>
+                {% else %}
+                    <p id="no-clubs-message">Uau, todos os Clubes favoritados! Parabéns, meu jovem, você conseguiu trocar seis por meia dúzia 👏👏👏</p>
+                {% endif %}
             {% endif %}
-        {% endif %}
-    </ul>
+        </ul>
+    </div>
+    
+    <!-- FIM -->
 </div>
+
 
 <script>
     document.querySelectorAll('.modal').forEach(modal => {
@@ -455,10 +463,21 @@ Home Page
     });
 
     document.addEventListener('DOMContentLoaded', function () {
+        if (localStorage.getItem('favoritosAberto') === 'true') {
+            var collapseElement = document.getElementById('collapseExample');
+            var bootstrapCollapse = new bootstrap.Collapse(collapseElement, {
+                toggle: true
+            });
+            document.querySelector('h2.favoritosheader').setAttribute('aria-expanded', 'true');
+    }
+
     document.querySelectorAll('[id^="favoritar-btn-"]').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var clubeId = this.getAttribute('data-clube-id');
             var url = `/clube/favoritar/${clubeId}/`;
+
+            var favoritosAberto = document.querySelector('h2.favoritosheader').getAttribute('aria-expanded') === 'true';
+            localStorage.setItem('favoritosAberto', favoritosAberto);
 
             fetch(url, {
                 method: 'POST',
@@ -469,17 +488,12 @@ Home Page
             })
             .then(response => response.json())
             .then(data => {
-                if (data.favoritado) {
-                    alert('Clube favoritado com sucesso!');
-                } else {
-                    alert('Clube removido dos favoritos!');
-                }
-
                 window.location.reload();
-                });
             });
         });
     });
+});
+
 </script>
 
 {% endblock %}
