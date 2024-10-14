@@ -251,7 +251,6 @@ Detail {{ clube.titulo }}
                 </div>
             </div>
             
-
             <div class="comentarios-container" id="comentariosContainer">
                 {% if not clube.comentarios.all %}
                     Nenhuma conversa foi iniciada no clube!
@@ -269,11 +268,15 @@ Detail {{ clube.titulo }}
                                 </div>
                             </div>
                             <div class="comentario-foto foto-direita">
-                                <img src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto de usuário" width="40rem">
+                                <a href="{% url 'profile' user.id %}">
+                                    <img src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto de usuário" width="40rem">
+                                </a>
                             </div>
                         {% else %}
                             <div class="comentario-foto foto-esquerda">
-                                <img src="{% if comentario.user.profile.icone %}{% static comentario.user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto de usuário" width="40rem">
+                                <a href="{% url 'profile' comentario.user.id %}">
+                                    <img src="{% if comentario.user.profile.icone %}{% static comentario.user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto de usuário" width="40rem">
+                                </a>
                             </div>
                             <div class="comentario-item outro-comentario">
                                 <div class="comentario-conteudo">
