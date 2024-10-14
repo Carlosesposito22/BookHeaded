@@ -559,7 +559,7 @@ Detail {{ clube.titulo }}
     .catch(error => {
         console.error('Erro na requisição:', error);
     });
-
+    location.reload(true);
 });
 
 
@@ -633,6 +633,7 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
     .then(data => {
         if (data.success) {
             carregarDadosMaratona(clubeId); // Recarregar dados após salvar
+            location.reload(true);
         } else {
             alert('Erro ao salvar maratona.');
             console.error('Erro:', data);
