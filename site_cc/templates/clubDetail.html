@@ -467,6 +467,7 @@ Detail {{ clube.titulo }}
         {% include 'modal_delete.html' %}
         {% include 'modal_avaliar.html' %}
         {% include 'pedidos.html' %}
+        {% include 'modal_SairDoClube.html' %}
         <div class="data-holder shadow"> 
             <div class="club-data-icons">
                 <h3><strong>Club Data</strong></h3>
@@ -474,7 +475,6 @@ Detail {{ clube.titulo }}
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topLivrosModal-{{ clube.id }}">
                         <i class="bi bi-journal-bookmark-fill"></i>
                     </button>
-                    {% if user == clube.moderador %}
                     <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary" data-clube-id="{{ clube.id }}">
                         {% if user in clube.favoritos.all %}
                         <i class="bi bi-star-fill"></i>
@@ -482,6 +482,7 @@ Detail {{ clube.titulo }}
                         <i class="bi bi-star"></i>
                         {% endif %}
                     </button>
+                    {% if user == clube.moderador %}
                     <div class="btn-group">
                         <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown"><i class="bi bi-gear-wide-connected"></i></button>
                         <ul class="dropdown-menu">
@@ -494,17 +495,6 @@ Detail {{ clube.titulo }}
                             <li><a href="#" class="btn btn-danger delete-club" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}">Delete Club</a></li>
                         </ul>
                       </div>
-                    {% else %}
-                    <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary" data-clube-id="{{ clube.id }}">
-                        {% if user in clube.favoritos.all %}
-                        <i class="bi bi-star-fill"></i>
-                        {% else %}
-                        <i class="bi bi-star"></i>
-                        {% endif %}
-                    </button>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#avaliarModal-{{ clube.id }}">
-                        Avaliar Clube
-                    </button>
                     {% endif %}
                 {% endif %}
             </div> 
@@ -521,6 +511,16 @@ Detail {{ clube.titulo }}
                 <strong>Total Marathons:</strong> {{ total_maratona_finalizadas }} 
                 <i class="bi bi-eye-fill" id="listarHistorico" data-clube-id="{{ clube.id }}" style="cursor: pointer;"></i>
             </p>
+            <hr>
+            {% if user != clube.moderador %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#avaliarModal-{{ clube.id }}">
+                Avaliar Clube
+            </button>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#sairDoClubeModal-{{ clube.id }}">
+                Sair do Clube
+            </button>
+            {% endif %}
         </div>
     </div>
 
