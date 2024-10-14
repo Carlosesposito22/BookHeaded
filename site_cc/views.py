@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Q
-from .models import Clube, Categoria, Modalidade, Comentario,Profile, Membro
+from .models import Clube, Categoria, Modalidade, Comentario,Profile, Membro,HistoricoMaratona
 import json
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -463,9 +463,18 @@ def finalizar_maratona_view(request, clube_id):
     
     if request.method == 'POST' and clube.maratona_ativa:
         try:
+            # Cria uma entrada no histórico da maratona
+            HistoricoMaratona.objects.create(
+                clube=clube,
+                nome_maratona=clube.nome_maratona,
+                data_fim=clube.data_fim_maratona,
+                capitulo_final=clube.capitulo_final_maratona
+            )
+
+            # Finaliza a maratona
             clube.progresso_atual = clube.capitulo_final_maratona
             clube.maratona_ativa = False
-            clube.total_maratona_finalizadas += 1  # Incrementa o total de maratonas finalizadas
+            clube.total_maratona_finalizadas += 1
             clube.save()
 
             return JsonResponse({'success': True, 'message': 'Maratona finalizada com sucesso!'})
@@ -474,4 +483,19 @@ def finalizar_maratona_view(request, clube_id):
 
     return JsonResponse({'success': False, 'message': 'Método inválido'}, status=400)
 
+@login_required
+def listar_historico_maratona_view(request, clube_id):
+    clube = get_object_or_404(Clube, pk=clube_id)
+    historico = HistoricoMaratona.objects.filter(clube=clube).order_by('-data_registro')
 
+    historico_data = [
+        {
+            'nome_maratona': h.nome_maratona,
+            'data_fim': h.data_fim.strftime('%Y-%m-%d'),
+            'capitulo_final': h.capitulo_final,
+            'data_registro': h.data_registro.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        for h in historico
+    ]
+
+    return JsonResponse({'success': True, 'historico': historico_data})
