@@ -65,12 +65,16 @@
     <ul class="users-ul">
         {% for usuario in usuarios %}
             <li class="users-li">
-                <a class="pfp-holder" href="{% url 'profile' usuario.id %}"><img class="pfp" src="{% static 'images\icon1.svg' %}"></a>
+                <a class="pfp-holder" href="{% url 'profile' usuario.id %}"><img class="pfp" src="{% if usuario.profile.icone %}{% static usuario.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}"></a>
                 <span class="user-n-bio">
                     <a class="username" href="{% url 'profile' usuario.id %}">
                         {{ usuario.username }}
                     </a>
-                    <p class="bio">ola</p> <!-- Aqui tu coloca a classe da bio da pessoa aonde tem 'ola' blz? -->
+                    {% if usuario.profile.bio %}
+                    <p class="bio">{{ usuario.profile.bio }}</p> <!-- Aqui tu coloca a classe da bio da pessoa aonde tem 'ola' blz? -->
+                    {% else %}
+                    <p class="bio">Ola!, sou um novo Bookheaded</p>
+                    {% endif %}
                 </span>
             </li>
             <hr>
