@@ -91,7 +91,7 @@ User = get_user_model()
 
 class Comentario(models.Model):
     clube = models.ForeignKey(Clube, related_name='comentarios', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)  # Set a default user ID (change as needed)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     comentario = models.TextField()
     data = models.DateTimeField(auto_now_add=True)
 
