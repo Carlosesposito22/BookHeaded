@@ -604,6 +604,7 @@ Detail {{ clube.titulo }}
                                 <th scope="col">Nome da Maratona</th>
                                 <th scope="col">Data de Início</th>
                                 <th scope="col">Data de Término</th>
+                                <th scope="col">Capítulo Inicial</th>
                                 <th scope="col">Capítulo Final</th>
                                 <th scope="col">Data de Registro</th>
                             </tr>
@@ -833,6 +834,7 @@ function listarHistorico(clubeId) {
                             <td>${historico.nome_maratona}</td>
                             <td>${historico.data_inicio}</td>
                             <td>${historico.data_fim}</td>
+                            <td>${historico.capitulo_atual}</td>
                             <td>${historico.capitulo_final}</td>
                             <td>${historico.data_registro}</td>
                         `;
@@ -936,6 +938,7 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
     const dataFim = document.getElementById('dataFim').value;
     const dataInicio = document.getElementById('dataInicio').value;
     const capituloFinal = document.getElementById('capituloFinal').value;
+    const capituloAtual = document.getElementById('capituloAtual').value;
 
     fetch(`/clube/${clubeId}/criar_maratona/`, {
         method: 'POST',
@@ -948,6 +951,7 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
             data_fim: dataFim,
             data_inicio: dataInicio,
             capitulo_final: capituloFinal,
+            capitulo_atual: capituloAtual,
         }),
     })
     .then(response => response.json())
