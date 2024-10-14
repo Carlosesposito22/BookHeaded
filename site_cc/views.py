@@ -486,7 +486,6 @@ def finalizar_maratona_view(request, clube_id):
     
     if request.method == 'POST' and clube.maratona_ativa:
         try:
-            # Cria uma entrada no histórico da maratona
             HistoricoMaratona.objects.create(
                 clube=clube,
                 nome_maratona=clube.nome_maratona,
@@ -496,7 +495,6 @@ def finalizar_maratona_view(request, clube_id):
                 capitulo_atual=clube.capitulo_atual_maratona,
             )
 
-            # Finaliza a maratona
             clube.progresso_atual = clube.capitulo_final_maratona
             clube.maratona_ativa = False
             clube.total_maratona_finalizadas += 1  

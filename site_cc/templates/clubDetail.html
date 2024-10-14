@@ -232,15 +232,13 @@ Detail {{ clube.titulo }}
     font-weight: 500;
 }
 
-/* Transformação ao passar o mouse (hover) */
 .btn.reluzir:hover {
     background-color: rgb(241, 186, 7);
-    transform: translateY(-3px); /* Eleva o botão ao hover */
-    box-shadow: 0 6px 0 rgb(177, 104, 0), /* A sombra sólida permanece no hover */
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 rgb(177, 104, 0),
     0 12px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Efeito de brilho */
 .btn.reluzir::before {
     content: '';
     position: absolute;
@@ -253,17 +251,15 @@ Detail {{ clube.titulo }}
     transition: all 0.5s ease;
     z-index: 1;
     opacity: 0;
-    pointer-events: none; /* Não interfere nas ações do botão */
+    pointer-events: none; 
 }
 
-/* Aparecer o brilho ao passar o mouse */
 .btn.reluzir:hover::before {
     opacity: 1;
     left: 100%;
     top: 100%;
 }
 
-/* Estilo adicional para garantir que o texto e o conteúdo fiquem acima do brilho */
 .btn.reluzir span {
     position: relative;
     z-index: 2;
@@ -400,9 +396,7 @@ Detail {{ clube.titulo }}
                 </div>
             </div>
         </div>
-        <!-- Fim -->
 
-        <!-- Modal para editar o clube-->
         <div class="modal fade" id="updateModal-{{ clube.id }}" tabindex="-1" aria-labelledby="updateModalLabel-{{ clube.id }}" aria-hidden="true" data-modalidade-id="{{ clube.modalidade.id }}" data-categoria-id="{{ clube.categoria.id }}">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -462,7 +456,6 @@ Detail {{ clube.titulo }}
                 </div>
             </div>
         </div>
-        <!-- Fim -->
 
         {% include 'modal_delete.html' %}
         {% include 'modal_avaliar.html' %}
@@ -822,7 +815,7 @@ function listarHistorico(clubeId) {
         })
         .then(data => {
             const historicoBody = document.getElementById('historicoBody');
-            historicoBody.innerHTML = ''; // Limpa o corpo da tabela antes de adicionar novos dados
+            historicoBody.innerHTML = '';
 
             if (data.success) {
                 if (data.historico.length === 0) {
@@ -842,7 +835,6 @@ function listarHistorico(clubeId) {
                     });
                 }
 
-                // Exibe o modal após carregar os dados
                 const modal = new bootstrap.Modal(document.getElementById('historicoMaratonasModal'));
                 modal.show();
             } else {
@@ -871,7 +863,6 @@ function listarHistorico(clubeId) {
         if (data.success) {
             alert('Maratona finalizada com sucesso!');
             location.reload(true);
-            // Aqui você pode atualizar a UI se necessário
         } else {
             alert('Erro ao finalizar maratona.');
             console.error('Erro:', data);
@@ -883,8 +874,6 @@ function listarHistorico(clubeId) {
     location.reload(true);
 });
 
-
-// Função para obter o CSRF token
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -900,7 +889,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Função para carregar dados da maratona
 function carregarDadosMaratona(clubeId) {
     fetch(`/clube/${clubeId}/detalhes_maratona/`)
         .then(response => {
@@ -929,7 +917,6 @@ function carregarDadosMaratona(clubeId) {
         });
 }
 
-// Registrar o listener do botão 'saveMaratona'
 document.getElementById('saveMaratona').addEventListener('click', function() {
     const createButton = document.getElementById('createMaratona');
     const clubeId = createButton.getAttribute('data-clube-id');
@@ -957,7 +944,7 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            carregarDadosMaratona(clubeId); // Recarregar dados após salvar
+            carregarDadosMaratona(clubeId); 
             location.reload(true);
         } else {
             alert('Erro ao salvar maratona.'+ data.message);
@@ -971,7 +958,6 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
 
 });
 
-// Evento para abrir o modal e carregar dados da maratona existente
 document.getElementById('createMaratona').addEventListener('click', function(event) {
     const createButton = event.currentTarget;
     const clubeId = createButton.getAttribute('data-clube-id');
@@ -981,10 +967,10 @@ document.getElementById('createMaratona').addEventListener('click', function(eve
         return;
     }
 
-    carregarDadosMaratona(clubeId); // Carregar dados ao abrir o modal
+    carregarDadosMaratona(clubeId); 
 });
 
-// Carregar dados da maratona ao carregar a página
+
 window.onload = function() {
     const createButton = document.getElementById('createMaratona');
     const clubeId = createButton.getAttribute('data-clube-id');
