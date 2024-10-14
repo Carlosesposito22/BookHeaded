@@ -210,6 +210,7 @@ def club_detail_view(request, pk):
     clube = get_object_or_404(Clube, id=pk)
     user = request.user
     progresso_percentual = (clube.progresso_atual / clube.total_capitulos * 100) if clube.total_capitulos > 0 else 0
+    total_maratona_finalizadas = clube.total_maratona_finalizadas
 
     context = {
         'clube': clube,
@@ -218,6 +219,7 @@ def club_detail_view(request, pk):
         'progresso_percentual': round(progresso_percentual),
         'user_is_member': Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists(),
         'user_request_pending': Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists(),
+        'total_maratona_finalizadas': total_maratona_finalizadas,
     }
     return render(request, 'clubDetail.html', context)
 
@@ -443,10 +445,10 @@ def finalizar_maratona_view(request, clube_id):
     
     if request.method == 'POST' and clube.maratona_ativa:
         try:
-            # Atualiza o progresso atual para o capítulo final da maratona
             clube.progresso_atual = clube.capitulo_final_maratona
             clube.maratona_ativa = False
-            clube.save()  # Salva as alterações no banco
+            clube.total_maratona_finalizadas += 1  # Incrementa o total de maratonas finalizadas
+            clube.save()
 
             return JsonResponse({'success': True, 'message': 'Maratona finalizada com sucesso!'})
         except Exception as e:

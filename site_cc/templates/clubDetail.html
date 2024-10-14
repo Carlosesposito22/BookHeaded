@@ -216,6 +216,10 @@ Detail {{ clube.titulo }}
         gap: .8rem;
     }
 
+    .dropdown-item:hover{
+        cursor: pointer;
+    }
+
 </style>
 
 <div class="container">
@@ -461,6 +465,7 @@ Detail {{ clube.titulo }}
             <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
             <p><strong>Total Ratings:</strong> {{ total_avaliacoes }}</p>
             <p class="div-stars"><strong>Rating:&nbsp;</strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+            <p><strong>Total Marathons:</strong> {{ total_maratona_finalizadas }} <i class="bi bi-eye-fill"></i></p>
         </div>
     </div>
 
