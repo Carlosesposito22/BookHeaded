@@ -260,15 +260,15 @@ def recusar_membro(request, clube_id, membro_id):
 def adicionar_membro(request, clube_id):
     clube = get_object_or_404(Clube, id=clube_id)
     Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': False})
-    return redirect('clubs')
+    url = reverse('myclubes')
+    return redirect(f'{url}?modal=clubeModal-{clube_id}')
 
 def adicionar_membro_publico(request, clube_id):
     clube = get_object_or_404(Clube, id=clube_id)
     if not clube.privado:
         Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': True})
-    return redirect('clubs')
-
-
+    url = reverse('myclubes')
+    return redirect(f'{url}?modal=clubeModal-{clube_id}')
 
 def atualizar_progresso(request, clube_id):
     if request.method == 'POST' and request.user.is_authenticated:

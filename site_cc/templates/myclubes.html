@@ -620,29 +620,9 @@ Home Page
     <!-- FIM -->
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    document.querySelectorAll('.modal').forEach(modal => {
-        modal.addEventListener('hidden.bs.modal', function (event) {
-            const target = event.target;
-
-            if (target.id.includes('deleteModal')) {
-                sessionStorage.setItem('deleteModalClosed', 'true');
-            }
-        });
-
-        modal.addEventListener('show.bs.modal', function (event) {
-            const target = event.target;
-
-            if (target.id.includes('clubeModal')) {
-                if (sessionStorage.getItem('deleteModalClosed') === 'true') {
-                    event.preventDefault(); 
-                    sessionStorage.removeItem('deleteModalClosed'); 
-                }
-            }
-        });
-    });
-
     document.addEventListener('DOMContentLoaded', function () {
         if (localStorage.getItem('favoritosAberto') === 'true') {
             var collapseElement = document.getElementById('collapseExample');
@@ -674,6 +654,22 @@ Home Page
         });
     });
 });
+
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const modalId = urlParams.get('modal');
+        
+        if (modalId) {
+            const modalSelector = `#${modalId}`;
+            const modalElement = document.querySelector(modalSelector);
+            
+            if (modalElement) {
+                $(modalSelector).modal('show');
+            } else {
+                console.error('Modal não encontrado:', modalSelector);
+            }
+        }
+    };
 
 </script>
 
