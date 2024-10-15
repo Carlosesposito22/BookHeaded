@@ -17,7 +17,7 @@
         max-width: 95%;
     }
 
-    .textbox-1{
+    .textbox-1 {
         text-align: left;
         min-width: 50%;
         max-width: 95%;
@@ -25,15 +25,105 @@
         flex-direction: column;
     }
 
-    p{
+    p {
         min-width: 70%;
         max-width: 95%;
     }
 
-    h1{
+    h1 {
         font-weight: bold;
         font-size: 4rem;
         max-width: 95%;
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 2.5em;
+    }
+
+    section {
+        max-width: 1200px;
+        margin: 40px auto;
+    }
+
+    h2 {
+        font-size: 2.2em;
+        color: #333;
+    }
+
+    .team-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 30px;
+    }
+
+    .team-member {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: calc(33.33% - 40px);
+        text-align: center;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .team-member:hover {
+        animation: golden-glow 0.5s forwards;
+    }
+
+    @keyframes golden-glow {
+        0% {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        100% {
+            box-shadow: 0 0 15px rgba(48, 169, 255, 1);
+            transform: scale(1.05);
+        }
+    }
+
+    .team-member img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+    }
+
+    .team-member h3 {
+        font-size: 1.4em;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .social-links {
+        margin-top: 15px;
+    }
+
+    .social-links a {
+        text-decoration: none;
+        color: #333;
+        font-size: 1.2em;
+        margin: 0 10px;
+    }
+
+    .social-links a:hover {
+        color: #333;
+    }
+
+    footer {
+        background-color: #333;
+        color: #fff;
+        padding: 15px 0;
+        margin-top: 50px;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+    }
+
+    footer p {
+        margin: 0;
     }
 </style>
 
@@ -55,13 +145,70 @@
         <hr>
         <br>
         <h1>Our Team</h1>
+        
+    <div class="team-container">
+        <div class="team-member">
+            <img src="{% static 'images/amanda.jpg' %}" alt="Membro 1">
+            <h3>Amanda Montarroios</h3>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/amanda-montarroios-150b90319/" target="_blank"><i class="bi bi-linkedin"></i>  LinkedIn</a>
+                <a href="https://github.com/amanda-montarroios" target="_blank"><i class="bi bi-github"></i>  GitHub</a><br>
+                <a>📩 amo@cesar.school</a>
+            </div>
+        </div>
+
+        <div class="team-member">
+            <img src="{% static 'images/carlos.jpg' %}" alt="Membro 2">
+            <h3>Carlos Eduardo Espósito</h3>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/carlos-eduardo-esp%C3%B3sito-35227530a/" target="_blank"><i class="bi bi-linkedin"></i>  LinkedIn</a>
+                <a href="https://github.com/Carlosesposito22" target="_blank"><i class="bi bi-github"></i>  GitHub</a><br>
+                <a>📩 ceec@cesar.school</a>
+            </div>
+        </div>
+
+        <div class="team-member">
+            <img src="{% static 'images/micucci.jpg' %}" alt="Membro 3">
+            <h3>João Henrique Micucci</h3>
+            <div class="social-links">
+                <a href="https://github.com/JhMicucci" target="_blank"><i class="bi bi-github"></i>  GitHub</a><br>
+                <a>📩 jhmm@cesar.school</a>
+            </div>
+        </div>
+
+        <div class="team-member">
+            <img src="{% static 'images/mamede.jpg' %}" alt="Membro 4">
+            <h3>João Pedro Mamede</h3>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/jpmamededs?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank"><i class="bi bi-linkedin"></i>  LinkedIn</a>
+                <a href="https://github.com/jpmamededs" target="_blank"><i class="bi bi-github"></i>  GitHub</a><br>
+                <a>📩 jpmd@cesar.school</a>
+            </div>
+        </div>
+
+        <div class="team-member">
+            <img src="{% static 'images/malu.jpg' %}" alt="Membro 5">
+            <h3>Maria Luíza Dantas</h3>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/maludantass" target="_blank"><i class="bi bi-linkedin"></i>  LinkedIn</a>
+                <a href="https://github.com/maludantass" target="_blank"><i class="bi bi-github"></i>  GitHub</a><br>
+                <a>📩 mldt@cesar.school</a>
+            </div>
+        </div>
+
+        <div class="team-member">
+            <img src="{% static 'images/mateus.jpg' %}" alt="Membro 6">
+            <h3>Mateus Ribeiro</h3>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/mateus-ribeiro-aa1148182?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank"><i class="bi bi-linkedin"></i>  LinkedIn</a>
+                <a href="https://github.com/Mateus-Ribeir0" target="_blank"><i class="bi bi-github"></i>  GitHub</a><br>
+                <a>📩 mar2@cesar.school</a>
+            </div>
+        </div>
+    </div>
     </div>
 
     <hr>
-
-
-
-
 
 </div>
 
