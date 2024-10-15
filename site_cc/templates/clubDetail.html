@@ -933,44 +933,78 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
     const capituloFinal = parseInt(document.getElementById('capituloFinal').value, 10);
     const capituloAtual = parseInt(document.getElementById('capituloAtual').value, 10);
 
+    // Verificação da data
     if (new Date(dataFim) < new Date(dataInicio)) {
         alert('A data final não pode ser menor que a data inicial.');
-        return; 
+        return;
     }
 
+    // Verificação dos capítulos
     if (capituloFinal < capituloAtual) {
         alert('O capítulo final não pode ser menor que o capítulo atual.');
         return;
     }
 
-    fetch(`/clube/${clubeId}/criar_maratona/`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'),
-        },
-        body: JSON.stringify({
-            nome_maratona: nomeMaratona,
-            data_fim: dataFim,
-            data_inicio: dataInicio,
-            capitulo_final: capituloFinal,
-            capitulo_atual: capituloAtual,
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            carregarDadosMaratona(clubeId); 
-            location.reload(true);
-        } else {
-            alert('Erro ao salvar maratona: ' + data.message);
-            console.error('Erro:', data);
-        }
-    })
-    .catch(error => {
-        console.error('Erro na requisição:', error);
-    });
+    // Verificar se o nome da maratona já existe
+    verificarNomeMaratonaExistente(nomeMaratona, clubeId)
+        .then(nomeExistente => {
+            if (nomeExistente) {
+                alert('Já existe uma maratona com este nome. Por favor, escolha um nome diferente.');
+                return;
+            }
+
+            // Se todas as validações passaram, criar a maratona
+            fetch(`/clube/${clubeId}/criar_maratona/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify({
+                    nome_maratona: nomeMaratona,
+                    data_fim: dataFim,
+                    data_inicio: dataInicio,
+                    capitulo_final: capituloFinal,
+                    capitulo_atual: capituloAtual,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    carregarDadosMaratona(clubeId); 
+                    location.reload(true);
+                } else {
+                    alert('Erro ao salvar maratona: ' + data.message);
+                    console.error('Erro:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Erro na requisição:', error);
+            });
+        });
 });
+
+function verificarNomeMaratonaExistente(nomeMaratona, clubeId) {
+    return fetch(`/clube/${clubeId}/listar_historico_maratona/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                return data.historico.some(historico => historico.nome_maratona === nomeMaratona);
+            } else {
+                throw new Error('Erro ao carregar histórico.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro na verificação do nome da maratona:', error);
+            return false; // Retorna false se ocorrer um erro
+        });
+}
+
 
 function calcularDuracao(dataInicio, dataFim) {
     const inicio = new Date(dataInicio);
