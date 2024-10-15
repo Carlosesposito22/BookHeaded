@@ -13,6 +13,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
+
 def pagina_principal(request):
     return render(request, 'pagina_principal.html')
 
@@ -541,3 +542,14 @@ def sair_do_clube(request, clube_id):
         messages.error(request, 'Você não faz parte deste clube.')
 
     return redirect('myclubes')
+from django.views.decorators.csrf import csrf_exempt
+
+
+def deletar_historico(request, username):
+    if request.method == 'POST':
+        user_searches = request.session.get('last_searches', [])
+        if username in user_searches:
+            user_searches.remove(username)
+            request.session['last_searches'] = user_searches
+            return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'}, status=400)

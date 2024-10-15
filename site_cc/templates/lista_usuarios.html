@@ -138,43 +138,45 @@
 
 <div class="container my-5">
 
-    {% if last_searches %}
-        <p class="d-inline-flex gap-1">
-            <a class="recent" style="color: rgb(126, 126, 126);" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                <h5 class="recent" style="color: rgb(126, 126, 126);">Recent <i class="bi bi-caret-down-fill"></i></h5>
-            </a>
-        </p>
-        <div class="collapse" id="collapseExample">
-            <div class="card card-body">
-                <ul class="users-ul"  id="users-ul-id">
-            
+    <p class="d-inline-flex gap-1">
+        <a class="recent" style="color: rgb(126, 126, 126);" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <h5 class="recent" style="color: rgb(126, 126, 126);">Recent <i class="bi bi-caret-down-fill"></i></h5>
+        </a>
+    </p>
+    
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+            {% if last_searches %}
+                <ul class="users-ul" id="users-ul-id">
                     {% for search in last_searches %}
-                        {% with user=user_links|get_item:search %}
-                            <li class="users-li" id="users-li-id">
-                                {% if user %}
-                                    <span class="user-n-bio" id="user-n-bio-id">
-                                        <div class="vr" id="profiles-vr"></div>
-                                        <a class="pfp-holder" href="{% url 'profile' user.id %}">
-                                            <img class="pfp" src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}">
-                                        </a>
-                                        <div class="username-del-body">
-                                            <a class="username" href="{% url 'profile' user.id %}">{{ search }}</a>
-                                            <i class="bi bi-x" id="bi-x-pfp"></i>
-                                        </div>
-                                    </span>
-                                {% else %}
-                                <div class="results-body">
+                    {% with user=user_links|get_item:search %}
+                        <li class="users-li" id="users-li-id">
+                            {% if user %}
+                                <span class="user-n-bio" id="user-n-bio-id">
+                                    <div class="vr" id="profiles-vr"></div>
+                                    <a class="pfp-holder" href="{% url 'profile' user.id %}">
+                                        <img class="pfp" src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}">
+                                    </a>
+                                    <div class="username-del-body">
+                                        <a class="username" href="{% url 'profile' user.id %}">{{ search }}</a>
+                                        <i class="bi bi-x" id="bi-x-pfp"></i>
+                                    </div>
+                                </span>
+                            {% else %}
+                                <div class="results-body search-result">
                                     <div class="vr" id="acc-vr"></div>
                                     <span class="search-result">{{ search }} <i class="bi bi-x"></i></span>
-                                </div>  
-                                {% endif %}
-                            </li>
-                        {% endwith %}
+                                </div>
+                            {% endif %}
+                        </li>
+                    {% endwith %}
                     {% endfor %}
                 </ul>
-            </div>
+            {% else %}
+                <p>Nenhum usuário recente encontrado.</p>
+            {% endif %}
         </div>
-    {% endif %}
+    </div>
 
     <br>
 
@@ -204,4 +206,59 @@
     </ul>
 
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const deleteIcons = document.querySelectorAll('.bi-x');
+
+    deleteIcons.forEach(icon => {
+        icon.addEventListener('click', function () {
+            let username = '';
+
+            const usernameElement = this.closest('.username-del-body') ? 
+                this.previousElementSibling : this.closest('.search-result');
+
+           
+            if (usernameElement && usernameElement.tagName === 'A') {
+                username = usernameElement.textContent.trim();
+            } else {
+               
+                username = usernameElement.textContent.trim();
+            }
+
+            
+            username = username.replace(/\s*\bi\b/g, '').trim();
+
+           
+            fetch(`/delete_search/${username}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    const listItem = this.closest('li');
+                    listItem.remove();  
+
+                    
+                    const recentList = document.querySelector('#users-ul-id');
+                    if (recentList && recentList.children.length === 0) {
+                        
+                        const cardBody = document.querySelector('.card.card-body');
+                        if (cardBody) {
+                            cardBody.innerHTML = '<p>Nenhum usuário recente encontrado.</p>';
+                        }
+                    }
+                }
+            })
+            .catch(error => console.error('Erro ao apagar o histórico:', error));
+        });
+    });
+});
+
+
+</script>
+
+
 {% endblock %}
