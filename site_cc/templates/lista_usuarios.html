@@ -42,6 +42,9 @@
         padding-right: 0.5rem;
         width: fit-content;
         border-radius: 2rem;
+        display: flex;
+        align-items: center;
+        
     }
 
     .user-n-bio{
@@ -56,15 +59,110 @@
         text-decoration: none;
         font-weight: 500 ;
     }
+
+    #users-ul-id{
+        margin-top: 0;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    #users-li-id{
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0;
+        margin: 0;
+        width: fit-content;
+    }
+
+    .results-body{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .search-result{
+        color: rgb(126, 126, 126);
+
+    }
+
+    #user-n-bio-id{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    #profiles-vr{
+        width: 0.15rem;
+        color: #0066FF;
+    }
+
+    #acc-vr{
+        width: 0.15rem;
+        border-width: 0.3rem;
+        border-color: rgb(126, 126, 126);
+    }
+
+    .username-del-body{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .bi-x{
+        cursor: pointer;
+    }
+
+    #bi-x-pfp{
+        color: #0066FF;
+    }
+
 </style>
 
 <div class="container my-5">
+
+    {% if last_searches %}
+        <ul class="users-ul"  id="users-ul-id">
+            <h5 class="recent" style="color: rgb(126, 126, 126);">Recent:</h5>
+            {% for search in last_searches %}
+                {% with user=user_links|get_item:search %}
+                    <li class="users-li" id="users-li-id">
+                        {% if user %}
+                            <span class="user-n-bio" id="user-n-bio-id">
+                                <div class="vr" id="profiles-vr"></div>
+                                <a class="pfp-holder" href="{% url 'profile' user.id %}">
+                                    <img class="pfp" src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}">
+                                </a>
+                                <div class="username-del-body">
+                                    <a class="username" href="{% url 'profile' user.id %}">{{ search }}</a>
+                                    <i class="bi bi-x" id="bi-x-pfp"></i>
+                                </div>
+                            </span>
+                        {% else %}
+                        <div class="results-body">
+                            <div class="vr" id="acc-vr"></div>
+                            <span class="search-result">{{ search }} <i class="bi bi-x"></i></span>
+                        </div>  
+                        {% endif %}
+                    </li>
+                {% endwith %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
     <h1>Search results for: {{ nomes }}</h1>
 
     <ul class="users-ul">
         {% if usuarios %}
             {% for usuario in usuarios %}
                 <li class="users-li">
+                    <div class="vr" id="profiles-vr"></div>
                     <a class="pfp-holder" href="{% url 'profile' usuario.id %}">
                         <img class="pfp" src="{% if usuario.profile.icone %}{% static usuario.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}">
                     </a>
@@ -73,7 +171,7 @@
                         {% if usuario.profile.bio %}
                             <p class="bio">{{ usuario.profile.bio }}</p>
                         {% else %}
-                            <p class="bio">Ola!, sou um novo Bookheaded</p>
+                            <p class="bio">Hi, I'm a certified bookhead!</p>
                         {% endif %}
                     </span>
                 </li>
@@ -83,32 +181,6 @@
             <p>Nenhum usuário encontrado.</p>
         {% endif %}
     </ul>
-
-    
-    {% if last_searches %}
-    <h2>Últimas pesquisas:</h2>
-    <ul>
-        {% for search in last_searches %}
-            {% with user=user_links|get_item:search %}
-                <li class="users-li">
-                    {% if user %}
-                        <a class="pfp-holder" href="{% url 'profile' user.id %}">
-                            <img class="pfp" src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}">
-                        </a>
-                        <span class="user-n-bio">
-                            <a class="username" href="{% url 'profile' user.id %}">{{ search }}</a>
-                            
-                        </span>
-                    {% else %}
-                        <span>{{ search }}</span>
-                    {% endif %}
-                </li>
-            {% endwith %}
-        {% endfor %}
-    </ul>
-{% endif %}
-
-
 
 </div>
 {% endblock %}
