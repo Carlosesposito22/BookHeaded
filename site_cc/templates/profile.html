@@ -9,6 +9,22 @@
         gap: 2rem;
     }
 
+    .badges{
+        background-color: white;
+        width: 25%;
+        border-radius: 1rem;
+        padding: 1rem;
+        padding-left: 2rem;
+    }
+
+    .badges-text{
+        font-weight: bold;
+        font-size: 2rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
 
     .hold {
         width: 60%;
@@ -31,6 +47,11 @@
         height: 10rem;
         border-top-right-radius: 2rem;
         border-top-left-radius: 2rem;
+        display: flex;
+        flex-direction: row;
+        justify-content: right;
+        padding: 1rem;
+        padding-right: 1.5rem;
     }
 
 
@@ -68,7 +89,7 @@
         background-color: #0066FF;
         border: none;
         border-radius: 2rem;
-        padding: 0.5rem 1rem;
+        padding: 0.2rem 1rem;
         color: white;
         font-weight: bold;
     }
@@ -165,6 +186,9 @@
     .img-user{
         width: fit-content;
         height: fit-content;
+        display: flex;
+        flex-direction: row;
+        gap: 3rem;
     }
 
 
@@ -217,18 +241,29 @@
 
 
 <div class="container my-5 superholder">
+    <div class="badges shadow-lg">
+        <p class="badges-text"><i class="bi bi-trophy-fill" style="color: #0066FF;"></i> Badges</p>
+    </div>
     <div class="col hold shadow-lg">
-        <div class="banner"></div>
+        <div class="banner">
+            {% if request.user == profile.user %}
+            <i class="bi bi-pencil-fill" onclick="openModal()" style="color: white; cursor: pointer;"></i>
+            {% endif %}
+        </div>
         <div class="rest">
             <div class="img-user-bio">
                 <div class="img-user-div">
                     {% if request.user == profile.user %}
                         <div class="img-user" onclick="openModal()">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
+                            <strong> Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
+                            <strong> Following</strong> <!-- Mesma logica aqui -->
                         </div>
                     {% else %}
                         <div class="img-user">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
+                            <strong> Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
+                            <strong> Following</strong> <!-- Mesma logica aqui -->
                         </div>
                     {% endif %}
                     <div class="user-n-follow">
@@ -270,7 +305,7 @@
 </div>
 
 <!-- Modal para alterar o perfil -->
-<div id="iconModal" class="modal">
+<div id="iconModal" class="modal" style="z-index: 999; ">
     <div class="modal-content">
         <span class="modaltitle-close">
             <h2><strong>Edit Profile</strong></h2>
