@@ -586,26 +586,29 @@ Detail {{ clube.titulo }}
     <div class="modal fade" id="historicoMaratonasModal" tabindex="-1" aria-labelledby="historicoMaratonasModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="historicoMaratonasModalLabel">Histórico de Maratonas</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <table class="table" id="historicoTable">
-                        <thead>
-                            <tr>
-                                <th scope="col">Nome da Maratona</th>
-                                <th scope="col">Data de Início</th>
-                                <th scope="col">Data de Término</th>
-                                <th scope="col">Capítulo Inicial</th>
-                                <th scope="col">Capítulo Final</th>
-                                <th scope="col">Data de Registro</th>
-                            </tr>
-                        </thead>
-                        <tbody id="historicoBody">
-                            <!-- Os dados serão inseridos aqui via JavaScript -->
-                        </tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th scope="col" style="width: 25%;">Nome da Maratona</th>
+                                    <th scope="col" class="text-nowrap" style="width: 15%;">Data de Início</th>
+                                    <th scope="col" class="text-nowrap" style="width: 15%;">Data de Término</th>
+                                    <th scope="col">Duração</th>
+                                    <th scope="col">Capítulo Atual</th>
+                                    <th scope="col">Capítulo Final</th>
+                                    <th scope="col">Capítulos Restantes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historicoBody">
+                                <!-- Os dados serão inseridos aqui via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -613,6 +616,7 @@ Detail {{ clube.titulo }}
             </div>
         </div>
     </div>
+    
     
     
 </div>
@@ -822,14 +826,17 @@ function listarHistorico(clubeId) {
                     historicoBody.innerHTML = '<tr><td colspan="5">Nenhum histórico encontrado.</td></tr>';
                 } else {
                     data.historico.forEach(historico => {
+                        const diasDuracao = calcularDuracao(historico.data_inicio, historico.data_fim);
+                        const totalCapitulos = calcularTotalCapitulos(historico.capitulo_final, historico.capitulo_atual);
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td>${historico.nome_maratona}</td>
                             <td>${historico.data_inicio}</td>
                             <td>${historico.data_fim}</td>
+                            <td>${diasDuracao} dias</td>
                             <td>${historico.capitulo_atual}</td>
                             <td>${historico.capitulo_final}</td>
-                            <td>${historico.data_registro}</td>
+                            <td>${totalCapitulos}</td>
                         `;
                         historicoBody.appendChild(row);
                     });
@@ -957,6 +964,18 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
     location.reload(true);
 
 });
+
+function calcularDuracao(dataInicio, dataFim) {
+    const inicio = new Date(dataInicio);
+    const fim = new Date(dataFim);
+    const duracao = Math.abs(fim - inicio); // em milissegundos
+    const dias = Math.ceil(duracao / (1000 * 60 * 60 * 24)); // converter para dias
+    return dias;
+}
+
+function calcularTotalCapitulos(capituloFinal, capituloAtual) {
+    return capituloFinal - capituloAtual;
+}
 
 document.getElementById('createMaratona').addEventListener('click', function(event) {
     const createButton = event.currentTarget;
