@@ -906,11 +906,13 @@ function carregarDadosMaratona(clubeId) {
                     document.getElementById('dataFim').value = data.data_fim;
                     document.getElementById('capituloFinal').value = data.capitulo_final;
                     document.getElementById('finalizarMaratona').style.display = 'block';
+                    document.getElementById('saveMaratona').innerText = 'Salvar Mudança'; // Muda o texto do botão
                 } else {
                     document.getElementById('nomeMaratona').value = '';
                     document.getElementById('dataFim').value = '';
                     document.getElementById('capituloFinal').value = '';
                     document.getElementById('finalizarMaratona').style.display = 'none';
+                    document.getElementById('saveMaratona').innerText = 'Criar Maratona'; // Texto padrão
                 }
             } else {
                 alert('Erro ao carregar dados da maratona.');
