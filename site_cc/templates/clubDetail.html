@@ -905,12 +905,12 @@ function carregarDadosMaratona(clubeId) {
                     document.getElementById('nomeMaratona').value = data.nome_maratona;
                     document.getElementById('dataFim').value = data.data_fim;
                     document.getElementById('capituloFinal').value = data.capitulo_final;
-                    document.getElementById('finalizarMaratona').style.display = 'block'; // Mostra o botão
+                    document.getElementById('finalizarMaratona').style.display = 'block';
                 } else {
                     document.getElementById('nomeMaratona').value = '';
                     document.getElementById('dataFim').value = '';
                     document.getElementById('capituloFinal').value = '';
-                    document.getElementById('finalizarMaratona').style.display = 'none'; // Esconde o botão
+                    document.getElementById('finalizarMaratona').style.display = 'none';
                 }
             } else {
                 alert('Erro ao carregar dados da maratona.');
@@ -930,8 +930,18 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
     const nomeMaratona = document.getElementById('nomeMaratona').value;
     const dataFim = document.getElementById('dataFim').value;
     const dataInicio = document.getElementById('dataInicio').value;
-    const capituloFinal = document.getElementById('capituloFinal').value;
-    const capituloAtual = document.getElementById('capituloAtual').value;
+    const capituloFinal = parseInt(document.getElementById('capituloFinal').value, 10);
+    const capituloAtual = parseInt(document.getElementById('capituloAtual').value, 10);
+
+    if (new Date(dataFim) < new Date(dataInicio)) {
+        alert('A data final não pode ser menor que a data inicial.');
+        return; 
+    }
+
+    if (capituloFinal < capituloAtual) {
+        alert('O capítulo final não pode ser menor que o capítulo atual.');
+        return;
+    }
 
     fetch(`/clube/${clubeId}/criar_maratona/`, {
         method: 'POST',
@@ -953,22 +963,20 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
             carregarDadosMaratona(clubeId); 
             location.reload(true);
         } else {
-            alert('Erro ao salvar maratona.'+ data.message);
+            alert('Erro ao salvar maratona: ' + data.message);
             console.error('Erro:', data);
         }
     })
     .catch(error => {
         console.error('Erro na requisição:', error);
     });
-    location.reload(true);
-
 });
 
 function calcularDuracao(dataInicio, dataFim) {
     const inicio = new Date(dataInicio);
     const fim = new Date(dataFim);
-    const duracao = Math.abs(fim - inicio); // em milissegundos
-    const dias = Math.ceil(duracao / (1000 * 60 * 60 * 24)); // converter para dias
+    const duracao = Math.abs(fim - inicio);
+    const dias = Math.ceil(duracao / (1000 * 60 * 60 * 24));
     return dias;
 }
 
