@@ -575,8 +575,8 @@ Detail {{ clube.titulo }}
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="finalizarMaratona">Finalizar Maratona</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="finalizarMaratona">Finalizar Maratona</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="saveMaratona">Salvar Maratona</button>
                 </div>
             </div>
@@ -599,7 +599,7 @@ Detail {{ clube.titulo }}
                                     <th scope="col" class="text-nowrap" style="width: 15%;">Data de Início</th>
                                     <th scope="col" class="text-nowrap" style="width: 15%;">Data de Término</th>
                                     <th scope="col">Duração</th>
-                                    <th scope="col">Capítulo Atual</th>
+                                    <th scope="col">Capítulo Inicial</th>
                                     <th scope="col">Capítulo Final</th>
                                     <th scope="col">Capítulos Lidos</th>
                                 </tr>
@@ -898,21 +898,19 @@ function getCookie(name) {
 
 function carregarDadosMaratona(clubeId) {
     fetch(`/clube/${clubeId}/detalhes_maratona/`)
-        .then(response => {
-            console.log("Resposta do servidor:", response);
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            console.log("Dados da maratona:", data);
             if (data.success) {
                 if (data.maratona_ativa) {
                     document.getElementById('nomeMaratona').value = data.nome_maratona;
                     document.getElementById('dataFim').value = data.data_fim;
                     document.getElementById('capituloFinal').value = data.capitulo_final;
+                    document.getElementById('finalizarMaratona').style.display = 'block'; // Mostra o botão
                 } else {
                     document.getElementById('nomeMaratona').value = '';
                     document.getElementById('dataFim').value = '';
                     document.getElementById('capituloFinal').value = '';
+                    document.getElementById('finalizarMaratona').style.display = 'none'; // Esconde o botão
                 }
             } else {
                 alert('Erro ao carregar dados da maratona.');
@@ -923,6 +921,7 @@ function carregarDadosMaratona(clubeId) {
             console.error('Erro na requisição:', error);
         });
 }
+
 
 document.getElementById('saveMaratona').addEventListener('click', function() {
     const createButton = document.getElementById('createMaratona');
