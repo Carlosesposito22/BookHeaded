@@ -107,8 +107,9 @@ class Comentario(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True, null=True)
-    seguindo = models.ManyToManyField(User, related_name='seguidores', blank=True)  
+    seguidores = models.ManyToManyField(User, related_name='seguindo', blank=True)  
     icone = models.CharField(max_length=255, blank=True, null=True)  
+    
 
     def __str__(self):
         return self.user.username

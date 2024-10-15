@@ -256,31 +256,33 @@
                     {% if request.user == profile.user %}
                         <div class="img-user" onclick="openModal()">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
-                            <strong> Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
-                            <strong> Following</strong> <!-- Mesma logica aqui -->
+                            
+                            <strong> {{ seguidores_count }} Followers </strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
+                            <strong> {{ seguindo_count }} Following</strong> <!-- Mesma logica aqui -->
                         </div>
                     {% else %}
                         <div class="img-user">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
-                            <strong> Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
-                            <strong> Following</strong> <!-- Mesma logica aqui -->
+                              
+                            <strong>{{ seguidores_count }} Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
+                            <strong> {{ seguindo_count }} Following</strong> <!-- Mesma logica aqui -->
                         </div>
                     {% endif %}
                     <div class="user-n-follow">
                         <strong class="username">@{{ profile.user.username }}</strong>
-                        {% if request.user != profile.user %}
-                            {% if request.user in profile.seguindo.all %}
-                                <span class="btn follow" id="following-text">Following <i class="bi bi-check"></i></span>
-                            {% else %}
-                                <form method="post" action="{% url 'seguir_usuario' profile.user.id %}" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn follow">
-                                        <i class="bi bi-plus"></i>
-                                        Follow
-                                    </button>
-                                </form>
-                            {% endif %}
-                        {% endif %}
+                    {% if request.user != profile.user %}
+                        {% if request.user in profile.seguidores.all %}
+                        <span class="btn follow" id="following-text">Following <i class="bi bi-check"></i></span>
+                    {% else %}
+                        <form method="post" action="{% url 'seguir_usuario' profile.user.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn follow">
+                                <i class="bi bi-plus"></i>
+                                Follow
+                            </button>
+                        </form>
+                    {% endif %}
+                    {% endif %}
                     </div>
                     <div class="biodiv">
                         {% if request.user == profile.user %}
@@ -359,14 +361,14 @@ window.onclick = function(event) {
 let selectedIcon = '';
 
 function chooseIcon(iconSrc) {
-    selectedIcon = iconSrc; // Armazena o ícone selecionado
+    selectedIcon = iconSrc; 
 }
 
 document.querySelector('.bio-form').addEventListener('submit', function() {
     if (selectedIcon) {
         const newSrc = '{% static '' %}' + selectedIcon;
-        document.querySelector('.pfp-holder').src = newSrc; // Atualiza a imagem do ícone
-        document.getElementById('icone-input').value = selectedIcon; // Atualiza o campo oculto
+        document.querySelector('.pfp-holder').src = newSrc; 
+        document.getElementById('icone-input').value = selectedIcon; 
     }
 });
 

@@ -314,6 +314,9 @@ def profile(request, user_id):
         'images/icon15.svg',
     ]
 
+    seguidores_count = profile.seguidores.count()  
+    seguindo_count = user.seguindo.count()  
+
     if request.method == 'POST':
         bio = request.POST.get('bio', '')
         icone = request.POST.get('icone', '')
@@ -328,8 +331,8 @@ def profile(request, user_id):
         profile.save()  
         return redirect('profile', user_id=user.id)  
 
-    return render(request, 'profile.html', {'profile': profile, 'icons': icons})  
-
+    return render(request, 'profile.html', {'profile': profile, 'icons': icons, 'seguidores_count': seguidores_count, 
+        'seguindo_count': seguindo_count, })  
 
 
 @login_required
@@ -338,11 +341,10 @@ def seguir_usuario(request, user_id):
         perfil = get_object_or_404(Profile, user__id=user_id)
 
         
-        if request.user not in perfil.seguindo.all():
-            perfil.seguindo.add(request.user)
+        if request.user not in perfil.seguidores.all():
+            perfil.seguidores.add(request.user) 
             perfil.save()
 
-        
         return redirect('profile', user_id=user_id)
    
 def lista_usuarios(request):
