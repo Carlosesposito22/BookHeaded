@@ -906,13 +906,13 @@ function carregarDadosMaratona(clubeId) {
                     document.getElementById('dataFim').value = data.data_fim;
                     document.getElementById('capituloFinal').value = data.capitulo_final;
                     document.getElementById('finalizarMaratona').style.display = 'block';
-                    document.getElementById('saveMaratona').innerText = 'Salvar Mudança'; // Muda o texto do botão
+                    document.getElementById('saveMaratona').innerText = 'Salvar Mudança';
                 } else {
                     document.getElementById('nomeMaratona').value = '';
                     document.getElementById('dataFim').value = '';
                     document.getElementById('capituloFinal').value = '';
                     document.getElementById('finalizarMaratona').style.display = 'none';
-                    document.getElementById('saveMaratona').innerText = 'Criar Maratona'; // Texto padrão
+                    document.getElementById('saveMaratona').innerText = 'Criar Maratona';
                 }
             } else {
                 alert('Erro ao carregar dados da maratona.');
@@ -935,19 +935,16 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
     const capituloFinal = parseInt(document.getElementById('capituloFinal').value, 10);
     const capituloAtual = parseInt(document.getElementById('capituloAtual').value, 10);
 
-    // Verificação da data
     if (new Date(dataFim) < new Date(dataInicio)) {
         alert('A data final não pode ser menor que a data inicial.');
         return;
     }
 
-    // Verificação dos capítulos
     if (capituloFinal < capituloAtual) {
         alert('O capítulo final não pode ser menor que o capítulo atual.');
         return;
     }
 
-    // Verificar se o nome da maratona já existe
     verificarNomeMaratonaExistente(nomeMaratona, clubeId)
         .then(nomeExistente => {
             if (nomeExistente) {
@@ -955,7 +952,6 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
                 return;
             }
 
-            // Se todas as validações passaram, criar a maratona
             fetch(`/clube/${clubeId}/criar_maratona/`, {
                 method: 'POST',
                 headers: {
@@ -1003,7 +999,7 @@ function verificarNomeMaratonaExistente(nomeMaratona, clubeId) {
         })
         .catch(error => {
             console.error('Erro na verificação do nome da maratona:', error);
-            return false; // Retorna false se ocorrer um erro
+            return false; 
         });
 }
 
