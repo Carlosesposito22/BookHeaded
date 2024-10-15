@@ -257,14 +257,14 @@
                         <div class="img-user" onclick="openModal()">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
                             
-                            <strong> {{ seguidores_count }} Followers </strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
+                            <strong style="cursor: pointer;" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
                             <strong> {{ seguindo_count }} Following</strong> <!-- Mesma logica aqui -->
                         </div>
                     {% else %}
                         <div class="img-user">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
                               
-                            <strong>{{ seguidores_count }} Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
+                            <strong style="cursor: pointer;" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong>  <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
                             <strong> {{ seguindo_count }} Following</strong> <!-- Mesma logica aqui -->
                         </div>
                     {% endif %}
@@ -341,6 +341,28 @@
         
     </div>
 </div>
+<div id="followersModal" class="modal">
+    <div class="modal-content">
+        <span class="modaltitle-close">
+            <h2><strong>Seguidores</strong></h2>
+            <span class="close-followers">&times;</span>
+        </span>
+
+        <ul style="list-style-type: none; padding-left: 0;">
+            {% for seguidor in seguidores %}
+            <li>
+                <div class="img-user">
+                <a href="{% url 'profile' seguidor.id %}" style="text-decoration: none;">
+                    @{{ seguidor.username }} <img src="{% if seguidor.profile.icone %}{% static seguidor.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto do perfil" class="pfp-holder">
+                </a>
+                </div>
+            </li>
+            {% empty %}
+            <li>Nenhum seguidor encontrado.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 
 <script>
     function openModal() {
@@ -371,6 +393,22 @@ document.querySelector('.bio-form').addEventListener('submit', function() {
         document.getElementById('icone-input').value = selectedIcon; 
     }
 });
+function openFollowersModal() {
+    document.getElementById('followersModal').style.display = 'block';
+}
+
+// Função para fechar o modal de seguidores
+document.querySelector('.close-followers').addEventListener('click', function() {
+    document.getElementById('followersModal').style.display = 'none';
+});
+
+// Fechar o modal ao clicar fora dele
+window.onclick = function(event) {
+    const modal = document.getElementById('followersModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+};
 
     
 </script>
