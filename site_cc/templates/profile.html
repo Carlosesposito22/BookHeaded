@@ -381,7 +381,9 @@
                         <div class="img-user">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder"  onclick="openModal()">
                             <strong style="cursor: pointer;" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
-                            <strong> {{ seguindo_count }} Following</strong> <!-- Mesma logica aqui -->
+                            
+                           
+                            <strong style="cursor: pointer;" onclick="openFollowingModal()">{{ seguindo_count }} Following</strong>
                         </div>
                     {% else %}
                         <div class="img-user">
@@ -428,7 +430,7 @@
     </div>
 </div>
 
-<!-- Modal para alterar o perfil -->
+<!-- mamed esse e o modal para alterar o perfil -->
 <div id="iconModal" class="modal" style="z-index: 999; ">
     <div class="modal-content">
         <span class="modaltitle-close">
@@ -463,6 +465,7 @@
         
     </div>
 </div>
+<!-- mamemd esse e o modal para mostrar os perfis que te seguem seguidos -->
 <div id="followersModal" class="modal">
     <div class="modal-content">
         <span class="modaltitle-close">
@@ -485,6 +488,27 @@
         </ul>
     </div>
 </div>
+
+<!-- mamemd esse e o modal para mostrar os perfis que vc esta seguindos -->
+<div id="followingModal" class="modal" style="z-index: 999;">
+    <div class="modal-content">
+        <span class="modaltitle-close">
+            <h2><strong>Following</strong></h2>
+            <span class="close-following">&times;</span>
+        </span>
+
+        <ul>
+            {% for usuario in seguindo %}
+                <li><a href="{% url 'profile' usuario.user.id %}">@{{ usuario.user.username }} <img src="{% if usuario.profile.icone %}{% static usuario.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto do perfil" class="pfp-holder"></a></li>
+            {% empty %}
+                <li>Você ainda não está seguindo ninguém.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+
+
 
 <script>
     function openModal() {
@@ -531,6 +555,21 @@ window.onclick = function(event) {
         modal.style.display = 'none';
     }
 };
+function openFollowingModal() {
+        document.getElementById("followingModal").style.display = "block";
+    }
+
+    var closeFollowingModal = document.getElementsByClassName("close-following")[0];
+    closeFollowingModal.onclick = function() {
+        document.getElementById("followingModal").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        var modal = document.getElementById("followingModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 
     
 </script>
