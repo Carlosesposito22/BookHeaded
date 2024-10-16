@@ -265,6 +265,52 @@ Detail {{ clube.titulo }}
     z-index: 2;
 }
 
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+  }
+
+  .modal-dialog{
+    overflow: hidden;
+  }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #0066FF; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1050;
+        border-radius: inherit; 
+    }
+
+    .overlay-text {
+        color: white;
+        font-size: 4rem;
+        font-weight: bold;
+        text-align: center;
+        animation: shake 0.4s infinite;
+        line-height: 5rem;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translate(0); }
+        10% { transform: translate(-3px, -3px); }
+        20% { transform: translate(3px, -3px); }
+        30% { transform: translate(-3px, 3px); }
+        40% { transform: translate(3px, 3px); }
+        50% { transform: translate(-3px, 0); }
+        60% { transform: translate(3px, 0); }
+        70% { transform: translate(0, -3px); }
+        80% { transform: translate(0, 3px); }
+}
 </style>
 
 
@@ -543,36 +589,40 @@ Detail {{ clube.titulo }}
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="maratonaModal" tabindex="-1" aria-labelledby="maratonaModalLabel" aria-hidden="true">
+        <canvas id="canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1040; pointer-events: none;"></canvas>
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="maratonaModalLabel">Criar Maratona</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-content" style="position: relative;">
+                <!-- Adicione esta div -->
+                <div id="overlay" class="overlay">
+                    <span class="overlay-text">Start<br>Reading Spree</span>
                 </div>
-                <div class="modal-body">
-                    <form id="maratonaForm">
-                        <div class="mb-3">
-                            <label for="nomeMaratona" class="form-label">Nome da Maratona</label>
-                            <input type="text" class="form-control" id="nomeMaratona" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="dataInicio" class="form-label">Data de Início</label>
-                            <input type="date" class="form-control" id="dataInicio" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="dataFim" class="form-label">Data de Término</label>
-                            <input type="date" class="form-control" id="dataFim" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="capituloAtual" class="form-label">Capítulo Atual</label>
-                            <input type="number" class="form-control" id="capituloAtual" value="{{ clube.progresso_atual }}" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="capituloFinal" class="form-label">Capítulo Final da Maratona</label>
-                            <input type="number" class="form-control" id="capituloFinal" required>
-                        </div>
-                    </form>
+                <div class="modal-body" style="position: relative; overflow: hidden;">
+                    <div style="position: relative; z-index: 2; color: black;">
+                        <form id="maratonaForm">
+                            <div class="mb-3">
+                                <label for="nomeMaratona" class="form-label">Nome da Maratona</label>
+                                <input type="text" class="form-control" id="nomeMaratona" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dataInicio" class="form-label">Data de Início</label>
+                                <input type="date" class="form-control" id="dataInicio" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dataFim" class="form-label">Data de Término</label>
+                                <input type="date" class="form-control" id="dataFim" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="capituloAtual" class="form-label">Capítulo Atual</label>
+                                <input type="number" class="form-control" id="capituloAtual" value="{{ clube.progresso_atual }}" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="capituloFinal" class="form-label">Capítulo Final da Maratona</label>
+                                <input type="number" class="form-control" id="capituloFinal" required>
+                            </div>
+                        </form>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -582,6 +632,9 @@ Detail {{ clube.titulo }}
             </div>
         </div>
     </div>
+    
+    
+
 
     <div class="modal fade" id="historicoMaratonasModal" tabindex="-1" aria-labelledby="historicoMaratonasModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -1039,11 +1092,104 @@ window.onload = function() {
 
 
 
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
                 const today = new Date().toISOString().split('T')[0];
                 document.getElementById('dataInicio').value = today;
-            });
+});
     
+
+const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+
+  // Define o tamanho do canvas para cobrir toda a tela
+  let cw = canvas.width = window.innerWidth;
+  let ch = canvas.height = window.innerHeight;
+
+  const rand = (min, max) => (min + Math.random() * (max - min));
+
+  class SpeedLine {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+
+      this.speed = rand(2, 4);
+      this.life = this.curLife = rand(500, 900);
+      this.alpha = rand(0.25, 1);
+      this.angle = Math.PI * rand(0, 2);
+      this.size = rand(20, 40);
+      this.inRadius = rand(200, 400);
+      this.outRadius = cw;
+    }
+
+    update() {
+      this.curLife -= this.speed;
+      this.inRadius += this.speed * 4;
+
+      this.alpha *= this.curLife / this.life;
+      this.size *= this.curLife / this.life;
+
+      this.draw();
+    }
+
+    draw() {
+      const { x, y, size, angle, alpha } = this,
+        { inRadius, outRadius } = this;
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+
+      ctx.beginPath();
+      ctx.moveTo(0, inRadius);
+      ctx.lineTo(size, outRadius);
+      ctx.lineTo(-size, outRadius);
+      ctx.closePath();
+
+      ctx.fillStyle = `rgba(255,255,255, ${alpha})`;
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  const lines = [];
+  const MAX_LINES = 300;
+
+  function updateLines() {
+    lines.forEach((line, i) => {
+      if (!line || line.curLife < 0) lines[i] = new SpeedLine(cw / 2, ch / 2);
+      lines[i].update();
+    });
+  }
+
+  for (let i = 0; i < MAX_LINES; i++) {
+    lines[i] = new SpeedLine(cw / 2, ch / 2);
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, cw, ch);
+    updateLines();
+  }
+
+  animate();
+
+
+  window.addEventListener('resize', () => {
+    cw = canvas.width = window.innerWidth;
+    ch = canvas.height = window.innerHeight;
+    updateLines();
+  });
+
+    $(document).ready(function() {
+        $('#maratonaModal').on('show.bs.modal', function () {
+            $('#overlay').show();
+        });
+
+        $('#maratonaModal').on('hide.bs.modal', function () {
+            $('#overlay').hide();
+        });
+    });
+
 
 </script>
 {% endblock %}
