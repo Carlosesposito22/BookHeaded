@@ -389,7 +389,7 @@
                         <div class="img-user">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
                             <strong style="cursor: pointer;" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong>  <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
-                            <strong> {{ seguindo_count }} Following</strong> <!-- Mesma logica aqui -->
+                            <strong style="cursor: pointer;" onclick="openFollowingModal()">{{ seguindo_count }} Following</strong>
                         </div>
                     {% endif %}
                     <div class="user-n-follow">
@@ -499,8 +499,15 @@
 
         <ul>
             {% for usuario in seguindo %}
-                <li><a href="{% url 'profile' usuario.user.id %}">@{{ usuario.user.username }} <img src="{% if usuario.profile.icone %}{% static usuario.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto do perfil" class="pfp-holder"></a></li>
+                <li>
+                    <div class="img-user">
+                    <a href="{% url 'profile' usuario.user.id %}">@{{ usuario.user.username }} <img src="{% if usuario.icone %}{% static usuario.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto do perfil" class="pfp-holder">
+                    </a>
+                    </div>
+                
+                </li>
             {% empty %}
+            
                 <li>Você ainda não está seguindo ninguém.</li>
             {% endfor %}
         </ul>
