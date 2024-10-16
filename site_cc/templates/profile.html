@@ -271,6 +271,37 @@
         font-size: 3rem;
     }
 
+    .followdata-li{
+        height: fit-content;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: left;
+    }
+
+    .followdata-ul{
+        gap: 1rem;
+        display: flex;
+        flex-direction: column;
+        margin-top: 2rem;
+    }
+
+    .img-user-followdata{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .close-followdata{
+        font-size: 2rem;
+        margin-top: -1rem;
+    }
+
+    .close-followdata:hover{
+        cursor: pointer;
+    }
+
     @media screen and (max-width: 767px){
         .badges{
             order: 2;
@@ -381,7 +412,9 @@
                         <div class="img-user">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder"  onclick="openModal()">
                             <strong style="cursor: pointer;" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
-                            <strong> {{ seguindo_count }} Following</strong> <!-- Mesma logica aqui -->
+                            
+                           
+                            <strong style="cursor: pointer;" onclick="openFollowingModal()">{{ seguindo_count }} Following</strong>
                         </div>
                     {% else %}
                         <div class="img-user">
@@ -428,7 +461,7 @@
     </div>
 </div>
 
-<!-- Modal para alterar o perfil -->
+<!-- mamed esse e o modal para alterar o perfil -->
 <div id="iconModal" class="modal" style="z-index: 999; ">
     <div class="modal-content">
         <span class="modaltitle-close">
@@ -463,28 +496,57 @@
         
     </div>
 </div>
+
+<!-- mamemd esse e o modal para mostrar os perfis que te seguem seguidos -->
 <div id="followersModal" class="modal">
     <div class="modal-content">
         <span class="modaltitle-close">
             <h2><strong>Seguidores</strong></h2>
-            <span class="close-followers">&times;</span>
+            <span class="close-followdata">&times;</span>
         </span>
 
-        <ul style="list-style-type: none; padding-left: 0;">
+        <ul class="followdata-ul" style="list-style: none; padding: 0;">
             {% for seguidor in seguidores %}
-            <li>
-                <div class="img-user">
-                <a href="{% url 'profile' seguidor.id %}" style="text-decoration: none;">
-                    @{{ seguidor.username }} <img src="{% if seguidor.profile.icone %}{% static seguidor.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto do perfil" class="pfp-holder">
-                </a>
+            <li class="followdata-li">
+                <div class="img-user-followdata">
+                    <img src="{% if seguidor.profile.icone %}{% static seguidor.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto do perfil" style="height: 2rem;">
+                    <a href="{% url 'profile' seguidor.id %}" style="text-decoration: none;">@{{ seguidor.username }}</a>
+
                 </div>
             </li>
             {% empty %}
-            <li>Nenhum seguidor encontrado.</li>
+            <li>No followers found.</li>
             {% endfor %}
         </ul>
     </div>
 </div>
+
+<!-- mamemd esse e o modal para mostrar os perfis que vc esta seguindos -->
+<div id="followingModal" class="modal" style="z-index: 999;">
+    <div class="modal-content">
+        <span class="modaltitle-close">
+            <h2><strong>Following</strong></h2>
+            <span class="close-followdata">&times;</span>
+        </span>
+
+        <ul class="followdata-ul" style="list-style: none; padding: 0;">
+            {% for usuario in seguindo %}
+                <li class="followdata-li">
+                    <div class="img-user-followdata">
+                        <img src="{% if usuario.profile.icone %}{% static usuario.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto do perfil" style="height: 2rem;">
+                        <a href="{% url 'profile' usuario.user.id %}">@{{ usuario.user.username }}</a>
+
+                    </div> 
+                </li>
+            {% empty %}
+                <li>No followers found.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+
+
 
 <script>
     function openModal() {
@@ -520,7 +582,7 @@ function openFollowersModal() {
 }
 
 // Função para fechar o modal de seguidores
-document.querySelector('.close-followers').addEventListener('click', function() {
+document.querySelector('.close-followdata').addEventListener('click', function() {
     document.getElementById('followersModal').style.display = 'none';
 });
 
@@ -531,6 +593,21 @@ window.onclick = function(event) {
         modal.style.display = 'none';
     }
 };
+function openFollowingModal() {
+        document.getElementById("followingModal").style.display = "block";
+    }
+
+    var closeFollowingModal = document.getElementsByClassName("close-followdata")[0];
+    closeFollowingModal.onclick = function() {
+        document.getElementById("followingModal").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        var modal = document.getElementById("followingModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 
     
 </script>

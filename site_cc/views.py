@@ -295,7 +295,9 @@ def atualizar_progresso(request, clube_id):
 def profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
     profile, created = Profile.objects.get_or_create(user=user)
+    
     seguidores = profile.seguidores.all()  
+    seguindo = Profile.objects.filter(seguidores=user)  
 
     icons = [
         'images/icon1.svg',
@@ -316,13 +318,12 @@ def profile(request, user_id):
     ]
 
     seguidores_count = profile.seguidores.count()  
-    seguindo_count = user.seguindo.count()  
+    seguindo_count = seguindo.count()  
 
     if request.method == 'POST':
         bio = request.POST.get('bio', '')
         icone = request.POST.get('icone', '')
 
-        
         if bio:
             profile.bio = bio
 
@@ -332,8 +333,15 @@ def profile(request, user_id):
         profile.save()  
         return redirect('profile', user_id=user.id)  
 
-    return render(request, 'profile.html', {'profile': profile,'seguidores': seguidores, 'icons': icons, 'seguidores_count': seguidores_count, 
-        'seguindo_count': seguindo_count, })  
+    return render(request, 'profile.html', {
+        'profile': profile,
+        'seguidores': seguidores,
+        'seguindo': seguindo,  
+        'icons': icons,
+        'seguidores_count': seguidores_count,
+        'seguindo_count': seguindo_count,
+    })
+
 
 
 @login_required
