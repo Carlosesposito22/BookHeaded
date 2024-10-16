@@ -7,23 +7,7 @@
         display: flex;
         flex-direction: row;
         gap: 2rem;
-    }
-
-    .badges{
-        background-color: white;
-        width: 25%;
-        border-radius: 1rem;
-        padding: 1rem;
-        padding-left: 2rem;
-    }
-
-    .badges-text{
-        font-weight: bold;
-        font-size: 2rem;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 1rem;
+        flex-wrap: wrap;
     }
 
     .hold {
@@ -192,7 +176,7 @@
     }
 
 
-    .img-user:hover img {
+    .pfp-holder:hover {
         filter: brightness(70%);
     }
 
@@ -236,13 +220,153 @@
         opacity: 50%;
     }
 
+    .bi-pencil-fill:hover{
+        color: #dbdbdb !important;
+    }
+
+    .badges{
+        background-color: white;
+        width: 25%;
+        border-radius: 1rem;
+        padding: 1rem 2rem;
+    }
+
+    .badges-text{
+        font-weight: bold;
+        font-size: 2rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .badges-holder{
+        width: 100%;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .badges-ul{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        list-style: none;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-top: 1rem;
+        padding: 0;
+    }
+
+    .badges-li{
+        background-color: rgb(202, 202, 202);
+        border-radius: 0.5rem;
+        width: 4.5rem;
+        text-align: center;
+        color: #888;
+    }
+
+    .bi-dot{
+        font-size: 3rem;
+    }
+
+    @media screen and (max-width: 767px){
+        .badges{
+            order: 2;
+            width: 100%;
+        }
+        .hold{
+            order: 1;
+            width: 100%;
+        }
+        .superholder{
+            flex-direction: column;
+        }
+        .img-user-bio{
+            width: 100%;
+        }
+        .img-user{
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+    }
+
 </style>
 
 
 
 <div class="container my-5 superholder">
+    <!-- Essa div é para mostrar os badges do usuário -->
     <div class="badges shadow-lg">
         <p class="badges-text"><i class="bi bi-trophy-fill" style="color: #0066FF;"></i> Badges</p>
+        <hr>
+        <div class="badges-holder">
+            <ul class="badges-ul">
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+                <li class="badges-li">
+                    <div class="nobadge-holder">
+                        <i class="bi bi-dot"></i>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="col hold shadow-lg">
         <div class="banner">
@@ -254,16 +378,14 @@
             <div class="img-user-bio">
                 <div class="img-user-div">
                     {% if request.user == profile.user %}
-                        <div class="img-user" onclick="openModal()">
-                            <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
-                            
+                        <div class="img-user">
+                            <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder"  onclick="openModal()">
                             <strong style="cursor: pointer;" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
                             <strong> {{ seguindo_count }} Following</strong> <!-- Mesma logica aqui -->
                         </div>
                     {% else %}
                         <div class="img-user">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
-                              
                             <strong style="cursor: pointer;" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong>  <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
                             <strong> {{ seguindo_count }} Following</strong> <!-- Mesma logica aqui -->
                         </div>
