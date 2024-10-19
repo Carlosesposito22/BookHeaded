@@ -402,12 +402,7 @@ def favoritar_clube(request, clube_id):
 
     return JsonResponse({'favoritado': favoritado})
 
-@login_required
-def top_livros(request, clube_id):
-    clube = get_object_or_404(Clube, id=clube_id)
-    top_livros = clube.top_livros.split('\n') if clube.top_livros else []
 
-    return render(request, 'modal_livros.html', {'clube': clube, 'top_livros': top_livros})
 
 @login_required
 def add_top_livros(request, clube_id):
