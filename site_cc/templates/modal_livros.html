@@ -1,11 +1,14 @@
-{% if top_livros %}
-    <ul>
-        {% for livro in top_livros %}
-        <li>{{ livro }}</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Nenhum livro listado ainda.</p>
-{% endif %}
-
-    
+<div class="top-books">
+    {% if top_livros %}
+        <ul class="top-books-ul">
+            {% for livro in top_livros %}
+                <li class="top-books-li {% if forloop.first %}first-place{% elif forloop.counter == 2 %}second-place{% elif forloop.counter == 3 %}third-place{% endif %}">
+                    <p style="margin-bottom: 0;">{{ livro }}</p>
+                    <!-- carlos aqui vai ficar a ordem tlg, coloquei no views ja -->
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p style="color: white;">Nenhum livro listado ainda.</p>
+    {% endif %}
+</div>

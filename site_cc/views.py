@@ -212,6 +212,7 @@ def club_detail_view(request, pk):
     user = request.user
     progresso_percentual = (clube.progresso_atual / clube.total_capitulos * 100) if clube.total_capitulos > 0 else 0
     total_maratona_finalizadas = clube.total_maratona_finalizadas
+    top_livros = clube.top_livros.split('\n') if clube.top_livros else []
 
     context = {
         'clube': clube,
@@ -221,6 +222,7 @@ def club_detail_view(request, pk):
         'user_is_member': Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists(),
         'user_request_pending': Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists(),
         'total_maratona_finalizadas': total_maratona_finalizadas,
+        'top_livros': top_livros
     }
     return render(request, 'clubDetail.html', context)
 

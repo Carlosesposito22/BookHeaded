@@ -220,9 +220,7 @@
                 <div class="club-data-icons">
                     <h3><strong>Club Data</strong></h3>
                     {% if user.is_authenticated %}
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topLivrosModal-{{ clube.id }}">
-                            <i class="bi bi-journal-bookmark-fill"></i>
-                        </button>
+                       
                         {% if user == clube.moderador %}
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown" style="border-radius: 0.5rem;"><i class="bi bi-gear-wide-connected"></i></button>
@@ -269,20 +267,14 @@
                     {% endif %}
                 {% endif %}
             </div>
+           
+            {% include 'modal_livros.html' %}
+            
+            
+            
 
-            <div class="top-books">
-                {% if top_livros %}
-                <ul class="top-books-ul">
-                    {% for livro in top_livros %}
-                    <li class="top-books-li" id="second"><p style="margin-bottom: 0;">{{ livro }}</p><div class="second-place"></div></li>
-                    <li class="top-books-li" id="first"><p style="margin-bottom: 0;">{{ livro }}</p><div class="first-place"></div></li>
-                    <li class="top-books-li" id="third"><p style="margin-bottom: 0;">{{ livro }}</p><div class="third-place"></div></li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <p style="color: white;">Nenhum livro listado ainda.</p>
-                {% endif %}
-            </div>
+            
+            
 
         </div>
         
