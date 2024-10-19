@@ -307,6 +307,9 @@ body, html {
     text-align: center;
     font-weight: 500;
     color: white;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    padding: 0.5rem;
   }
   
   .top-books-ul {
