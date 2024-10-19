@@ -4,127 +4,158 @@
 {% block content %}
 
 <style>
-    * {
-        font-family: 'DM Sans', 'sans-serif';
-    }
+* {
+    font-family: 'DM Sans', 'sans-serif';
+}
 
-    .superdiv {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
-        justify-content: left;
-        align-items: center;
-        max-width: 95%;
-    }
+.superdiv {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: left;
+    align-items: center;
+    max-width: 95%;
+}
 
-    .textbox-1 {
-        text-align: left;
-        min-width: 50%;
-        max-width: 95%;
-        display: flex;
-        flex-direction: column;
+.textbox-1 {
+    text-align: left;
+    min-width: 50%;
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+}
+
+p {
+    min-width: 70%;
+    max-width: 95%;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 4rem;
+    max-width: 95%;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+section {
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+h2 {
+    font-size: 2.2em;
+    color: #333;
+}
+
+.team-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.team-member {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: calc(33.33% - 40px);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.team-member:hover {
+    animation: golden-glow 0.5s forwards;
+}
+
+@keyframes golden-glow {
+    0% {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(48, 169, 255, 1);
+        transform: scale(1.05);
+    }
+}
+
+.team-member img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.team-member h3 {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.social-links {
+    margin-top: 15px;
+}
+
+.social-links a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2em;
+    margin: 0 10px;
+}
+
+.social-links a:hover {
+    color: #333;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 0;
+    margin-top: 50px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
     }
 
     p {
-        min-width: 70%;
-        max-width: 95%;
+        min-width: 100%;
+        max-width: 100%;
     }
 
-    h1 {
-        font-weight: bold;
-        font-size: 4rem;
-        max-width: 95%;
-    }
-
-    header h1 {
-        margin: 0;
-        font-size: 2.5em;
-    }
-
-    section {
-        max-width: 1200px;
-        margin: 40px auto;
-    }
-
-    h2 {
-        font-size: 2.2em;
-        color: #333;
-    }
-
-    .team-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 40px;
-        margin-top: 30px;
+    .textbox-1 {
+        min-width: 100%;
+        max-width: 100%;
     }
 
     .team-member {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: calc(33.33% - 40px);
-        text-align: center;
-        transition: transform 0.3s ease-in-out;
-    }
-
-    .team-member:hover {
-        animation: golden-glow 0.5s forwards;
-    }
-
-    @keyframes golden-glow {
-        0% {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        100% {
-            box-shadow: 0 0 15px rgba(48, 169, 255, 1);
-            transform: scale(1.05);
-        }
-    }
-
-    .team-member img {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-bottom: 15px;
-    }
-
-    .team-member h3 {
-        font-size: 1.4em;
-        margin-bottom: 10px;
-        color: #333;
-    }
-
-    .social-links {
-        margin-top: 15px;
-    }
-
-    .social-links a {
-        text-decoration: none;
-        color: #333;
-        font-size: 1.2em;
-        margin: 0 10px;
-    }
-
-    .social-links a:hover {
-        color: #333;
-    }
-
-    footer {
-        background-color: #333;
-        color: #fff;
-        padding: 15px 0;
-        margin-top: 50px;
-        position: relative;
-        bottom: 0;
         width: 100%;
+        margin-bottom: 20px;
     }
 
-    footer p {
-        margin: 0;
+    .team-container {
+        gap: 20px;
     }
+
+    .superdiv {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+    }
+}
 </style>
 
 <div class="container mt-5 superdiv">
