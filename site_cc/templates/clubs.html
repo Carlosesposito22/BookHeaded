@@ -305,15 +305,17 @@
                                 <button type="button" class="btn btn-sm category-btn 
                                     {% if categoria.nome == 'Ficção' %}categoria-ficção{% elif categoria.nome == 'Autoajuda' %}categoria-autoajuda{% elif categoria.nome == 'Tecnologia' %}categoria-tecnologia{% elif categoria.nome == 'Ciência' %}categoria-ciência{% elif categoria.nome == 'Mistério' %}categoria-mistério{% elif categoria.nome == 'Fantasia' %}categoria-fantasia{% elif categoria.nome == 'Romance' %}categoria-romance{% elif categoria.nome == 'História' %}categoria-historia{% elif categoria.nome == 'Biografia' %}categoria-biografia{% elif categoria.nome == 'Não-ficção' %}categoria-não-ficção{% endif %}" 
                                     data-categoria="{{ categoria.nome }}"  
-                                    onclick="filterByCategory('{{ categoria.nome }}')">
+                                    onclick="toggleCategorySelection('{{ categoria.nome }}')">
                                     {{ categoria.nome }}
                                 </button>
                             </li>  
                             {% endfor %}
-                            <li class="btn btn-primary categories-li" style="border-radius: 2rem; font-weight: bold;">Filter <i class="bi bi-filter"></i></li>
+                            <li class="btn btn-primary categories-li" style="border-radius: 2rem; font-weight: bold;" onclick="applyFilter()">
+                                Filter <i class="bi bi-filter"></i>
+                            </li>
                         </ul>
                     </div>
-                </div>
+                </div>                
             </div>
         </div>
     </div>
@@ -384,22 +386,48 @@ function updateCarousel() {
     document.getElementById('carousel').style.transform = `translateX(${offset}rem)`;
 }
 
-function filterByCategory(categoria) {
-    const url = new URL(window.location.href);
-    const categoriasAtuais = new Set(url.searchParams.getAll('categoria'));
+let selectedCategories = new Set(); 
+function toggleCategorySelection(categoria) {
+    const button = document.querySelector(`button[data-categoria="${categoria}"]`);
 
-    if (categoriasAtuais.has(categoria)) {
-        categoriasAtuais.delete(categoria);  
+    if (selectedCategories.has(categoria)) {
+        selectedCategories.delete(categoria);  
+        button.classList.remove('active');     
     } else {
-        categoriasAtuais.add(categoria); 
+        selectedCategories.add(categoria);    
+        button.classList.add('active');       
+    }
+}
+
+function applyFilter() {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('categoria');  
+
+    if (selectedCategories.size > 0) {
+        selectedCategories.forEach(cat => url.searchParams.append('categoria', cat));
     }
 
-    url.searchParams.delete('categoria'); 
-
-    categoriasAtuais.forEach(cat => url.searchParams.append('categoria', cat));
-
-    window.location.href = url;  
+    window.location.href = url;
 }
+
+function resetSelectedCategoriesFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const categorias = urlParams.getAll('categoria');
+
+    categorias.forEach(categoria => {
+        const button = document.querySelector(`button[data-categoria="${categoria}"]`);
+        if (button) {
+            selectedCategories.add(categoria);  
+            button.classList.add('active');      
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', resetSelectedCategoriesFromURL);
+
+
+
+
 
 window.addEventListener('load', () => {
     const urlParams = new URLSearchParams(window.location.search);
