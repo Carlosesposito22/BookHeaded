@@ -20,7 +20,7 @@ from .views import (
     profile,
     lista_usuarios,
     favoritar_clube,
-    top_livros,
+    
     add_top_livros,
     get_modalidades,
     get_categorias,
@@ -60,7 +60,6 @@ urlpatterns = [
     path('perfil/<int:user_id>/', profile, name='profile'),
     path('seguir/<int:user_id>/', seguir_usuario, name='seguir_usuario'),
     path('clube/favoritar/<int:clube_id>/', views.favoritar_clube, name='favoritar_clube'),
-    path('clube/<int:clube_id>/top-livros/', views.top_livros, name='top_livros'),
     path('clube/<int:clube_id>/add-top-livros/', views.add_top_livros, name='add_top_livros'),
     path('usuarios/', lista_usuarios, name='lista_usuarios'),
     path('clube/<int:clube_id>/criar_maratona/', views.criar_maratona_view, name='criar_maratona'),
