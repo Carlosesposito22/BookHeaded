@@ -250,18 +250,21 @@
     <h1>Clubs</h1>
     <br>
 
-    <div id="carouselExampleAutoplaying" class="carousel slide img-carousel" data-bs-ride="carousel">
+    <div id="carouselExampleAutoplaying" class="carousel slide img-carousel d-none d-md-block" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
                 <div class="item1">
-                    <img src="{% static 'images/livro_teste.jpg' %}" class="d-block w-100 photo-carousel" alt="...">
+                    <img src="{% static 'images/hp.png' %}" class="d-block w-100 photo-carousel" alt="...">
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="{% static 'images/reading-925589_1280.jpg' %}" class="d-block w-100 photo-carousel" alt="...">
+                <div class="d-flex justify-content-between modal-class">
+                    <img src="{% static 'images/duna.png' %}" class="d-block w-50 photo-carousel modal-class" alt="...">
+                    <img src="{% static 'images/romance.png' %}" class="d-block w-50 photo-carousel modal-class" alt="...">
+                </div>
             </div>
             <div class="carousel-item">
-                <img src="{% static 'images/reading-925589_1280.jpg' %}" class="d-block w-100 photo-carousel" alt="...">
+                <img src="{% static 'images/agatha.png' %}" class="d-block w-100 photo-carousel" alt="...">
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
