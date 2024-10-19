@@ -83,7 +83,6 @@
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{% url 'profile' user_id=user.id %}">Profile</a></li>
             <li><a class="dropdown-item text-black" href=" {% url 'myclubes' %}">My Clubs</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
             <li><hr class="dropdown-divider"></li>
             <form method="post" action="{% url 'logout' %}" style="display:inline;" class="logout-btn-div">
             {% csrf_token %}
