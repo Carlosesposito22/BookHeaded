@@ -29,6 +29,7 @@ from .views import (
     listar_historico_maratona_view,
     sair_do_clube,
     deletar_historico,
+    seguir_usuario,
 )
 
 urlpatterns = [
@@ -68,6 +69,7 @@ urlpatterns = [
     path('clube/<int:clube_id>/listar_historico_maratona/', listar_historico_maratona_view, name='listar_historico_maratona'),
     path('clube/<int:clube_id>/sair/', views.sair_do_clube, name='sair-do-clube'),
     path('delete_search/<str:username>/', deletar_historico, name='delete_search'),
+    path('seguir/<int:user_id>/', seguir_usuario, name='seguir_usuario')
     
 
 ]

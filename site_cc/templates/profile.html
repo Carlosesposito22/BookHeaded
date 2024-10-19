@@ -425,18 +425,20 @@
                     {% endif %}
                     <div class="user-n-follow">
                         <strong class="username">@{{ profile.user.username }}</strong>
-                    {% if request.user != profile.user %}
-                        {% if request.user in profile.seguidores.all %}
-                        <span class="btn follow" id="following-text">Following <i class="bi bi-check"></i></span>
-                    {% else %}
-                        <form method="post" action="{% url 'seguir_usuario' profile.user.id %}" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn follow">
-                                <i class="bi bi-plus"></i>
-                                Follow
-                            </button>
-                        </form>
-                    {% endif %}
+                        {% if request.user != profile.user %}
+                            {% if request.user in profile.seguidores.all %}
+                           
+                            <form method="POST" action="{% url 'seguir_usuario' user_id=profile.user.id %}">
+                                {% csrf_token %}
+                                <button type="submit" span class="btn follow" id="following-text">Unfollow <i class="bi bi-check"></i></span></button>
+                            </form>
+                        {% else %}
+                            
+                            <form method="POST" action="{% url 'seguir_usuario' user_id=profile.user.id %}">
+                                {% csrf_token %}
+                                <button type="submit" span class="btn follow" id="following-text">Follow<i class="bi bi-check"></i></span></button>
+                            </form>
+                        {% endif %}
                     {% endif %}
                     </div>
                     <div class="biodiv">

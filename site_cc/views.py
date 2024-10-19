@@ -349,10 +349,14 @@ def seguir_usuario(request, user_id):
     if request.method == 'POST':
         perfil = get_object_or_404(Profile, user__id=user_id)
 
+        if request.user in perfil.seguidores.all():
+           
+            perfil.seguidores.remove(request.user)
+        else:
+            
+            perfil.seguidores.add(request.user)
         
-        if request.user not in perfil.seguidores.all():
-            perfil.seguidores.add(request.user) 
-            perfil.save()
+        perfil.save()
 
         return redirect('profile', user_id=user_id)
    
@@ -564,3 +568,4 @@ def deletar_historico(request, username):
             request.session['last_searches'] = user_searches
             return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'}, status=400)
+
