@@ -398,4 +398,249 @@
 
 <script src="{% static 'js/clubDetail.js' %}"></script>
 
+<script>
+// JS da maratona --> vai ficar aq pq modularizado fica bugado e eu tô sem saco pra mecher nisso
+    
+document.getElementById('listarHistorico').addEventListener('click', function() {
+    const clubeId = this.getAttribute('data-clube-id');
+    listarHistorico(clubeId);
+});
+
+function listarHistorico(clubeId) {
+    fetch(`/clube/${clubeId}/listar_historico_maratona/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const historicoBody = document.getElementById('historicoBody');
+            historicoBody.innerHTML = '';
+
+            if (data.success) {
+                if (data.historico.length === 0) {
+                    historicoBody.innerHTML = '<tr><td colspan="5">Nenhum histórico encontrado.</td></tr>';
+                } else {
+                    data.historico.forEach(historico => {
+                        const diasDuracao = calcularDuracao(historico.data_inicio, historico.data_fim);
+                        const totalCapitulos = calcularTotalCapitulos(historico.capitulo_final, historico.capitulo_atual);
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${historico.nome_maratona}</td>
+                            <td>${historico.data_inicio}</td>
+                            <td>${historico.data_fim}</td>
+                            <td>${diasDuracao} dias</td>
+                            <td>${historico.capitulo_atual}</td>
+                            <td>${historico.capitulo_final}</td>
+                            <td>${totalCapitulos}</td>
+                        `;
+                        historicoBody.appendChild(row);
+                    });
+                }
+
+                const modal = new bootstrap.Modal(document.getElementById('historicoMaratonasModal'));
+                modal.show();
+            } else {
+                historicoBody.innerHTML = '<tr><td colspan="5">Nenhum histórico encontrado.</td></tr>';
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+        });
+}
+
+
+    document.getElementById('finalizarMaratona').addEventListener('click', function() {
+    const createButton = document.getElementById('createMaratona');
+    const clubeId = createButton.getAttribute('data-clube-id');
+
+    fetch(`/clube/${clubeId}/finalizar_maratona/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Maratona finalizada com sucesso!');
+            location.reload(true);
+        } else {
+            alert('Erro ao finalizar maratona.');
+            console.error('Erro:', data);
+        }
+    })
+    .catch(error => {
+        console.error('Erro na requisição:', error);
+    });
+    location.reload(true);
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function carregarDadosMaratona(clubeId) {
+    fetch(`/clube/${clubeId}/detalhes_maratona/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.maratona_ativa) {
+                    document.getElementById('nomeMaratona').value = data.nome_maratona;
+                    document.getElementById('dataFim').value = data.data_fim;
+                    document.getElementById('capituloFinal').value = data.capitulo_final;
+                    document.getElementById('finalizarMaratona').style.display = 'block';
+                    document.getElementById('saveMaratona').innerText = 'Salvar Mudança';
+                } else {
+                    document.getElementById('nomeMaratona').value = '';
+                    document.getElementById('dataFim').value = '';
+                    document.getElementById('capituloFinal').value = '';
+                    document.getElementById('finalizarMaratona').style.display = 'none';
+                    document.getElementById('saveMaratona').innerText = 'Criar Maratona';
+                }
+            } else {
+                alert('Erro ao carregar dados da maratona.');
+                console.error('Erro:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+        });
+}
+
+
+document.getElementById('saveMaratona').addEventListener('click', function() {
+    const createButton = document.getElementById('createMaratona');
+    const clubeId = createButton.getAttribute('data-clube-id');
+    
+    const nomeMaratona = document.getElementById('nomeMaratona').value;
+    const dataFim = document.getElementById('dataFim').value;
+    const dataInicio = document.getElementById('dataInicio').value;
+    const capituloFinal = parseInt(document.getElementById('capituloFinal').value, 10);
+    const capituloAtual = parseInt(document.getElementById('capituloAtual').value, 10);
+
+    if (new Date(dataFim) < new Date(dataInicio)) {
+        alert('A data final não pode ser menor que a data inicial.');
+        return;
+    }
+
+    if (capituloFinal < capituloAtual) {
+        alert('O capítulo final não pode ser menor que o capítulo atual.');
+        return;
+    }
+
+    verificarNomeMaratonaExistente(nomeMaratona, clubeId)
+        .then(nomeExistente => {
+            if (nomeExistente) {
+                alert('Já existe uma maratona com este nome. Por favor, escolha um nome diferente.');
+                return;
+            }
+
+            fetch(`/clube/${clubeId}/criar_maratona/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify({
+                    nome_maratona: nomeMaratona,
+                    data_fim: dataFim,
+                    data_inicio: dataInicio,
+                    capitulo_final: capituloFinal,
+                    capitulo_atual: capituloAtual,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    carregarDadosMaratona(clubeId); 
+                    location.reload(true);
+                } else {
+                    alert('Erro ao salvar maratona: ' + data.message);
+                    console.error('Erro:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Erro na requisição:', error);
+            });
+        });
+});
+
+function verificarNomeMaratonaExistente(nomeMaratona, clubeId) {
+    return fetch(`/clube/${clubeId}/listar_historico_maratona/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                return data.historico.some(historico => historico.nome_maratona === nomeMaratona);
+            } else {
+                throw new Error('Erro ao carregar histórico.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro na verificação do nome da maratona:', error);
+            return false; 
+        });
+}
+
+
+function calcularDuracao(dataInicio, dataFim) {
+    const inicio = new Date(dataInicio);
+    const fim = new Date(dataFim);
+    const duracao = Math.abs(fim - inicio);
+    const dias = Math.ceil(duracao / (1000 * 60 * 60 * 24));
+    return dias;
+}
+
+function calcularTotalCapitulos(capituloFinal, capituloAtual) {
+    return capituloFinal - capituloAtual;
+}
+
+document.getElementById('createMaratona').addEventListener('click', function(event) {
+    const createButton = event.currentTarget;
+    const clubeId = createButton.getAttribute('data-clube-id');
+
+    if (!clubeId) {
+        console.error('Clube ID não encontrado.');
+        return;
+    }
+
+    carregarDadosMaratona(clubeId); 
+});
+
+
+window.onload = function() {
+    const createButton = document.getElementById('createMaratona');
+    const clubeId = createButton.getAttribute('data-clube-id');
+    if (clubeId) {
+        carregarDadosMaratona(clubeId);
+    }
+};
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('dataInicio').value = today;
+            });
+    
+</script>
+
 {% endblock %}
