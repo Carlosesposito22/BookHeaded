@@ -11,6 +11,12 @@
     <link href="{% static 'css/ClubDetail.css' %}" rel="stylesheet" />
 {% endblock extracss %}
 
+{% if clube.maratona_ativa %}
+    <div class="spree-informer">
+        This club is under a reading spree right now <i class="bi bi-info-circle-fill"></i>
+    </div>
+{% endif %}
+
 <div class="container">
     <div class="hold-evr">
         <div class="data-progress-holder">
@@ -208,55 +214,78 @@
         {% include 'modal_avaliar.html' %}
         {% include 'pedidos.html' %}
         {% include 'modal_SairDoClube.html' %}
-        <div class="data-holder shadow"> 
-            <div class="club-data-icons">
-                <h3><strong>Club Data</strong></h3>
-                {% if user.is_authenticated %}
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topLivrosModal-{{ clube.id }}">
-                        <i class="bi bi-journal-bookmark-fill"></i>
+
+        <div class="data-n-topclubs">
+            <div class="data-holder shadow"> 
+                <div class="club-data-icons">
+                    <h3><strong>Club Data</strong></h3>
+                    {% if user.is_authenticated %}
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topLivrosModal-{{ clube.id }}">
+                            <i class="bi bi-journal-bookmark-fill"></i>
+                        </button>
+                        {% if user == clube.moderador %}
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown" style="border-radius: 0.5rem;"><i class="bi bi-gear-wide-connected"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}">Edit Club</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTopLivrosModal-{{ clube.id }}">Editar Favoritos</a></li>
+                                    {% if clube.privado %}
+                                        <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
+                                    {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a href="#" class="btn btn-danger delete-club" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}">Delete Club</a></li>
+                            </ul>
+                          </div>
+                        {% endif %}
+                    {% endif %}
+                </div> 
+    
+                <hr>
+                <p class="text-break description-text"><strong>Description: </strong>{{ clube.descricao|safe }}</p>
+                <p><strong>Foundation:  </strong>{{ clube.dataDeCriacao|date:"d/m/Y" }}</p>
+                <p><strong>Genre:</strong> {{ clube.categoria.nome }}</p>
+                <p><strong>Modality:</strong> {{ clube.modalidade.nome }}</p>
+                <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
+                <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
+                <p class="div-stars"><strong>Rating:&nbsp;</strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+                <p>
+                    <strong>Total Sprees:</strong> {{ total_maratona_finalizadas }} 
+                    <i class="bi bi-eye-fill" id="listarHistorico" data-clube-id="{{ clube.id }}" style="cursor: pointer;"></i>
+                </p>
+                <hr>
+                {% if user != clube.moderador %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#avaliarModal-{{ clube.id }}">
+                        Avaliar Clube
                     </button>
-                    {% if user == clube.moderador %}
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown"><i class="bi bi-gear-wide-connected"></i></button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}">Edit Club</a></li>
-                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTopLivrosModal-{{ clube.id }}">Editar Favoritos</a></li>
-                                {% if clube.privado %}
-                                    <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
-                                {% endif %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a href="#" class="btn btn-danger delete-club" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}">Delete Club</a></li>
-                        </ul>
-                      </div>
+                    &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#sairDoClubeModal-{{ clube.id }}">
+                        Sair do Clube
+                    </button>
+                {% else %}
+                    {% if clube.maratona_ativa %}
+                        <button id="createMaratona" data-clube-id="{{ clube.id }}" class="btn btn-primary btn-sm reluzir" data-bs-toggle="modal" data-bs-target="#maratonaModal">Edit Spree <i class="bi bi-pencil-fill" style="font-size: 0.8rem;"></i></button>
+                    {% else %}
+                        <button id="createMaratona" data-clube-id="{{ clube.id }}" class="btn btn-primary btn-sm reluzir" data-bs-toggle="modal" data-bs-target="#maratonaModal">Start Spree</button>
                     {% endif %}
                 {% endif %}
-            </div> 
+            </div>
 
-            <hr>
-            <p class="text-break description-text"><strong>Description: </strong>{{ clube.descricao|safe }}</p>
-            <p><strong>Foundation:  </strong>{{ clube.dataDeCriacao|date:"d/m/Y" }}</p>
-            <p><strong>Genre:</strong> {{ clube.categoria.nome }}</p>
-            <p><strong>Modality:</strong> {{ clube.modalidade.nome }}</p>
-            <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
-            <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
-            <p class="div-stars"><strong>Rating:&nbsp;</strong>{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
-            <p>
-                <strong>Total Marathons:</strong> {{ total_maratona_finalizadas }} 
-                <i class="bi bi-eye-fill" id="listarHistorico" data-clube-id="{{ clube.id }}" style="cursor: pointer;"></i>
-            </p>
-            <hr>
-            {% if user != clube.moderador %}
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#avaliarModal-{{ clube.id }}">
-                Avaliar Clube
-            </button>
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#sairDoClubeModal-{{ clube.id }}">
-                Sair do Clube
-            </button>
-            {% else %}
-            <button id="createMaratona" data-clube-id="{{ clube.id }}" class="btn btn-primary btn-sm reluzir" data-bs-toggle="modal" data-bs-target="#maratonaModal">Start Spree</button>
-            {% endif %}
+            <div class="top-books">
+                {% if top_livros %}
+                <ul class="top-books-ul">
+                    {% for livro in top_livros %}
+                    <li class="top-books-li" id="second"><p style="margin-bottom: 0;">{{ livro }}</p><div class="second-place"></div></li>
+                    <li class="top-books-li" id="first"><p style="margin-bottom: 0;">{{ livro }}</p><div class="first-place"></div></li>
+                    <li class="top-books-li" id="third"><p style="margin-bottom: 0;">{{ livro }}</p><div class="third-place"></div></li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p style="color: white;">Nenhum livro listado ainda.</p>
+                {% endif %}
+            </div>
+
         </div>
+        
     </div>
 
     <div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
@@ -290,9 +319,6 @@
         <canvas id="canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1040; pointer-events: none;"></canvas>
         <div class="modal-dialog">
             <div class="modal-content" style="position: relative;">
-                <div id="overlay" class="overlay">
-                    <span class="overlay-text">Start<br>Reading Spree</span>
-                </div>
                 <div class="modal-body" style="position: relative; overflow: hidden;">
                     <div style="position: relative; z-index: 2; color: black;">
                         <form id="maratonaForm">
@@ -302,7 +328,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="dataInicio" class="form-label">Data de Início</label>
-                                <input type="date" class="form-control" id="dataInicio" readonly>
+                                <input type="date" class="form-control" id="dataInicio" required>
                             </div>
                             <div class="mb-3">
                                 <label for="dataFim" class="form-label">Data de Término</label>

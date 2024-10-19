@@ -310,6 +310,10 @@
         cursor: pointer;
     }
 
+    #follow-text:hover{
+        background-color: #004bbb;
+    }
+
     @media screen and (max-width: 767px){
         .badges{
             order: 2;
@@ -441,10 +445,9 @@
                                 <button type="submit" span class="btn follow" id="following-text">Unfollow <i class="bi bi-check"></i></span></button>
                             </form>
                         {% else %}
-                            
                             <form method="POST" action="{% url 'seguir_usuario' user_id=profile.user.id %}">
                                 {% csrf_token %}
-                                <button type="submit" span class="btn follow" id="following-text">Follow<i class="bi bi-check"></i></span></button>
+                                <button type="submit" span class="btn follow" id="follow-text">Follow<i class="bi bi-check"></i></span></button>
                             </form>
                         {% endif %}
                     {% endif %}
