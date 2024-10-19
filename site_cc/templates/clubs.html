@@ -324,37 +324,41 @@
     </div>
 
     <div class="hold-evr">
-        <div class="cards-div">
-            <ul id="carousel" style="display: flex; padding: 0; margin: 0; list-style: none;">
-                {% for clube_context in clubes_context %}
-                    {% with clube=clube_context.clube %}
-                        <li>
-                            <div class="card shadow">
-                                <div class="card-body" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
-                                    <h5 class="card-title">
-                                        <a class="titles" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
-                                            {{ clube.titulo }}
-                                        </a>
-                                    </h5>
-                                    <div class="genre-stars">
-                                        <h6 class="card-subtitle mb-2 text-muted">{{ clube.categoria }}<i class="bi bi-dot"></i></h6>
-                                        <p class="div-stars">{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
-                                    </div>
-                                    <p class="date">
-                                        <span class="badge text-bg-primary">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span>
-                                    </p>
-                                    <div class="description-area">
-                                        <p class="card-text text-break">{{ clube.descricao|cortar_texto:120|safe }}</p>
+        {% if clubes_context %}
+            <div class="cards-div">
+                <ul id="carousel" style="display: flex; padding: 0; margin: 0; list-style: none;">
+                    {% for clube_context in clubes_context %}
+                        {% with clube=clube_context.clube %}
+                            <li>
+                                <div class="card shadow">
+                                    <div class="card-body" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
+                                        <h5 class="card-title">
+                                            <a class="titles" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
+                                                {{ clube.titulo }}
+                                            </a>
+                                        </h5>
+                                        <div class="genre-stars">
+                                            <h6 class="card-subtitle mb-2 text-muted">{{ clube.categoria }}<i class="bi bi-dot"></i></h6>
+                                            <p class="div-stars">{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+                                        </div>
+                                        <p class="date">
+                                            <span class="badge text-bg-primary">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span>
+                                        </p>
+                                        <div class="description-area">
+                                            <p class="card-text text-break">{{ clube.descricao|cortar_texto:120|safe }}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                    {% endwith %}
-                {% endfor %}
-            </ul>
-        </div>
-        <button id="prev" class="carousel-button">◀</button>
-        <button id="next" class="carousel-button">▶</button>
+                            </li>
+                        {% endwith %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <button id="prev" class="carousel-button">◀</button>
+            <button id="next" class="carousel-button">▶</button>
+        {% else %}
+            <p class="text-center">Nenhum clube corresponde aos filtros selecionados. Por favor, tente uma pesquisa diferente.</p>
+        {% endif %}
     </div>
 
     {% for clube_context in clubes_context %}
