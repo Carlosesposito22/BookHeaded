@@ -4,12 +4,19 @@
 
 .data-holder {
     background-color: rgb(255, 255, 255);
-    width: fit-content;
+    width: 30%;
     padding: .8rem;
     border-radius: 1rem;
     z-index: 99;
-    max-width: fit-content;
+    max-width: 100%;
     height: fit-content;
+}
+
+.title-n-fav{
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    align-items: center;
 }
 
 .hold-evr {
@@ -26,8 +33,16 @@
     width: 65%;
 }
 
+.btn-progress-bar{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .progressbar-holder {
-    width: 80%;
     max-width: 100%;
     min-width: 80%;
 }
@@ -130,6 +145,10 @@ small {
     margin-left: 0.5rem;
 }
 
+.comentarioholder{
+    padding: 0rem 1rem;
+}
+
 .comment-n-date{
     display: flex;
     flex-direction: row;
@@ -197,6 +216,13 @@ small {
     .comentarioholder, .capitulo-container, .comentarios-container, .data-holder {
         width: 100%;
     }
+}
+
+#setProgress{
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
 }
 
 .comentario-wrapper{
