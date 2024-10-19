@@ -7,9 +7,8 @@
     padding: .8rem;
     border-radius: 1rem;
     z-index: 99;
-    max-width: 100%;
     height: fit-content;
-    width: 100%;
+    width: 30%;
 }
 
 .title-n-fav{
@@ -40,6 +39,7 @@
     margin: 0;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .progressbar-holder {
@@ -176,53 +176,6 @@ small {
 
 .capitulo-atual{
     background-color: #0066FF;
-}
-
-@media (max-width: 700px) {
-    .data-progress-holder {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-    }
-
-    .btn-progress-bar{
-        width: 100%;
-        justify-content: center;
-        align-items: center;
-        display: flex;
-    }
-
-    .hold-evr-exc-admt {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .data-holder {
-        margin-top: 1rem;
-        width: 100%;
-    }
-
-    .container {
-        align-items: center;
-        justify-content: center;
-    }
-
-    .hold-evr {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .holder-title-btn {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .comentarioholder, .capitulo-container, .comentarios-container, .data-holder {
-        width: 100%;
-    }
 }
 
 #setProgress{
@@ -414,3 +367,49 @@ body, html {
     flex-direction: row;
     justify-content: space-between;
   }
+
+  @media (max-width: 700px) {
+    .data-progress-holder {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .btn-progress-bar{
+        width: 100%;
+        align-items: center;
+    }
+
+    .hold-evr-exc-admt {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .data-holder {
+        margin-top: 1rem;
+        width: 100% !important;
+    }
+
+    .container {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hold-evr {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+    }
+
+    .holder-title-btn {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .comentarioholder, .capitulo-container, .comentarios-container, .data-holder {
+        width: 100%;
+    }
+}
