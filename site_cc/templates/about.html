@@ -4,159 +4,178 @@
 {% block content %}
 
 <style>
-    * {
-        font-family: 'DM Sans', 'sans-serif';
-    }
+* {
+    font-family: 'DM Sans', 'sans-serif';
+}
 
-    .superdiv {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 2rem;
-        justify-content: left;
-        align-items: center;
-        max-width: 95%;
-    }
+.superdiv {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: left;
+    align-items: center;
+    max-width: 95%;
+}
 
-    .textbox-1 {
-        text-align: left;
-        min-width: 50%;
-        max-width: 95%;
-        display: flex;
-        flex-direction: column;
+.textbox-1 {
+    text-align: left;
+    min-width: 50%;
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+}
+
+p {
+    min-width: 70%;
+    max-width: 95%;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 4rem;
+    max-width: 95%;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+section {
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+h2 {
+    font-size: 2.2em;
+    color: #333;
+}
+
+.team-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.team-member {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: calc(33.33% - 40px);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.team-member:hover {
+    animation: golden-glow 0.5s forwards;
+}
+
+@keyframes golden-glow {
+    0% {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(48, 169, 255, 1);
+        transform: scale(1.05);
+    }
+}
+
+.team-member img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.team-member h3 {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.social-links {
+    margin-top: 15px;
+}
+
+.social-links a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2em;
+    margin: 0 10px;
+}
+
+.social-links a:hover {
+    color: #333;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    padding: 15px 0;
+    margin-top: 50px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
     }
 
     p {
-        min-width: 70%;
-        max-width: 95%;
+        min-width: 100%;
+        max-width: 100%;
     }
 
-    h1 {
-        font-weight: bold;
-        font-size: 4rem;
-        max-width: 95%;
-    }
-
-    header h1 {
-        margin: 0;
-        font-size: 2.5em;
-    }
-
-    section {
-        max-width: 1200px;
-        margin: 40px auto;
-    }
-
-    h2 {
-        font-size: 2.2em;
-        color: #333;
-    }
-
-    .team-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 40px;
-        margin-top: 30px;
+    .textbox-1 {
+        min-width: 100%;
+        max-width: 100%;
     }
 
     .team-member {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: calc(33.33% - 40px);
-        text-align: center;
-        transition: transform 0.3s ease-in-out;
-    }
-
-    .team-member:hover {
-        animation: golden-glow 0.5s forwards;
-    }
-
-    @keyframes golden-glow {
-        0% {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        100% {
-            box-shadow: 0 0 15px rgba(48, 169, 255, 1);
-            transform: scale(1.05);
-        }
-    }
-
-    .team-member img {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-bottom: 15px;
-    }
-
-    .team-member h3 {
-        font-size: 1.4em;
-        margin-bottom: 10px;
-        color: #333;
-    }
-
-    .social-links {
-        margin-top: 15px;
-    }
-
-    .social-links a {
-        text-decoration: none;
-        color: #333;
-        font-size: 1.2em;
-        margin: 0 10px;
-    }
-
-    .social-links a:hover {
-        color: #333;
-    }
-
-    footer {
-        background-color: #333;
-        color: #fff;
-        padding: 15px 0;
-        margin-top: 50px;
-        position: relative;
-        bottom: 0;
         width: 100%;
+        margin-bottom: 20px;
     }
 
-    footer p {
-        margin: 0;
+    .team-container {
+        gap: 20px;
     }
+
+    .superdiv {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+    }
+}
 </style>
 
 <div class="container mt-5 superdiv">
 
     <div class="textbox-1">
-        <h1>Our Purpose</h1>
+        <h1>Our Purpose</h1> <strong></strong>
         <br>
-        <p> With the ongoing advance of technology, we noticed that the book culture went on a skyhill down.<br><br>Such a
-            mistake made <a>our team</a> think: "Why don't we ally this book thing with the internet?", and then,
-            bookheaded
-            was born.<br><br>
-            Our goal is to make reading books entertaining again, by creating the perfect network for people to manage
-            their
-            book clubs, and make it easier to immerge into this culture. You can also interact with other enthusiasts,
-            discuss your readings, make friends with similar tastes as you, and much more.
-        </p>
+        <h5> O <strong>Bookheaded</strong> é um projeto desenvolvido para a disciplina de Fundamentos de Desenvolvimento de Software (FDS) do curso de Ciência da
+            Computação. A plataforma foi idealizada para <strong>promover a interação entre leitores, permitindo a criação de grupos de leitura, clubes
+            privados e públicos, e bate-papos sobre livros.</strong> O projeto foca em facilitar o compartilhamento de experiências literárias e incentivar
+            a leitura colaborativa, proporcionando uma interface intuitiva onde os usuários podem organizar suas leituras, debater sobre capítulos
+            específicos e criar conexões com outros membros da comunidade.
+            </h5>
         <br>
         <hr>
         <br>
         <h1>Our Team</h1>
         
     <div class="team-container">
-        <div class="team-member">
-            <img src="{% static 'images/amanda.jpg' %}" alt="Membro 1">
-            <h3>Amanda Montarroios</h3>
-            <div class="social-links">
-                <a href="https://www.linkedin.com/in/amanda-montarroios-150b90319/" target="_blank"><i class="bi bi-linkedin"></i>  LinkedIn</a>
-                <a href="https://github.com/amanda-montarroios" target="_blank"><i class="bi bi-github"></i>  GitHub</a><br>
-                <a>📩 amo@cesar.school</a>
-            </div>
-        </div>
-
+        
         <div class="team-member">
             <img src="{% static 'images/carlos.jpg' %}" alt="Membro 2">
             <h3>Carlos Eduardo Espósito</h3>
@@ -166,7 +185,7 @@
                 <a>📩 ceec@cesar.school</a>
             </div>
         </div>
-
+        
         <div class="team-member">
             <img src="{% static 'images/micucci.jpg' %}" alt="Membro 3">
             <h3>João Henrique Micucci</h3>
@@ -175,7 +194,7 @@
                 <a>📩 jhmm@cesar.school</a>
             </div>
         </div>
-
+        
         <div class="team-member">
             <img src="{% static 'images/mamede.jpg' %}" alt="Membro 4">
             <h3>João Pedro Mamede</h3>
@@ -185,7 +204,7 @@
                 <a>📩 jpmd@cesar.school</a>
             </div>
         </div>
-
+        
         <div class="team-member">
             <img src="{% static 'images/malu.jpg' %}" alt="Membro 5">
             <h3>Maria Luíza Dantas</h3>
@@ -195,7 +214,7 @@
                 <a>📩 mldt@cesar.school</a>
             </div>
         </div>
-
+        
         <div class="team-member">
             <img src="{% static 'images/mateus.jpg' %}" alt="Membro 6">
             <h3>Mateus Ribeiro</h3>
@@ -205,10 +224,19 @@
                 <a>📩 mar2@cesar.school</a>
             </div>
         </div>
-    </div>
-    </div>
+        <div class="team-member">
+            <img src="{% static 'images/amanda.jpg' %}" alt="Membro 1">
+            <h3>Amanda Montarroios</h3>
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/amanda-montarroios-150b90319/" target="_blank"><i class="bi bi-linkedin"></i>  LinkedIn</a>
+                <a href="https://github.com/amanda-montarroios" target="_blank"><i class="bi bi-github"></i>  GitHub</a><br>
+                <a>📩 amo@cesar.school</a>
+            </div>
+        </div>
+    </div> 
+</div>
 
-    <hr>
+<hr>
 
 </div>
 

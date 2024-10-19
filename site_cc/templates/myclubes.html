@@ -624,12 +624,16 @@ Home Page
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        if (localStorage.getItem('favoritosAberto') === 'true') {
-            var collapseElement = document.getElementById('collapseExample');
-            var bootstrapCollapse = new bootstrap.Collapse(collapseElement, {
-                toggle: true
-            });
-            document.querySelector('h2.favoritosheader').setAttribute('aria-expanded', 'true');
+    if (localStorage.getItem('favoritosAberto') === 'true') {
+        var collapseElement = document.getElementById('collapseExample');
+        var bootstrapCollapse = new bootstrap.Collapse(collapseElement, {
+            toggle: true
+        });
+        document.querySelector('h2.favoritosheader').setAttribute('aria-expanded', 'true');
+
+        setTimeout(() => {
+            localStorage.removeItem('favoritosAberto');
+        }, 1000);
     }
 
     document.querySelectorAll('[id^="favoritar-btn-"]').forEach(function (btn) {
@@ -655,21 +659,21 @@ Home Page
     });
 });
 
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const modalId = urlParams.get('modal');
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const modalId = urlParams.get('modal');
+    
+    if (modalId) {
+        const modalSelector = `#${modalId}`;
+        const modalElement = document.querySelector(modalSelector);
         
-        if (modalId) {
-            const modalSelector = `#${modalId}`;
-            const modalElement = document.querySelector(modalSelector);
-            
-            if (modalElement) {
-                $(modalSelector).modal('show');
-            } else {
-                console.error('Modal não encontrado:', modalSelector);
-            }
+        if (modalElement) {
+            $(modalSelector).modal('show');
+        } else {
+            console.error('Modal não encontrado:', modalSelector);
         }
-    };
+    }
+};
 
 </script>
 
