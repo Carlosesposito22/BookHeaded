@@ -8,7 +8,7 @@
     border-radius: 1rem;
     z-index: 99;
     height: fit-content;
-    width: 30%;
+    width: 100%;
 }
 
 .title-n-fav{
@@ -368,7 +368,19 @@ body, html {
     justify-content: space-between;
   }
 
+  .data-n-topbooks{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 30%;
+  }
+
   @media (max-width: 700px) {
+
+    .data-n-topbooks{
+        width: 100% !important;
+    }
+
     .data-progress-holder {
         flex-direction: column;
         align-items: center;
@@ -395,6 +407,7 @@ body, html {
     .container {
         align-items: center;
         justify-content: center;
+        margin-right: -0.6rem;
     }
 
     .hold-evr {
