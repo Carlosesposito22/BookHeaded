@@ -215,7 +215,6 @@
         {% include 'pedidos.html' %}
         {% include 'modal_SairDoClube.html' %}
 
-        <div class="data-n-topclubs">
             <div class="data-holder shadow"> 
                 <div class="club-data-icons">
                     <h3><strong>Club Data</strong></h3>
@@ -228,7 +227,7 @@
                             <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown" style="border-radius: 0.5rem;"><i class="bi bi-gear-wide-connected"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}">Edit Club</a></li>
-                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTopLivrosModal-{{ clube.id }}">Editar Favoritos</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTopLivrosModal-{{ clube.id }}">Edit Top Books</a></li>
                                     {% if clube.privado %}
                                         <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
                                     {% endif %}
@@ -269,22 +268,6 @@
                     {% endif %}
                 {% endif %}
             </div>
-
-            <div class="top-books">
-                {% if top_livros %}
-                <ul class="top-books-ul">
-                    {% for livro in top_livros %}
-                    <li class="top-books-li" id="second"><p style="margin-bottom: 0;">{{ livro }}</p><div class="second-place"></div></li>
-                    <li class="top-books-li" id="first"><p style="margin-bottom: 0;">{{ livro }}</p><div class="first-place"></div></li>
-                    <li class="top-books-li" id="third"><p style="margin-bottom: 0;">{{ livro }}</p><div class="third-place"></div></li>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <p style="color: white;">Nenhum livro listado ainda.</p>
-                {% endif %}
-            </div>
-
-        </div>
         
     </div>
 
