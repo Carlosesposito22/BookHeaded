@@ -246,19 +246,7 @@ const canvas = document.getElementById('canvas');
     updateLines();
   }
   animate();
-  window.addEventListener('resize', () => {
-    cw = canvas.width = window.innerWidth;
-    ch = canvas.height = window.innerHeight;
-    updateLines();
-  });
-    $(document).ready(function() {
-        $('#maratonaModal').on('show.bs.modal', function () {
-            $('#overlay').show();
-        });
-        $('#maratonaModal').on('hide.bs.modal', function () {
-            $('#overlay').hide();
-        });
-    });
+
 
 
 // Adiciona o JS da maratona daqui pra baixo, viu Mateus. 3 horas só pra descobrir que era só colocar meu código na parte de cima. A vida não é um morango. PS: Carlos
@@ -462,6 +450,20 @@ function verificarNomeMaratonaExistente(nomeMaratona, clubeId) {
             return false; 
         });
 }
+
+window.addEventListener('resize', () => {
+    cw = canvas.width = window.innerWidth;
+    ch = canvas.height = window.innerHeight;
+    updateLines();
+  });
+$(document).ready(function() {
+    $('#maratonaModal').on('show.bs.modal', function () {
+        $('#overlay').show();
+    });
+    $('#maratonaModal').on('hide.bs.modal', function () {
+        $('#overlay').hide();
+    });
+});
 
 
 function calcularDuracao(dataInicio, dataFim) {
