@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django.http import JsonResponse, HttpResponseBadRequest
 
 
 def pagina_principal(request):
@@ -262,7 +263,15 @@ def recusar_membro(request, clube_id, membro_id):
 
 def adicionar_membro(request, clube_id):
     clube = get_object_or_404(Clube, id=clube_id)
-    Membro.objects.get_or_create(clube=clube, usuario=request.user, defaults={'aprovado': False})
+
+    membro_existente = Membro.objects.filter(clube=clube, usuario=request.user).exists()
+
+    if membro_existente:
+
+        return HttpResponseBadRequest("Você já solicitou acesso a este clube.")
+
+    Membro.objects.create(clube=clube, usuario=request.user, aprovado=False)
+    
     url = reverse('myclubes')
     return redirect(f'{url}?modal=clubeModal-{clube_id}')
 
@@ -429,7 +438,6 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def criar_maratona_view(request, clube_id):
     clube = get_object_or_404(Clube, pk=clube_id)
-    
 
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -443,19 +451,34 @@ def criar_maratona_view(request, clube_id):
             data_fim = datetime.strptime(data_fim_str, '%Y-%m-%d').date()
             data_inicio = datetime.strptime(data_inicio_str, '%Y-%m-%d').date()
 
-            clube.data_inicio_maratona = data_inicio
+            if data_fim < data_inicio:
+                return JsonResponse({'success': False, 'message': 'Data final não pode ser menor que a data inicial.'}, status=400)
+
+            if capitulo_final < capitulo_atual:
+                return JsonResponse({'success': False, 'message': 'Capítulo final não pode ser menor que o capítulo atual.'}, status=400)
+
+            if clube.maratona_ativa:
+                clube.nome_maratona = nome_maratona  
+                clube.data_inicio_maratona = data_inicio 
+                clube.data_fim_maratona = data_fim
+                clube.capitulo_final_maratona = capitulo_final
+                clube.capitulo_atual_maratona = capitulo_atual
+                clube.save()  
+                return JsonResponse({'success': True, 'message': 'Maratona atualizada com sucesso!'})
+
             clube.maratona_ativa = True
+            clube.data_inicio_maratona = data_inicio
             clube.data_fim_maratona = data_fim
             clube.capitulo_final_maratona = capitulo_final
             clube.capitulo_atual_maratona = capitulo_atual
             clube.nome_maratona = nome_maratona  
             clube.save()  
 
-            return JsonResponse({'success': True, 'message': 'Maratona atualizada com sucesso!'})
+            return JsonResponse({'success': True, 'message': 'Maratona criada com sucesso!'})
+
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
-    
     if clube.maratona_ativa:
         return JsonResponse({
             'success': True,
@@ -467,6 +490,7 @@ def criar_maratona_view(request, clube_id):
         })
     else:
         return JsonResponse({'success': False, 'message': 'Nenhuma maratona ativa'}, status=404)
+
 
 
 @receiver(post_save, sender=Clube)
