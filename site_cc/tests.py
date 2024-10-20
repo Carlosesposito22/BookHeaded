@@ -1,14 +1,14 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Clube, Modalidade, Categoria, Membro, HistoricoMaratona
+from .models import Clube, Modalidade, Categoria, Membro, HistoricoMaratona, Comentario
 from datetime import datetime
 import json
 import logging
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
-from .models import Clube, Categoria, Modalidade
+from site_cc.models import Clube, Modalidade, Categoria, Comentario
 
 class MaratonaTests(TestCase):
 
@@ -271,12 +271,12 @@ class TestClubePrivado(TestCase):
         self.client.login(username=username, password=password)
 
     def test_criar_clube_privado(self):
-        """Testa se o clube é criado corretamente como privado."""
+        """Testa se o clube é criado corretamente como privado.""" 
         assert self.clube_privado.privado is True
         assert Clube.objects.count() == 1
 
     def test_solicitacao_entrada(self):
-        """Testa se a solicitação de entrada é registrada corretamente."""
+        """Testa se a solicitação de entrada é registrada corretamente.""" 
         self.fazer_login('participante', '12345')
         url = reverse('adicionar-membro', args=[self.clube_privado.id])
         response = self.client.post(url)
@@ -286,7 +286,7 @@ class TestClubePrivado(TestCase):
         assert membro.aprovado is False
 
     def test_aprovar_membro(self):
-        """Testa se o moderador pode aprovar uma solicitação de entrada."""
+        """Testa se o moderador pode aprovar uma solicitação de entrada.""" 
         Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=False)
         
         self.fazer_login('moderador', '12345')
@@ -298,7 +298,7 @@ class TestClubePrivado(TestCase):
         assert membro.aprovado is True
 
     def test_rejeitar_membro(self):
-        """Testa se o moderador pode rejeitar uma solicitação de entrada."""
+        """Testa se o moderador pode rejeitar uma solicitação de entrada.""" 
         membro = Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=False)
         
         self.fazer_login('moderador', '12345')
@@ -309,7 +309,7 @@ class TestClubePrivado(TestCase):
         assert not Membro.objects.filter(id=membro.id).exists()
 
     def test_acesso_apos_aprovacao(self):
-        """Testa se um membro aprovado pode acessar o clube."""
+        """Testa se um membro aprovado pode acessar o clube.""" 
         Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=True)
 
         self.fazer_login('participante', '12345')
@@ -320,7 +320,7 @@ class TestClubePrivado(TestCase):
         assert 'Clube Fechado' in str(response.content)
 
     def test_mensagem_solicitacao_pendente(self):
-        """Testa se um participante não aprovado vê uma mensagem de solicitação pendente."""
+        """Testa se um participante não aprovado vê uma mensagem de solicitação pendente.""" 
 
         membro = Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=False)
 
@@ -336,7 +336,7 @@ class TestClubePrivado(TestCase):
         assert 'pendente' in response.content.decode().lower(), "Mensagem de solicitação pendente não encontrada"
 
     def test_solicitacao_entrada_duplicada(self):
-        """Testa se o sistema impede solicitações duplicadas para o mesmo clube."""
+        """Testa se o sistema impede solicitações duplicadas para o mesmo clube.""" 
 
         Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=False)
 
@@ -352,7 +352,7 @@ class TestClubePrivado(TestCase):
         assert 'você já solicitou acesso a este clube' in response_content, "Mensagem de erro esperada não encontrada"
 
     def test_rejeitar_membro_ja_rejeitado_ou_inexistente(self):
-        """Testa se o moderador não pode rejeitar um membro já rejeitado ou que não existe."""
+        """Testa se o moderador não pode rejeitar um membro já rejeitado ou que não existe.""" 
         membro = Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=False)
         self.fazer_login('moderador', '12345')
 
@@ -365,7 +365,7 @@ class TestClubePrivado(TestCase):
         assert response.status_code == 404
 
     def test_criar_clube_com_informacoes_faltantes(self):
-        """Testa manualmente se o clube não pode ser criado com informações faltantes."""
+        """Testa manualmente se o clube não pode ser criado com informações faltantes.""" 
         clube_count_antes = Clube.objects.count()
 
         titulo = ''
@@ -386,11 +386,6 @@ class TestClubePrivado(TestCase):
         
         assert clube_count_antes == clube_count_depois, "O clube foi criado com informações faltantes!"
 
-
-from django.test import TestCase, Client
-from django.urls import reverse
-from django.contrib.auth.models import User
-from .models import Clube, Categoria, Modalidade
 
 class ClubeSearchTest(TestCase):
 
@@ -420,7 +415,7 @@ class ClubeSearchTest(TestCase):
         )
 
     def test_search_bar_visible(self):
-        """Teste 1: Verifica se a barra de pesquisa está visível na página de clubes."""
+        """Teste 1: Verifica se a barra de pesquisa está visível na página de clubes.""" 
         response = self.client.get(reverse('clubs'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '<input', msg_prefix="A barra de pesquisa não foi encontrada na página")
@@ -428,39 +423,101 @@ class ClubeSearchTest(TestCase):
         self.assertContains(response, 'placeholder="Search Clubs"', msg_prefix="O placeholder da barra de pesquisa está incorreto")
 
     def test_search_club_by_name(self):
-        """Teste 2: Verifica se a busca por nome do clube funciona corretamente."""
+        """Teste 2: Verifica se a busca por nome do clube funciona corretamente.""" 
         response = self.client.get(reverse('clubs'), {'nome': 'Corrida'})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Clube de Corrida')
         self.assertNotContains(response, 'Clube de Leitura')
 
     def test_club_description_none(self):
-        """Teste 3: Verifica se a descrição do clube sendo None é tratada corretamente."""
+        """Teste 3: Verifica se a descrição do clube sendo None é tratada corretamente.""" 
         response = self.client.get(reverse('clubs'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Clube de Leitura')
         self.assertNotContains(response, 'None') 
     
     def test_partial_search_club_by_name(self):
-        """Teste 4: Verifica se a busca parcial por nome do clube funciona corretamente."""
+        """Teste 4: Verifica se a busca parcial por nome do clube funciona corretamente.""" 
         response = self.client.get(reverse('clubs'), {'nome': 'Corr'})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Clube de Corrida')
         self.assertNotContains(response, 'Clube de Leitura')
 
     def test_search_club_by_nonexistent_name(self):
-        """Teste 5: Verifica se uma busca por nome inexistente exibe a mensagem apropriada."""
+        """Teste 5: Verifica se uma busca por nome inexistente exibe a mensagem apropriada.""" 
         response = self.client.get(reverse('clubs'), {'nome': 'Clube Inexistente'})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Nenhum clube corresponde aos filtros selecionados. Por favor, tente uma pesquisa diferente.', 
                             msg_prefix="A mensagem de 'nenhum clube encontrado' não foi exibida.")
 
     def test_search_club_case_insensitive(self):
-        """Teste 6: Verifica se a busca por nome do clube é case insensitive."""
+        """Teste 6: Verifica se a busca por nome do clube é case insensitive.""" 
         response = self.client.get(reverse('clubs'), {'nome': 'clube de corrida'})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Clube de Corrida')
         self.assertNotContains(response, 'Clube de Leitura')
 
 
+class ComentarioTests(TestCase):
 
+    def setUp(self):
+
+        self.user = User.objects.create_user(username='testuser', password='12345')
+
+        self.client.login(username='testuser', password='12345')
+
+        self.modalidade = Modalidade.objects.create(nome='Leitura')
+        self.categoria = Categoria.objects.create(nome='Fantasia')
+
+        self.clube = Clube.objects.create(
+            moderador=self.user,
+            titulo='Clube de Leitura',
+            modalidade=self.modalidade,
+            categoria=self.categoria,
+            descricao='Clube focado em leitura de fantasia'
+        )
+
+    def test_comentario_vazio(self):
+        """
+        Testa se o sistema exibe erro ao tentar enviar comentário vazio e não salva o comentário.
+        """
+        response = self.client.post(reverse('add_comentario', kwargs={'pk': self.clube.id}), { 
+            'comentario': '' 
+        })
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(Comentario.objects.count(), 0)
+
+        self.assertContains(response, 'O comentário não pode estar vazio.')
+
+    def test_moderador_pode_comentar(self):
+        """
+        Testa se o moderador do clube pode comentar corretamente.
+        """
+        response = self.client.post(reverse('add_comentario', kwargs={'pk': self.clube.id}), {
+            'comentario': 'Esse é um comentário válido.'  
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Comentario.objects.count(), 1)
+
+        comentario = Comentario.objects.first()
+        self.assertEqual(comentario.comentario, 'Esse é um comentário válido.')
+        self.assertEqual(comentario.user, self.user)
+
+    def test_usuario_pode_comentar(self):
+        """
+        Testa se um usuário logado pode comentar no clube.
+        """
+
+        response = self.client.post(reverse('add_comentario', kwargs={'pk': self.clube.id}), {
+            'comentario': 'Comentário de um usuário.' 
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Comentario.objects.count(), 1)
+
+        comentario = Comentario.objects.first()
+        self.assertEqual(comentario.comentario, 'Comentário de um usuário.')
+        self.assertEqual(comentario.user, self.user)

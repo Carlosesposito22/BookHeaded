@@ -31,7 +31,6 @@ def contato(request):
     return render(request, 'contato.html')
 
 @login_required
-
 def clubes_view(request):
     nome = request.GET.get('nome', '')
     clubes = Clube.objects.all()
@@ -43,7 +42,7 @@ def clubes_view(request):
     if categorias: 
         clubes = clubes.filter(categoria__nome__in=categorias)  
 
-    no_clubs_found = clubes.count() == 0
+    no_clubs_found = clubes.count() == 0  # Verifica se nenhum clube foi encontrado
 
     user = request.user
     clubes_context = [
@@ -58,9 +57,10 @@ def clubes_view(request):
     context = {
         'clubes_context': clubes_context,
         'cat_menu': Categoria.objects.all(),
-        'no_clubs_found': no_clubs_found,
+        'no_clubs_found': no_clubs_found,  # Passa a informação de que nenhum clube foi encontrado
     }
     return render(request, 'clubs.html', context)
+
 
 
 
@@ -178,13 +178,21 @@ def comentario_create_view(request, clube_id):
     clube = Clube.objects.get(pk=clube_id)
 
     if request.method == 'POST':
-        comentario_texto = request.POST.get('comentario')
-        
+        comentario_texto = request.POST.get('comentario').strip()  # Remove espaços em branco
+
+        # Verifica se o campo de comentário está vazio
+        if not comentario_texto:
+            messages.error(request, 'O comentário não pode estar vazio.')
+            return render(request, 'addComentario.html', {'clube': clube})
+
+        # Se o comentário não for vazio, prossegue para salvar
         Comentario.objects.create(
             clube=clube,
             user=request.user, 
             comentario=comentario_texto  
         )
+
+        messages.success(request, 'Comentário adicionado com sucesso!')
         return redirect('club-Detail', pk=clube.pk)
 
     return render(request, 'addComentario.html', {'clube': clube})
