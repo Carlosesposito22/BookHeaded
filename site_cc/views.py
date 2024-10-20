@@ -42,6 +42,8 @@ def clubes_view(request):
     if categorias: 
         clubes = clubes.filter(categoria__nome__in=categorias)  
 
+    no_clubs_found = clubes.count() == 0
+
     user = request.user
     clubes_context = [
         {
@@ -55,8 +57,11 @@ def clubes_view(request):
     context = {
         'clubes_context': clubes_context,
         'cat_menu': Categoria.objects.all(),
+        'no_clubs_found': no_clubs_found,
     }
     return render(request, 'clubs.html', context)
+
+
 
 
 @login_required
