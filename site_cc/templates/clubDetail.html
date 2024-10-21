@@ -517,6 +517,11 @@ document.getElementById('saveMaratona').addEventListener('click', function() {
     const capituloFinal = parseInt(document.getElementById('capituloFinal').value, 10);
     const capituloAtual = parseInt(document.getElementById('capituloAtual').value, 10);
 
+    if (nomeMaratona === '') {
+        alert('O nome da maratona não pode estar em branco.');
+        return;
+    }
+
     if (new Date(dataFim) < new Date(dataInicio)) {
         alert('A data final não pode ser menor que a data inicial.');
         return;
