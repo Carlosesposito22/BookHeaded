@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 from django.urls import reverse
-from .models import Clube, Membro, Comentario, Modalidade, Categoria, HistoricoMaratona, Profile
+from .models import Clube, Membro, Comentario, Modalidade, Categoria, HistoricoMaratona, Profile, Avaliacao
 from .views import comentario_create_view
 from unittest.mock import patch
 from django.conf import settings
@@ -1020,4 +1020,100 @@ class LivrosFavoritosTest(TestCase):
         self.assertEqual(response.status_code, 403)
         self.clube.refresh_from_db()
         self.assertNotEqual(self.clube.top_livros, 'Livro Indevido')
+
+
+class AvaliacaoClubeTest(TestCase):
+
+    def setUp(self):
+        # Criar uma categoria e uma modalidade
+        self.categoria = Categoria.objects.create(nome='Ficção')
+        self.modalidade = Modalidade.objects.create(nome='Online')
+
+        # Criar um moderador
+        self.moderador = User.objects.create_user(username='moderador', password='modpassword')
+
+        # Criar um clube
+        self.clube = Clube.objects.create(
+            titulo='Clube de Teste',
+            moderador=self.moderador,
+            descricao='Um clube para testar avaliações',
+            categoria=self.categoria,
+            modalidade=self.modalidade
+        )
+
+        # Criar um participante
+        self.participante = User.objects.create_user(username='participante', password='password123')
+
+    def test_usuario_logado_pode_acessar_clube(self):
+        """Verificar se o participante logado pode acessar a página do clube"""
+        self.client.login(username='participante', password='password123')
+        response = self.client.get(reverse('club-Detail', args=[self.clube.id]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_usuario_pode_avaliar_clube(self):
+        """Verificar se o participante pode avaliar o clube com uma nota válida"""
+        self.client.login(username='participante', password='password123')
+        response = self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 4})
+        
+        # Verificar se a avaliação foi registrada
+        avaliacao = Avaliacao.objects.filter(clube=self.clube, usuario=self.participante).first()
+        self.assertIsNotNone(avaliacao)
+        self.assertEqual(avaliacao.valor, 4)
+
+    def test_usuario_nao_seleciona_nota_exibe_erro(self):
+        """Testar se o envio de uma avaliação sem uma nota exibe uma mensagem de erro"""
+        self.client.login(username='participante', password='password123')
+
+        # Simular o envio de uma avaliação sem selecionar uma nota (rating vazio)
+        response = self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': ''})
+
+        # Verificar se o status da resposta é 200 (página recarregada com erro)
+        self.assertEqual(response.status_code, 200)
+
+        # Verificar se a avaliação não foi registrada
+        self.assertEqual(Avaliacao.objects.filter(clube=self.clube, usuario=self.participante).count(), 0)
+
+        # Verificar se a mensagem de erro de campo obrigatório está presente
+        self.assertContains(response, "Este campo é obrigatório e deve ser um número entre 1 e 5.")
+
+    def test_usuario_pode_atualizar_avaliacao(self):
+        """Verificar se o participante pode atualizar sua avaliação"""
+        self.client.login(username='participante', password='password123')
+
+        # Primeiro, enviar uma avaliação inicial
+        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 4})
+
+        # Atualizar a avaliação
+        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 5})
+
+        # Verificar se a avaliação foi atualizada
+        avaliacao = Avaliacao.objects.get(clube=self.clube, usuario=self.participante)
+        self.assertEqual(avaliacao.valor, 5)
+
+    def test_media_avaliacoes_atualizada_corretamente(self):
+        """Verificar se a média de avaliações é atualizada corretamente após nova avaliação"""
+        # Criar outro participante e enviar avaliações
+        participante2 = User.objects.create_user(username='participante2', password='password123')
+        self.client.login(username='participante', password='password123')
+        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 3})
+
+        self.client.login(username='participante2', password='password123')
+        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 5})
+
+        # Verificar se a média de avaliações foi calculada corretamente
+        self.assertEqual(self.clube.calcular_media_avaliacoes(), 4)
+
+    def test_usuario_nao_pode_avaliar_mais_de_uma_vez(self):
+        """Verificar se o participante não pode enviar uma nova avaliação, mas apenas atualizar a existente"""
+        self.client.login(username='participante', password='password123')
+
+        # Enviar uma avaliação inicial
+        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 3})
+
+        # Tentar enviar uma nova avaliação
+        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 5})
+
+        # Verificar se a avaliação foi atualizada, mas não duplicada
+        avaliacao = Avaliacao.objects.filter(clube=self.clube, usuario=self.participante).count()
+        self.assertEqual(avaliacao, 1)  # Deve haver apenas uma avaliação registrada
 

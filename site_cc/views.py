@@ -250,14 +250,25 @@ def delete_club_view(request, pk):
     return render(request, 'deleteClube.html', context)
 
 def avaliacao_view(request, pk):
+    clube = get_object_or_404(Clube, id=pk)
+    
     if request.method == "POST":
-        clube = get_object_or_404(Clube, id=pk)
-        rating = int(request.POST.get('rating'))
-        if 1 <= rating <= 5:
+        rating = request.POST.get('rating')
+        
+        # Verificar se o valor de rating foi fornecido e é válido
+        if rating and rating.isdigit() and 1 <= int(rating) <= 5:
             Avaliacao.objects.update_or_create(
-                clube=clube, usuario=request.user, defaults={'valor': rating}
+                clube=clube, usuario=request.user, defaults={'valor': int(rating)}
             )
-        return HttpResponseRedirect(reverse('club-Detail', args=[clube.id]))
+            return HttpResponseRedirect(reverse('club-Detail', args=[clube.id]))
+        else:
+            # Se o rating for inválido, retornar a página com uma mensagem de erro
+            return render(request, 'clubDetail.html', {
+                'clube': clube,
+                'error_message': "Este campo é obrigatório e deve ser um número entre 1 e 5."
+            })
+
+    return HttpResponseRedirect(reverse('club-Detail', args=[clube.id]))
 
 def aprovar_membro(request, clube_id, membro_id):
     clube = get_object_or_404(Clube, id=clube_id)
