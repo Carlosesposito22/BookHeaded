@@ -1,16 +1,15 @@
 from django.contrib.auth.models import User
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
-from .models import Profile
-from .models import Clube, Membro, Comentario, Modalidade, Categoria 
-from django.contrib.auth.models import User
+from .models import Clube, Membro, Comentario, Modalidade, Categoria, HistoricoMaratona, Profile
 from .views import comentario_create_view
 from unittest.mock import patch
-from django.test import Client
-from .models import Modalidade
 from django.conf import settings
-import os
 from django.http import HttpResponseForbidden
+from datetime import datetime
+import json
+import logging
+import os
 
 
 class SeguirUsuarioTest(TestCase):
@@ -42,14 +41,6 @@ class SeguirUsuarioTest(TestCase):
 
         self.profile2.refresh_from_db()
         self.assertNotIn(self.user1, self.profile2.seguidores.all())
-
-from django.test import TestCase, Client
-from django.urls import reverse
-from django.contrib.auth.models import User
-from .models import Clube, Modalidade, Categoria, Membro, HistoricoMaratona, Comentario, Profile
-from datetime import datetime
-import json
-import logging
 
 
 class ProfileViewTest(TestCase):
@@ -638,7 +629,6 @@ class TestClubePrivado(TestCase):
         assert response.status_code == 400, f"Esperava 400, mas recebeu {response.status_code}"
 
         response_content = response.content.decode().lower()
-        print("Response content:", response_content)
 
         assert 'você já solicitou acesso a este clube' in response_content, "Mensagem de erro esperada não encontrada"
 
@@ -1030,3 +1020,4 @@ class LivrosFavoritosTest(TestCase):
         self.assertEqual(response.status_code, 403)
         self.clube.refresh_from_db()
         self.assertNotEqual(self.clube.top_livros, 'Livro Indevido')
+
