@@ -20,6 +20,7 @@ Home Page
         font-family: 'DM Sans', 'sans-serif';
         font-size: 4rem;
         margin-bottom: 2rem;
+        color: var(--bs-body-color);
     }
 
     .holder {
@@ -479,7 +480,7 @@ Home Page
 
 <div class="container my-5 clubs-container">
     <div class="holder1">
-        <h1 class="text-dark fw-bold">My Clubs</h1>
+        <h1 class="fw-bold">My Clubs</h1>
         <div class="holder2">
             <form method="get" class="search-container">
                 <input type="text" name="nome" class="form-control search-input search-bar" placeholder="Search My Clubs" aria-label="Search Clubs" value="{{ request.GET.nome }}">
@@ -573,7 +574,7 @@ Home Page
     
     <!-- Seção: Clubes Não Favoritados -->
     <br>
-    <h2 class="fw-bold">All clubs</h2>
+    <h2 class="fw-bold" style="color: var(--bs-body-color);">All clubs</h2>
     <div class="N-favoritos-list">
         <ul id="nao-favoritos-list">
             {% if object_list.exists %}
@@ -612,7 +613,7 @@ Home Page
                 {% if request.GET.nome %}
                     <p id="no-clubs-message">No clubs found with this name.</p>
                 {% else %}
-                    <p id="no-clubs-message">Uau, todos os Clubes favoritados! Parabéns, meu jovem, você conseguiu trocar seis por meia dúzia 👏👏👏</p>
+                    <p id="no-clubs-message" style="color: var(--bs-body-color);">Uau, todos os Clubes favoritados! Parabéns, meu jovem, você conseguiu trocar seis por meia dúzia 👏👏👏</p>
                 {% endif %}
             {% endif %}
         </ul>
