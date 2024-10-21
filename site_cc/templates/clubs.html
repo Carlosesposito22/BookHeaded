@@ -324,51 +324,56 @@
     </div>
 
     <div class="hold-evr">
-        {% if clubes_context %}
-            <div class="cards-div">
-                <ul id="carousel" style="display: flex; padding: 0; margin: 0; list-style: none;">
-                    {% for clube_context in clubes_context %}
-                        {% with clube=clube_context.clube %}
-                            <li>
-                                <div class="card shadow">
-                                    <div class="card-body" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
-                                        <h5 class="card-title">
-                                            <a class="titles" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
-                                                {{ clube.titulo }}
-                                            </a>
-                                        </h5>
-                                        <div class="genre-stars">
-                                            <h6 class="card-subtitle mb-2 text-muted">{{ clube.categoria }}<i class="bi bi-dot"></i></h6>
-                                            <p class="div-stars">{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
-                                        </div>
-                                        <p class="date">
-                                            <span class="badge text-bg-primary">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span>
-                                        </p>
-                                        <div class="description-area">
-                                            <p class="card-text text-break">{{ clube.descricao|cortar_texto:120|safe }}</p>
-                                        </div>
+        <div class="cards-div">
+            <ul id="carousel" style="display: flex; padding: 0; margin: 0; list-style: none;">
+                {% for clube_context in clubes_context %}
+                    {% with clube=clube_context.clube %}
+                        <li>
+                            <div class="card shadow">
+                                <div class="card-body" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
+                                    <h5 class="card-title">
+                                        <a class="titles" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
+                                            {{ clube.titulo }}
+                                        </a>
+                                    </h5>
+                                    <div class="genre-stars">
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ clube.categoria }}<i class="bi bi-dot"></i></h6>
+                                        <p class="div-stars">{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p>
+                                    </div>
+                                    <p class="date">
+                                        <span class="badge text-bg-primary">Since {{ clube.dataDeCriacao|date:"d/m/Y" }}</span>
+                                    </p>
+                                    <div class="description-area">
+                                        <p class="card-text text-break">{{ clube.descricao|cortar_texto:120|safe }}</p>
                                     </div>
                                 </div>
-                            </li>
-                        {% endwith %}
-                    {% endfor %}
-                </ul>
-            </div>
-            <button id="prev" class="carousel-button">◀</button>
-            <button id="next" class="carousel-button">▶</button>
-        {% else %}
-            <p class="text-center">Nenhum clube corresponde aos filtros selecionados. Por favor, tente uma pesquisa diferente.</p>
-        {% endif %}
+                            </div>
+                        </li>
+                    {% endwith %}
+                {% endfor %}
+            </ul>
+    
+            {% if no_clubs_found %}
+                <div class="no-clubs-message text-center" style="width: 100%; text-align: center; padding: 20px;	">
+                    Nenhum clube corresponde aos filtros selecionados. Por favor, tente uma pesquisa diferente.
+                </div>
+            {% endif %}
+
+        
+        </div>
+    
+        <button id="prev" class="carousel-button">◀</button>
+        <button id="next" class="carousel-button">▶</button>
+        
+        {% for clube_context in clubes_context %}
+            {% with clube=clube_context.clube %}
+                {% include 'modal_clubs.html' %}
+            {% endwith %}
+        {% endfor %}
     </div>
-
-    {% for clube_context in clubes_context %}
-        {% with clube=clube_context.clube %}
-            {% include 'modal_clubs.html' %}
-        {% endwith %}
-    {% endfor %}
-    <br><br>
-</div>
-
+     
+        <br><br>
+    
 
 
 <script>
@@ -394,6 +399,7 @@ function updateCarousel() {
 }
 
 let selectedCategories = new Set(); 
+
 function toggleCategorySelection(categoria) {
     const button = document.querySelector(`button[data-categoria="${categoria}"]`);
 
@@ -432,10 +438,6 @@ function resetSelectedCategoriesFromURL() {
 
 document.addEventListener('DOMContentLoaded', resetSelectedCategoriesFromURL);
 
-
-
-
-
 window.addEventListener('load', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const categoriasSelecionadas = urlParams.getAll('categoria');
@@ -446,7 +448,33 @@ window.addEventListener('load', () => {
             button.classList.add('active');
         }
     });
+
+    checkVisibleClubs();
 });
+
+function checkVisibleClubs() {
+    const clubes = document.querySelectorAll('#carousel li');
+    let clubesVisiveis = 0;
+
+    clubes.forEach(clube => {
+        if (clube.style.display !== 'none') {
+            clubesVisiveis++;
+        }
+    });
+
+    const noClubsMessage = document.querySelector('.no-clubs-message');
+    if (clubesVisiveis === 0) {
+        if (noClubsMessage) {
+            noClubsMessage.style.display = 'block';
+        }
+    } else {
+        if (noClubsMessage) {
+            noClubsMessage.style.display = 'none';
+        }
+    }
+}
+
+
 
 </script>
 
