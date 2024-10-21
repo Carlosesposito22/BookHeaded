@@ -259,6 +259,9 @@
                     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#sairDoClubeModal-{{ clube.id }}">
                         Sair do Clube
                     </button>
+                    {% if error_message %}
+                        <div class="alert alert-danger">{{ error_message }}</div>
+                    {% endif %}
                 {% else %}
                     {% if clube.maratona_ativa %}
                         <button id="createMaratona" data-clube-id="{{ clube.id }}" class="btn btn-primary btn-sm reluzir" data-bs-toggle="modal" data-bs-target="#maratonaModal">Edit Spree <i class="bi bi-pencil-fill" style="font-size: 0.8rem;"></i></button>
@@ -267,7 +270,6 @@
                     {% endif %}
                 {% endif %}
             </div>
-
             {% include 'modal_livros.html' %}
         </div>
         
