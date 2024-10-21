@@ -4,8 +4,23 @@
 {% block content %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
-    body {
-        background-color: white;
+      body {
+        background-color: var(--bs-body-bg);
+        color: var(--bs-body-color);
+    }
+
+    .startnow {
+        background-color: var(--bs-primary);
+        color: var(--bs-light);
+        width: fit-content;
+        height: fit-content;
+        padding: 0.5rem;
+        font-weight: bold;
+        font-size: 2rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        border-radius: 5rem;
+        margin-top: 2rem;
     }
 
     main {
@@ -35,19 +50,6 @@
         justify-content: space-between;
         padding-left: 4rem;
         padding-right: 4rem;
-    }
-
-    .startnow {
-        width: fit-content;
-        height: fit-content;
-        padding: 0.5rem;
-        font-weight: bold;
-        font-size: 2rem;
-        padding-left: 2rem;
-        padding-right: 2rem;
-        border-radius: 5rem;
-        margin-top: 2rem;
-
     }
 
     .column1 {
@@ -98,7 +100,7 @@
     }
 
     footer {
-        background-color: #ffffff;
+        background-color: var(--bs-body-bg);
         padding: 50px 0;
     }
 
@@ -120,7 +122,7 @@
 
     .footer-col h4 {
         font-size: 22px;
-        color: rgb(0, 0, 0);
+        color: var(--bs-body-color);
         margin-bottom: 20px;
         font-weight: bold;
         position: relative;
@@ -138,7 +140,7 @@
     .footer-col ul li a {
         font-size: 16px;
         text-transform: capitalize;
-        color: rgb(0, 0, 0);
+        color: var(--bs-body-color);
         text-decoration: none;
         font-weight: 300;
         display: block;
@@ -163,7 +165,7 @@
         margin: 0 10px 10px 0;
         text-decoration: none;
         border-radius: 50%;
-        color: rgb(0, 0, 0);
+        color: var(--bs-body-color);
         border: 1px solid white;
         transition: all 0.5s ease;
     }
@@ -173,8 +175,8 @@
     }
 
     .footer-col .medias-socias a:hover {
-        color: #000000;
-        background-color: white;
+        background-color: var(--bs-body-bg);
+        color: var(--bs-body-color);
     }
 
     .segunda-section {
@@ -775,7 +777,7 @@
         <section class="container main-100vh">
             <div class="row holdermainvh">
                 <span class="col-md-6 text-column">
-                    <p class="text-black title">book clubs made <strong style="color:#0066FF;">better</strong> and
+                    <p class="title">book clubs made <strong style="color:#0066FF;">better</strong> and
                         <strong style="color:#0066FF;">easier</strong> to immerse in.
                     </p>
                     <button class="btn btn-primary startnow" href="{% url 'login' %}">Access Now</button>
