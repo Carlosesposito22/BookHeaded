@@ -4,6 +4,11 @@
     font-family: 'DM Sans', 'sans-serif';
   }
 
+  body{
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+  }
+
   .newclub-btn{
     padding-top: .3rem;
   }
@@ -30,15 +35,15 @@
 
 </style>
 
-<header class="p-3 text-bg-white shadow-lg">
+<header class="p-3 shadow-lg">
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
       <ul class="nav nav-underline col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-        <li class="nav-item"><a href="{% url 'pagina_principal' %}" class="nav-link px-2 text-black">Home</a></li>
-        <li class="nav-item"><a href="{% url 'about' %}" class="nav-link px-2 text-black">About</a></li>
+        <li class="nav-item"><a href="{% url 'pagina_principal' %}" class="nav-link px-2 ">Home</a></li>
+        <li class="nav-item"><a href="{% url 'about' %}" class="nav-link px-2 ">About</a></li>
         {% if user.is_authenticated %}
         {% csrf_token %}
-        <a class="nav-item nav-link px-2 text-black" href=" {% url 'clubs' %}">Clubs</a>
+        <a class="nav-item nav-link px-2 " href=" {% url 'clubs' %}">Clubs</a>
         
         <form method="get" action="{% url 'lista_usuarios' %}" class="d-flex">
           <div class="input-group">
@@ -64,7 +69,7 @@
           </button>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{% url 'profile' user_id=user.id %}">Profile</a></li>
-            <li><a class="dropdown-item text-black" href=" {% url 'myclubes' %}">My Clubs</a></li>
+            <li><a class="dropdown-item" href=" {% url 'myclubes' %}">My Clubs</a></li>
             <li><hr class="dropdown-divider"></li>
           
             <form method="post" action="{% url 'logout' %}" style="display:inline;" class="logout-btn-div">

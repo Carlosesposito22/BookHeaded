@@ -9,7 +9,8 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background: white;
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
   }
 
   .centered-container {
@@ -23,7 +24,8 @@
   }
 
   .row {
-    background: rgb(255, 255, 255);
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
     width: fit-content;
     max-width: 100%;
     max-height: auto;
@@ -74,7 +76,7 @@
 
   .not-registered {
     margin-top: 2rem;
-    color: black;
+    
   }
 
   .logo-image{
@@ -121,8 +123,8 @@
       <form method="POST" action="{% url 'login' %}">
         {% csrf_token %}
         <div class="mb-3">
-          <p class="text-start text-black display-5 fw-bold login-text">Welcome back</p>
-          <p class="text-start text-black fw-light user-text">Get into the perfect place for bookheads just like you.
+          <p class="text-start display-5 fw-bold login-text">Welcome back</p>
+          <p class="text-start user-text">Get into the perfect place for bookheads just like you.
           </p>
           <input type="text" class="form-control p-3 user-passwd" id="username" name="username" placeholder="username">
         </div>

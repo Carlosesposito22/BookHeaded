@@ -15,6 +15,8 @@ Criar conta
         display: flex;
         justify-content: center;
         align-items: center;
+        background-color: var(--bs-body-bg);
+        color: var(--bs-body-color);
     }
 
     .container-div {
@@ -67,7 +69,6 @@ Criar conta
     }
 
     .alr-registered {
-        color: black;
         font-family: 'DM Sans', 'sans-serif';
         width: 100%;
         text-align: center;
@@ -264,7 +265,7 @@ Criar conta
         <img src="{% static 'images/certified-bookhead.svg' %}" class="certified-bkh">
     </div>
     <div class="holdallform">
-        <h1 class="text-black fw-bold">Become a certified<br>bookhead right now</h1>
+        <h1 class="fw-bold">Become a certified<br>bookhead right now</h1>
         <div class="form-group p-2">
             <form method="POST">
                 {% csrf_token %}

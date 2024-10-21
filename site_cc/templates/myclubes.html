@@ -12,7 +12,8 @@ Home Page
 
     body {
         font-family: 'DM Sans', 'sans-serif';
-        background: white;
+        background-color: var(--bs-body-bg);
+        color: var(--bs-body-color);
     }
 
     h1 {
@@ -572,7 +573,7 @@ Home Page
     
     <!-- Seção: Clubes Não Favoritados -->
     <br>
-    <h2 class="text-dark fw-bold">All clubs</h2>
+    <h2 class="fw-bold">All clubs</h2>
     <div class="N-favoritos-list">
         <ul id="nao-favoritos-list">
             {% if object_list.exists %}

@@ -11,10 +11,11 @@ Criando
 <style>
     body {
         font-family: 'DM Sans', 'sans-serif';
-        background-color: white;
         margin: 0;
         padding: 0;
         overflow: hidden;
+        background-color: var(--bs-body-bg);
+        color: var(--bs-body-color);
     }
 
     .superholder {
@@ -146,7 +147,8 @@ Criando
     }
 
     .form-group {
-        background-color: white;
+        background-color: var(--bs-body-bg);
+        color: var(--bs-body-color);
         padding: 1rem;
         box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
         display: flex;
@@ -182,7 +184,6 @@ Criando
     }
 
     label {
-        color: black;
         font-size: 1rem;
         font-weight: bold;
     }
@@ -399,7 +400,7 @@ Criando
                 <img src="{% static 'images/mateus.svg' %}" class="mateus" alt="Imagem do avatar">
             </div>
             <form method="post" id="create-club-form">
-                <h1 class="text-start text-black">Create your new <p class="h1 fw-bold reading-club">reading club</p>
+                <h1 class="text-start">Create your new <p class="h1 fw-bold reading-club">reading club</p>
                 </h1>
                 {% csrf_token %}
                 <label for="titulo">Title:</label>
