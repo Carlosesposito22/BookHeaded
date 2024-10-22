@@ -433,8 +433,8 @@
                     {% else %}
                         <div class="img-user">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
-                            <strong style="cursor: pointer;" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong>  <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
-                            <strong style="cursor: pointer;" onclick="openFollowingModal()">{{ seguindo_count }} Following</strong>
+                            <strong style="cursor: pointer;" onclick="openFollowersModal()" id="followers-text2">{{ seguidores_count }} Followers</strong>  <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
+                            <strong style="cursor: pointer;" onclick="openFollowingModal()" id="following-text2">{{ seguindo_count }} Following</strong>
                         </div>
                     {% endif %}
                     <div class="user-n-follow">
@@ -444,12 +444,12 @@
                            
                             <form method="POST" action="{% url 'seguir_usuario' user_id=profile.user.id %}">
                                 {% csrf_token %}
-                                <button type="submit" span class="btn follow" id="following-text">Unfollow <i class="bi bi-check"></i></span></button>
+                                <button type="submit" span class="btn follow" id="following-text" name="unfollow">Unfollow <i class="bi bi-check"></i></span></button>
                             </form>
                         {% else %}
                             <form method="POST" action="{% url 'seguir_usuario' user_id=profile.user.id %}">
                                 {% csrf_token %}
-                                <button type="submit" span class="btn follow" id="follow-text">Follow<i class="bi bi-check"></i></span></button>
+                                <button type="submit" span class="btn follow" id="follow-text" name="follow">Follow<i class="bi bi-check"></i></span></button>
                             </form>
                         {% endif %}
                     {% endif %}

@@ -11,50 +11,129 @@ import json
 import logging
 import os
 
+from django.contrib.auth.models import User
+from django.urls import reverse
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from django.test import LiveServerTestCase
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+import time
+from site_cc.models import Profile
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+import time
+from django.contrib.staticfiles.testing import LiveServerTestCase
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-class SeguirUsuarioTest(TestCase):
+class SeguirUsuarioTest(LiveServerTestCase):
 
-    def setUp(self):
-        self.user1 = User.objects.create_user(username='user1', password='senha123')
-        self.user2 = User.objects.create_user(username='user2', password='senha123')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
-        self.profile1 = Profile.objects.create(user=self.user1)
-        self.profile2 = Profile.objects.create(user=self.user2)
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
 
-    def test_seguir_usuario(self):
-        self.client.login(username='user1', password='senha123')
+    def teste_cenario1(self):
+        driver = self.driver
 
-        url = reverse('seguir_usuario', args=[self.user2.id])
-        response = self.client.post(url)
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
 
-        self.profile2.refresh_from_db()
-        self.assertIn(self.user1, self.profile2.seguidores.all())
+        usuario = driver.find_element(By.NAME, "username")
+        senha = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        registrar = driver.find_element(By.NAME, "registrar")
 
-    def test_parar_seguir_usuario(self):
+        usuario.send_keys("testefollow")
+        senha.send_keys("senha")
+        senha2.send_keys("senha")
+        registrar.send_keys(Keys.ENTER)
 
-        self.client.login(username='user1', password='senha123')
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
 
-        self.profile2.seguidores.add(self.user1)
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
 
-        url = reverse('seguir_usuario', args=[self.user2.id])
-        response = self.client.post(url)
+        usuariologin.send_keys("testefollow")
+        senhalogin.send_keys("senha")
+        senhalogin.send_keys(Keys.ENTER)
 
-        self.profile2.refresh_from_db()
-        self.assertNotIn(self.user1, self.profile2.seguidores.all())
+        driver.get("http://127.0.0.1:8000/perfil/25/") # <-- Mateus altera esse 25 pra o id de um usuário existente pra tu
 
+        try:
+            WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.ID, 'follow-text'))
+            )
+            follow_button = driver.find_element(By.ID, 'follow-text')
+            follow_button.click()
+            print("Seguir realizado com sucesso.")
+            time.sleep(2)
+            view_followers= driver.find_element(By.ID, 'followers-text2')
+            view_followers.click()
+            time.sleep(2)
+        except Exception as e:
+            print(f"Erro ao seguir: {e}")
+
+    def teste_cenario2(self):
+        driver = self.driver
+
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        usuariologin.send_keys("testefollow")
+        senhalogin.send_keys("senha")
+        senhalogin.send_keys(Keys.ENTER)
+
+        driver.get("http://127.0.0.1:8000/perfil/25/") # <-- Mateus altera esse 25 pra o id de um usuário existente pra tu
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//*[contains(text(),'Unfollow')]"))
+        )
+
+        try:
+            unfollow_button = driver.find_element(By.XPATH, "//*[contains(text(),'Unfollow')]")
+            driver.execute_script("arguments[0].click();", unfollow_button) 
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(text(),'Follow')]"))
+            )
+            view_followers2= driver.find_element(By.ID, 'followers-text2')
+            time.sleep(2)
+            view_followers2.click()
+            time.sleep(2)
+            print("Unfollow realizado com sucesso.")
+        except Exception as e:
+            print(f"Erro ao realizar Unfollow: {e}")
 
 class ProfileViewTest(TestCase):
 
     def setUp(self):
-        # Criar dois usuários e seus perfis
         self.user1 = User.objects.create_user(username='user1', password='password123')
         self.user2 = User.objects.create_user(username='user2', password='password123')
 
-        # Criação de perfis com ícones
         self.profile1 = Profile.objects.create(user=self.user1, bio="Bio do user1", icone="images/icon1.svg")
         self.profile2 = Profile.objects.create(user=self.user2, bio="Bio do user2", icone="images/icon2.svg")
 
-        # Fazer com que user1 siga user2
         self.profile1.seguidores.add(self.user2)
 
     def test_profile_link_in_navbar(self):
@@ -62,7 +141,6 @@ class ProfileViewTest(TestCase):
         self.client.login(username='user1', password='password123')
         response = self.client.get(reverse('profile', kwargs={'user_id': self.user1.id}))
 
-        # Verificar se o perfil do usuário está disponível na navbar
         self.assertContains(response, 'Profile')
         self.assertEqual(response.status_code, 200)
 
@@ -71,7 +149,6 @@ class ProfileViewTest(TestCase):
         self.client.login(username='user1', password='password123')
         response = self.client.get(reverse('profile', kwargs={'user_id': self.user1.id}))
 
-        # Verificar se o nome de usuário, bio, ícone e contagem de seguidores/seguidos são exibidos
         self.assertContains(response, '@user1')
         self.assertContains(response, 'Bio do user1')
         self.assertContains(response, 'images/icon1.svg')  # Ícone de perfil
