@@ -1237,3 +1237,162 @@ class AvaliacaoClubeTest(TestCase):
         avaliacao = Avaliacao.objects.filter(clube=self.clube, usuario=self.participante).count()
         self.assertEqual(avaliacao, 1)  # Deve haver apenas uma avaliação registrada
 
+class verificarProgresso(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def teste_cenario1(self):
+        driver = self.driver
+
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
+
+        usuarioComentar.send_keys("userAdm")
+        senhaComentar.send_keys("senha")
+        senha2Comentar.send_keys("senha")
+        registrarComentar.click()
+
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        usuariologin.send_keys("userAdm")
+        senhalogin.send_keys("senha")
+        senhalogin.send_keys(Keys.ENTER)
+
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, "newclub-btn"))
+        )
+        newclub = driver.find_element(By.ID, "newclub-btn")
+        newclub.click()
+
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "titulo"))
+        )
+        findForm1 = driver.find_element(By.NAME, "titulo")
+        findForm2 = driver.find_element(By.NAME, "modalidade")
+        findForm3 = driver.find_element(By.NAME, "categoria")
+        findForm4 = driver.find_element(By.NAME, "descricao")
+        findForm5 = driver.find_element(By.ID, "create-btn")
+
+        findForm1.send_keys("teste progressbar")
+
+        modalidadeSelect = Select(findForm2)
+        modalidadeSelect.select_by_visible_text("Online")
+
+        categoriaSelect = Select(findForm3)
+        categoriaSelect.select_by_visible_text("Ficção")
+
+        findForm4.send_keys("Descricao pra teste de progress bar")
+        findForm5.click()
+
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, "setProgress"))
+        )
+        botaoProgress = driver.find_element(By.ID, "setProgress")
+        botaoProgress.click()
+
+        capitulo_atual = WebDriverWait(driver, 20).until(
+            EC.element_to_be_clickable((By.ID, "currentcapitulo"))
+        )
+        capitulo_atual.clear()
+        capitulo_atual.send_keys("10")
+
+        capitulo_total = WebDriverWait(driver, 20).until(
+            EC.element_to_be_clickable((By.ID, "totalcapitulo"))
+        )
+        capitulo_total.clear()
+        capitulo_total.send_keys("30")
+
+        save = driver.find_element(By.ID, "saveProgress")
+        save.click()
+
+        time.sleep(1)
+
+        pfp = driver.find_element(By.NAME, "pfp")
+        pfp.click()
+
+        time.sleep(2)
+
+        logout = driver.find_element(By.ID, "logout-btn")
+        logout.click()
+
+        time.sleep(1)
+
+        driver.get("http://127.0.0.1:8000/membros/register/")
+
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
+
+        usuarioComentar.send_keys("usercomumprogressbar")
+        senhaComentar.send_keys("senha")
+        senha2Comentar.send_keys("senha")
+        registrarComentar.click()
+
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        usuariologin.send_keys("usercomumprogressbar")
+        senhalogin.send_keys("senha")
+        senhalogin.send_keys(Keys.ENTER)
+
+        time.sleep(1)
+
+        driver.get("http://127.0.0.1:8000/clubs/")
+
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        time.sleep(1)
+
+        botao_card = driver.find_element(By.NAME, "titles")
+        botao_card.click()
+
+        time.sleep(1)
+
+        botao_club = WebDriverWait(driver, 20).until(
+            EC.element_to_be_clickable((By.NAME, "entrar-btn"))
+        )
+        botao_club.click()
+
+        time.sleep(1) 
+
+        try:
+            botao_club_novo_entrar = WebDriverWait(driver, 20).until(
+                EC.element_to_be_clickable((By.NAME, "entrar-btn"))
+            )
+            botao_club_novo_entrar.click()
+        except:
+            driver.execute_script("arguments[0].click();", botao_club_novo_entrar)
+
+        time.sleep(2)
