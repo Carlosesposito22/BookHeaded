@@ -288,7 +288,7 @@
                     </a>
                     <form method="get" class="d-flex">
                         <input type="text" name="nome" class="form-control search-input" placeholder="Search Clubs"
-                            aria-label="Search Clubs" value="{{ request.GET.nome }}">
+                            aria-label="Search Clubs" value="{{ request.GET.nome }}" id="pesquisa-barra">
                         <button class="btn btn-outline-primary search-btn" type="submit">
                             <i class="bi bi-search"></i>
                         </button>
@@ -329,7 +329,7 @@
                             <div class="card shadow">
                                 <div class="card-body" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
                                     <h5 class="card-title">
-                                        <a class="titles" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
+                                        <a class="titles" name="titles" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">
                                             {{ clube.titulo }}
                                         </a>
                                     </h5>

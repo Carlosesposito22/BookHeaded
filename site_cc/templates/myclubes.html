@@ -538,7 +538,7 @@ Home Page
                     <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow">
                         <div class="hold-title-icons">
                             <div class="title-date-div">
-                                <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot"></i></a>
+                                <a class="club-title" name="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot"></i></a>
                                 <div class="div-stars">
                                     &nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
                                 </div>

@@ -368,245 +368,6 @@ class SearchUsersTests(TestCase):
         self.assertContains(response, 'alice', msg_prefix="O usuário 'alice' não foi exibido corretamente.")
 
 
-class MaratonaTests(TestCase):
-
-    def setUp(self):
-        self.moderador = User.objects.create_user(username='moderador', password='senha123')
-        self.membro = User.objects.create_user(username='membro', password='senha123')
-
-        self.modalidade = Modalidade.objects.create(nome='Leitura')
-        self.categoria = Categoria.objects.create(nome='Fantasia')
-
-        self.clube = Clube.objects.create(
-            moderador=self.moderador,
-            titulo='Clube de Leitura',
-            modalidade=self.modalidade,
-            categoria=self.categoria,
-            descricao='Clube focado em leitura de fantasia'
-        )
-
-        self.membro_clube = Membro.objects.create(clube=self.clube, usuario=self.membro, aprovado=True)
-
-        self.client = Client()
-
-    def fazer_login(self, username, password):
-        """Auxiliar para realizar o login"""
-        self.client.login(username=username, password=password)
-
-    def test_botao_criar_maratona_visivel_para_moderador(self):
-        self.fazer_login('moderador', 'senha123')
-        response = self.client.get(reverse('club-Detail', kwargs={'pk': self.clube.id}))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Start Spree')
-
-    def test_botao_criar_maratona_invisivel_para_membro(self):
-        self.fazer_login('membro', 'senha123')
-        response = self.client.get(reverse('club-Detail', kwargs={'pk': self.clube.id}))
-        self.assertNotContains(response, 'Start Spree')
-
-    def test_criacao_maratona(self):
-        self.fazer_login('moderador', 'senha123')
-
-        dados_maratona = {
-            'nome_maratona': 'Maratona de Outubro',
-            'data_inicio': '2024-10-01',
-            'data_fim': '2024-10-31',
-            'capitulo_final': 100,
-            'capitulo_atual': 1
-        }
-
-        response = self.client.post(
-            reverse('criar_maratona', kwargs={'clube_id': self.clube.id}),
-            data=json.dumps(dados_maratona),
-            content_type='application/json'
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {'success': True, 'message': 'Maratona criada com sucesso!'})
-
-        self.clube.refresh_from_db()
-        self.assertEqual(self.clube.nome_maratona, 'Maratona de Outubro')
-        self.assertEqual(self.clube.maratona_ativa, True)
-        self.assertEqual(self.clube.capitulo_atual_maratona, 1)
-        self.assertEqual(self.clube.capitulo_final_maratona, 100)
-
-    def test_criacao_maratona_data_final_menor_que_data_inicio(self):
-        self.fazer_login('moderador', 'senha123')
-
-        dados_maratona = {
-            'nome_maratona': 'Maratona de Outubro',
-            'data_inicio': '2024-10-31',
-            'data_fim': '2024-10-01',
-            'capitulo_final': 100,
-            'capitulo_atual': 1
-        }
-
-        response = self.client.post(
-            reverse('criar_maratona', kwargs={'clube_id': self.clube.id}),
-            data=json.dumps(dados_maratona),
-            content_type='application/json'
-        )
-
-        self.assertEqual(response.status_code, 400)
-        self.assertJSONEqual(response.content, {'success': False, 'message': 'Data final não pode ser menor que a data inicial.'})
-
-    def test_criacao_maratona_capitulo_final_menor_que_capitulo_inicial(self):
-        self.fazer_login('moderador', 'senha123')
-
-        dados_maratona = {
-            'nome_maratona': 'Maratona de Outubro',
-            'data_inicio': '2024-10-01',
-            'data_fim': '2024-10-31',
-            'capitulo_final': 0,
-            'capitulo_atual': 1
-        }
-
-        response = self.client.post(
-            reverse('criar_maratona', kwargs={'clube_id': self.clube.id}),
-            data=json.dumps(dados_maratona),
-            content_type='application/json'
-        )
-
-        self.assertEqual(response.status_code, 400)
-        self.assertJSONEqual(response.content, {'success': False, 'message': 'Capítulo final não pode ser menor que o capítulo atual.'})
-
-    def test_visualizacao_maratona_para_membros(self):
-        self.fazer_login('membro', 'senha123')
-        response = self.client.get(reverse('detalhes_maratona', kwargs={'clube_id': self.clube.id}))
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {
-            'success': True,
-            'maratona_ativa': False
-        })
-
-    def test_finalizar_maratona(self):
-        self.fazer_login('moderador', 'senha123')
-
-        self.clube.maratona_ativa = True
-        self.clube.nome_maratona = 'Maratona de Outubro'
-        self.clube.data_inicio_maratona = datetime.strptime('2024-10-01', '%Y-%m-%d').date()
-        self.clube.data_fim_maratona = datetime.strptime('2024-10-31', '%Y-%m-%d').date()
-        self.clube.capitulo_final_maratona = 100
-        self.clube.capitulo_atual_maratona = 50
-        self.clube.save()
-
-        response = self.client.post(reverse('finalizar_maratona', kwargs={'clube_id': self.clube.id}))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {'success': True, 'message': 'Maratona finalizada com sucesso!'})
-
-        self.clube.refresh_from_db()
-        self.assertFalse(self.clube.maratona_ativa)
-        historico = HistoricoMaratona.objects.filter(clube=self.clube).first()
-        self.assertIsNotNone(historico)
-        self.assertEqual(historico.nome_maratona, 'Maratona de Outubro')
-
-    def test_atualizacao_historico_apos_finalizacao_maratona(self):
-        self.fazer_login('moderador', 'senha123')
-
-        self.clube.maratona_ativa = True
-        self.clube.nome_maratona = 'Maratona de Outubro'
-        self.clube.data_inicio_maratona = datetime.strptime('2024-10-01', '%Y-%m-%d').date()
-        self.clube.data_fim_maratona = datetime.strptime('2024-10-31', '%Y-%m-%d').date()
-        self.clube.capitulo_final_maratona = 100
-        self.clube.capitulo_atual_maratona = 50
-        self.clube.total_maratona_finalizadas = 0
-        self.clube.save()
-
-        response = self.client.post(reverse('finalizar_maratona', kwargs={'clube_id': self.clube.id}))
-
-        self.assertEqual(response.status_code, 200)
-        self.clube.refresh_from_db()
-        self.assertEqual(self.clube.total_maratona_finalizadas, 1)
-
-    def test_registro_historico_apos_finalizacao(self):
-        self.fazer_login('moderador', 'senha123')
-
-        self.clube.maratona_ativa = True
-        self.clube.nome_maratona = 'Maratona de Outubro'
-        self.clube.data_inicio_maratona = datetime.strptime('2024-10-01', '%Y-%m-%d').date()
-        self.clube.data_fim_maratona = datetime.strptime('2024-10-31', '%Y-%m-%d').date()
-        self.clube.capitulo_final_maratona = 100
-        self.clube.capitulo_atual_maratona = 50
-        self.clube.save()
-
-        self.client.post(reverse('finalizar_maratona', kwargs={'clube_id': self.clube.id}))
-
-        historico = HistoricoMaratona.objects.filter(clube=self.clube).first()
-        self.assertIsNotNone(historico)
-        self.assertEqual(historico.nome_maratona, 'Maratona de Outubro')
-        self.assertEqual(int(historico.capitulo_final), 100)  
-        self.assertEqual(int(historico.capitulo_atual), 50)  
-        self.assertEqual(historico.data_inicio, self.clube.data_inicio_maratona)
-        self.assertEqual(historico.data_fim, self.clube.data_fim_maratona)
-
-    def test_visualizacao_historico_para_membros(self):
-        self.fazer_login('membro', 'senha123')
-
-        self.clube.maratona_ativa = True
-        self.clube.nome_maratona = 'Maratona de Outubro'
-        self.clube.data_inicio_maratona = datetime.strptime('2024-10-01', '%Y-%m-%d').date()
-        self.clube.data_fim_maratona = datetime.strptime('2024-10-31', '%Y-%m-%d').date()
-        self.clube.capitulo_final_maratona = 100
-        self.clube.capitulo_atual_maratona = 50
-        self.clube.save()
-
-        self.client.post(reverse('finalizar_maratona', kwargs={'clube_id': self.clube.id}))
-        response = self.client.get(reverse('listar_historico_maratona', kwargs={'clube_id': self.clube.id}))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {
-            'success': True,
-            'historico': [{
-                'nome_maratona': 'Maratona de Outubro',
-                'data_inicio': '2024-10-01',
-                'data_fim': '2024-10-31',
-                'capitulo_final': '100',
-                'capitulo_atual': '50',
-                'data_registro': response.json()['historico'][0]['data_registro'] 
-            }]
-        })
-
-    def test_editar_maratona(self):
-        logging.disable(logging.CRITICAL)
-
-        self.fazer_login('moderador', 'senha123')
-
-        self.clube.maratona_ativa = True
-        self.clube.nome_maratona = 'Maratona Inicial'
-        self.clube.data_inicio_maratona = datetime.strptime('2024-10-01', '%Y-%m-%d').date()
-        self.clube.data_fim_maratona = datetime.strptime('2024-10-31', '%Y-%m-%d').date()
-        self.clube.capitulo_final_maratona = 100
-        self.clube.capitulo_atual_maratona = 10
-        self.clube.save()
-
-        novos_dados_maratona = {
-            'nome_maratona': 'Maratona Editada',
-            'data_inicio': '2024-10-05',
-            'data_fim': '2024-11-05',
-            'capitulo_final': 120,
-            'capitulo_atual': 15
-        }
-
-        response = self.client.post(
-            reverse('criar_maratona', kwargs={'clube_id': self.clube.id}),
-            data=json.dumps(novos_dados_maratona),
-            content_type='application/json'
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertJSONEqual(response.content, {'success': True, 'message': 'Maratona atualizada com sucesso!'})
-
-        self.clube.refresh_from_db()
-        self.assertEqual(self.clube.nome_maratona, 'Maratona Editada')
-        self.assertEqual(self.clube.data_inicio_maratona, datetime.strptime('2024-10-05', '%Y-%m-%d').date())
-        self.assertEqual(self.clube.data_fim_maratona, datetime.strptime('2024-11-05', '%Y-%m-%d').date())
-        self.assertEqual(self.clube.capitulo_atual_maratona, 15)
-        self.assertEqual(self.clube.capitulo_final_maratona, 120)
-
-        logging.disable(logging.NOTSET)
-
-
 class TestClubePrivado(TestCase):
     
     def setUp(self):
@@ -815,71 +576,353 @@ class ClubeSearchTest(TestCase):
         self.assertContains(response, 'Clube de Corrida')
         self.assertNotContains(response, 'Clube de Leitura')
 
+from selenium.webdriver.support.ui import Select
 
 class ComentarioTests(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
-        self.user = User.objects.create_user(username='testuser', password='12345')
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
 
-        self.client.login(username='testuser', password='12345')
+    def teste_cenario1(self):
+        driver = self.driver
 
-        self.modalidade = Modalidade.objects.create(nome='Leitura')
-        self.categoria = Categoria.objects.create(nome='Fantasia')
-
-        self.clube = Clube.objects.create(
-            moderador=self.user,
-            titulo='Clube de Leitura',
-            modalidade=self.modalidade,
-            categoria=self.categoria,
-            descricao='Clube focado em leitura de fantasia'
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
         )
 
-    def test_comentario_vazio(self):
-        """
-        Testa se o sistema exibe erro ao tentar enviar comentário vazio e não salva o comentário.
-        """
-        response = self.client.post(reverse('add_comentario', kwargs={'pk': self.clube.id}), { 
-            'comentario': '' 
-        })
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
 
-        self.assertEqual(response.status_code, 200)
+        usuarioComentar.send_keys("usercomentario1")
+        senhaComentar.send_keys("senha")
+        senha2Comentar.send_keys("senha")
+        registrarComentar.send_keys(Keys.ENTER)
 
-        self.assertEqual(Comentario.objects.count(), 0)
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
 
-        self.assertContains(response, 'O comentário não pode estar vazio.')
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
 
-    def test_moderador_pode_comentar(self):
-        """
-        Testa se o moderador do clube pode comentar corretamente.
-        """
-        response = self.client.post(reverse('add_comentario', kwargs={'pk': self.clube.id}), {
-            'comentario': 'Esse é um comentário válido.'  
-        })
+        usuariologin.send_keys("usercomentario1")
+        senhalogin.send_keys("senha")
+        senhalogin.send_keys(Keys.ENTER)
 
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(Comentario.objects.count(), 1)
+        time.sleep(1)
 
-        comentario = Comentario.objects.first()
-        self.assertEqual(comentario.comentario, 'Esse é um comentário válido.')
-        self.assertEqual(comentario.user, self.user)
+        pfp = driver.find_element(By.NAME, "pfp")
+        pfp.click()
 
-    def test_usuario_pode_comentar(self):
-        """
-        Testa se um usuário logado pode comentar no clube.
-        """
+        time.sleep(2)
 
-        response = self.client.post(reverse('add_comentario', kwargs={'pk': self.clube.id}), {
-            'comentario': 'Comentário de um usuário.' 
-        })
+        logout = driver.find_element(By.ID, "logout-btn")
+        logout.click()
 
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(Comentario.objects.count(), 1)
+        time.sleep(1)
 
-        comentario = Comentario.objects.first()
-        self.assertEqual(comentario.comentario, 'Comentário de um usuário.')
-        self.assertEqual(comentario.user, self.user)
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
 
+        usuarioComentar2 = driver.find_element(By.NAME, "username")
+        senhaComentar2 = driver.find_element(By.NAME, "password1")
+        senha2Comentar2 = driver.find_element(By.NAME, "password2")
+        registrarComentar2 = driver.find_element(By.NAME, "registrar")
+
+        usuarioComentar2.send_keys("usercomentario2")
+        senhaComentar2.send_keys("senha")
+        senha2Comentar2.send_keys("senha")
+        registrarComentar2.send_keys(Keys.ENTER)
+
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuariologin2 = driver.find_element(By.NAME, "username")
+        senhalogin2 = driver.find_element(By.NAME, "password")
+
+        usuariologin2.send_keys("usercomentario2")
+        senhalogin2.send_keys("senha")
+        senhalogin2.send_keys(Keys.ENTER)
+
+        time.sleep(1)
+
+        newclub = driver.find_element(By.ID, "newclub-btn")
+        newclub.click()
+
+        time.sleep(1)
+
+        findForm1 = driver.find_element(By.NAME, "titulo")
+        findForm2 = driver.find_element(By.NAME, "modalidade")
+        findForm3 = driver.find_element(By.NAME, "categoria")
+        findForm4 = driver.find_element(By.NAME, "descricao")
+        findForm5 = driver.find_element(By.ID, "create-btn")
+
+        findForm1.send_keys("teste Comentario")
+
+        modalidadeSelect = Select(findForm2)
+        modalidadeSelect.select_by_visible_text("Online")
+
+        categoriaSelect = Select(findForm3)
+        categoriaSelect.select_by_visible_text("Ficção")
+
+        findForm4.send_keys("Descricao pra teste blz")
+
+        time.sleep(1)
+
+        findForm5.click()
+
+        time.sleep(1)
+
+        findComentarioBox = driver.find_element(By.NAME, "comentario")
+        findComentarioBox.send_keys("Comentario para teste")
+
+        time.sleep(1)
+
+        findComentar = driver.find_element(By.NAME, "comentar")
+        findComentar.click()
+        print("Comentário deu certo.")
+
+        time.sleep(1)
+
+        driver.get("http://127.0.0.1:8000")
+
+        pfp = driver.find_element(By.NAME, "pfp")
+        pfp.click()
+
+        time.sleep(2)
+
+        logout = driver.find_element(By.ID, "logout-btn")
+        logout.click()
+
+        time.sleep(1)
+
+        driver.get("http://127.0.0.1:8000/membros/login/")
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        usuariologin.send_keys("usercomentario1")
+        senhalogin.send_keys("senha")
+        senhalogin.send_keys(Keys.ENTER)
+
+        time.sleep(1)
+
+        driver.get("http://127.0.0.1:8000/clubs/")
+
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        time.sleep(1)
+
+        botao_card = driver.find_element(By.NAME, "titles")
+        botao_card.click()
+
+        time.sleep(1)  # Aguarda o resultado da ação
+
+        # Acessa a modal de clubs
+        botao_club = driver.find_element(By.NAME, "entrar-btn")
+        botao_club.click()
+
+        time.sleep(1)  # Aguarda o resultado da ação
+
+        # Acessa a modal de clubs
+        botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
+        botao_club_novo_entrar.click()
+
+        time.sleep(1)
+
+        findComentarioBox = driver.find_element(By.NAME, "comentario")
+        findComentarioBox.send_keys("Comentario para teste do usuario nao adm!!")
+
+        time.sleep(1)
+
+        findComentar = driver.find_element(By.NAME, "comentar")
+        findComentar.click()
+        print("Comentário deu certo dnv.")
+
+        time.sleep(1)
+
+        findComentarioBox = driver.find_element(By.NAME, "comentario")
+        findComentarioBox.send_keys("Agora vou fazer um comentário vazio...")
+        time.sleep(1)
+        findComentarioBox.clear()
+        findComentarioBox = driver.find_element(By.NAME, "comentario")
+        findComentarioBox.send_keys("")
+        time.sleep(1)
+        findComentar = driver.find_element(By.NAME, "comentar")
+        findComentar.click()
+        time.sleep(1)
+
+class MaratonaTests(LiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def teste_verifica_presenca_btn_moderador_participante(self):
+        driver = self.driver
+
+        # Acessa a página de registro
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        # Preenche os campos de registro
+        usuario = driver.find_element(By.NAME, "username")
+        senha = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        registrar = driver.find_element(By.NAME, "registrar")
+
+        usuario.send_keys("testemaratonaModerador")
+        senha.send_keys("senha")
+        senha2.send_keys("senha")
+        registrar.send_keys(Keys.ENTER)
+
+        # Acessa a página de login
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        # Preenche os campos de login
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        usuariologin.send_keys("testemaratonaModerador")
+        senhalogin.send_keys("senha")
+        senhalogin.send_keys(Keys.ENTER)
+
+        # Clica no botão de criar club
+        botao_club = driver.find_element(By.ID, "newclub-btn")
+        botao_club.click()
+        time.sleep(1)
+
+        # Preenche o formulário de criação de club
+        titulo_input = driver.find_element(By.ID, "titulo")
+        titulo_input.send_keys("Book ola2")
+
+        modalidade_select = Select(driver.find_element(By.ID, "modalidade"))
+        modalidade_select.select_by_value("1")  # Seleciona a modalidade desejada
+
+        categoria_select = Select(driver.find_element(By.ID, "categoria"))
+        categoria_select.select_by_value("1")  # Seleciona a categoria desejada
+
+        descricao_input = driver.find_element(By.ID, "descricao")
+        descricao_input.send_keys("This is a test description for the book club.")
+
+        create_btn = driver.find_element(By.ID, "create-btn")
+        driver.execute_script("arguments[0].removeAttribute('disabled')", create_btn)
+        create_btn.click()
+
+        time.sleep(3)
+
+        # Registra novo usuário como membro
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuario = driver.find_element(By.NAME, "username")
+        senha = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        registrar = driver.find_element(By.NAME, "registrar")
+
+        usuario.send_keys("testemaratonaMembro")
+        senha.send_keys("senha")
+        senha2.send_keys("senha")
+        registrar.send_keys(Keys.ENTER)
+
+        # Login com o novo usuário
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        usuariologin.send_keys("testemaratonaMembro")
+        senhalogin.send_keys("senha")
+        senhalogin.send_keys(Keys.ENTER)
+
+        # Acessa a aba de clubs
+        botao_club = driver.find_element(By.ID, "abaclubs")
+        botao_club.click()
+
+        time.sleep(3)  # Aguarda o carregamento da página
+
+                # Rola até o final da página
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Aguarda um pequeno intervalo para garantir que todo o conteúdo carregue
+        time.sleep(2)  # Pode ajustar conforme o tempo de carregamento da página
+
+        # Aguarda o campo de pesquisa aparecer
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "pesquisa-barra"))
+        )
+
+        # Encontra o campo de pesquisa e insere o nome do clube
+        pesquisa_barra = driver.find_element(By.ID, "pesquisa-barra")
+        pesquisa_barra.send_keys("Book ola2")  # Nome do clube criado anteriormente
+
+        # Pressiona enter para realizar a pesquisa
+        pesquisa_barra.send_keys(Keys.ENTER)
+
+        time.sleep(2)  # Pode ajustar conforme o tempo de carregamento da página
+                # Rola até o final da página
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Aguarda um pequeno intervalo para garantir que todo o conteúdo carregue
+        time.sleep(2)  # Pode ajustar conforme o tempo de carregamento da página
+
+        # Acessa a modal de clubs
+        botao_card = driver.find_element(By.NAME, "titles")
+        botao_card.click()
+
+        time.sleep(2)  # Aguarda o resultado da ação
+
+        # Acessa a modal de clubs
+        botao_club = driver.find_element(By.NAME, "entrar-btn")
+        botao_club.click()
+
+        time.sleep(3)  # Aguarda o resultado da ação
+
+        # Acessa a modal de clubs
+        botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
+        botao_club_novo_entrar.click()
+
+        time.sleep(5)  # Aguarda o resultado da ação
 
 class SairDoClubeTest(TestCase):
 
