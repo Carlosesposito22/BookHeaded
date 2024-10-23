@@ -781,7 +781,7 @@ class ComentarioTests(TestCase):
         findComentar.click()
         time.sleep(1)
 
-class ClubePrivado(LiveServerTestCase):
+class BarraDePesquisa(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -805,7 +805,7 @@ class ClubePrivado(LiveServerTestCase):
         """Imprime uma mensagem de erro no estilo padrão do Django."""
         self.stdout.write(self.style.ERROR(message))
 
-    def teste_clube_privado(self):
+    def teste_barra_pesquisa(self):
         try:
             driver = self.driver
             driver.get("http://127.0.0.1:8000/membros/register/")
