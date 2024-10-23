@@ -816,6 +816,11 @@ class BarraDePesquisa(LiveServerTestCase):
             senha2 = driver.find_element(By.NAME, "password2")
             registrar = driver.find_element(By.NAME, "registrar")
 
+            assert usuario is not None, "Campo 'username' não encontrado"
+            assert senha is not None, "Campo 'password1' não encontrado"
+            assert senha2 is not None, "Campo 'password2' não encontrado"
+            assert registrar is not None, "Botão 'registrar' não encontrado"
+
             usuario.send_keys("testemaratonaModerador")
             senha.send_keys("senha")
             senha2.send_keys("senha")
@@ -827,31 +832,39 @@ class BarraDePesquisa(LiveServerTestCase):
             usuariologin = driver.find_element(By.NAME, "username")
             senhalogin = driver.find_element(By.NAME, "password")
 
+            assert usuariologin is not None, "Campo de login 'username' não encontrado"
+            assert senhalogin is not None, "Campo de login 'password' não encontrado"
+
             usuariologin.send_keys("testemaratonaModerador")
             senhalogin.send_keys("senha")
             senhalogin.send_keys(Keys.ENTER)
 
             botao_club = driver.find_element(By.ID, "newclub-btn")
+            assert botao_club is not None, "Botão para criar clube não encontrado"
             botao_club.click()
             time.sleep(1)
 
             titulo_input = driver.find_element(By.ID, "titulo")
+            assert titulo_input is not None, "Campo de título não encontrado"
             titulo_input.send_keys("Lilivro ola2")
 
             modalidade_select = Select(driver.find_element(By.ID, "modalidade"))
+            assert modalidade_select is not None, "Campo de seleção 'modalidade' não encontrado"
             modalidade_select.select_by_value("1")
 
             categoria_select = Select(driver.find_element(By.ID, "categoria"))
+            assert categoria_select is not None, "Campo de seleção 'categoria' não encontrado"
             categoria_select.select_by_value("1")
 
             descricao_input = driver.find_element(By.ID, "descricao")
+            assert descricao_input is not None, "Campo de descrição não encontrado"
             descricao_input.send_keys("This is a test description for the book club.")
 
             create_btn = driver.find_element(By.ID, "create-btn")
+            assert create_btn is not None, "Botão de criação do clube não encontrado"
             driver.execute_script("arguments[0].removeAttribute('disabled')", create_btn)
             create_btn.click()
             time.sleep(2)
-
 
             driver = self.driver
             driver.get("http://127.0.0.1:8000/membros/register/")
@@ -861,6 +874,11 @@ class BarraDePesquisa(LiveServerTestCase):
             senha = driver.find_element(By.NAME, "password1")
             senha2 = driver.find_element(By.NAME, "password2")
             registrar = driver.find_element(By.NAME, "registrar")
+
+            assert usuario is not None, "Campo 'username' não encontrado (para o Membro)"
+            assert senha is not None, "Campo 'password1' não encontrado (para o Membro)"
+            assert senha2 is not None, "Campo 'password2' não encontrado (para o Membro)"
+            assert registrar is not None, "Botão 'registrar' não encontrado (para o Membro)"
 
             usuario.send_keys("testemaratonaMembro")
             senha.send_keys("senha")
@@ -873,11 +891,15 @@ class BarraDePesquisa(LiveServerTestCase):
             usuariologin = driver.find_element(By.NAME, "username")
             senhalogin = driver.find_element(By.NAME, "password")
 
+            assert usuariologin is not None, "Campo de login 'username' não encontrado (para o Membro)"
+            assert senhalogin is not None, "Campo de login 'password' não encontrado (para o Membro)"
+
             usuariologin.send_keys("testemaratonaMembro")
             senhalogin.send_keys("senha")
             senhalogin.send_keys(Keys.ENTER)
 
             botao_club = driver.find_element(By.ID, "abaclubs")
+            assert botao_club is not None, "Botão de navegação para os clubes não encontrado"
             botao_club.click()
             time.sleep(3)
 
@@ -887,6 +909,7 @@ class BarraDePesquisa(LiveServerTestCase):
             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "pesquisa-barra")))
 
             pesquisa_barra = driver.find_element(By.ID, "pesquisa-barra")
+            assert pesquisa_barra is not None, "Barra de pesquisa não encontrada"
             pesquisa_barra.send_keys("Lili")
             pesquisa_barra.send_keys(Keys.ENTER)
             time.sleep(2)
@@ -915,9 +938,10 @@ class BarraDePesquisa(LiveServerTestCase):
 
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(4)
-            print("Teste de verificação de filtro ca insensitive")
+            print("Teste de verificação de filtro case insensitive")
         except Exception as e:
             print(f"Falha no teste de verificação de presença do botão de moderador e participante: {e}")
+
 
 
 class MaratonaTests(LiveServerTestCase):
