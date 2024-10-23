@@ -282,7 +282,7 @@
             <div class="search-bar-n-text">
                 <h2>Search for clubs made for you</h2>
                 <div class="search-container">
-                    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button"
+                    <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button" id="botao-filtro"
                         aria-expanded="false" aria-controls="collapseExample">
                         <i class="bi bi-funnel-fill"></i>
                     </a>
@@ -310,7 +310,7 @@
                                 </button>
                             </li>  
                             {% endfor %}
-                            <li class="btn btn-primary categories-li" style="border-radius: 2rem; font-weight: bold;" onclick="applyFilter()">
+                            <li class="btn btn-primary categories-li" style="border-radius: 2rem; font-weight: bold;" onclick="applyFilter()" id="filter">
                                 Filter <i class="bi bi-filter"></i>
                             </li>
                         </ul>
