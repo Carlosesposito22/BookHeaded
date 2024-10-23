@@ -195,58 +195,49 @@ class ProfileViewTest(TestCase):
 
         self.assertContains(response, '@user1')
         self.assertContains(response, 'Bio do user1')
-        self.assertContains(response, 'images/icon1.svg')  # Ícone de perfil
-        self.assertContains(response, '1 Followers')  # user1 tem 1 seguidor
-        self.assertContains(response, '0 Following')  # user1 não segue ninguém
+        self.assertContains(response, 'images/icon1.svg')
+        self.assertContains(response, '1 Followers')
+        self.assertContains(response, '0 Following')
 
     def test_followers_and_following_display_with_icons_and_usernames(self):
         """Verificar se os seguidores e seguidos aparecem corretamente com as fotos de perfil e nomes"""
         self.client.login(username='user1', password='password123')
         response = self.client.get(reverse('profile', kwargs={'user_id': self.user1.id}))
 
-        # Verificar se user2 aparece na lista de seguidores de user1 com nome de usuário e ícone
-        self.assertContains(response, '@user2')  # Nome de usuário do seguidor (user2)
-        self.assertContains(response, 'images/icon2.svg')  # Ícone do seguidor (user2)
+        self.assertContains(response, '@user2')
+        self.assertContains(response, 'images/icon2.svg')
 
-        # Verificar se user1 aparece corretamente na lista de "seguidos" de user2 com nome e ícone
         self.client.login(username='user2', password='password123')
         response = self.client.get(reverse('profile', kwargs={'user_id': self.user2.id}))
 
-        self.assertContains(response, '@user1')  # Nome de usuário do seguido (user1)
-        self.assertContains(response, 'images/icon1.svg')  # Ícone do seguido (user1)
+        self.assertContains(response, '@user1')
+        self.assertContains(response, 'images/icon1.svg')
 
     def test_correct_followers_and_following_links(self):
         """Verificar se os links dos seguidores e seguidos estão corretos"""
         self.client.login(username='user1', password='password123')
         response = self.client.get(reverse('profile', kwargs={'user_id': self.user1.id}))
 
-        # Verificar se o link do seguidor está correto
         self.assertContains(response, reverse('profile', kwargs={'user_id': self.user2.id}))
 
-        # Verificar se os usuários seguidos estão corretos
         self.client.login(username='user2', password='password123')
         response = self.client.get(reverse('profile', kwargs={'user_id': self.user2.id}))
         self.assertContains(response, reverse('profile', kwargs={'user_id': self.user1.id}))
 
     def test_profile_icon_in_navbar(self):
         """Verificar se o ícone de perfil correto aparece na navbar para o usuário logado"""
-        # Fazer login com o user1
+
         self.client.login(username='user1', password='password123')
-       
-        # Fazer uma requisição para uma página que inclui a navbar
+
         response = self.client.get(reverse('profile', kwargs={'user_id': self.user1.id}))
-       
-        # Verificar se o ícone de perfil correto de user1 aparece na navbar
+
         self.assertContains(response, 'images/icon1.svg', msg_prefix="O ícone de perfil do user1 não está correto na navbar.")
         self.assertEqual(response.status_code, 200)
 
-        # Fazer login com o user2
         self.client.login(username='user2', password='password123')
 
-        # Fazer uma requisição para a página do user2 que também inclui a navbar
         response = self.client.get(reverse('profile', kwargs={'user_id': self.user2.id}))
-       
-        # Verificar se o ícone de perfil correto de user2 aparece na navbar
+
         self.assertContains(response, 'images/icon2.svg', msg_prefix="O ícone de perfil do user2 não está correto na navbar.")
         self.assertEqual(response.status_code, 200)
 
@@ -254,21 +245,18 @@ class ProfileViewTest(TestCase):
 class ProfileEditTests(TestCase):
 
     def setUp(self):
-        # Cria um usuário e um perfil de teste
+
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.profile = Profile.objects.create(user=self.user, bio="Initial bio", icone='images/icon3.svg')
 
-        # Loga o usuário
         self.client.login(username='testuser', password='12345')
 
     def test_edit_button_visible_and_functional(self):
-        # Acessa a página de perfil para o próprio usuário (onde o botão "Editar" deve estar visível)
+
         response = self.client.get(reverse('profile', kwargs={'user_id': self.user.id}))
-       
-        # Verifica se o botão "Editar" está presente
+
         self.assertContains(response, 'bi-pencil-fill', msg_prefix="O botão de edição não está visível para o proprietário do perfil")
 
-        # Envia um POST simulando uma edição no perfil (alterando a bio e o ícone)
         new_bio = "New bio text"
         new_icon = 'images/icon4.svg'
         response = self.client.post(reverse('profile', kwargs={'user_id': self.user.id}), {
@@ -276,17 +264,14 @@ class ProfileEditTests(TestCase):
             'icone': new_icon
         })
 
-        # Redireciona para a página de perfil após a edição
         self.assertEqual(response.status_code, 302)
 
-        # Recarrega o perfil do banco de dados e verifica as alterações
         self.profile.refresh_from_db()
         self.assertEqual(self.profile.bio, new_bio, "A bio não foi atualizada corretamente")
         self.assertEqual(self.profile.icone, new_icon, "O ícone de perfil não foi atualizado corretamente")
 
     def test_partial_edit(self):
-        # Teste para verificar se é possível alterar apenas a bio ou apenas o ícone separadamente
-        # Alterar somente a bio
+
         new_bio = "Another bio update"
         response = self.client.post(reverse('profile', kwargs={'user_id': self.user.id}), {
             'bio': new_bio,
@@ -295,7 +280,6 @@ class ProfileEditTests(TestCase):
         self.assertEqual(self.profile.bio, new_bio, "A bio não foi atualizada corretamente ao editar somente a bio")
         self.assertEqual(self.profile.icone, 'images/icon3.svg', "O ícone não deveria ter sido alterado")
 
-        # Alterar somente o ícone
         new_icon = 'images/icon5.svg'
         response = self.client.post(reverse('profile', kwargs={'user_id': self.user.id}), {
             'icone': new_icon,
@@ -307,28 +291,24 @@ class ProfileEditTests(TestCase):
 class ProfileEditNavbarTests(TestCase):
 
     def setUp(self):
-        # Cria um usuário e um perfil de teste
+
         self.user = User.objects.create_user(username='testuser', password='12345')
         self.profile = Profile.objects.create(user=self.user, icone='images/icon3.svg')
 
-        # Loga o usuário
         self.client.login(username='testuser', password='12345')
 
     def test_profile_icon_update_reflects_in_navbar(self):
-        # Verifica o ícone atual antes da edição
+
         response = self.client.get(reverse('pagina_principal'))
         self.assertContains(response, 'images/icon3.svg', msg_prefix="O ícone original não foi encontrado na navbar antes da edição.")
 
-        # Simula a edição do perfil para alterar o ícone
         new_icon = 'images/icon4.svg'
         response = self.client.post(reverse('profile', kwargs={'user_id': self.user.id}), {
             'icone': new_icon,
         })
 
-        # Redireciona corretamente após a atualização
         self.assertEqual(response.status_code, 302)
 
-        # Faz uma nova requisição para verificar a navbar
         response = self.client.get(reverse('pagina_principal'))  # Pega uma página que carrega a navbar
         self.assertContains(response, new_icon, msg_prefix="O novo ícone de perfil não foi atualizado na navbar.")
 
@@ -336,38 +316,32 @@ class ProfileEditNavbarTests(TestCase):
 class SearchUsersTests(TestCase):
    
     def setUp(self):
-        # Criar usuários de teste
+
         self.user1 = User.objects.create_user(username='testuser1', password='password123')
         self.user2 = User.objects.create_user(username='testuser2', password='password123')
         self.user3 = User.objects.create_user(username='alice', password='password123')
-       
-        # Criar perfis para cada usuário manualmente
+
         Profile.objects.create(user=self.user1, bio="Bio for testuser1", icone='images/icon1.svg')
         Profile.objects.create(user=self.user2, bio="Bio for testuser2", icone='images/icon2.svg')
         Profile.objects.create(user=self.user3, bio="Bio for Alice", icone='images/icon3.svg')
 
-        # Loga o usuário 1 para realizar os testes
         self.client.login(username='testuser1', password='password123')
 
     def test_search_bar_is_available(self):
         """Verifica se a barra de pesquisa está disponível na página"""
-        # Carregar a página que inclui a barra de pesquisa, por exemplo, 'lista_usuarios'
+
         response = self.client.get(reverse('lista_usuarios'))
-       
-        # Verifica se o status da resposta é OK (200)
+
         self.assertEqual(response.status_code, 200)
        
-        # Verifica se o placeholder da barra de pesquisa está na resposta
         self.assertIn('placeholder="Search Bookheads"', response.content.decode(),
                     msg="O placeholder da barra de pesquisa não está correto.")
 
     def test_search_returns_multiple_results_with_profile_info(self):
         """Verifica se a busca retorna múltiplos resultados e exibe as informações corretas"""
-        # Faz uma busca que retorna múltiplos usuários e verifica nome, bio e ícone
         response = self.client.get(reverse('lista_usuarios'), {'nomes': 'testuser'})
         self.assertEqual(response.status_code, 200)
 
-        # Verifica se ambos os usuários testuser1 e testuser2 aparecem corretamente nos resultados
         self.assertContains(response, 'testuser1', msg_prefix="O nome do usuário testuser1 não foi exibido corretamente.")
         self.assertContains(response, 'Bio for testuser1', msg_prefix="A bio do usuário testuser1 não foi exibida corretamente.")
         self.assertContains(response, 'images/icon1.svg', msg_prefix="O ícone do usuário testuser1 não foi exibido corretamente.")
@@ -378,35 +352,29 @@ class SearchUsersTests(TestCase):
 
     def test_search_no_results(self):
         """Verifica se a pesquisa que não retorna resultados exibe a mensagem correta"""
-        # Faz uma busca que não retorna resultados
         response = self.client.get(reverse('lista_usuarios'), {'nomes': 'nonexistentuser'})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Nenhum usuário encontrado.', msg_prefix="A mensagem de 'Nenhum usuário encontrado' não foi exibida.")
 
     def test_click_on_search_result_opens_correct_profile_with_info(self):
         """Verifica se ao clicar no resultado da pesquisa o perfil correto é aberto"""
-        # Faz uma busca por "alice"
         response = self.client.get(reverse('lista_usuarios'), {'nomes': 'alice'})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'alice', msg_prefix="O resultado da busca não exibiu o usuário 'alice'.")
-       
-        # Simula o clique no perfil de 'alice' e verifica se o perfil correto é carregado
+
         profile_url = reverse('profile', kwargs={'user_id': self.user3.id})
         response = self.client.get(profile_url)
         self.assertEqual(response.status_code, 200)
-       
-        # Verifica se o nome, bio e ícone corretos são exibidos no perfil de 'alice'
+
         self.assertContains(response, 'alice', msg_prefix="O nome do perfil não está correto.")
         self.assertContains(response, 'Bio for Alice', msg_prefix="A bio do perfil não está correta.")
         self.assertContains(response, 'images/icon3.svg', msg_prefix="O ícone de perfil não está correto.")
 
     def test_search_with_empty_query_returns_all_profiles(self):
         """Verifica se a pesquisa com campo vazio retorna todos os perfis"""
-        # Realiza uma busca com o campo 'nomes' vazio
         response = self.client.get(reverse('lista_usuarios'), {'nomes': ''})
         self.assertEqual(response.status_code, 200)
 
-        # Verifica se todos os usuários aparecem nos resultados
         self.assertContains(response, 'testuser1', msg_prefix="O usuário 'testuser1' não foi exibido corretamente.")
         self.assertContains(response, 'testuser2', msg_prefix="O usuário 'testuser2' não foi exibido corretamente.")
         self.assertContains(response, 'alice', msg_prefix="O usuário 'alice' não foi exibido corretamente.")
@@ -780,15 +748,13 @@ class ComentarioTests(TestCase):
         botao_card = driver.find_element(By.NAME, "titles")
         botao_card.click()
 
-        time.sleep(1)  # Aguarda o resultado da ação
+        time.sleep(1)
 
-        # Acessa a modal de clubs
         botao_club = driver.find_element(By.NAME, "entrar-btn")
         botao_club.click()
 
-        time.sleep(1)  # Aguarda o resultado da ação
+        time.sleep(1)
 
-        # Acessa a modal de clubs
         botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
         botao_club_novo_entrar.click()
 
@@ -1832,11 +1798,10 @@ class MaratonaTests(LiveServerTestCase):
             botao_save_maratona.click()
             time.sleep(4)
 
-            # Usando assert para verificar o sucesso do teste
             self.assertTrue(True, "Teste de criação de maratona foi concluído com sucesso.")
 
         except Exception as e:
-            # Usando fail para capturar o erro no teste
+
             self.fail(f"Falha no teste de criação de maratona: {e}")
 
 
@@ -1847,15 +1812,13 @@ class MaratonaTests(LiveServerTestCase):
 class SairDoClubeTest(TestCase):
 
     def setUp(self):
-        # Recuperar categoria e modalidade já existentes, criadas pelo signals.py
+
         self.categoria = Categoria.objects.get(nome='Ficção')
         self.modalidade = Modalidade.objects.get(nome='Online')
 
-        # Criar um usuário e logá-lo como moderador
         self.moderador = User.objects.create_user(username='moderador', password='Asd12345678')
         self.client.login(username='moderador', password='Asd12345678')
 
-        # Criar um clube com categoria e modalidade, e adicionar o moderador como moderador
         self.clube = Clube.objects.create(
             titulo='Clube de Teste',
             moderador=self.moderador,
@@ -1864,40 +1827,32 @@ class SairDoClubeTest(TestCase):
             modalidade=self.modalidade
         )
 
-        # Criar outro usuário que será um membro comum
         self.membro = User.objects.create_user(username='membro', password='Asd12345678')
         Membro.objects.create(clube=self.clube, usuario=self.membro)
 
     def test_botao_nao_aparece_para_moderador(self):
-        # Acessar a página do clube como moderador (onde o botão de sair NÃO deveria estar)
         response = self.client.get(reverse('club-Detail', args=[self.clube.id]))
-        
-        # Verificar que o botão "Sair do Clube" NÃO está presente no HTML para o moderador
+
         self.assertNotContains(response, '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#sairDoClubeModal-{{ clube.id }}">Sair do Clube</button>')
 
     def test_botao_sair_do_clube_aparece_para_membro(self):
-        # Logar como membro
+
         self.client.logout()
         self.client.login(username='membro', password='Asd12345678')
 
-        # Acessar a página do clube (onde o botão de sair deveria estar para o membro)
         response = self.client.get(reverse('club-Detail', args=[self.clube.id]))
-        
-        # Verificar se o botão "Sair do Clube" está presente no HTML para o membro
+
         self.assertContains(response, 'Sair do Clube')
 
     def test_usuario_sai_do_clube(self):
-        # Logar como membro
+
         self.client.logout()
         self.client.login(username='membro', password='Asd12345678')
 
-        # Testa se o usuário é removido corretamente da lista de membros
         response = self.client.post(reverse('sair-do-clube', args=[self.clube.id]))
-        
-        # Verificar se o membro foi removido
+
         self.assertFalse(Membro.objects.filter(clube=self.clube, usuario=self.membro).exists())
 
-        # Verificar se a mensagem de sucesso foi enviada
         self.assertRedirects(response, reverse('myclubes'))
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
@@ -1907,15 +1862,12 @@ class SairDoClubeTest(TestCase):
 class FavoritarClubeTest(TestCase):
 
     def setUp(self):
-        # Recuperar categoria e modalidade já existentes, criadas pelo signals.py
         self.categoria = Categoria.objects.get(nome='Ficção')
         self.modalidade = Modalidade.objects.get(nome='Online')
 
-        # Criar um usuário moderador e logá-lo
         self.moderador = User.objects.create_user(username='moderador', password='Asd12345678')
         self.client.login(username='moderador', password='Asd12345678')
 
-        # Criar um clube e adicionar o moderador como moderador do clube
         self.clube = Clube.objects.create(
             titulo='Clube de Teste',
             moderador=self.moderador,
@@ -1924,59 +1876,48 @@ class FavoritarClubeTest(TestCase):
             modalidade=self.modalidade
         )
 
-        # Criar um usuário membro
         self.membro = User.objects.create_user(username='membro', password='Asd12345678')
 
     def test_usuario_logado_pode_favoritar_clube(self):
-        # Logar como membro
+
         self.client.logout()
         self.client.login(username='membro', password='Asd12345678')
 
-        # Favoritar o clube
         response = self.client.post(reverse('favoritar_clube', args=[self.clube.id]))
 
-        # Verificar se o clube foi favoritado corretamente
         self.assertEqual(response.status_code, 200)
         self.assertTrue(self.membro in self.clube.favoritos.all())
 
     def test_lista_de_clubes_favoritos_atualizada(self):
-        # Logar como membro
+
         self.client.logout()
         self.client.login(username='membro', password='Asd12345678')
 
-        # Favoritar o clube
         self.client.post(reverse('favoritar_clube', args=[self.clube.id]))
 
-        # Verificar se o clube está na lista de favoritos do usuário
         self.assertTrue(self.clube in self.membro.clubes_favoritos.all())
 
     def test_usuario_pode_visualizar_clubes_favoritos(self):
-        # Logar como membro
+
         self.client.logout()
         self.client.login(username='membro', password='Asd12345678')
 
-        # Adicionar o clube aos favoritos do membro
         self.membro.clubes_favoritos.add(self.clube)
 
-        # Acessar a página onde os favoritos são exibidos (ajustar a URL correta para 'myclubes')
         response = self.client.get(reverse('myclubes'))
 
-        # Verificar se o título do clube favoritado aparece na lista de favoritos
         self.assertContains(response, self.clube.titulo)
 
-        # Verificar se o ícone de estrela preenchida aparece indicando que o clube está favoritado
         self.assertContains(response, '<i class="bi bi-star-fill star-from-btn"></i>')
 
     def test_usuario_pode_desfavoritar_clube(self):
-        # Logar como membro
+
         self.client.logout()
         self.client.login(username='membro', password='Asd12345678')
 
-        # Favoritar o clube e depois desfavoritar
         self.client.post(reverse('favoritar_clube', args=[self.clube.id]))
         response = self.client.post(reverse('favoritar_clube', args=[self.clube.id]))
 
-        # Verificar se o clube foi removido dos favoritos
         self.assertEqual(response.status_code, 200)
         self.assertFalse(self.membro in self.clube.favoritos.all())
 
@@ -1984,15 +1925,13 @@ class FavoritarClubeTest(TestCase):
 class LivrosFavoritosTest(TestCase):
 
     def setUp(self):
-        # Recuperar categoria e modalidade já existentes, criadas pelo signals.py
+
         self.categoria = Categoria.objects.get(nome='Ficção')
         self.modalidade = Modalidade.objects.get(nome='Online')
 
-        # Criar um moderador e logá-lo
         self.moderador = User.objects.create_user(username='moderador', password='Asd12345678')
         self.client.login(username='moderador', password='Asd12345678')
 
-        # Criar um clube e associar o moderador ao clube
         self.clube = Clube.objects.create(
             titulo='Clube de Leitura',
             moderador=self.moderador,
@@ -2001,62 +1940,52 @@ class LivrosFavoritosTest(TestCase):
             modalidade=self.modalidade
         )
 
-        # Criar um membro comum
         self.membro = User.objects.create_user(username='membro', password='Asd12345678')
 
     def test_moderador_pode_adicionar_livros_favoritos(self):
-        # Logar como moderador (já está logado no setup)
         response = self.client.post(reverse('add_top_livros', args=[self.clube.id]), {
             'top_livros': 'Livro 1\nLivro 2\nLivro 3'
         })
 
-        # Verificar se os livros foram adicionados corretamente
         self.clube.refresh_from_db()
         self.assertEqual(self.clube.top_livros, 'Livro 1\nLivro 2\nLivro 3')
-        self.assertEqual(response.status_code, 302)  # Redireciona após o sucesso
+        self.assertEqual(response.status_code, 302)
 
     def test_membros_podem_visualizar_livros_favoritos(self):
-        # Logar como membro
+
         self.client.logout()
         self.client.login(username='membro', password='Asd12345678')
 
-        # Adicionar livros pelo moderador
         self.clube.top_livros = 'Livro 1\nLivro 2\nLivro 3'
         self.clube.save()
 
-        # Verificar se os membros conseguem ver a lista de livros favoritos
         response = self.client.get(reverse('club-Detail', args=[self.clube.id]))
 
-        # Verificar se os livros estão sendo exibidos corretamente
         self.assertContains(response, 'Livro 1')
         self.assertContains(response, 'Livro 2')
         self.assertContains(response, 'Livro 3')
 
     def test_moderador_pode_editar_livros_favoritos(self):
-        # Logar como moderador (já está logado no setup)
+
         self.clube.top_livros = 'Livro 1\nLivro 2'
         self.clube.save()
 
-        # Editar a lista de livros
         response = self.client.post(reverse('add_top_livros', args=[self.clube.id]), {
             'top_livros': 'Livro 1\nLivro 2\nLivro 3'
         })
 
-        # Verificar se a lista foi atualizada corretamente
         self.clube.refresh_from_db()
         self.assertEqual(self.clube.top_livros, 'Livro 1\nLivro 2\nLivro 3')
 
     def test_membro_nao_pode_editar_livros_favoritos(self):
-        # Logar como membro
+
         self.client.logout()
         self.client.login(username='membro', password='Asd12345678')
 
-        # Tentar editar a lista de livros favoritos
         response = self.client.post(reverse('add_top_livros', args=[self.clube.id]), {
             'top_livros': 'Livro Indevido'
         })
 
-        # Verificar se a alteração foi negada
         self.assertEqual(response.status_code, 403)
         self.clube.refresh_from_db()
         self.assertNotEqual(self.clube.top_livros, 'Livro Indevido')
@@ -2065,14 +1994,12 @@ class LivrosFavoritosTest(TestCase):
 class AvaliacaoClubeTest(TestCase):
 
     def setUp(self):
-        # Criar uma categoria e uma modalidade
+
         self.categoria = Categoria.objects.create(nome='Ficção')
         self.modalidade = Modalidade.objects.create(nome='Online')
 
-        # Criar um moderador
         self.moderador = User.objects.create_user(username='moderador', password='modpassword')
 
-        # Criar um clube
         self.clube = Clube.objects.create(
             titulo='Clube de Teste',
             moderador=self.moderador,
@@ -2081,7 +2008,6 @@ class AvaliacaoClubeTest(TestCase):
             modalidade=self.modalidade
         )
 
-        # Criar um participante
         self.participante = User.objects.create_user(username='participante', password='password123')
 
     def test_usuario_logado_pode_acessar_clube(self):
@@ -2094,8 +2020,7 @@ class AvaliacaoClubeTest(TestCase):
         """Verificar se o participante pode avaliar o clube com uma nota válida"""
         self.client.login(username='participante', password='password123')
         response = self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 4})
-        
-        # Verificar se a avaliação foi registrada
+
         avaliacao = Avaliacao.objects.filter(clube=self.clube, usuario=self.participante).first()
         self.assertIsNotNone(avaliacao)
         self.assertEqual(avaliacao.valor, 4)
@@ -2104,35 +2029,27 @@ class AvaliacaoClubeTest(TestCase):
         """Testar se o envio de uma avaliação sem uma nota exibe uma mensagem de erro"""
         self.client.login(username='participante', password='password123')
 
-        # Simular o envio de uma avaliação sem selecionar uma nota (rating vazio)
         response = self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': ''})
 
-        # Verificar se o status da resposta é 200 (página recarregada com erro)
         self.assertEqual(response.status_code, 200)
 
-        # Verificar se a avaliação não foi registrada
         self.assertEqual(Avaliacao.objects.filter(clube=self.clube, usuario=self.participante).count(), 0)
 
-        # Verificar se a mensagem de erro de campo obrigatório está presente
         self.assertContains(response, "Este campo é obrigatório e deve ser um número entre 1 e 5.")
 
     def test_usuario_pode_atualizar_avaliacao(self):
         """Verificar se o participante pode atualizar sua avaliação"""
         self.client.login(username='participante', password='password123')
 
-        # Primeiro, enviar uma avaliação inicial
         self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 4})
 
-        # Atualizar a avaliação
         self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 5})
 
-        # Verificar se a avaliação foi atualizada
         avaliacao = Avaliacao.objects.get(clube=self.clube, usuario=self.participante)
         self.assertEqual(avaliacao.valor, 5)
 
     def test_media_avaliacoes_atualizada_corretamente(self):
         """Verificar se a média de avaliações é atualizada corretamente após nova avaliação"""
-        # Criar outro participante e enviar avaliações
         participante2 = User.objects.create_user(username='participante2', password='password123')
         self.client.login(username='participante', password='password123')
         self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 3})
@@ -2140,22 +2057,18 @@ class AvaliacaoClubeTest(TestCase):
         self.client.login(username='participante2', password='password123')
         self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 5})
 
-        # Verificar se a média de avaliações foi calculada corretamente
         self.assertEqual(self.clube.calcular_media_avaliacoes(), 4)
 
     def test_usuario_nao_pode_avaliar_mais_de_uma_vez(self):
         """Verificar se o participante não pode enviar uma nova avaliação, mas apenas atualizar a existente"""
         self.client.login(username='participante', password='password123')
 
-        # Enviar uma avaliação inicial
         self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 3})
 
-        # Tentar enviar uma nova avaliação
         self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 5})
 
-        # Verificar se a avaliação foi atualizada, mas não duplicada
         avaliacao = Avaliacao.objects.filter(clube=self.clube, usuario=self.participante).count()
-        self.assertEqual(avaliacao, 1)  # Deve haver apenas uma avaliação registrada
+        self.assertEqual(avaliacao, 1)
 
 class verificarProgresso(TestCase):
 
