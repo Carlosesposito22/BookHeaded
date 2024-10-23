@@ -1757,6 +1757,11 @@ class MaratonaTests(LiveServerTestCase):
             senha2 = driver.find_element(By.NAME, "password2")
             registrar = driver.find_element(By.NAME, "registrar")
 
+            assert usuario is not None, "Campo 'username' não encontrado"
+            assert senha is not None, "Campo 'password1' não encontrado"
+            assert senha2 is not None, "Campo 'password2' não encontrado"
+            assert registrar is not None, "Botão 'registrar' não encontrado"
+
             usuario.send_keys("testemaratonaModerador")
             senha.send_keys("senha")
             senha2.send_keys("senha")
@@ -1768,57 +1773,72 @@ class MaratonaTests(LiveServerTestCase):
             usuariologin = driver.find_element(By.NAME, "username")
             senhalogin = driver.find_element(By.NAME, "password")
 
+            assert usuariologin is not None, "Campo de login 'username' não encontrado"
+            assert senhalogin is not None, "Campo de login 'password' não encontrado"
+
             usuariologin.send_keys("testemaratonaModerador")
             senhalogin.send_keys("senha")
             senhalogin.send_keys(Keys.ENTER)
 
             botao_club = driver.find_element(By.ID, "newclub-btn")
+            assert botao_club is not None, "Botão 'newclub-btn' não encontrado"
             botao_club.click()
             time.sleep(1)
 
             titulo_input = driver.find_element(By.ID, "titulo")
+            assert titulo_input is not None, "Campo 'titulo' não encontrado"
             titulo_input.send_keys("Book ola2")
 
             modalidade_select = Select(driver.find_element(By.ID, "modalidade"))
+            assert modalidade_select is not None, "Campo de seleção 'modalidade' não encontrado"
             modalidade_select.select_by_value("1")
 
             categoria_select = Select(driver.find_element(By.ID, "categoria"))
+            assert categoria_select is not None, "Campo de seleção 'categoria' não encontrado"
             categoria_select.select_by_value("1")
 
             descricao_input = driver.find_element(By.ID, "descricao")
+            assert descricao_input is not None, "Campo de descrição 'descricao' não encontrado"
             descricao_input.send_keys("This is a test description for the book club.")
 
             create_btn = driver.find_element(By.ID, "create-btn")
+            assert create_btn is not None, "Botão de criação 'create-btn' não encontrado"
             driver.execute_script("arguments[0].removeAttribute('disabled')", create_btn)
             create_btn.click()
             time.sleep(2)
 
             botao_maratona = driver.find_element(By.ID, "createMaratona")
+            assert botao_maratona is not None, "Botão 'createMaratona' não encontrado"
             botao_maratona.click()
             time.sleep(4)
 
             nome_maratona = driver.find_element(By.ID, "nomeMaratona")
+            assert nome_maratona is not None, "Campo 'nomeMaratona' não encontrado"
             nome_maratona.send_keys("Teste Maratona")
             time.sleep(2)
 
             data_fim = driver.find_element(By.ID, "dataFim")
+            assert data_fim is not None, "Campo 'dataFim' não encontrado"
             data_fim.send_keys("30122024")
             time.sleep(2)
 
             capitulo_final = driver.find_element(By.ID, "capituloFinal")
+            assert capitulo_final is not None, "Campo 'capituloFinal' não encontrado"
             capitulo_final.send_keys("100")
             time.sleep(2)
 
             botao_save_maratona = driver.find_element(By.ID, "saveMaratona")
+            assert botao_save_maratona is not None, "Botão 'saveMaratona' não encontrado"
             botao_save_maratona.click()
             time.sleep(4)
 
             # Usando assert para verificar o sucesso do teste
             self.assertTrue(True, "Teste de criação de maratona foi concluído com sucesso.")
-        
+
         except Exception as e:
             # Usando fail para capturar o erro no teste
             self.fail(f"Falha no teste de criação de maratona: {e}")
+
 
 
 
