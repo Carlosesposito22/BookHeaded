@@ -1385,7 +1385,7 @@ class verificarProgresso(TestCase):
         )
         botao_club.click()
 
-        time.sleep(1) 
+        time.sleep(3) 
 
         try:
             botao_club_novo_entrar = WebDriverWait(driver, 20).until(
