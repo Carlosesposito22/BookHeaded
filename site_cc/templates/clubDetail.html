@@ -196,7 +196,7 @@
                                                 <input type="checkbox" id="privado" name="privado" {% if clube.privado %}checked{% endif %}>
 
                                                 <div class="modal-footer">
-                                                    <button class="btn btn-primary btn-sm" type="submit">Atualizar</button>
+                                                    <button class="btn btn-primary btn-sm" type="submit" name="atualizar">Atualizar</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -225,7 +225,7 @@
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary engine" id="engine" data-bs-toggle="dropdown" style="border-radius: 0.5rem;"><i class="bi bi-gear-wide-connected"></i></button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}">Edit Club</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}" name="editclub">Edit Club</a></li>
                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTopLivrosModal-{{ clube.id }}">Edit Top Books</a></li>
                                     {% if clube.privado %}
                                         <li><a href="#" id="request" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
