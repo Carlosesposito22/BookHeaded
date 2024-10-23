@@ -416,7 +416,7 @@
     <div class="col hold shadow-lg">
         <div class="banner">
             {% if request.user == profile.user %}
-            <i class="bi bi-pencil-fill" onclick="openModal()" style="color: white; cursor: pointer;"></i>
+            <i class="bi bi-pencil-fill" name="pencil" onclick="openModal()" style="color: white; cursor: pointer;"></i>
             {% endif %}
         </div>
         <div class="rest">
@@ -425,20 +425,20 @@
                     {% if request.user == profile.user %}
                         <div class="img-user">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder"  onclick="openModal()">
-                            <strong style="cursor: pointer;" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
+                            <strong style="cursor: pointer;" name="followers-text2" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
                             
                            
-                            <strong style="cursor: pointer;" onclick="openFollowingModal()">{{ seguindo_count }} Following</strong>
+                            <strong style="cursor: pointer;" name="seguindo" onclick="openFollowingModal()">{{ seguindo_count }} Following</strong>
                         </div>
                     {% else %}
                         <div class="img-user">
                             <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder">
-                            <strong style="cursor: pointer;" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong>  <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
-                            <strong style="cursor: pointer;" onclick="openFollowingModal()">{{ seguindo_count }} Following</strong>
+                            <strong style="cursor: pointer;"  name="followers-text2" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong>  <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
+                            <strong style="cursor: pointer;" name="seguindo" onclick="openFollowingModal()">{{ seguindo_count }} Following</strong>
                         </div>
                     {% endif %}
                     <div class="user-n-follow">
-                        <strong class="username">@{{ profile.user.username }}</strong>
+                        <strong class="username" name="nomeexibir">@{{ profile.user.username }}</strong>
                         {% if request.user != profile.user %}
                             {% if request.user in profile.seguidores.all %}
                            
@@ -457,7 +457,7 @@
                     <div class="biodiv">
                         {% if request.user == profile.user %}
                             {% if profile.bio %}
-                                <p class="text-break bio">{{ profile.bio }}</p>
+                                <p class="text-break bio" name="bio_usuario">{{ profile.bio }}</p>
                             {% else %}
                                 <p>Olá, sou um novo bookheaded</p>
                             {% endif %}
@@ -497,7 +497,7 @@
             <label style="width: fit-content; color: #494949; font-weight: 500;">Profile icon</label>
             <div class="icon-options">
                 {% for icon in icons %}
-                <button type="button" class="icon" id="modal-icon" onclick="chooseIcon('{{ icon }}')" style="border-style: none; border-radius: 100%;">
+                <button type="button" class="icon" id="modal-icon" name="icone" onclick="chooseIcon('{{ icon }}')" style="border-style: none; border-radius: 100%;">
                     <img src="{% static icon %}" alt="Ícone">
                 </button>
                 {% endfor %}
@@ -506,7 +506,7 @@
 
         <br>
 
-        <button class="btn btn-primary fw-bold save-bio" id="save-bio-modal" style="border-radius: 1rem;">Save Changes</button>
+        <button class="btn btn-primary fw-bold save-bio" id="save-bio-modal" name="salvar" style="border-radius: 1rem;">Save Changes</button>
         </form>
         
     </div>
@@ -517,15 +517,15 @@
     <div class="modal-content">
         <span class="modaltitle-close">
             <h2><strong>Followers</strong></h2>
-            <span class="close-followdata">&times;</span>
+            <span class="close-followdata" onclick="closeFollowersModal()" >&times;</span>
         </span>
 
         <ul class="followdata-ul" style="list-style: none; padding: 0;">
             {% for seguidor in seguidores %}
             <li class="followdata-li">
                 <div class="img-user-followdata">
-                    <img src="{% if seguidor.profile.icone %}{% static seguidor.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto do perfil" style="height: 2rem;">
-                    <a href="{% url 'profile' seguidor.id %}" style="text-decoration: none;">@{{ seguidor.username }}</a>
+                    <img src="{% if seguidor.profile.icone %}{% static seguidor.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="foto do perfil" style="height: 2rem;" name="fotodoperfil">
+                    <a href="{% url 'profile' seguidor.id %}" style="text-decoration: none;" name="foto_perfil">@{{ seguidor.username }}</a>
 
                 </div>
             </li>
@@ -540,7 +540,7 @@
     <div class="modal-content">
         <span class="modaltitle-close">
             <h2><strong>Following</strong></h2>
-            <span class="close" onclick="closeFollowingModal()">&times;</span>
+            <span class="close"  onclick="closeFollowingModal()">&times;</span>
         </span>
 
         <ul class="followdata-ul" style="list-style: none; padding: 0;">
@@ -562,7 +562,8 @@
 
 
 <script>
-    function openModal() {
+   
+   function openModal() {
     document.getElementById('iconModal').style.display = 'block';
 }
 
@@ -590,39 +591,39 @@ document.querySelector('.bio-form').addEventListener('submit', function() {
         document.getElementById('icone-input').value = selectedIcon; 
     }
 });
+
 function openFollowersModal() {
     document.getElementById('followersModal').style.display = 'block';
 }
-
-
-document.querySelector('.close-followdata').addEventListener('click', function() {
-    document.getElementById('followersModal').style.display = 'none';
-});
-
-
-window.onclick = function(event) {
-    const modal = document.getElementById('followersModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-};
 
 function openFollowingModal() {
     document.getElementById("followingModal").style.display = "block";
 }
 
-
 function closeFollowingModal() {
     document.getElementById("followingModal").style.display = "none";
 }
 
+function closeFollowersModal() {
+    document.getElementById("followersModal").style.display = "none";
+}
 
+// Unificar o comportamento de clique fora dos modais
 window.onclick = function(event) {
     const followingModal = document.getElementById("followingModal");
+    const followersModal = document.getElementById("followersModal");
+
+    // Fechar modal de Following
     if (event.target == followingModal) {
         closeFollowingModal();
     }
+
+    // Fechar modal de Followers
+    if (event.target == followersModal) {
+        closeFollowersModal();
+    }
 };
+
    
 
     
