@@ -168,6 +168,36 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
   </li>
 </ul>
 </details>
+<details>
+<summary>Entrega 3</summary>
+<ul>
+  <li>
+<a href="">Imagem do Backlog no Jira</a>
+</li>
+  
+<li>
+    <a  href=""
+      >Imagem do Board no Jira</a
+    >
+  </li>
+
+  <li>
+    <a  href=""
+      >Screencast dos testes</a
+    >
+  </li>
+    <li>
+    <a  href=""
+      >Screencast do deployment</a
+    >
+  </li>
+      <li>
+    <a  href=""
+      >Screencast do Lo-fi</a
+    >
+  </li>
+
+</details>
 <br>
 
 ## 📑 Prototipação Lo-Fi

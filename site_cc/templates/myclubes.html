@@ -495,7 +495,7 @@ Home Page
     <!-- Seção: Clubes Favoritados -->
     <p class="d-inline-flex gap-1">
         <h2 class="favoritosheader" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-        aria-controls="collapseExample">
+        aria-controls="collapseExample" id="favoritosheader-btn">
         <i class="bi bi-star-fill" style="color: white;"></i>Favorites<i class="bi bi-caret-down-fill"
             id="caret-icon"></i>
     </h2>
@@ -516,7 +516,7 @@ Home Page
                                 </div>
                             </div>
                             <div class="icons-div" id="fav-icons-div">
-                                <button id="favoritar-btn-{{ clube.id }}" class="btn fav-favoritar-btn" data-clube-id="{{ clube.id }}">
+                                <button id="favoritar-btn-{{ clube.id }}" class="btn fav-favoritar-btn" data-clube-id="{{ clube.id }}" name="desfavoritar-btn">
                                     {% if user in clube.favoritos.all %}
                                         <i class="bi bi-star-fill star-from-btn"></i>
                                     {% else %}
@@ -538,13 +538,13 @@ Home Page
                     <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow">
                         <div class="hold-title-icons">
                             <div class="title-date-div">
-                                <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot"></i></a>
+                                <a class="club-title" name="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot"></i></a>
                                 <div class="div-stars">
                                     &nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
                                 </div>
                             </div>
                             <div class="icons-div">
-                                <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary favoritar-btn1" data-clube-id="{{ clube.id }}">
+                                <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary favoritar-btn1" data-clube-id="{{ clube.id }}" name="favoritar-btn">
                                     {% if user in clube.favoritos.all %}
                                         <i class="bi bi-star-fill star-from-btn"></i>
                                     {% else %}
@@ -583,14 +583,14 @@ Home Page
                     <div class="super-div {% if user.is_authenticated and user.id == clube.moderador.id %}admin-border{% endif %} shadow">
                         <div class="hold-title-icons">
                             <div class="title-date-div">
-                                <a class="club-title" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot"></i></a>
+                                <a class="club-title" id="tituloCard" href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}<i class="bi bi-dot"></i></a>
                                 <div class="div-stars">
                                     &nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}
                                 </div>
                             </div>
                             
                             <div class="icons-div">
-                                <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary favoritar-btn1" data-clube-id="{{ clube.id }}">
+                                <button id="favoritar-btn-{{ clube.id }}" class="btn btn-primary favoritar-btn1" data-clube-id="{{ clube.id }}" name="favoritar-btn">
                                         {% if user in clube.favoritos.all %}
                                             <i class="bi bi-star-fill star-from-btn"></i>
                                         {% else %}

@@ -413,13 +413,13 @@ Criando
                     <select name="modalidade" id="modalidade" class="form-control" required>
                         <option value="">Select a modality</option>
                         {% for modalidade in modalidades %}
-                        <option value="{{ modalidade.id }}" class="form-control">{{ modalidade.nome }}</option>
+                        <option value="{{ modalidade.id }}" class="form-control" name="modalidade">{{ modalidade.nome }}</option>
                         {% endfor %}
                     </select>
                     <select name="categoria" id="categoria" class="form-control" required>
                         <option value="">Select a genre</option>
                         {% for categoria in categorias %}
-                        <option value="{{ categoria.id }}" class="form-control">{{ categoria.nome }}</option>
+                        <option value="{{ categoria.id }}" class="form-control" name="categoria">{{ categoria.nome }}</option>
                         {% endfor %}
                     </select>
                 </div>

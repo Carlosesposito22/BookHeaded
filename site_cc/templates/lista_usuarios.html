@@ -164,7 +164,7 @@
                                 <span class="user-n-bio" id="user-n-bio-id">
                                     <div class="vr" id="profiles-vr"></div>
                                     <a class="pfp-holder" href="{% url 'profile' user.id %}">
-                                        <img class="pfp" src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}">
+                                        <img class="pfp" name="pfp" src="{% if user.profile.icone %}{% static user.profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}">
                                     </a>
                                     <div class="username-del-body">
                                         <a class="username" href="{% url 'profile' user.id %}">{{ search }}</a>

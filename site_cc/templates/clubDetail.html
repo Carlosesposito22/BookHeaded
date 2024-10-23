@@ -105,7 +105,7 @@
                     <input type="hidden" name="clube_id" value="{{ clube.pk }}">
                     <textarea name="comentario" id="comentario" required class="form-control me-2" rows="1"
                         style="height: 38px;"></textarea>
-                    <button type="submit" class="btn btn-primary btn-sm" style="height: 38px;">Comentar</button>
+                    <button type="submit" class="btn btn-primary btn-sm" style="height: 38px;" name="comentar">Comentar</button>
                 </form>
             </div>         
         </div>
@@ -223,12 +223,12 @@
                        
                         {% if user == clube.moderador %}
                         <div class="btn-group">
-                            <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown" style="border-radius: 0.5rem;"><i class="bi bi-gear-wide-connected"></i></button>
+                            <button type="button" class="btn btn-secondary engine" id="engine" data-bs-toggle="dropdown" style="border-radius: 0.5rem;"><i class="bi bi-gear-wide-connected"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}">Edit Club</a></li>
                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTopLivrosModal-{{ clube.id }}">Edit Top Books</a></li>
                                     {% if clube.privado %}
-                                        <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
+                                        <li><a href="#" id="request" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
                                     {% endif %}
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a href="#" class="btn btn-danger delete-club" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}">Delete Club</a></li>
@@ -256,7 +256,7 @@
                         Avaliar Clube
                     </button>
                     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#sairDoClubeModal-{{ clube.id }}">
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#sairDoClubeModal-{{ clube.id }}" id="sair-do-clube-btn">
                         Sair do Clube
                     </button>
                     {% if error_message %}

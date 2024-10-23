@@ -44,7 +44,7 @@
                                 {% else %}
                                     <form method="post" action="{% url 'adicionar-membro' clube.pk %}" class="d-flex justify-content-center my-3">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-success text-white py-2 text-center">Solicitar Associação</button>
+                                        <button type="submit" class="btn btn-success text-white py-2 text-center" name="solicitar">Solicitar Associação</button>
                                     </form>
                                 {% endif %}
                             {% else %}
@@ -54,7 +54,7 @@
                             {% if not clube_context.user_is_member %}
                                 <form method="post" action="{% url 'adicionar-membro-publico' clube.pk %}" class="d-flex justify-content-center my-3">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-success text-white py-2 text-center">Juntar-se ao Clube</button>
+                                    <button type="submit" class="btn btn-success text-white py-2 text-center" name="entrar-btn">Juntar-se ao Clube</button>
                                 </form>
                             {% else %}
                                 <p class="btn btn-success text-white text-center">Você é membro deste clube</p>
