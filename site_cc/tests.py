@@ -67,6 +67,11 @@ class SeguirUsuarioTest(LiveServerTestCase):
         senha2 = driver.find_element(By.NAME, "password2")
         registrar = driver.find_element(By.NAME, "registrar")
 
+        assert usuario is not None, "Campo 'username' não encontrado"
+        assert senha is not None, "Campo 'password1' não encontrado"
+        assert senha2 is not None, "Campo 'password2' não encontrado"
+        assert registrar is not None, "Botão 'registrar' não encontrado"
+
         usuario.send_keys("testefollow")
         senha.send_keys("senha")
         senha2.send_keys("senha")
@@ -80,21 +85,30 @@ class SeguirUsuarioTest(LiveServerTestCase):
         usuariologin = driver.find_element(By.NAME, "username")
         senhalogin = driver.find_element(By.NAME, "password")
 
+        assert usuariologin is not None, "Campo de login 'username' não encontrado"
+        assert senhalogin is not None, "Campo de login 'password' não encontrado"
+
         usuariologin.send_keys("testefollow")
         senhalogin.send_keys("senha")
         senhalogin.send_keys(Keys.ENTER)
 
-        driver.get("http://127.0.0.1:8000/perfil/25/") # <-- Mateus altera esse 25 pra o id de um usuário existente pra tu
+        driver.get("http://127.0.0.1:8000/usuarios/?nomes=")
 
         try:
             WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable((By.NAME, 'user'))
+            )
+            pfp_touch = driver.find_element(By.NAME, 'user')
+            pfp_touch.click()
+            WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.ID, 'follow-text'))
             )
-            follow_button = driver.find_element(By.ID, 'follow-text')
-            follow_button.click()
-            print("Seguir realizado com sucesso.")
+            followbtn = driver.find_element(By.ID, 'follow-text')
+            followbtn.click()
             time.sleep(2)
-            view_followers= driver.find_element(By.ID, 'followers-text2')
+
+            view_followers = driver.find_element(By.ID, 'followers-text2')
+            assert view_followers is not None, "Botão de visualização de seguidores não encontrado"
             view_followers.click()
             time.sleep(2)
         except Exception as e:
@@ -111,28 +125,49 @@ class SeguirUsuarioTest(LiveServerTestCase):
         usuariologin = driver.find_element(By.NAME, "username")
         senhalogin = driver.find_element(By.NAME, "password")
 
+        assert usuariologin is not None, "Campo de login 'username' não encontrado"
+        assert senhalogin is not None, "Campo de login 'password' não encontrado"
+
         usuariologin.send_keys("testefollow")
         senhalogin.send_keys("senha")
         senhalogin.send_keys(Keys.ENTER)
 
-        driver.get("http://127.0.0.1:8000/perfil/25/") # <-- Mateus altera esse 25 pra o id de um usuário existente pra tu
+        driver.get("http://127.0.0.1:8000/usuarios/?nomes=")
+
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.NAME, 'user'))
+        )
+        pfp_touch = driver.find_element(By.NAME, 'user')
+        pfp_touch.click()
+        time.sleep(2)
+
+        view_followers = driver.find_element(By.ID, 'followers-text2')
+        assert view_followers is not None, "Botão de visualização de seguidores não encontrado"
+        view_followers.click()
+        time.sleep(2)
+
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "//*[contains(text(),'Unfollow')]"))
         )
 
         try:
             unfollow_button = driver.find_element(By.XPATH, "//*[contains(text(),'Unfollow')]")
-            driver.execute_script("arguments[0].click();", unfollow_button) 
+            assert unfollow_button is not None, "Botão 'Unfollow' não encontrado"
+            driver.execute_script("arguments[0].click();", unfollow_button)
+            
             WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, "//*[contains(text(),'Follow')]"))
             )
-            view_followers2= driver.find_element(By.ID, 'followers-text2')
+
+            view_followers2 = driver.find_element(By.ID, 'followers-text2')
+            assert view_followers2 is not None, "Botão de visualização de seguidores não encontrado após Unfollow"
             time.sleep(2)
             view_followers2.click()
             time.sleep(2)
             print("Unfollow realizado com sucesso.")
         except Exception as e:
             print(f"Erro ao realizar Unfollow: {e}")
+
 
 class ProfileViewTest(TestCase):
 
