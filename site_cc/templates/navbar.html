@@ -43,7 +43,7 @@
         <li class="nav-item"><a href="{% url 'about' %}" class="nav-link px-2 ">About</a></li>
         {% if user.is_authenticated %}
         {% csrf_token %}
-        <a class="nav-item nav-link px-2 " href=" {% url 'clubs' %}">Clubs</a>
+        <a class="nav-item nav-link px-2 " id="clubsLink" href=" {% url 'clubs' %}">Clubs</a>
         
         <form method="get" action="{% url 'lista_usuarios' %}" class="d-flex">
           <div class="input-group">

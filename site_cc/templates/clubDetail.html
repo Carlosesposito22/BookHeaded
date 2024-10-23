@@ -223,12 +223,12 @@
                        
                         {% if user == clube.moderador %}
                         <div class="btn-group">
-                            <button type="button" class="btn btn-secondary engine" data-bs-toggle="dropdown" style="border-radius: 0.5rem;"><i class="bi bi-gear-wide-connected"></i></button>
+                            <button type="button" class="btn btn-secondary engine" id="engine" data-bs-toggle="dropdown" style="border-radius: 0.5rem;"><i class="bi bi-gear-wide-connected"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}">Edit Club</a></li>
                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTopLivrosModal-{{ clube.id }}">Edit Top Books</a></li>
                                     {% if clube.privado %}
-                                        <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
+                                        <li><a href="#" id="request" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
                                     {% endif %}
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a href="#" class="btn btn-danger delete-club" data-bs-toggle="modal" data-bs-target="#deleteModal-{{ clube.id }}">Delete Club</a></li>

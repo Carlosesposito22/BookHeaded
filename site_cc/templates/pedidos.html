@@ -14,12 +14,12 @@
 
                                 <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" class="approve-form d-inline-block" data-url="{% url 'aprovar-membro' clube.pk membro.pk %}">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-primary btn-sm">Aprovar</button>
+                                    <button type="submit" id="aprove" class="btn btn-outline-primary btn-sm">Aprovar</button>
                                 </form>
 
                                 <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" class="refuse-form d-inline-block" data-url="{% url 'recusar-membro' clube.pk membro.pk %}">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>
+                                    <button type="submit" id="recusar" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>
                                 </form>
                             </li>
                         {% endif %}
