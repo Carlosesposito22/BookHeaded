@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.test import TestCase, Client
+from django.test import TestCase, Client, LiveServerTestCase
 from django.urls import reverse
 from .models import Clube, Membro, Comentario, Modalidade, Categoria, HistoricoMaratona, Profile, Avaliacao
 from .views import comentario_create_view
@@ -7,36 +7,25 @@ from unittest.mock import patch
 from django.conf import settings
 from django.http import HttpResponseForbidden
 from datetime import datetime
-import json
-import logging
-import os
 from django.core.management import call_command
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
-from django.test import TestCase
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-import time
-
-from django.contrib.auth.models import User
-from django.urls import reverse
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from django.test import LiveServerTestCase
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-import time
-from site_cc.models import Profile
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-import time
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import StaleElementReferenceException
 from django.contrib.staticfiles.testing import LiveServerTestCase
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+import requests
+import json
+import logging
+import time
+import os
+
 
 class SeguirUsuarioTest(LiveServerTestCase):
 
@@ -168,427 +157,6 @@ class SeguirUsuarioTest(LiveServerTestCase):
         except Exception as e:
             print(f"Erro ao realizar Unfollow: {e}")
 
-
-class ProfileViewTest(TestCase):
-
-    def setUp(self):
-        self.user1 = User.objects.create_user(username='user1', password='password123')
-        self.user2 = User.objects.create_user(username='user2', password='password123')
-
-        self.profile1 = Profile.objects.create(user=self.user1, bio="Bio do user1", icone="images/icon1.svg")
-        self.profile2 = Profile.objects.create(user=self.user2, bio="Bio do user2", icone="images/icon2.svg")
-
-        self.profile1.seguidores.add(self.user2)
-
-    def test_profile_link_in_navbar(self):
-        """Verificar se o link 'Profile' aparece na navbar para usuários logados"""
-        self.client.login(username='user1', password='password123')
-        response = self.client.get(reverse('profile', kwargs={'user_id': self.user1.id}))
-
-        self.assertContains(response, 'Profile')
-        self.assertEqual(response.status_code, 200)
-
-    def test_profile_information_display(self):
-        """Verificar se as informações do perfil são exibidas corretamente"""
-        self.client.login(username='user1', password='password123')
-        response = self.client.get(reverse('profile', kwargs={'user_id': self.user1.id}))
-
-        self.assertContains(response, '@user1')
-        self.assertContains(response, 'Bio do user1')
-        self.assertContains(response, 'images/icon1.svg')
-        self.assertContains(response, '1 Followers')
-        self.assertContains(response, '0 Following')
-
-    def test_followers_and_following_display_with_icons_and_usernames(self):
-        """Verificar se os seguidores e seguidos aparecem corretamente com as fotos de perfil e nomes"""
-        self.client.login(username='user1', password='password123')
-        response = self.client.get(reverse('profile', kwargs={'user_id': self.user1.id}))
-
-        self.assertContains(response, '@user2')
-        self.assertContains(response, 'images/icon2.svg')
-
-        self.client.login(username='user2', password='password123')
-        response = self.client.get(reverse('profile', kwargs={'user_id': self.user2.id}))
-
-        self.assertContains(response, '@user1')
-        self.assertContains(response, 'images/icon1.svg')
-
-    def test_correct_followers_and_following_links(self):
-        """Verificar se os links dos seguidores e seguidos estão corretos"""
-        self.client.login(username='user1', password='password123')
-        response = self.client.get(reverse('profile', kwargs={'user_id': self.user1.id}))
-
-        self.assertContains(response, reverse('profile', kwargs={'user_id': self.user2.id}))
-
-        self.client.login(username='user2', password='password123')
-        response = self.client.get(reverse('profile', kwargs={'user_id': self.user2.id}))
-        self.assertContains(response, reverse('profile', kwargs={'user_id': self.user1.id}))
-
-    def test_profile_icon_in_navbar(self):
-        """Verificar se o ícone de perfil correto aparece na navbar para o usuário logado"""
-
-        self.client.login(username='user1', password='password123')
-
-        response = self.client.get(reverse('profile', kwargs={'user_id': self.user1.id}))
-
-        self.assertContains(response, 'images/icon1.svg', msg_prefix="O ícone de perfil do user1 não está correto na navbar.")
-        self.assertEqual(response.status_code, 200)
-
-        self.client.login(username='user2', password='password123')
-
-        response = self.client.get(reverse('profile', kwargs={'user_id': self.user2.id}))
-
-        self.assertContains(response, 'images/icon2.svg', msg_prefix="O ícone de perfil do user2 não está correto na navbar.")
-        self.assertEqual(response.status_code, 200)
-
-
-class ProfileEditTests(TestCase):
-
-    def setUp(self):
-
-        self.user = User.objects.create_user(username='testuser', password='12345')
-        self.profile = Profile.objects.create(user=self.user, bio="Initial bio", icone='images/icon3.svg')
-
-        self.client.login(username='testuser', password='12345')
-
-    def test_edit_button_visible_and_functional(self):
-
-        response = self.client.get(reverse('profile', kwargs={'user_id': self.user.id}))
-
-        self.assertContains(response, 'bi-pencil-fill', msg_prefix="O botão de edição não está visível para o proprietário do perfil")
-
-        new_bio = "New bio text"
-        new_icon = 'images/icon4.svg'
-        response = self.client.post(reverse('profile', kwargs={'user_id': self.user.id}), {
-            'bio': new_bio,
-            'icone': new_icon
-        })
-
-        self.assertEqual(response.status_code, 302)
-
-        self.profile.refresh_from_db()
-        self.assertEqual(self.profile.bio, new_bio, "A bio não foi atualizada corretamente")
-        self.assertEqual(self.profile.icone, new_icon, "O ícone de perfil não foi atualizado corretamente")
-
-    def test_partial_edit(self):
-
-        new_bio = "Another bio update"
-        response = self.client.post(reverse('profile', kwargs={'user_id': self.user.id}), {
-            'bio': new_bio,
-        })
-        self.profile.refresh_from_db()
-        self.assertEqual(self.profile.bio, new_bio, "A bio não foi atualizada corretamente ao editar somente a bio")
-        self.assertEqual(self.profile.icone, 'images/icon3.svg', "O ícone não deveria ter sido alterado")
-
-        new_icon = 'images/icon5.svg'
-        response = self.client.post(reverse('profile', kwargs={'user_id': self.user.id}), {
-            'icone': new_icon,
-        })
-        self.profile.refresh_from_db()
-        self.assertEqual(self.profile.icone, new_icon, "O ícone não foi atualizado corretamente ao editar somente o ícone")
-
-
-class ProfileEditNavbarTests(TestCase):
-
-    def setUp(self):
-
-        self.user = User.objects.create_user(username='testuser', password='12345')
-        self.profile = Profile.objects.create(user=self.user, icone='images/icon3.svg')
-
-        self.client.login(username='testuser', password='12345')
-
-    def test_profile_icon_update_reflects_in_navbar(self):
-
-        response = self.client.get(reverse('pagina_principal'))
-        self.assertContains(response, 'images/icon3.svg', msg_prefix="O ícone original não foi encontrado na navbar antes da edição.")
-
-        new_icon = 'images/icon4.svg'
-        response = self.client.post(reverse('profile', kwargs={'user_id': self.user.id}), {
-            'icone': new_icon,
-        })
-
-        self.assertEqual(response.status_code, 302)
-
-        response = self.client.get(reverse('pagina_principal'))  # Pega uma página que carrega a navbar
-        self.assertContains(response, new_icon, msg_prefix="O novo ícone de perfil não foi atualizado na navbar.")
-
-
-class SearchUsersTests(TestCase):
-   
-    def setUp(self):
-
-        self.user1 = User.objects.create_user(username='testuser1', password='password123')
-        self.user2 = User.objects.create_user(username='testuser2', password='password123')
-        self.user3 = User.objects.create_user(username='alice', password='password123')
-
-        Profile.objects.create(user=self.user1, bio="Bio for testuser1", icone='images/icon1.svg')
-        Profile.objects.create(user=self.user2, bio="Bio for testuser2", icone='images/icon2.svg')
-        Profile.objects.create(user=self.user3, bio="Bio for Alice", icone='images/icon3.svg')
-
-        self.client.login(username='testuser1', password='password123')
-
-    def test_search_bar_is_available(self):
-        """Verifica se a barra de pesquisa está disponível na página"""
-
-        response = self.client.get(reverse('lista_usuarios'))
-
-        self.assertEqual(response.status_code, 200)
-       
-        self.assertIn('placeholder="Search Bookheads"', response.content.decode(),
-                    msg="O placeholder da barra de pesquisa não está correto.")
-
-    def test_search_returns_multiple_results_with_profile_info(self):
-        """Verifica se a busca retorna múltiplos resultados e exibe as informações corretas"""
-        response = self.client.get(reverse('lista_usuarios'), {'nomes': 'testuser'})
-        self.assertEqual(response.status_code, 200)
-
-        self.assertContains(response, 'testuser1', msg_prefix="O nome do usuário testuser1 não foi exibido corretamente.")
-        self.assertContains(response, 'Bio for testuser1', msg_prefix="A bio do usuário testuser1 não foi exibida corretamente.")
-        self.assertContains(response, 'images/icon1.svg', msg_prefix="O ícone do usuário testuser1 não foi exibido corretamente.")
-       
-        self.assertContains(response, 'testuser2', msg_prefix="O nome do usuário testuser2 não foi exibido corretamente.")
-        self.assertContains(response, 'Bio for testuser2', msg_prefix="A bio do usuário testuser2 não foi exibida corretamente.")
-        self.assertContains(response, 'images/icon2.svg', msg_prefix="O ícone do usuário testuser2 não foi exibido corretamente.")
-
-    def test_search_no_results(self):
-        """Verifica se a pesquisa que não retorna resultados exibe a mensagem correta"""
-        response = self.client.get(reverse('lista_usuarios'), {'nomes': 'nonexistentuser'})
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Nenhum usuário encontrado.', msg_prefix="A mensagem de 'Nenhum usuário encontrado' não foi exibida.")
-
-    def test_click_on_search_result_opens_correct_profile_with_info(self):
-        """Verifica se ao clicar no resultado da pesquisa o perfil correto é aberto"""
-        response = self.client.get(reverse('lista_usuarios'), {'nomes': 'alice'})
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'alice', msg_prefix="O resultado da busca não exibiu o usuário 'alice'.")
-
-        profile_url = reverse('profile', kwargs={'user_id': self.user3.id})
-        response = self.client.get(profile_url)
-        self.assertEqual(response.status_code, 200)
-
-        self.assertContains(response, 'alice', msg_prefix="O nome do perfil não está correto.")
-        self.assertContains(response, 'Bio for Alice', msg_prefix="A bio do perfil não está correta.")
-        self.assertContains(response, 'images/icon3.svg', msg_prefix="O ícone de perfil não está correto.")
-
-    def test_search_with_empty_query_returns_all_profiles(self):
-        """Verifica se a pesquisa com campo vazio retorna todos os perfis"""
-        response = self.client.get(reverse('lista_usuarios'), {'nomes': ''})
-        self.assertEqual(response.status_code, 200)
-
-        self.assertContains(response, 'testuser1', msg_prefix="O usuário 'testuser1' não foi exibido corretamente.")
-        self.assertContains(response, 'testuser2', msg_prefix="O usuário 'testuser2' não foi exibido corretamente.")
-        self.assertContains(response, 'alice', msg_prefix="O usuário 'alice' não foi exibido corretamente.")
-
-
-class TestClubePrivado(TestCase):
-    
-    def setUp(self):
-
-        self.moderador = User.objects.create_user(username='moderador', password='12345')
-        self.participante = User.objects.create_user(username='participante', password='12345')
-
-        self.categoria = Categoria.objects.create(nome='Ficção')
-        self.modalidade = Modalidade.objects.create(nome='Virtual')
-
-        self.clube_privado = Clube.objects.create(
-            moderador=self.moderador,
-            titulo='Clube Fechado',
-            privado=True,
-            categoria=self.categoria,
-            modalidade=self.modalidade
-        )
-        
-    def fazer_login(self, username, password):
-        """Auxiliar para realizar o login"""
-        self.client.login(username=username, password=password)
-
-    def test_criar_clube_privado(self):
-        """Testa se o clube é criado corretamente como privado.""" 
-        assert self.clube_privado.privado is True
-        assert Clube.objects.count() == 1
-
-    def test_solicitacao_entrada(self):
-        """Testa se a solicitação de entrada é registrada corretamente.""" 
-        self.fazer_login('participante', '12345')
-        url = reverse('adicionar-membro', args=[self.clube_privado.id])
-        response = self.client.post(url)
-        
-        assert response.status_code == 302 
-        membro = Membro.objects.get(clube=self.clube_privado, usuario=self.participante)
-        assert membro.aprovado is False
-
-    def test_aprovar_membro(self):
-        """Testa se o moderador pode aprovar uma solicitação de entrada.""" 
-        Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=False)
-        
-        self.fazer_login('moderador', '12345')
-        url = reverse('aprovar-membro', args=[self.clube_privado.id, 1])
-        response = self.client.get(url)
-        
-        assert response.status_code == 200
-        membro = Membro.objects.get(clube=self.clube_privado, usuario=self.participante)
-        assert membro.aprovado is True
-
-    def test_rejeitar_membro(self):
-        """Testa se o moderador pode rejeitar uma solicitação de entrada.""" 
-        membro = Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=False)
-        
-        self.fazer_login('moderador', '12345')
-        url = reverse('recusar-membro', args=[self.clube_privado.id, membro.id])
-        response = self.client.post(url)
-
-        assert response.status_code == 200
-        assert not Membro.objects.filter(id=membro.id).exists()
-
-    def test_acesso_apos_aprovacao(self):
-        """Testa se um membro aprovado pode acessar o clube.""" 
-        Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=True)
-
-        self.fazer_login('participante', '12345')
-        url = reverse('club-Detail', args=[self.clube_privado.id])
-        response = self.client.get(url)
-
-        assert response.status_code == 200
-        assert 'Clube Fechado' in str(response.content)
-
-    def test_mensagem_solicitacao_pendente(self):
-        """Testa se um participante não aprovado vê uma mensagem de solicitação pendente.""" 
-
-        membro = Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=False)
-
-        assert Membro.objects.filter(id=membro.id, aprovado=False).exists(), "O membro não foi criado como pendente"
-
-        self.fazer_login('participante', '12345')
-
-        url = reverse('club-Detail', args=[self.clube_privado.id])
-        response = self.client.get(url)
-
-        assert response.status_code == 200, "Falha ao acessar a página de detalhe do clube"
-
-        assert 'pendente' in response.content.decode().lower(), "Mensagem de solicitação pendente não encontrada"
-
-    def test_solicitacao_entrada_duplicada(self):
-        """Testa se o sistema impede solicitações duplicadas para o mesmo clube.""" 
-
-        Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=False)
-
-        self.fazer_login('participante', '12345')
-        url = reverse('adicionar-membro', args=[self.clube_privado.id])
-        response = self.client.post(url)
-
-        assert response.status_code == 400, f"Esperava 400, mas recebeu {response.status_code}"
-
-        response_content = response.content.decode().lower()
-
-        assert 'você já solicitou acesso a este clube' in response_content, "Mensagem de erro esperada não encontrada"
-
-    def test_rejeitar_membro_ja_rejeitado_ou_inexistente(self):
-        """Testa se o moderador não pode rejeitar um membro já rejeitado ou que não existe.""" 
-        membro = Membro.objects.create(clube=self.clube_privado, usuario=self.participante, aprovado=False)
-        self.fazer_login('moderador', '12345')
-
-        url = reverse('recusar-membro', args=[self.clube_privado.id, membro.id])
-        response = self.client.post(url)
-        assert response.status_code == 200
-        assert not Membro.objects.filter(id=membro.id).exists()
-
-        response = self.client.post(url)
-        assert response.status_code == 404
-
-    def test_criar_clube_com_informacoes_faltantes(self):
-        """Testa manualmente se o clube não pode ser criado com informações faltantes.""" 
-        clube_count_antes = Clube.objects.count()
-
-        titulo = ''
-        categoria = None
-        
-        if not titulo or not categoria:
-            return
-
-        Clube.objects.create(
-            moderador=self.moderador,
-            titulo=titulo,  
-            privado=True,
-            categoria=categoria,  
-            modalidade=self.modalidade
-        )
-        
-        clube_count_depois = Clube.objects.count()
-        
-        assert clube_count_antes == clube_count_depois, "O clube foi criado com informações faltantes!"
-
-
-class ClubeSearchTest(TestCase):
-
-    def setUp(self):
-
-        self.user = User.objects.create_user(username='testuser', password='12345')
-        self.client.login(username='testuser', password='12345')
-
-        self.categoria_esportes = Categoria.objects.create(nome='Esportes')
-        self.categoria_leitura = Categoria.objects.create(nome='Leitura')
-        self.modalidade = Modalidade.objects.create(nome='Corrida')
-
-
-        self.clube1 = Clube.objects.create(
-            moderador=self.user,
-            titulo='Clube de Corrida',
-            modalidade=self.modalidade,
-            categoria=self.categoria_esportes,
-            descricao='Este é um clube dedicado à corrida.'
-        )
-        self.clube2 = Clube.objects.create(
-            moderador=self.user,
-            titulo='Clube de Leitura',
-            modalidade=self.modalidade,
-            categoria=self.categoria_leitura,
-            descricao=None 
-        )
-
-    def test_search_bar_visible(self):
-        """Teste 1: Verifica se a barra de pesquisa está visível na página de clubes.""" 
-        response = self.client.get(reverse('clubs'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, '<input', msg_prefix="A barra de pesquisa não foi encontrada na página")
-        self.assertContains(response, 'type="text"', msg_prefix="A barra de pesquisa não está configurada corretamente")
-        self.assertContains(response, 'placeholder="Search Clubs"', msg_prefix="O placeholder da barra de pesquisa está incorreto")
-
-    def test_search_club_by_name(self):
-        """Teste 2: Verifica se a busca por nome do clube funciona corretamente.""" 
-        response = self.client.get(reverse('clubs'), {'nome': 'Corrida'})
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Clube de Corrida')
-        self.assertNotContains(response, 'Clube de Leitura')
-
-    def test_club_description_none(self):
-        """Teste 3: Verifica se a descrição do clube sendo None é tratada corretamente.""" 
-        response = self.client.get(reverse('clubs'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Clube de Leitura')
-        self.assertNotContains(response, 'None') 
-    
-    def test_partial_search_club_by_name(self):
-        """Teste 4: Verifica se a busca parcial por nome do clube funciona corretamente.""" 
-        response = self.client.get(reverse('clubs'), {'nome': 'Corr'})
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Clube de Corrida')
-        self.assertNotContains(response, 'Clube de Leitura')
-
-    def test_search_club_by_nonexistent_name(self):
-        """Teste 5: Verifica se uma busca por nome inexistente exibe a mensagem apropriada.""" 
-        response = self.client.get(reverse('clubs'), {'nome': 'Clube Inexistente'})
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Nenhum clube corresponde aos filtros selecionados. Por favor, tente uma pesquisa diferente.', 
-                            msg_prefix="A mensagem de 'nenhum clube encontrado' não foi exibida.")
-
-    def test_search_club_case_insensitive(self):
-        """Teste 6: Verifica se a busca por nome do clube é case insensitive.""" 
-        response = self.client.get(reverse('clubs'), {'nome': 'clube de corrida'})
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Clube de Corrida')
-        self.assertNotContains(response, 'Clube de Leitura')
-
-from selenium.webdriver.support.ui import Select
 
 class ComentarioTests(TestCase):
 
@@ -781,6 +349,7 @@ class ComentarioTests(TestCase):
         findComentar = driver.find_element(By.NAME, "comentar")
         findComentar.click()
         time.sleep(1)
+
 
 class ClubePrivadoTests(LiveServerTestCase):
 
@@ -1387,11 +956,7 @@ class ClubePrivadoTests(LiveServerTestCase):
 
         except Exception as e:
             print(f"Falha no teste de verificação campos obrigatórios: {e}")
-
-        
-    
                 
-
 
 class BarraDePesquisa(LiveServerTestCase):
 
@@ -1553,7 +1118,6 @@ class BarraDePesquisa(LiveServerTestCase):
             print("Teste de verificação de filtro case insensitive")
         except Exception as e:
             print(f"Falha no teste de verificação de presença do botão de moderador e participante: {e}")
-
 
 
 class MaratonaTests(LiveServerTestCase):
@@ -1805,270 +1369,509 @@ class MaratonaTests(LiveServerTestCase):
             self.fail(f"Falha no teste de criação de maratona: {e}")
 
 
+class SairDoClubeTests(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def test_sair_do_clube(self):
+        driver = self.driver
+
+        # 1. Registro do moderador
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
+
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar, "Botão de registro não encontrado.")
+
+        usuarioComentar.send_keys("moderador_clube")
+        senhaComentar.send_keys("senha_moderador")
+        senha2Comentar.send_keys("senha_moderador")
+        registrarComentar.send_keys(Keys.ENTER)
+
+        # 2. Login do moderador
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin, "Campo 'password' de login não encontrado.")
+
+        usuariologin.send_keys("moderador_clube")
+        senhalogin.send_keys("senha_moderador")
+        senhalogin.send_keys(Keys.ENTER)
+
+        time.sleep(1)
+
+        # 3. Criar um novo clube
+        newclub = driver.find_element(By.ID, "newclub-btn")
+        self.assertIsNotNone(newclub, "Botão 'Create Club' não encontrado.")
+        newclub.click()
+
+        time.sleep(1)
+
+        findForm1 = driver.find_element(By.NAME, "titulo")
+        findForm2 = driver.find_element(By.NAME, "modalidade")
+        findForm3 = driver.find_element(By.NAME, "categoria")
+        findForm4 = driver.find_element(By.NAME, "descricao")
+        findForm5 = driver.find_element(By.ID, "create-btn")
+
+        # Asserts para verificar os campos de criação do clube
+        self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
+        self.assertIsNotNone(findForm2, "Campo 'modalidade' não encontrado.")
+        self.assertIsNotNone(findForm3, "Campo 'categoria' não encontrado.")
+        self.assertIsNotNone(findForm4, "Campo 'descricao' não encontrado.")
+        self.assertIsNotNone(findForm5, "Botão 'create-btn' não encontrado.")
+
+        findForm1.send_keys("Clube de Teste Sair")
+
+        modalidadeSelect = Select(findForm2)
+        modalidadeSelect.select_by_visible_text("Online")
+
+        categoriaSelect = Select(findForm3)
+        categoriaSelect.select_by_visible_text("Ficção")
+
+        findForm4.send_keys("Descrição do clube de teste para sair.")
+
+        time.sleep(1)
+        findForm5.click()
+
+        time.sleep(4)
+
+        # 4. clicar no logout
+        driver.get("http://127.0.0.1:8000")
+        pfp = driver.find_element(By.NAME, "pfp")
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
+        pfp.click()
+
+        time.sleep(2)
+
+        logout = driver.find_element(By.ID, "logout-btn")
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
+
+        time.sleep(1)
+
+        # 5. Registro do membro
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuarioComentar2 = driver.find_element(By.NAME, "username")
+        senhaComentar2 = driver.find_element(By.NAME, "password1")
+        senha2Comentar2 = driver.find_element(By.NAME, "password2")
+        registrarComentar2 = driver.find_element(By.NAME, "registrar")
+
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar2, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar2, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar2, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar2, "Botão de registro não encontrado.")
+
+        usuarioComentar2.send_keys("membro_clube")
+        senhaComentar2.send_keys("senha_membro")
+        senha2Comentar2.send_keys("senha_membro")
+        registrarComentar2.send_keys(Keys.ENTER)
+
+        # 6. Login do membro
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin2 = driver.find_element(By.NAME, "username")
+        senhalogin2 = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin2, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin2, "Campo 'password' de login não encontrado.")
+
+        usuariologin2.send_keys("membro_clube")
+        senhalogin2.send_keys("senha_membro")
+        senhalogin2.send_keys(Keys.ENTER)
+
+        time.sleep(1)
+
+        # 7. Navegar para o clube e entrar nele
+        driver.get("http://127.0.0.1:8000/clubs/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/clubs/", "Não foi redirecionado corretamente para a página 'Clubs'.")
+
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+
+        botao_card = driver.find_element(By.NAME, "titles")
+        self.assertIsNotNone(botao_card, "Botão do card do clube não encontrado.")
+        botao_card.click()
+
+        time.sleep(1)
+
+        # Acessa a modal de clubs
+        botao_club = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club, "Botão de entrar no clube não encontrado.")
+        botao_club.click()
+
+        time.sleep(1)
+
+        # Acessa a modal de clubs novamente
+        botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club_novo_entrar, "Botão de entrar no clube (2ª vez) não encontrado.")
+        botao_club_novo_entrar.click()
+
+        time.sleep(3)
+
+        # 8. Sair do clube
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "sair-do-clube-btn")))
+        sair_do_clube_btn = driver.find_element(By.ID, "sair-do-clube-btn")
+        self.assertIsNotNone(sair_do_clube_btn, "Botão 'Sair do Clube' não encontrado.")
+        sair_do_clube_btn.click()
+
+        # Verificar se a modal de confirmação aparece
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".modal.show")))
+        modal_sair = driver.find_element(By.CSS_SELECTOR, ".modal.show")
+        self.assertTrue(modal_sair.is_displayed(), "Modal de confirmação não foi exibido.")
+
+        confirmar_sair = driver.find_element(By.XPATH, "//form[@method='post']//button[contains(text(), 'Sair do Clube')]")
+        self.assertIsNotNone(confirmar_sair, "Botão 'Confirmar Sair' não encontrado.")
+        confirmar_sair.click()
+
+        # 9. Verificar se a mensagem de sucesso foi exibida no frontend após sair do clube
+        WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".alert-warning")))
+        mensagem_sucesso = driver.find_element(By.CSS_SELECTOR, ".alert-warning")
+        self.assertIn("Você saiu do clube", mensagem_sucesso.text, "Mensagem de sucesso não foi exibida ou está incorreta.")
+
+        time.sleep(3)
+
+        # 10. Verificar no banco de dados se o membro foi removido
+        def test_sair_do_clube(self):
+            usuario_bd = User.objects.get(username="membro_clube")
+            clube_bd = Clube.objects.get(titulo="Clube de Teste Sair")
+            bool_clube = Membro.objects.filter(usuario=usuario_bd, clube=clube_bd, aprovado=True).exists()
+            self.assertFalse(bool_clube, "Usuário ainda é membro do clube após sair.")
 
 
+class FavoritarClubeTests(LiveServerTestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
-class SairDoClubeTest(TestCase):
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
 
-    def setUp(self):
+    def test_01_moderador_favorita_clube(self):
+        driver = self.driver
 
-        self.categoria = Categoria.objects.get(nome='Ficção')
-        self.modalidade = Modalidade.objects.get(nome='Online')
+        # 1. Registro do moderador
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
-        self.moderador = User.objects.create_user(username='moderador', password='Asd12345678')
-        self.client.login(username='moderador', password='Asd12345678')
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
 
-        self.clube = Clube.objects.create(
-            titulo='Clube de Teste',
-            moderador=self.moderador,
-            descricao='Um clube de teste',
-            categoria=self.categoria,
-            modalidade=self.modalidade
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar, "Botão de registro não encontrado.")
+
+        usuarioComentar.send_keys("moderador_clube")
+        senhaComentar.send_keys("senha_moderador")
+        senha2Comentar.send_keys("senha_moderador")
+        registrarComentar.send_keys(Keys.ENTER)
+
+        # 2. Login do moderador
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin, "Campo 'password' de login não encontrado.")
+
+        usuariologin.send_keys("moderador_clube")
+        senhalogin.send_keys("senha_moderador")
+        senhalogin.send_keys(Keys.ENTER)
+
+        time.sleep(1)
+
+        # 3. Criar um novo clube
+        newclub = driver.find_element(By.ID, "newclub-btn")
+        self.assertIsNotNone(newclub, "Botão 'Create Club' não encontrado.")
+
+        newclub.click()
+
+        time.sleep(1)
+
+        findForm1 = driver.find_element(By.NAME, "titulo")
+        findForm2 = driver.find_element(By.NAME, "modalidade")
+        findForm3 = driver.find_element(By.NAME, "categoria")
+        findForm4 = driver.find_element(By.NAME, "descricao")
+        findForm5 = driver.find_element(By.ID, "create-btn")
+
+        # Asserts para verificar os campos de criação do clube
+        self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
+        self.assertIsNotNone(findForm2, "Campo 'modalidade' não encontrado.")
+        self.assertIsNotNone(findForm3, "Campo 'categoria' não encontrado.")
+        self.assertIsNotNone(findForm4, "Campo 'descricao' não encontrado.")
+        self.assertIsNotNone(findForm5, "Botão 'create-btn' não encontrado.")
+
+        findForm1.send_keys("Clube Favorito Teste")
+
+        modalidadeSelect = Select(findForm2)
+        modalidadeSelect.select_by_visible_text("Online")
+
+        categoriaSelect = Select(findForm3)
+        categoriaSelect.select_by_visible_text("Ficção")
+
+        findForm4.send_keys("Descrição do clube favorito para teste.")
+
+        time.sleep(1)
+        findForm5.click()
+
+        # 4. Navegar para a página "My Clubs"
+        driver.get("http://127.0.0.1:8000/myclubes/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/myclubes/", "Não foi redirecionado corretamente para a página 'My Clubs'.")
+
+        # 5. Garantir que o dropdown de favoritos está aberto
+        time.sleep(2)
+
+        # 6. Recapturar o botão de favoritar após abrir o dropdown
+        favoritar_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "favoritar-btn"))
         )
+        self.assertIsNotNone(favoritar_btn, "Botão de favoritar não encontrado.")
 
-        self.membro = User.objects.create_user(username='membro', password='Asd12345678')
-        Membro.objects.create(clube=self.clube, usuario=self.membro)
+        # 7. Clicar no botão de favoritar
+        favoritar_btn.click()
 
-    def test_botao_nao_aparece_para_moderador(self):
-        response = self.client.get(reverse('club-Detail', args=[self.clube.id]))
+        # 8. Verificar se o ícone de estrela foi atualizado para "favoritado"
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".bi-star-fill")))
 
-        self.assertNotContains(response, '<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#sairDoClubeModal-{{ clube.id }}">Sair do Clube</button>')
+        time.sleep(2)
 
-    def test_botao_sair_do_clube_aparece_para_membro(self):
+        # 9. Expandir novamente o dropdown de favoritos
+        for _ in range(3):
+            try:
+                dropdown = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, "h2.favoritosheader"))
+                )
+                self.assertIsNotNone(dropdown, "Dropdown de favoritos não encontrado.")
+                ActionChains(driver).move_to_element(dropdown).click().perform()
+                break
+            except StaleElementReferenceException:
+                print("Tentando clicar novamente no dropdown após ele ficar stale.")
+                time.sleep(1)
 
-        self.client.logout()
-        self.client.login(username='membro', password='Asd12345678')
+        time.sleep(2)
 
-        response = self.client.get(reverse('club-Detail', args=[self.clube.id]))
+        # 10. Recapturar o botão de favoritar (agora como desfavoritar)
+        favoritar_btn = None
+        for _ in range(3):
+            try:
+                favoritar_btn = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.NAME, "desfavoritar-btn"))
+                )
+                favoritar_btn.click()  # Clicar para desfavoritar
+                break
+            except StaleElementReferenceException:
+                print("Botão de desfavoritar ficou stale. Recapturando o botão...")
+                time.sleep(1)
 
-        self.assertContains(response, 'Sair do Clube')
+        # Verificar se o botão foi clicado corretamente
+        self.assertIsNotNone(favoritar_btn, "O botão de desfavoritar não pôde ser clicado.")
 
-    def test_usuario_sai_do_clube(self):
+        # 11. Verificar se o ícone de estrela foi atualizado para "não favoritado"
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".bi-star")))
 
-        self.client.logout()
-        self.client.login(username='membro', password='Asd12345678')
+        time.sleep(3)
 
-        response = self.client.post(reverse('sair-do-clube', args=[self.clube.id]))
+        # 12. Logout do moderador
+        driver.get("http://127.0.0.1:8000/")
+        pfp = driver.find_element(By.NAME, "pfp")
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
 
-        self.assertFalse(Membro.objects.filter(clube=self.clube, usuario=self.membro).exists())
+        pfp.click()
 
-        self.assertRedirects(response, reverse('myclubes'))
-        messages = list(response.wsgi_request._messages)
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(str(messages[0]), f'Você saiu do clube "{self.clube.titulo}"')
+        time.sleep(1)
 
+        logout = driver.find_element(By.ID, "logout-btn")
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
 
-class FavoritarClubeTest(TestCase):
+        time.sleep(2)
 
-    def setUp(self):
-        self.categoria = Categoria.objects.get(nome='Ficção')
-        self.modalidade = Modalidade.objects.get(nome='Online')
+    def test_02_membro_favorita_clube(self):
+        driver = self.driver
 
-        self.moderador = User.objects.create_user(username='moderador', password='Asd12345678')
-        self.client.login(username='moderador', password='Asd12345678')
+        # 1. Registro do membro
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
-        self.clube = Clube.objects.create(
-            titulo='Clube de Teste',
-            moderador=self.moderador,
-            descricao='Clube para testes de funcionalidade',
-            categoria=self.categoria,
-            modalidade=self.modalidade
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
+
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar, "Botão de registro não encontrado.")
+
+        usuarioComentar.send_keys("membro_clube")
+        senhaComentar.send_keys("senha_membro")
+        senha2Comentar.send_keys("senha_membro")
+        registrarComentar.send_keys(Keys.ENTER)
+
+        # 2. Login do membro
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin, "Campo 'password' de login não encontrado.")
+
+        usuariologin.send_keys("membro_clube")
+        senhalogin.send_keys("senha_membro")
+        senhalogin.send_keys(Keys.ENTER)
+
+        time.sleep(1)
+
+        # 3. Navegar para a página "Clubs" e entrar no clube "Clube Favorito Teste"
+        driver.get("http://127.0.0.1:8000/clubs/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/clubs/", "Não foi redirecionado corretamente para a página 'Clubs'.")
+
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        time.sleep(1)
+
+        botao_card = driver.find_element(By.NAME, "titles")
+        self.assertIsNotNone(botao_card, "Botão do card do clube não encontrado.")
+        botao_card.click()
+
+        time.sleep(1)
+
+        # Acessa a modal de clubs
+        botao_club = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club, "Botão de entrar no clube não encontrado.")
+        botao_club.click()
+
+        time.sleep(3)
+
+        # Acessa a modal de clubs
+        botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club_novo_entrar, "Botão de entrar no clube (2ª vez) não encontrado.")
+        botao_club_novo_entrar.click()
+
+        time.sleep(3)
+
+        # 4. Navegar para a página "My Clubs"
+        driver.get("http://127.0.0.1:8000/myclubes/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/myclubes/", "Não foi redirecionado corretamente para a página 'My Clubs'.")
+
+        # 5. Garantir que o dropdown de favoritos está aberto
+        time.sleep(2)
+
+        # 6. Capturar o botão de favoritar
+        favoritar_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "favoritar-btn"))
         )
+        self.assertIsNotNone(favoritar_btn, "Botão de favoritar não encontrado.")
+
+        # 7. Clicar no botão de favoritar
+        favoritar_btn.click()
+
+        # 8. Verificar se o ícone de estrela foi atualizado para "favoritado"
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".bi-star-fill")))
+
+        time.sleep(2)
+
+        # 9. Expandir novamente o dropdown de favoritos
+        for _ in range(3):
+            try:
+                dropdown = WebDriverWait(driver, 10).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, "h2.favoritosheader"))
+                )
+                self.assertIsNotNone(dropdown, "Dropdown de favoritos não encontrado.")
+                ActionChains(driver).move_to_element(dropdown).click().perform()
+                break
+            except StaleElementReferenceException:
+                print("Tentando clicar novamente no dropdown após ele ficar stale.")
+                time.sleep(1)
+
+        time.sleep(2)
+
+        # 10. Recapturar o botão de favoritar (agora como desfavoritar)
+        favoritar_btn = None
+        for _ in range(3):
+            try:
+                favoritar_btn = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.NAME, "desfavoritar-btn"))
+                )
+                favoritar_btn.click()  # Clicar para desfavoritar
+                break
+            except StaleElementReferenceException:
+                print("Botão de desfavoritar ficou stale. Recapturando o botão...")
+                time.sleep(1)
+
+        # Verificar se o botão foi clicado corretamente
+        self.assertIsNotNone(favoritar_btn, "O botão de desfavoritar não pôde ser clicado.")
+
+        # 11. Verificar se o ícone de estrela foi atualizado para "não favoritado"
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".bi-star")))
+
+        time.sleep(3)
+
+        # 12. Logout do membro
+        driver.get("http://127.0.0.1:8000/")
+        pfp = driver.find_element(By.NAME, "pfp")
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
+
+        pfp.click()
+
+        time.sleep(1)
+
+        logout = driver.find_element(By.ID, "logout-btn")
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
+
+        time.sleep(2)
 
-        self.membro = User.objects.create_user(username='membro', password='Asd12345678')
-
-    def test_usuario_logado_pode_favoritar_clube(self):
-
-        self.client.logout()
-        self.client.login(username='membro', password='Asd12345678')
-
-        response = self.client.post(reverse('favoritar_clube', args=[self.clube.id]))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(self.membro in self.clube.favoritos.all())
-
-    def test_lista_de_clubes_favoritos_atualizada(self):
-
-        self.client.logout()
-        self.client.login(username='membro', password='Asd12345678')
-
-        self.client.post(reverse('favoritar_clube', args=[self.clube.id]))
-
-        self.assertTrue(self.clube in self.membro.clubes_favoritos.all())
-
-    def test_usuario_pode_visualizar_clubes_favoritos(self):
-
-        self.client.logout()
-        self.client.login(username='membro', password='Asd12345678')
-
-        self.membro.clubes_favoritos.add(self.clube)
-
-        response = self.client.get(reverse('myclubes'))
-
-        self.assertContains(response, self.clube.titulo)
-
-        self.assertContains(response, '<i class="bi bi-star-fill star-from-btn"></i>')
-
-    def test_usuario_pode_desfavoritar_clube(self):
-
-        self.client.logout()
-        self.client.login(username='membro', password='Asd12345678')
-
-        self.client.post(reverse('favoritar_clube', args=[self.clube.id]))
-        response = self.client.post(reverse('favoritar_clube', args=[self.clube.id]))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertFalse(self.membro in self.clube.favoritos.all())
-
-
-class LivrosFavoritosTest(TestCase):
-
-    def setUp(self):
-
-        self.categoria = Categoria.objects.get(nome='Ficção')
-        self.modalidade = Modalidade.objects.get(nome='Online')
-
-        self.moderador = User.objects.create_user(username='moderador', password='Asd12345678')
-        self.client.login(username='moderador', password='Asd12345678')
-
-        self.clube = Clube.objects.create(
-            titulo='Clube de Leitura',
-            moderador=self.moderador,
-            descricao='Clube para leitura de ficção científica',
-            categoria=self.categoria,
-            modalidade=self.modalidade
-        )
-
-        self.membro = User.objects.create_user(username='membro', password='Asd12345678')
-
-    def test_moderador_pode_adicionar_livros_favoritos(self):
-        response = self.client.post(reverse('add_top_livros', args=[self.clube.id]), {
-            'top_livros': 'Livro 1\nLivro 2\nLivro 3'
-        })
-
-        self.clube.refresh_from_db()
-        self.assertEqual(self.clube.top_livros, 'Livro 1\nLivro 2\nLivro 3')
-        self.assertEqual(response.status_code, 302)
-
-    def test_membros_podem_visualizar_livros_favoritos(self):
-
-        self.client.logout()
-        self.client.login(username='membro', password='Asd12345678')
-
-        self.clube.top_livros = 'Livro 1\nLivro 2\nLivro 3'
-        self.clube.save()
-
-        response = self.client.get(reverse('club-Detail', args=[self.clube.id]))
-
-        self.assertContains(response, 'Livro 1')
-        self.assertContains(response, 'Livro 2')
-        self.assertContains(response, 'Livro 3')
-
-    def test_moderador_pode_editar_livros_favoritos(self):
-
-        self.clube.top_livros = 'Livro 1\nLivro 2'
-        self.clube.save()
-
-        response = self.client.post(reverse('add_top_livros', args=[self.clube.id]), {
-            'top_livros': 'Livro 1\nLivro 2\nLivro 3'
-        })
-
-        self.clube.refresh_from_db()
-        self.assertEqual(self.clube.top_livros, 'Livro 1\nLivro 2\nLivro 3')
-
-    def test_membro_nao_pode_editar_livros_favoritos(self):
-
-        self.client.logout()
-        self.client.login(username='membro', password='Asd12345678')
-
-        response = self.client.post(reverse('add_top_livros', args=[self.clube.id]), {
-            'top_livros': 'Livro Indevido'
-        })
-
-        self.assertEqual(response.status_code, 403)
-        self.clube.refresh_from_db()
-        self.assertNotEqual(self.clube.top_livros, 'Livro Indevido')
-
-
-class AvaliacaoClubeTest(TestCase):
-
-    def setUp(self):
-
-        self.categoria = Categoria.objects.create(nome='Ficção')
-        self.modalidade = Modalidade.objects.create(nome='Online')
-
-        self.moderador = User.objects.create_user(username='moderador', password='modpassword')
-
-        self.clube = Clube.objects.create(
-            titulo='Clube de Teste',
-            moderador=self.moderador,
-            descricao='Um clube para testar avaliações',
-            categoria=self.categoria,
-            modalidade=self.modalidade
-        )
-
-        self.participante = User.objects.create_user(username='participante', password='password123')
-
-    def test_usuario_logado_pode_acessar_clube(self):
-        """Verificar se o participante logado pode acessar a página do clube"""
-        self.client.login(username='participante', password='password123')
-        response = self.client.get(reverse('club-Detail', args=[self.clube.id]))
-        self.assertEqual(response.status_code, 200)
-
-    def test_usuario_pode_avaliar_clube(self):
-        """Verificar se o participante pode avaliar o clube com uma nota válida"""
-        self.client.login(username='participante', password='password123')
-        response = self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 4})
-
-        avaliacao = Avaliacao.objects.filter(clube=self.clube, usuario=self.participante).first()
-        self.assertIsNotNone(avaliacao)
-        self.assertEqual(avaliacao.valor, 4)
-
-    def test_usuario_nao_seleciona_nota_exibe_erro(self):
-        """Testar se o envio de uma avaliação sem uma nota exibe uma mensagem de erro"""
-        self.client.login(username='participante', password='password123')
-
-        response = self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': ''})
-
-        self.assertEqual(response.status_code, 200)
-
-        self.assertEqual(Avaliacao.objects.filter(clube=self.clube, usuario=self.participante).count(), 0)
-
-        self.assertContains(response, "Este campo é obrigatório e deve ser um número entre 1 e 5.")
-
-    def test_usuario_pode_atualizar_avaliacao(self):
-        """Verificar se o participante pode atualizar sua avaliação"""
-        self.client.login(username='participante', password='password123')
-
-        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 4})
-
-        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 5})
-
-        avaliacao = Avaliacao.objects.get(clube=self.clube, usuario=self.participante)
-        self.assertEqual(avaliacao.valor, 5)
-
-    def test_media_avaliacoes_atualizada_corretamente(self):
-        """Verificar se a média de avaliações é atualizada corretamente após nova avaliação"""
-        participante2 = User.objects.create_user(username='participante2', password='password123')
-        self.client.login(username='participante', password='password123')
-        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 3})
-
-        self.client.login(username='participante2', password='password123')
-        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 5})
-
-        self.assertEqual(self.clube.calcular_media_avaliacoes(), 4)
-
-    def test_usuario_nao_pode_avaliar_mais_de_uma_vez(self):
-        """Verificar se o participante não pode enviar uma nova avaliação, mas apenas atualizar a existente"""
-        self.client.login(username='participante', password='password123')
-
-        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 3})
-
-        self.client.post(reverse('avaliacoes_clube', args=[self.clube.id]), {'rating': 5})
-
-        avaliacao = Avaliacao.objects.filter(clube=self.clube, usuario=self.participante).count()
-        self.assertEqual(avaliacao, 1)
 
 class verificarProgresso(TestCase):
 
@@ -3015,4 +2818,152 @@ class verificarMembros(LiveServerTestCase):
 
 
 
+
+
+
+
+class TestFiltro(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+#nao tem clube
+    def teste_cenario1(self):
+        driver = self.driver
+
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
+
+        usuarioComentar.send_keys("userAdm")
+        senhaComentar.send_keys("senha")
+        senha2Comentar.send_keys("senha")
+        registrarComentar.click()
+
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        usuariologin.send_keys("userAdm")
+        senhalogin.send_keys("senha")
+        senhalogin.send_keys(Keys.ENTER)
+        
+        time.sleep(1)
+
+        driver.get("http://127.0.0.1:8000/clubs/")
+        
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, 20000);")
+        
+        time.sleep(2)
+
+        botao_ficcao = WebDriverWait(driver, 20).until(
+          EC.element_to_be_clickable((By.ID, "botao-filtro"))
+         )
+        botao_ficcao.click()
+        
+        time.sleep(2)
+        
+        botao_autoajuda = driver.find_element(By.XPATH, "//button[contains(text(), 'Mistério')]")
+        botao_autoajuda.click()
+    
+        time.sleep(2)  
+        
+        botao_filter = driver.find_element(By.ID, "filter")
+        botao_filter.click()
+        
+        time.sleep(2)
+        
+        driver.execute_script("window.scrollTo(0, 20000);")
+        
+        time.sleep(2)
+        
+        page_content = driver.page_source
+        assert "Mistério" in page_content, "O filtro de Mistério não foi aplicado corretamente."
+
+#tem clube
+    def teste_cenario2(self):
+        
+        driver = self.driver
+
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
+
+        usuarioComentar.send_keys("userAdm")
+        senhaComentar.send_keys("senha")
+        senha2Comentar.send_keys("senha")
+        registrarComentar.click()
+
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        usuariologin.send_keys("userAdm")
+        senhalogin.send_keys("senha")
+        senhalogin.send_keys(Keys.ENTER)
+        
+        time.sleep(1)
+
+        driver.get("http://127.0.0.1:8000/clubs/")
+        
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, 20000);")
+        
+        time.sleep(2)
+
+        botao_ficcao = WebDriverWait(driver, 20).until(
+          EC.element_to_be_clickable((By.ID, "botao-filtro"))
+         )
+        botao_ficcao.click()
+        
+        time.sleep(2)
+        
+        botao_autoajuda = driver.find_element(By.XPATH, "//button[contains(text(), 'Ficção')]")
+        botao_autoajuda.click()
+    
+        time.sleep(2)  
+        
+        botao_filter = driver.find_element(By.ID, "filter")
+        botao_filter.click()
+        
+        time.sleep(2)
+        
+        driver.execute_script("window.scrollTo(0, 20000);")
+        
+        time.sleep(2)
+        
+        page_content = driver.page_source
+        assert "Ficção" in page_content, "O filtro de Ficção não foi aplicado corretamente."
 
