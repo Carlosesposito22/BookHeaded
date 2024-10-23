@@ -816,6 +816,11 @@ class ClubePrivadoTests(LiveServerTestCase):
             senha2 = driver.find_element(By.NAME, "password2")
             registrar = driver.find_element(By.NAME, "registrar")
 
+            assert usuario is not None, "Campo 'username' não encontrado"
+            assert senha is not None, "Campo 'password1' não encontrado"
+            assert senha2 is not None, "Campo 'password2' não encontrado"
+            assert registrar is not None, "Botão 'registrar' não encontrado"
+
             usuario.send_keys("testemaratonaModerador")
             senha.send_keys("senha")
             senha2.send_keys("senha")
@@ -827,41 +832,51 @@ class ClubePrivadoTests(LiveServerTestCase):
             usuariologin = driver.find_element(By.NAME, "username")
             senhalogin = driver.find_element(By.NAME, "password")
 
+            assert usuariologin is not None, "Campo de login 'username' não encontrado"
+            assert senhalogin is not None, "Campo de login 'password' não encontrado"
+
             usuariologin.send_keys("testemaratonaModerador")
             senhalogin.send_keys("senha")
             senhalogin.send_keys(Keys.ENTER)
 
             botao_club = driver.find_element(By.ID, "newclub-btn")
+            assert botao_club is not None, "Botão 'newclub-btn' não encontrado"
             botao_club.click()
             time.sleep(1)
 
             titulo_input = driver.find_element(By.ID, "titulo")
+            assert titulo_input is not None, "Campo 'titulo' não encontrado"
             titulo_input.send_keys("Book w4")
 
-
             categoria_select = Select(driver.find_element(By.ID, "categoria"))
+            assert categoria_select is not None, "Campo de seleção 'categoria' não encontrado"
             categoria_select.select_by_value("1")
 
             descricao_input = driver.find_element(By.ID, "descricao")
+            assert descricao_input is not None, "Campo de descrição 'descricao' não encontrado"
             descricao_input.send_keys("This is a test description for the book club.")
 
             checkbox = driver.find_element(By.ID, "privado")
+            assert checkbox is not None, "Checkbox 'privado' não encontrado"
             checkbox.click()
 
             create_btn = driver.find_element(By.ID, "create-btn")
+            assert create_btn is not None, "Botão de criação 'create-btn' não encontrado"
             driver.execute_script("arguments[0].removeAttribute('disabled')", create_btn)
             create_btn.click()
             time.sleep(3)
 
-            
             modalidade_select = Select(driver.find_element(By.ID, "modalidade"))
+            assert modalidade_select is not None, "Campo de seleção 'modalidade' não encontrado"
             modalidade_select.select_by_value("1")
             create_btn.click()
             time.sleep(3)
-            print("Teste de verificação campos obrigatorios.")
+
+            print("Teste de verificação campos obrigatórios.")
         
         except Exception as e:
-            print(f"Falha no teste de verificação campos obrigatorios: {e}")
+            print(f"Falha no teste de verificação campos obrigatórios: {e}")
+
 
     def teste_receber_solicitacao_duplicada_e_recebimento(self):
         try:
