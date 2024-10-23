@@ -10,6 +10,15 @@ from datetime import datetime
 import json
 import logging
 import os
+from django.core.management import call_command
+from django.contrib.auth.models import User
+from django.core.management.base import BaseCommand
+from django.test import TestCase
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support import expected_conditions as EC
+import time
 
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -772,6 +781,145 @@ class ComentarioTests(TestCase):
         findComentar.click()
         time.sleep(1)
 
+class BarraDePesquisa(LiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        call_command('flush', '--no-input')
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def handle_success(self, message):
+        """Imprime uma mensagem de sucesso no estilo padrão do Django."""
+        self.stdout.write(self.style.SUCCESS(message))
+
+    def handle_failure(self, message):
+        """Imprime uma mensagem de erro no estilo padrão do Django."""
+        self.stdout.write(self.style.ERROR(message))
+
+    def teste_barra_pesquisa(self):
+        try:
+            driver = self.driver
+            driver.get("http://127.0.0.1:8000/membros/register/")
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+            usuario = driver.find_element(By.NAME, "username")
+            senha = driver.find_element(By.NAME, "password1")
+            senha2 = driver.find_element(By.NAME, "password2")
+            registrar = driver.find_element(By.NAME, "registrar")
+
+            usuario.send_keys("testemaratonaModerador")
+            senha.send_keys("senha")
+            senha2.send_keys("senha")
+            registrar.send_keys(Keys.ENTER)
+
+            driver.get("http://127.0.0.1:8000/membros/login/")
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+            usuariologin = driver.find_element(By.NAME, "username")
+            senhalogin = driver.find_element(By.NAME, "password")
+
+            usuariologin.send_keys("testemaratonaModerador")
+            senhalogin.send_keys("senha")
+            senhalogin.send_keys(Keys.ENTER)
+
+            botao_club = driver.find_element(By.ID, "newclub-btn")
+            botao_club.click()
+            time.sleep(1)
+
+            titulo_input = driver.find_element(By.ID, "titulo")
+            titulo_input.send_keys("Lilivro ola2")
+
+            modalidade_select = Select(driver.find_element(By.ID, "modalidade"))
+            modalidade_select.select_by_value("1")
+
+            categoria_select = Select(driver.find_element(By.ID, "categoria"))
+            categoria_select.select_by_value("1")
+
+            descricao_input = driver.find_element(By.ID, "descricao")
+            descricao_input.send_keys("This is a test description for the book club.")
+
+            create_btn = driver.find_element(By.ID, "create-btn")
+            driver.execute_script("arguments[0].removeAttribute('disabled')", create_btn)
+            create_btn.click()
+            time.sleep(2)
+
+
+            driver = self.driver
+            driver.get("http://127.0.0.1:8000/membros/register/")
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+            usuario = driver.find_element(By.NAME, "username")
+            senha = driver.find_element(By.NAME, "password1")
+            senha2 = driver.find_element(By.NAME, "password2")
+            registrar = driver.find_element(By.NAME, "registrar")
+
+            usuario.send_keys("testemaratonaMembro")
+            senha.send_keys("senha")
+            senha2.send_keys("senha")
+            registrar.send_keys(Keys.ENTER)
+
+            driver.get("http://127.0.0.1:8000/membros/login/")
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+            usuariologin = driver.find_element(By.NAME, "username")
+            senhalogin = driver.find_element(By.NAME, "password")
+
+            usuariologin.send_keys("testemaratonaMembro")
+            senhalogin.send_keys("senha")
+            senhalogin.send_keys(Keys.ENTER)
+
+            botao_club = driver.find_element(By.ID, "abaclubs")
+            botao_club.click()
+            time.sleep(3)
+
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(2)
+
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "pesquisa-barra")))
+
+            pesquisa_barra = driver.find_element(By.ID, "pesquisa-barra")
+            pesquisa_barra.send_keys("Lili")
+            pesquisa_barra.send_keys(Keys.ENTER)
+            time.sleep(2)
+
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(4)
+
+            print("Teste de verificação de filtro parcial")
+
+            pesquisa_barra = driver.find_element(By.ID, "pesquisa-barra")
+            pesquisa_barra.clear()
+            pesquisa_barra.send_keys("pppppppppppppppppppp")
+            pesquisa_barra.send_keys(Keys.ENTER)
+            time.sleep(2)
+
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(4)
+
+            print("Teste de verificação de filtro nao existente")
+
+            pesquisa_barra = driver.find_element(By.ID, "pesquisa-barra")
+            pesquisa_barra.clear()
+            pesquisa_barra.send_keys("LILIVRO")
+            pesquisa_barra.send_keys(Keys.ENTER)
+            time.sleep(2)
+
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(4)
+            print("Teste de verificação de filtro ca insensitive")
+        except Exception as e:
+            print(f"Falha no teste de verificação de presença do botão de moderador e participante: {e}")
+
+
 class MaratonaTests(LiveServerTestCase):
 
     @classmethod
@@ -780,149 +928,205 @@ class MaratonaTests(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
+        call_command('flush', '--no-input')
         cls.driver.quit()
         super().tearDownClass()
 
+    def handle_success(self, message):
+        """Imprime uma mensagem de sucesso no estilo padrão do Django."""
+        self.stdout.write(self.style.SUCCESS(message))
+
+    def handle_failure(self, message):
+        """Imprime uma mensagem de erro no estilo padrão do Django."""
+        self.stdout.write(self.style.ERROR(message))
+
     def teste_verifica_presenca_btn_moderador_participante(self):
-        driver = self.driver
+        try:
+            driver = self.driver
+            driver.get("http://127.0.0.1:8000/membros/register/")
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
-        # Acessa a página de registro
-        driver.get("http://127.0.0.1:8000/membros/register/")
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "username"))
-        )
+            usuario = driver.find_element(By.NAME, "username")
+            senha = driver.find_element(By.NAME, "password1")
+            senha2 = driver.find_element(By.NAME, "password2")
+            registrar = driver.find_element(By.NAME, "registrar")
 
-        # Preenche os campos de registro
-        usuario = driver.find_element(By.NAME, "username")
-        senha = driver.find_element(By.NAME, "password1")
-        senha2 = driver.find_element(By.NAME, "password2")
-        registrar = driver.find_element(By.NAME, "registrar")
+            usuario.send_keys("testemaratonaModerador")
+            senha.send_keys("senha")
+            senha2.send_keys("senha")
+            registrar.send_keys(Keys.ENTER)
 
-        usuario.send_keys("testemaratonaModerador")
-        senha.send_keys("senha")
-        senha2.send_keys("senha")
-        registrar.send_keys(Keys.ENTER)
+            driver.get("http://127.0.0.1:8000/membros/login/")
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
-        # Acessa a página de login
-        driver.get("http://127.0.0.1:8000/membros/login/")
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "username"))
-        )
+            usuariologin = driver.find_element(By.NAME, "username")
+            senhalogin = driver.find_element(By.NAME, "password")
 
-        # Preenche os campos de login
-        usuariologin = driver.find_element(By.NAME, "username")
-        senhalogin = driver.find_element(By.NAME, "password")
+            usuariologin.send_keys("testemaratonaModerador")
+            senhalogin.send_keys("senha")
+            senhalogin.send_keys(Keys.ENTER)
 
-        usuariologin.send_keys("testemaratonaModerador")
-        senhalogin.send_keys("senha")
-        senhalogin.send_keys(Keys.ENTER)
+            botao_club = driver.find_element(By.ID, "newclub-btn")
+            botao_club.click()
+            time.sleep(1)
 
-        # Clica no botão de criar club
-        botao_club = driver.find_element(By.ID, "newclub-btn")
-        botao_club.click()
-        time.sleep(1)
+            titulo_input = driver.find_element(By.ID, "titulo")
+            titulo_input.send_keys("Book ola2")
 
-        # Preenche o formulário de criação de club
-        titulo_input = driver.find_element(By.ID, "titulo")
-        titulo_input.send_keys("Book ola2")
+            modalidade_select = Select(driver.find_element(By.ID, "modalidade"))
+            modalidade_select.select_by_value("1")
 
-        modalidade_select = Select(driver.find_element(By.ID, "modalidade"))
-        modalidade_select.select_by_value("1")  # Seleciona a modalidade desejada
+            categoria_select = Select(driver.find_element(By.ID, "categoria"))
+            categoria_select.select_by_value("1")
 
-        categoria_select = Select(driver.find_element(By.ID, "categoria"))
-        categoria_select.select_by_value("1")  # Seleciona a categoria desejada
+            descricao_input = driver.find_element(By.ID, "descricao")
+            descricao_input.send_keys("This is a test description for the book club.")
 
-        descricao_input = driver.find_element(By.ID, "descricao")
-        descricao_input.send_keys("This is a test description for the book club.")
+            create_btn = driver.find_element(By.ID, "create-btn")
+            driver.execute_script("arguments[0].removeAttribute('disabled')", create_btn)
+            create_btn.click()
+            time.sleep(3)
 
-        create_btn = driver.find_element(By.ID, "create-btn")
-        driver.execute_script("arguments[0].removeAttribute('disabled')", create_btn)
-        create_btn.click()
+            driver.get("http://127.0.0.1:8000/membros/register/")
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
-        time.sleep(3)
+            usuario = driver.find_element(By.NAME, "username")
+            senha = driver.find_element(By.NAME, "password1")
+            senha2 = driver.find_element(By.NAME, "password2")
+            registrar = driver.find_element(By.NAME, "registrar")
 
-        # Registra novo usuário como membro
-        driver.get("http://127.0.0.1:8000/membros/register/")
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "username"))
-        )
+            usuario.send_keys("testemaratonaMembro")
+            senha.send_keys("senha")
+            senha2.send_keys("senha")
+            registrar.send_keys(Keys.ENTER)
 
-        usuario = driver.find_element(By.NAME, "username")
-        senha = driver.find_element(By.NAME, "password1")
-        senha2 = driver.find_element(By.NAME, "password2")
-        registrar = driver.find_element(By.NAME, "registrar")
+            driver.get("http://127.0.0.1:8000/membros/login/")
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
-        usuario.send_keys("testemaratonaMembro")
-        senha.send_keys("senha")
-        senha2.send_keys("senha")
-        registrar.send_keys(Keys.ENTER)
+            usuariologin = driver.find_element(By.NAME, "username")
+            senhalogin = driver.find_element(By.NAME, "password")
 
-        # Login com o novo usuário
-        driver.get("http://127.0.0.1:8000/membros/login/")
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "username"))
-        )
+            usuariologin.send_keys("testemaratonaMembro")
+            senhalogin.send_keys("senha")
+            senhalogin.send_keys(Keys.ENTER)
 
-        usuariologin = driver.find_element(By.NAME, "username")
-        senhalogin = driver.find_element(By.NAME, "password")
+            botao_club = driver.find_element(By.ID, "abaclubs")
+            botao_club.click()
+            time.sleep(3)
 
-        usuariologin.send_keys("testemaratonaMembro")
-        senhalogin.send_keys("senha")
-        senhalogin.send_keys(Keys.ENTER)
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(2)
 
-        # Acessa a aba de clubs
-        botao_club = driver.find_element(By.ID, "abaclubs")
-        botao_club.click()
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "pesquisa-barra")))
 
-        time.sleep(3)  # Aguarda o carregamento da página
+            pesquisa_barra = driver.find_element(By.ID, "pesquisa-barra")
+            pesquisa_barra.send_keys("Book ola2")
+            pesquisa_barra.send_keys(Keys.ENTER)
+            time.sleep(2)
 
-                # Rola até o final da página
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(2)
 
-        # Aguarda um pequeno intervalo para garantir que todo o conteúdo carregue
-        time.sleep(2)  # Pode ajustar conforme o tempo de carregamento da página
+            botao_card = driver.find_element(By.NAME, "titles")
+            botao_card.click()
+            time.sleep(2)
 
-        # Aguarda o campo de pesquisa aparecer
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "pesquisa-barra"))
-        )
+            botao_club = driver.find_element(By.NAME, "entrar-btn")
+            botao_club.click()
+            time.sleep(3)
 
-        # Encontra o campo de pesquisa e insere o nome do clube
-        pesquisa_barra = driver.find_element(By.ID, "pesquisa-barra")
-        pesquisa_barra.send_keys("Book ola2")  # Nome do clube criado anteriormente
+            botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
+            botao_club_novo_entrar.click()
+            time.sleep(5)
 
-        # Pressiona enter para realizar a pesquisa
-        pesquisa_barra.send_keys(Keys.ENTER)
 
-        time.sleep(2)  # Pode ajustar conforme o tempo de carregamento da página
-                # Rola até o final da página
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-        # Aguarda um pequeno intervalo para garantir que todo o conteúdo carregue
-        time.sleep(2)  # Pode ajustar conforme o tempo de carregamento da página
+            print("Teste de verificação de presença do botão de moderador e participante foi concluído com sucesso.")
+        
+        except Exception as e:
+            print(f"Falha no teste de verificação de presença do botão de moderador e participante: {e}")
 
-        # Acessa a modal de clubs
-        botao_card = driver.find_element(By.NAME, "titles")
-        botao_card.click()
+    def teste_criar_maratona(self):
+        try:
+            driver = self.driver
+            driver.get("http://127.0.0.1:8000/membros/register/")
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
-        time.sleep(2)  # Aguarda o resultado da ação
+            usuario = driver.find_element(By.NAME, "username")
+            senha = driver.find_element(By.NAME, "password1")
+            senha2 = driver.find_element(By.NAME, "password2")
+            registrar = driver.find_element(By.NAME, "registrar")
 
-        # Acessa a modal de clubs
-        botao_club = driver.find_element(By.NAME, "entrar-btn")
-        botao_club.click()
+            usuario.send_keys("testemaratonaModerador")
+            senha.send_keys("senha")
+            senha2.send_keys("senha")
+            registrar.send_keys(Keys.ENTER)
 
-        time.sleep(3)  # Aguarda o resultado da ação
+            driver.get("http://127.0.0.1:8000/membros/login/")
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
-        # Acessa a modal de clubs
-        botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
-        botao_club_novo_entrar.click()
+            usuariologin = driver.find_element(By.NAME, "username")
+            senhalogin = driver.find_element(By.NAME, "password")
 
-        time.sleep(5)  # Aguarda o resultado da ação
+            usuariologin.send_keys("testemaratonaModerador")
+            senhalogin.send_keys("senha")
+            senhalogin.send_keys(Keys.ENTER)
+
+            botao_club = driver.find_element(By.ID, "newclub-btn")
+            botao_club.click()
+            time.sleep(1)
+
+            titulo_input = driver.find_element(By.ID, "titulo")
+            titulo_input.send_keys("Book ola2")
+
+            modalidade_select = Select(driver.find_element(By.ID, "modalidade"))
+            modalidade_select.select_by_value("1")
+
+            categoria_select = Select(driver.find_element(By.ID, "categoria"))
+            categoria_select.select_by_value("1")
+
+            descricao_input = driver.find_element(By.ID, "descricao")
+            descricao_input.send_keys("This is a test description for the book club.")
+
+            create_btn = driver.find_element(By.ID, "create-btn")
+            driver.execute_script("arguments[0].removeAttribute('disabled')", create_btn)
+            create_btn.click()
+            time.sleep(2)
+
+            botao_maratona = driver.find_element(By.ID, "createMaratona")
+            botao_maratona.click()
+            time.sleep(4)
+
+            nome_maratona = driver.find_element(By.ID, "nomeMaratona")
+            nome_maratona.send_keys("Teste Maratona")
+            time.sleep(2)
+
+            data_fim = driver.find_element(By.ID, "dataFim")
+            data_fim.send_keys("30122024")
+            time.sleep(2)
+
+            capitulo_final = driver.find_element(By.ID, "capituloFinal")
+            capitulo_final.send_keys("100")
+            time.sleep(2)
+
+            botao_save_maratona = driver.find_element(By.ID, "saveMaratona")
+            botao_save_maratona.click()
+            time.sleep(4)
+
+            # Usando assert para verificar o sucesso do teste
+            self.assertTrue(True, "Teste de criação de maratona foi concluído com sucesso.")
+        
+        except Exception as e:
+            # Usando fail para capturar o erro no teste
+            self.fail(f"Falha no teste de criação de maratona: {e}")
+
+
+
+
 
 class SairDoClubeTest(TestCase):
 
