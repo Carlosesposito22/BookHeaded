@@ -83,6 +83,14 @@ class SeguirUsuarioTest(LiveServerTestCase):
         cls.driver.quit()
         super().tearDownClass()
 
+    def setUp(self):
+        
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+               
+    
+
     def teste_cenario1(self):
         driver = self.driver
 
@@ -212,6 +220,12 @@ class ComentarioTests(TestCase):
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
+
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+    
 
     def teste_cenario1(self):
         driver = self.driver
@@ -406,6 +420,13 @@ class ClubePrivadoTests(LiveServerTestCase):
         call_command('flush', '--no-input')
         cls.driver.quit()
         super().tearDownClass()
+
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+               
+    
 
     def handle_success(self, message):
         """Imprime uma mensagem de sucesso no estilo padrão do Django."""
@@ -1014,6 +1035,12 @@ class BarraDePesquisa(LiveServerTestCase):
         cls.driver.quit()
         super().tearDownClass()
 
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+    
+
     def handle_success(self, message):
         """Imprime uma mensagem de sucesso no estilo padrão do Django."""
         self.stdout.write(self.style.SUCCESS(message))
@@ -1175,6 +1202,19 @@ class MaratonaTests(LiveServerTestCase):
         call_command('flush', '--no-input')
         cls.driver.quit()
         super().tearDownClass()
+
+    
+
+
+    
+    def tearDown(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+      
+       
+               
+    
 
     def handle_success(self, message):
         """Imprime uma mensagem de sucesso no estilo padrão do Django."""
@@ -1424,6 +1464,14 @@ class SairDoClubeTests(TestCase):
         cls.driver.quit()
         super().tearDownClass()
 
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+       
+               
+    
+
     def test_sair_do_clube(self):
         driver = self.driver
 
@@ -1623,6 +1671,14 @@ class FavoritarClubeTests(LiveServerTestCase):
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
+
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        
+               
+    
 
     def test_01_moderador_favorita_clube(self):
         driver = self.driver
@@ -1928,6 +1984,14 @@ class verificarProgresso(TestCase):
         cls.driver.quit()
         super().tearDownClass()
 
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        
+               
+    
+
     def teste_cenario1(self):
         driver = self.driver
 
@@ -2088,6 +2152,14 @@ class verificarMembros(LiveServerTestCase):
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
+
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+               
+    
 
     def teste_cenario_aprovando(self):
         driver = self.driver
@@ -2847,6 +2919,12 @@ class TestFiltro(TestCase):
         cls.driver.quit()
         super().tearDownClass()
 
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+    
+
     # Cenario sem clube
     def teste_cenario1(self):
         driver = self.driver
@@ -3013,7 +3091,11 @@ class ProfileViewTest(TestCase):
 
     def setUp(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
-           
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        
+               
+
 
    
    
@@ -3384,7 +3466,11 @@ class Editprofiletest(TestCase):
 
     def setUp(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
-       
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        
+               
+
     
     
     def teste1(self):
@@ -3551,6 +3637,9 @@ class usuarioprofiletest(TestCase):
     
     def setUp(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        
                
 
    
