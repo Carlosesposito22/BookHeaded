@@ -192,7 +192,7 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
     >
   </li>
     <li>
-    <a  href=""
+    <a  href="https://youtu.be/T0e2fO5k4hs?si=BTed1JPzTvUcA4eo"
       >Screencast do deployment</a
     >
   </li>
