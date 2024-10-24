@@ -182,7 +182,7 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
   </li>
   <li>
     <a  href=""
-      >Deplyment</a
+      >Deployment</a
     >
   </li>
   <li>
