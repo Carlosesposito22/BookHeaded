@@ -189,7 +189,7 @@
 
     <br>
 
-    <h1>Search results for: <strong id="search-highlight" style="color: #0066FF;">{{ nomes }}</strong></h1>
+    <h1 name="tdspessoas">Search results for: <strong id="search-highlight" style="color: #0066FF;">{{ nomes }}</strong></h1>
 
     <ul class="users-ul">
         {% if usuarios %}
@@ -210,7 +210,7 @@
                 </li>
             {% endfor %}
         {% else %}
-            <p>Nenhum usuário encontrado.</p>
+            <p name="textoS">Nenhum usuário encontrado.</p>
         {% endif %}
     </ul>
 
