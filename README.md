@@ -172,7 +172,7 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
 <summary>Entrega 3</summary>
 <ul>
   <li>
-<a href="">Imagem do Backlog no Jira</a>
+<a href="Mídia/backlog3.jpg">Imagem do Backlog no Jira</a>
 </li>
   
 <li>
@@ -180,7 +180,11 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
       >Imagem do Board no Jira</a
     >
   </li>
-
+  <li>
+    <a  href=""
+      >Deplyment</a
+    >
+  </li>
   <li>
     <a  href=""
       >Screencast dos testes</a
