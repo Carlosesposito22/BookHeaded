@@ -2792,36 +2792,6 @@ class verificarMembros(LiveServerTestCase):
 
         time.sleep(5)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class TestFiltro(TestCase):
     @classmethod
     def setUpClass(cls):
