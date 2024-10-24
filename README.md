@@ -182,7 +182,7 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
   </li>
   <li>
     <a  href=""
-      >Deplyment</a
+      >Deployment</a
     >
   </li>
   <li>
@@ -196,7 +196,7 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
     >
   </li>
       <li>
-    <a  href=""
+    <a  href="https://www.youtube.com/watch?v=JkCUlYNbTWo"
       >Screencast do Lo-fi</a
     >
   </li>
