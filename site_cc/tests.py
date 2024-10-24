@@ -1609,6 +1609,233 @@ class SairDoClubeTests(TestCase):
             self.assertFalse(bool_clube, "Usuário ainda é membro do clube após sair.")
 
 
+class AvaliacaoClubeTests(LiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def test_01_moderador_nao_avalia(self):
+        driver = self.driver
+
+        # 1. Registro do moderador
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuario_moderador = driver.find_element(By.NAME, "username")
+        senha_moderador = driver.find_element(By.NAME, "password1")
+        senha2_moderador = driver.find_element(By.NAME, "password2")
+        registrar_moderador = driver.find_element(By.NAME, "registrar")
+
+        # Assert para garantir que os elementos de registro estão presentes
+        self.assertIsNotNone(usuario_moderador, "Campo de 'username' do moderador não encontrado.")
+        self.assertIsNotNone(senha_moderador, "Campo de 'senha' do moderador não encontrado.")
+        self.assertIsNotNone(senha2_moderador, "Campo de confirmação de senha do moderador não encontrado.")
+        self.assertIsNotNone(registrar_moderador, "Botão de registrar moderador não encontrado.")
+
+        usuario_moderador.send_keys("moderador_clube")
+        senha_moderador.send_keys("senha_moderador")
+        senha2_moderador.send_keys("senha_moderador")
+        registrar_moderador.send_keys(Keys.ENTER)
+
+        # 2. Login do moderador
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        login_moderador = driver.find_element(By.NAME, "username")
+        senha_login_moderador = driver.find_element(By.NAME, "password")
+
+        # Assert para garantir que os campos de login estão presentes
+        self.assertIsNotNone(login_moderador, "Campo de 'username' do moderador não encontrado.")
+        self.assertIsNotNone(senha_login_moderador, "Campo de 'senha' do moderador não encontrado.")
+
+        login_moderador.send_keys("moderador_clube")
+        senha_login_moderador.send_keys("senha_moderador")
+        senha_login_moderador.send_keys(Keys.ENTER)
+
+        time.sleep(2)
+
+        # 3. Criar um novo clube
+        newclub = driver.find_element(By.ID, "newclub-btn")
+        self.assertIsNotNone(newclub, "Botão de criar novo clube não encontrado.")
+        newclub.click()
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "titulo")))
+
+        titulo_clube = driver.find_element(By.NAME, "titulo")
+        modalidade_clube = driver.find_element(By.NAME, "modalidade")
+        categoria_clube = driver.find_element(By.NAME, "categoria")
+        descricao_clube = driver.find_element(By.NAME, "descricao")
+        create_clube_btn = driver.find_element(By.ID, "create-btn")
+
+        # Asserts para garantir que os campos de criação do clube estão presentes
+        self.assertIsNotNone(titulo_clube, "Campo de título do clube não encontrado.")
+        self.assertIsNotNone(modalidade_clube, "Campo de modalidade do clube não encontrado.")
+        self.assertIsNotNone(categoria_clube, "Campo de categoria do clube não encontrado.")
+        self.assertIsNotNone(descricao_clube, "Campo de descrição do clube não encontrado.")
+        self.assertIsNotNone(create_clube_btn, "Botão de criação do clube não encontrado.")
+
+        titulo_clube.send_keys("Clube Teste Avaliacao")
+
+        modalidade_select = Select(modalidade_clube)
+        modalidade_select.select_by_visible_text("Online")
+
+        categoria_select = Select(categoria_clube)
+        categoria_select.select_by_visible_text("Ficção")
+
+        time.sleep(2)
+
+        descricao_clube.send_keys("Clube criado pelo moderador para teste de avaliações.")
+
+        create_clube_btn.click()
+
+        time.sleep(2)
+
+        # 4. Verificar que o moderador não pode avaliar o próprio clube
+        avaliar_btn = driver.find_elements(By.CSS_SELECTOR, "button[data-bs-target*='#avaliarModal']")
+        self.assertEqual(len(avaliar_btn), 0, "Moderador não deveria poder avaliar o próprio clube.")
+
+        time.sleep(1)
+
+        # 5. Logout do moderador
+        driver.get("http://127.0.0.1:8000/")
+        pfp_moderador = driver.find_element(By.NAME, "pfp")
+        self.assertIsNotNone(pfp_moderador, "Imagem de perfil do moderador não encontrada.")
+        pfp_moderador.click()
+
+        time.sleep(1)
+
+        logout_moderador = driver.find_element(By.ID, "logout-btn")
+        self.assertIsNotNone(logout_moderador, "Botão de logout do moderador não encontrado.")
+        logout_moderador.click()
+
+        time.sleep(1)
+
+    def test_02_membro_avalia_clube(self):
+        driver = self.driver
+
+        # 1. Registro do membro
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuario_membro = driver.find_element(By.NAME, "username")
+        senha_membro = driver.find_element(By.NAME, "password1")
+        senha2_membro = driver.find_element(By.NAME, "password2")
+        registrar_membro = driver.find_element(By.NAME, "registrar")
+
+        # Assert para garantir que os campos de registro do membro estão presentes
+        self.assertIsNotNone(usuario_membro, "Campo de 'username' do membro não encontrado.")
+        self.assertIsNotNone(senha_membro, "Campo de 'senha' do membro não encontrado.")
+        self.assertIsNotNone(senha2_membro, "Campo de confirmação de senha do membro não encontrado.")
+        self.assertIsNotNone(registrar_membro, "Botão de registrar membro não encontrado.")
+
+        usuario_membro.send_keys("membro_clube")
+        senha_membro.send_keys("senha_membro")
+        senha2_membro.send_keys("senha_membro")
+        registrar_membro.send_keys(Keys.ENTER)
+
+        time.sleep(2)
+
+        # 2. Login do membro
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        login_membro = driver.find_element(By.NAME, "username")
+        senha_login_membro = driver.find_element(By.NAME, "password")
+
+        # Assert para garantir que os campos de login estão presentes
+        self.assertIsNotNone(login_membro, "Campo de 'username' do membro não encontrado.")
+        self.assertIsNotNone(senha_login_membro, "Campo de 'senha' do membro não encontrado.")
+
+        login_membro.send_keys("membro_clube")
+        senha_login_membro.send_keys("senha_membro")
+        senha_login_membro.send_keys(Keys.ENTER)
+
+        time.sleep(2)
+
+        # 3. Membro entra no clube criado pelo moderador
+        driver.get("http://127.0.0.1:8000/clubs/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/clubs/", "Não foi redirecionado corretamente para a página 'Clubs'.")
+
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)
+
+        botao_card = driver.find_element(By.NAME, "titles")
+        self.assertIsNotNone(botao_card, "Botão do card do clube não encontrado.")
+        botao_card.click()
+
+        time.sleep(2)
+
+        # Acessa a modal de clubs
+        botao_club = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club, "Botão de entrar no clube não encontrado.")
+        botao_club.click()
+
+        time.sleep(3)
+
+        # Acessa a modal de clubs novamente
+        botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club_novo_entrar, "Botão de entrar no clube (2ª vez) não encontrado.")
+        botao_club_novo_entrar.click()
+
+        time.sleep(3)
+
+        # 4. Membro avalia o clube
+        avaliar_modal_btn = driver.find_element(By.NAME, "avaliarbtn")
+        avaliar_modal_btn.click()
+
+        time.sleep(2)
+
+        select_nota = driver.find_element(By.ID, "rating-btn")
+        select_nota.click()
+        select_nota.find_element(By.ID, "notateste").click()
+        select_nota.click()
+        submit_avaliacao_btn = driver.find_element(By.NAME, "enviar-btn")
+        submit_avaliacao_btn.click()
+        time.sleep(3)
+
+        # 5. Membro tenta enviar avaliação sem nota
+        avaliar_modal_btn = driver.find_element(By.NAME, "avaliarbtn")
+        avaliar_modal_btn.click()
+
+        time.sleep(2)
+
+        select_nota = driver.find_element(By.ID, "rating-btn")
+        select_nota.click()
+        select_nota.click()
+        submit_avaliacao_btn = driver.find_element(By.NAME, "enviar-btn")
+        submit_avaliacao_btn.click()
+        time.sleep(3)
+
+        sair_modal = driver.find_element(By.ID, "sair-avaliar")
+        sair_modal.click()
+        time.sleep(1)
+
+        # 6. Membro altera a avaliação para 5
+        avaliar_modal_btn = driver.find_element(By.NAME, "avaliarbtn")
+        avaliar_modal_btn.click()
+
+        time.sleep(2)
+
+        select_nota = driver.find_element(By.ID, "rating-btn")
+        select_nota.click()
+        select_nota.find_element(By.ID, "notateste2").click()
+        select_nota.click()
+        submit_avaliacao_btn = driver.find_element(By.NAME, "enviar-btn")
+        submit_avaliacao_btn.click()
+        time.sleep(3)
+
+
 class FavoritarClubeTests(LiveServerTestCase):
 
     @classmethod
@@ -2072,7 +2299,8 @@ class verificarProgresso(TestCase):
             driver.execute_script("arguments[0].click();", botao_club_novo_entrar)
 
         time.sleep(2)
-    
+
+
 class verificarMembros(LiveServerTestCase):
 
     @classmethod
@@ -2993,8 +3221,6 @@ class TestFiltro(TestCase):
         self.assertIn("Ficção", page_content, "O filtro de Ficção não foi aplicado corretamente.")
 
 
-
-
 class ProfileViewTest(TestCase):
     
     @classmethod
@@ -3533,6 +3759,8 @@ class Editprofiletest(TestCase):
 
         # Verificar se o ícone foi atualizado corretamente (checar o src da imagem)
         self.assertEqual(icone_atualizado.get_attribute("src"), "http://127.0.0.1:8000/static/images/icon4.svg", "O ícone não foi atualizado corretamente.")
+
+        
 class usuarioprofiletest(TestCase):   
     @classmethod
     def setUpClass(cls):
