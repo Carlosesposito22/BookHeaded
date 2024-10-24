@@ -143,7 +143,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Salvar</button>
+                            <button type="submit" class="btn btn-primary" name="edit-book-btn">Salvar</button>
                         </div>
                     </form>
                 </div>
@@ -226,7 +226,7 @@
                             <button type="button" class="btn btn-secondary engine" id="engine" data-bs-toggle="dropdown" style="border-radius: 0.5rem;"><i class="bi bi-gear-wide-connected"></i></button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateModal-{{ clube.id }}" name="editclub">Edit Club</a></li>
-                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTopLivrosModal-{{ clube.id }}">Edit Top Books</a></li>
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#addTopLivrosModal-{{ clube.id }}" name="editbooks">Edit Top Books</a></li>
                                     {% if clube.privado %}
                                         <li><a href="#" id="request" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#pedidosModal">Requests</a></li>
                                     {% endif %}
