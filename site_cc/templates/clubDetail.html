@@ -252,7 +252,7 @@
                 </p>
                 <hr>
                 {% if user != clube.moderador %}
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#avaliarModal-{{ clube.id }}">
+                    <button type="button" class="btn btn-primary" name="avaliarbtn" data-bs-toggle="modal" data-bs-target="#avaliarModal-{{ clube.id }}">
                         Avaliar Clube
                     </button>
                     &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -260,7 +260,7 @@
                         Sair do Clube
                     </button>
                     {% if error_message %}
-                        <div class="alert alert-danger">{{ error_message }}</div>
+                        <div class="alert alert-danger" id="erro-avaliar">{{ error_message }}</div>
                     {% endif %}
                 {% else %}
                     {% if clube.maratona_ativa %}
