@@ -2833,35 +2833,6 @@ class verificarMembros(LiveServerTestCase):
         time.sleep(5)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class TestFiltro(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -2876,11 +2847,11 @@ class TestFiltro(TestCase):
         cls.driver.quit()
         super().tearDownClass()
 
-#nao tem clube
+    # Cenario sem clube
     def teste_cenario1(self):
         driver = self.driver
-
         driver.get("http://127.0.0.1:8000/membros/register/")
+        
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "username"))
         )
@@ -2890,60 +2861,67 @@ class TestFiltro(TestCase):
         senha2Comentar = driver.find_element(By.NAME, "password2")
         registrarComentar = driver.find_element(By.NAME, "registrar")
 
+        # Preenche os campos de registro
         usuarioComentar.send_keys("userAdm")
         senhaComentar.send_keys("senha")
         senha2Comentar.send_keys("senha")
         registrarComentar.click()
 
+        # Verifica se o registro foi concluído
+        self.assertIn("Usuário registrado com sucesso", driver.page_source, "Falha ao registrar o usuário.")
+
+        # Faz login
         driver.get("http://127.0.0.1:8000/membros/login/")
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "username"))
         )
-
         usuariologin = driver.find_element(By.NAME, "username")
         senhalogin = driver.find_element(By.NAME, "password")
 
         usuariologin.send_keys("userAdm")
         senhalogin.send_keys("senha")
         senhalogin.send_keys(Keys.ENTER)
-        
+
         time.sleep(1)
 
+        # Verifica se o login foi realizado com sucesso
+        self.assertIn("Bem-vindo, userAdm", driver.page_source, "Falha ao fazer login.")
+
+        # Acessa a página de clubes
         driver.get("http://127.0.0.1:8000/clubs/")
-        
         time.sleep(1)
-
         driver.execute_script("window.scrollTo(0, 20000);")
-        
+
         time.sleep(2)
 
+        # Verifica se o botão de filtro está clicável
         botao_ficcao = WebDriverWait(driver, 20).until(
-          EC.element_to_be_clickable((By.ID, "botao-filtro"))
-         )
+            EC.element_to_be_clickable((By.ID, "botao-filtro"))
+        )
         botao_ficcao.click()
-        
+
         time.sleep(2)
-        
-        botao_autoajuda = driver.find_element(By.XPATH, "//button[contains(text(), 'Mistério')]")
-        botao_autoajuda.click()
-    
-        time.sleep(2)  
-        
+
+        botao_misterio = driver.find_element(By.XPATH, "//button[contains(text(), 'Mistério')]")
+        botao_misterio.click()
+
+        time.sleep(2)
+
         botao_filter = driver.find_element(By.ID, "filter")
         botao_filter.click()
-        
-        time.sleep(2)
-        
-        driver.execute_script("window.scrollTo(0, 20000);")
-        
-        time.sleep(2)
-        
-        page_content = driver.page_source
-        assert "Mistério" in page_content, "O filtro de Mistério não foi aplicado corretamente."
 
-#tem clube
+        time.sleep(2)
+
+        driver.execute_script("window.scrollTo(0, 20000);")
+
+        time.sleep(2)
+
+        # Verifica se o filtro foi aplicado corretamente
+        page_content = driver.page_source
+        self.assertIn("Mistério", page_content, "O filtro de Mistério não foi aplicado corretamente.")
+
+    # Cenario com clube
     def teste_cenario2(self):
-        
         driver = self.driver
 
         driver.get("http://127.0.0.1:8000/membros/register/")
@@ -2961,6 +2939,10 @@ class TestFiltro(TestCase):
         senha2Comentar.send_keys("senha")
         registrarComentar.click()
 
+        # Verifica se o registro foi concluído
+        self.assertIn("Usuário registrado com sucesso", driver.page_source, "Falha ao registrar o usuário.")
+
+        # Faz login
         driver.get("http://127.0.0.1:8000/membros/login/")
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "username"))
@@ -2972,40 +2954,44 @@ class TestFiltro(TestCase):
         usuariologin.send_keys("userAdm")
         senhalogin.send_keys("senha")
         senhalogin.send_keys(Keys.ENTER)
-        
+
         time.sleep(1)
 
+        # Verifica se o login foi bem-sucedido
+        self.assertIn("Bem-vindo, userAdm", driver.page_source, "Falha ao fazer login.")
+
+        # Acessa a página de clubes
         driver.get("http://127.0.0.1:8000/clubs/")
-        
         time.sleep(1)
 
         driver.execute_script("window.scrollTo(0, 20000);")
-        
         time.sleep(2)
 
         botao_ficcao = WebDriverWait(driver, 20).until(
-          EC.element_to_be_clickable((By.ID, "botao-filtro"))
-         )
+            EC.element_to_be_clickable((By.ID, "botao-filtro"))
+        )
         botao_ficcao.click()
-        
+
         time.sleep(2)
-        
-        botao_autoajuda = driver.find_element(By.XPATH, "//button[contains(text(), 'Ficção')]")
-        botao_autoajuda.click()
-    
-        time.sleep(2)  
-        
+
+        botao_ficcao = driver.find_element(By.XPATH, "//button[contains(text(), 'Ficção')]")
+        botao_ficcao.click()
+
+        time.sleep(2)
+
         botao_filter = driver.find_element(By.ID, "filter")
         botao_filter.click()
-        
+
         time.sleep(2)
-        
+
         driver.execute_script("window.scrollTo(0, 20000);")
-        
+
         time.sleep(2)
-        
+
+        # Verifica se o filtro foi aplicado corretamente
         page_content = driver.page_source
-        assert "Ficção" in page_content, "O filtro de Ficção não foi aplicado corretamente."
+        self.assertIn("Ficção", page_content, "O filtro de Ficção não foi aplicado corretamente.")
+
 
 
 
