@@ -180,7 +180,11 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
       >Imagem do Board no Jira</a
     >
   </li>
-
+  <li>
+    <a  href=""
+      >Deplyment</a
+    >
+  </li>
   <li>
     <a  href=""
       >Screencast dos testes</a
