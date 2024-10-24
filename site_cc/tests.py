@@ -1,70 +1,31 @@
-from django.contrib.auth.models import User
-from django.test import TestCase, Client, LiveServerTestCase
-from django.urls import reverse
 from .models import Clube, Membro, Comentario, Modalidade, Categoria, HistoricoMaratona, Profile, Avaliacao
-from .views import comentario_create_view
-from unittest.mock import patch
-from django.conf import settings
-from django.http import HttpResponseForbidden
-from datetime import datetime
-from django.core.management import call_command
-from django.contrib.auth.models import User
+from site_cc.management.commands.deleteusuarios import Command
+from django.test import TestCase, Client, LiveServerTestCase
 from django.core.management.base import BaseCommand
+from django.core.management import call_command
+from django.http import HttpResponseForbidden
+from django.contrib.auth.models import User
+from .views import comentario_create_view
+from django.urls import reverse
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
-from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import StaleElementReferenceException
 from django.contrib.staticfiles.testing import LiveServerTestCase
+from unittest.mock import patch
+from django.conf import settings
+from selenium import webdriver
+from datetime import datetime
 import requests
 import json
 import logging
 import time
 import os
-
-
-from django.contrib.auth.models import User
-from django.test import TestCase, Client
-from django.urls import reverse
-from .models import Clube, Membro, Comentario, Modalidade, Categoria, HistoricoMaratona, Profile, Avaliacao
-from .views import comentario_create_view
-from unittest.mock import patch
-from django.conf import settings
-from django.http import HttpResponseForbidden
-from datetime import datetime
-import json
-import logging
-import os
-from site_cc.management.commands.deleteusuarios import Command  # Substitua 'seu_comando' pelo nome correto do arquivo
-from django.core.management import call_command
-
-import time
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from django.contrib.auth.models import User  # Importar o modelo User do Django para manipulação
-
-
-from django.test import LiveServerTestCase
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.select import Select
-from selenium import webdriver
-from django.core.management import call_command
-import time, subprocess
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
+import subprocess
 
 
 class SeguirUsuarioTest(LiveServerTestCase):
@@ -2138,6 +2099,200 @@ class FavoritarClubeTests(LiveServerTestCase):
         logout.click()
 
         time.sleep(2)
+
+
+class TopLivrosTests(LiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def test_01_moderador_adiciona_top_livros(self):
+        driver = self.driver
+
+        # 1. Registro do moderador
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuario_moderador = driver.find_element(By.NAME, "username")
+        senha_moderador = driver.find_element(By.NAME, "password1")
+        senha2_moderador = driver.find_element(By.NAME, "password2")
+        registrar_moderador = driver.find_element(By.NAME, "registrar")
+
+        usuario_moderador.send_keys("moderador_clube")
+        senha_moderador.send_keys("senha_moderador")
+        senha2_moderador.send_keys("senha_moderador")
+        registrar_moderador.send_keys(Keys.ENTER)
+
+        # 2. Login do moderador
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        login_moderador = driver.find_element(By.NAME, "username")
+        senha_login_moderador = driver.find_element(By.NAME, "password")
+
+        login_moderador.send_keys("moderador_clube")
+        senha_login_moderador.send_keys("senha_moderador")
+        senha_login_moderador.send_keys(Keys.ENTER)
+
+        time.sleep(2)
+
+        # 3. Criar um novo clube
+        newclub = driver.find_element(By.ID, "newclub-btn")
+        newclub.click()
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "titulo")))
+
+        titulo_clube = driver.find_element(By.NAME, "titulo")
+        modalidade_clube = driver.find_element(By.NAME, "modalidade")
+        categoria_clube = driver.find_element(By.NAME, "categoria")
+        descricao_clube = driver.find_element(By.NAME, "descricao")
+        create_clube_btn = driver.find_element(By.ID, "create-btn")
+
+        titulo_clube.send_keys("Clube Teste Livros")
+
+        modalidade_select = Select(modalidade_clube)
+        modalidade_select.select_by_visible_text("Online")
+
+        categoria_select = Select(categoria_clube)
+        categoria_select.select_by_visible_text("Ficção")
+
+        descricao_clube.send_keys("Clube criado pelo moderador para teste de livros favoritos.")
+
+        create_clube_btn.click()
+
+        time.sleep(2)
+
+        # 4. Acessar dropdown para editar os livros favoritos
+        dropdown_btn = driver.find_element(By.ID, "engine")
+        self.assertIsNotNone(dropdown_btn, "Botão do dropdown não encontrado.")
+        dropdown_btn.click()
+
+        time.sleep(1)
+
+        # 5. Selecionar o item do dropdown para editar os livros favoritos (id modal '#addTopLivrosModal-1')
+        edit_books_option = driver.find_element(By.NAME, "editbooks")
+        self.assertIsNotNone(edit_books_option, "Opção para editar livros favoritos não encontrada.")
+        edit_books_option.click()
+
+        time.sleep(2)
+
+        # 6. Preencher os livros favoritos
+        textarea_livros = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "top_livros"))
+        )
+        self.assertIsNotNone(textarea_livros, "Campo de 'top_livros' não encontrado.")
+        textarea_livros.clear()  # Limpa o campo antes de adicionar novos livros
+        textarea_livros.send_keys("Livro 1\nLivro 2\nLivro 3")
+
+        # 7. Submeter o formulário para salvar os livros favoritos
+        submit_btn = driver.find_element(By.NAME, "edit-book-btn")
+        self.assertIsNotNone(submit_btn, "Botão de salvar lista de livros favoritos não encontrado.")
+        submit_btn.click()
+
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(5)
+
+        # 8. Logout do moderador
+        driver.get("http://127.0.0.1:8000/")
+        pfp_moderador = driver.find_element(By.NAME, "pfp")
+        pfp_moderador.click()
+
+        time.sleep(1)
+
+        logout_moderador = driver.find_element(By.ID, "logout-btn")
+        logout_moderador.click()
+
+        time.sleep(1)
+
+    def test_02_membro_visualiza_top_livros(self):
+        driver = self.driver
+
+        # 1. Registro do membro
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuario_membro = driver.find_element(By.NAME, "username")
+        senha_membro = driver.find_element(By.NAME, "password1")
+        senha2_membro = driver.find_element(By.NAME, "password2")
+        registrar_membro = driver.find_element(By.NAME, "registrar")
+
+        usuario_membro.send_keys("membro_clube")
+        senha_membro.send_keys("senha_membro")
+        senha2_membro.send_keys("senha_membro")
+        registrar_membro.send_keys(Keys.ENTER)
+
+        time.sleep(1)
+
+        # 2. Login do membro
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        login_membro = driver.find_element(By.NAME, "username")
+        senha_login_membro = driver.find_element(By.NAME, "password")
+
+        login_membro.send_keys("membro_clube")
+        senha_login_membro.send_keys("senha_membro")
+        senha_login_membro.send_keys(Keys.ENTER)
+
+        time.sleep(2)
+
+       # 3. Acessa a modal de clubs
+        driver.get("http://127.0.0.1:8000/clubs/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/clubs/", "Não foi redirecionado corretamente para a página 'Clubs'.")
+
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+
+        botao_card = driver.find_element(By.NAME, "titles")
+        self.assertIsNotNone(botao_card, "Botão do card do clube não encontrado.")
+        botao_card.click()
+
+        time.sleep(1)
+
+        # Acessa a modal de clubs
+        botao_club = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club, "Botão de entrar no clube não encontrado.")
+        botao_club.click()
+
+        time.sleep(1)
+
+        # Acessa a modal de clubs novamente
+        botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club_novo_entrar, "Botão de entrar no clube (2ª vez) não encontrado.")
+        botao_club_novo_entrar.click()
+
+        time.sleep(3)
+
+        # 4. Verifica se os livros favoritos são exibidos
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(5)
+        element_to_scroll = driver.find_element(By.NAME, "top-books")
+        driver.execute_script("arguments[0].scrollIntoView(true);", element_to_scroll)
+
+        # 5. Logout do membro
+        driver.get("http://127.0.0.1:8000/")
+        pfp_membro = driver.find_element(By.NAME, "pfp")
+        pfp_membro.click()
+
+        time.sleep(1)
+
+        logout_membro = driver.find_element(By.ID, "logout-btn")
+        logout_membro.click()
+
+        time.sleep(1)
 
 
 class verificarProgresso(TestCase):
