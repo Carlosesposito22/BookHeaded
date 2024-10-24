@@ -172,31 +172,40 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
 <summary>Entrega 3</summary>
 <ul>
   <li>
-<a href="">Imagem do Backlog no Jira</a>
+<a href="Mídia/backlog3.png">Imagem do Backlog no Jira</a>
 </li>
   
 <li>
-    <a  href=""
+    <a  href="Mídia/quadro3.png"
       >Imagem do Board no Jira</a
     >
   </li>
-
+  <li>
+    <a  href="https://bookheaded.azurewebsites.net/"
+      >Deployment</a
+    >
+  </li>
+  
   <li>
     <a  href=""
       >Screencast dos testes</a
     >
   </li>
     <li>
-    <a  href=""
+    <a  href="https://youtu.be/T0e2fO5k4hs?si=BTed1JPzTvUcA4eo"
       >Screencast do deployment</a
     >
   </li>
       <li>
-    <a  href=""
+    <a  href="https://www.youtube.com/watch?v=JkCUlYNbTWo"
       >Screencast do Lo-fi</a
     >
   </li>
-
+        <li>
+    <a  href="https://www.figma.com/proto/647wQMhbLuuVg614lNbp5g/Untitled?node-id=0-1&t=J2t430tHXVBytTUY-1"
+      >Prototipação Lo-fi</a
+    >
+        </li>
 </details>
 <br>
 

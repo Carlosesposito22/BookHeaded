@@ -3,24 +3,24 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="avaliarModalLabel-{{ clube.id }}">Avaliar Clube</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" id="sair-avaliar" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form action="{% url 'avaliacoes_clube' clube.pk %}" method="POST">
                     {% csrf_token %}
-                    <input type="hidden" name="clube_id" value="{{ clube.pk }}">
-                    <div class="mb-3">
+                    <input type="hidden" name="clube_id" value="{{ clube.pk }}" >
+                    <div class="mb-3" id="rating-btn">
                         <label for="rating" class="form-label">Avalie de 1 a 5:</label>
                         <select name="rating" id="rating-{{ clube.id }}" class="form-select" required>
                             <option value="">Escolha uma avaliação</option>
                             <option value="1">1</option>
-                            <option value="2">2</option>
+                            <option value="2" id="notateste">2</option>
                             <option value="3">3</option>
                             <option value="4">4</option>
-                            <option value="5">5</option>
+                            <option value="5" id="notateste2">5</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+                    <button type="submit" class="btn btn-primary" name="enviar-btn">Enviar Avaliação</button>
                 </form>
             </div>
         </div>
