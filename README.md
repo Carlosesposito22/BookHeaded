@@ -176,7 +176,7 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
 </li>
   
 <li>
-    <a  href=""
+    <a  href="Mídia/quadro3.png"
       >Imagem do Board no Jira</a
     >
   </li>
