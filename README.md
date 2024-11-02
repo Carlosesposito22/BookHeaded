@@ -207,6 +207,45 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
     >
         </li>
 </details>
+<details>
+<summary>Entrega 4</summary>
+<ul>
+  <li>
+<a href="">Imagem do Backlog no Jira</a>
+</li>
+  
+<li>
+    <a  href=""
+      >Imagem do Quadro no Jira</a
+    >
+  </li>
+    <li>
+    <a  href=""
+      >Screencast do Deployment</a
+    >
+  </li>
+      <li>
+    <a  href=""
+      >Screencast dos Testes Automatizados</a
+    >
+  </li>
+      <li>
+    <a  href=""
+      >Screencast do Lo-Fi</a
+    >
+  </li>
+
+  <li>
+    <a href="Mídia/1.jpg" target="_blank">
+      <a href="Mídia/2.jpg" target="_blank">
+        <a href="Mídia/3.jpg" target="_blank">
+          Prototipação Lo-Fi
+        </a>
+      </a>
+    </a>
+  </li>
+</ul>
+</details>
 <br>
 
 ## 📑 Prototipação Lo-Fi
