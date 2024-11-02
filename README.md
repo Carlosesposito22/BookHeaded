@@ -236,15 +236,10 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
   </li>
 
   <li>
-    <a href="Mídia/1.jpg" target="_blank">
-      <a href="Mídia/2.jpg" target="_blank">
-        <a href="Mídia/3.jpg" target="_blank">
-          Prototipação Lo-Fi
-        </a>
-      </a>
-    </a>
+    <a  href="https://www.figma.com/proto/647wQMhbLuuVg614lNbp5g/Untitled?node-id=0-1&t=J2t430tHXVBytTUY-1"
+      >Prototipação Lo-fi</a
+    >
   </li>
-</ul>
 </details>
 <br>
 
