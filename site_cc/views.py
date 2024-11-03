@@ -331,6 +331,9 @@ def profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
     profile, created = Profile.objects.get_or_create(user=user)
     
+    # Obtendo os clubes que o usuário favoritou
+    clubes_favoritos = Clube.objects.filter(favoritos=user)  # Use 'user' em vez de 'request.user'
+    
     seguidores = profile.seguidores.all()  
     seguindo = Profile.objects.filter(seguidores=user)  
 
@@ -375,7 +378,9 @@ def profile(request, user_id):
         'icons': icons,
         'seguidores_count': seguidores_count,
         'seguindo_count': seguindo_count,
+        'clubes_favoritos': clubes_favoritos,  # Adicionando clubes favoritos ao contexto
     })
+
 
 
 
@@ -613,4 +618,6 @@ def deletar_historico(request, username):
             request.session['last_searches'] = user_searches
             return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'}, status=400)
+
+
 
