@@ -35,7 +35,7 @@ Para ativar o ambiente virtual:
 
 ### No Windows:
 ```
-.\venv\Scripts\activate
+source venv/Scripts/activate
 ```
 
 ### No macOS/Linux:
@@ -47,3 +47,45 @@ source venv/bin/activate
 Com o ambiente virtual ativado dentro da mesma pasta, instale as dependências necessárias:
 ```
 pip install -r requirements.txt
+```
+### 5. Execute as migrações:
+Realize as migrações no banco usando: 
+(Note que em algums dispositivos é usado py como prefixo ao inves de python)
+```
+python .\manage.py makemigrations
+```
+Em seguida
+```
+python .\manage.py migrate
+```
+### 6. Execute o Servidor de Desenvolvimento
+Finalmente, para iniciar o servidor de desenvolvimento, execute:
+
+```
+python .\manage.py runserver
+```
+
+Agora, você deve ser capaz de acessar o aplicativo em seu navegador, normalmente o servidor local é http://localhost:8000/.
+
+### 7. Contribuindo com Código
+
+Recomendamos o uso do Visual Studio Code (VSCode) para desenvolver o projeto. Para abrir o projeto no VSCode, siga os passos abaixo:
+
+# Abra o VSCode.
+Clique em File > Open Folder... e selecione o diretório do projeto conecta-cesar.
+Certifique-se de que o ambiente virtual esteja ativado no terminal do VSCode.
+
+# Abra um Pull Request.
+
+### Processo de Revisão
+Nossa equipe irá analisar todos os pull requests. Apenas aqueles que forem coerentes e estiverem alinhados com os objetivos do projeto serão aprovados.
+
+# Dúvidas?
+Se tiver qualquer dúvida, sinta-se à vontade para abrir uma issue.
+
+
+## Diretrizes de Desenvolvimento 🤔
+
+  - Para fazer uma boa contribuição siga as boas práticas de codificação em Python, HTML e CSS.
+  - Formatação correta do código.
+  - Ordem de imports correta no código.
