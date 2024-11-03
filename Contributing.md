@@ -72,7 +72,7 @@ Agora, você deve ser capaz de acessar o aplicativo em seu navegador, normalment
 Recomendamos o uso do Visual Studio Code (VSCode) para desenvolver o projeto. Para abrir o projeto no VSCode, siga os passos abaixo:
 
 # Abra o VSCode.
-Clique em File > Open Folder... e selecione o diretório do projeto conecta-cesar.
+Clique em File > Open Folder... e selecione o diretório do projeto BookHeaded.
 Certifique-se de que o ambiente virtual esteja ativado no terminal do VSCode.
 
 # Abra um Pull Request.
