@@ -471,14 +471,14 @@
             </div>
             <div class="user-data">
                 <p class="user-info">User Info</p>
-                <h3>My Favorite Clubs</h3>
+                <h3>Favorites Clubes</h3>
                 <ul>
                     {% for clube in clubes_favoritos %}
                         <li>
                             <a href="#" data-bs-toggle="modal" data-bs-target="#clubeModal-{{ clube.id }}">{{ clube.titulo }}</a>
                         </li>
                     {% empty %}
-                        <li>You have no favorite clubs yet.</li>
+                        <li>User has no favorite clubes yet.</li>
                     {% endfor %}
                 </ul>
             </div>            
