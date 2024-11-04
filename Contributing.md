@@ -52,17 +52,13 @@ pip install -r requirements.txt
 Realize as migrações no banco usando: 
 (Note que em algums dispositivos é usado py como prefixo ao inves de python)
 ```
-python .\manage.py makemigrations
-```
-Em seguida
-```
-python .\manage.py migrate
+python manage.py migrate
 ```
 ### 6. Execute o Servidor de Desenvolvimento
 Finalmente, para iniciar o servidor de desenvolvimento, execute:
 
 ```
-python .\manage.py runserver
+python manage.py runserver
 ```
 
 Agora, você deve ser capaz de acessar o aplicativo em seu navegador, normalmente o servidor local é http://localhost:8000/.
