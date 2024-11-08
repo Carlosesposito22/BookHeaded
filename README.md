@@ -220,6 +220,11 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
     >
   </li>
     <li>
+    <a  href="https://bookheaded.azurewebsites.net/"
+      >Deployment</a
+    >
+  </li>
+    <li>
     <a  href=""
       >Screencast do Deployment</a
     >
@@ -232,6 +237,11 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
       <li>
     <a  href="https://youtu.be/HIGIJcHg02s?si=Uy5NNb7FnRjBV661"
       >Screencast do Lo-Fi</a
+    >
+  </li>
+        <li>
+    <a  href=""
+      >Bug Tracker</a
     >
   </li>
 

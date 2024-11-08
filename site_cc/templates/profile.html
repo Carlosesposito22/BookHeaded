@@ -57,6 +57,13 @@
         border-radius: 1rem;
         width: fit-content;
         max-width: 80%;
+        background-color: var(--bs-custom-bg);
+    }
+
+    @include color-mode(dark) {
+        .biodiv{
+            background-color: blue;
+        }
     }
 
 
@@ -526,7 +533,7 @@
                         {% endif %}
                     {% endif %}
                     </div>
-                    <div class="biodiv">
+                    <div class="biodiv" data-bs-theme="dark">
                         {% if request.user == profile.user %}
                             {% if profile.bio %}
                                 <p class="text-break bio" name="bio_usuario">{{ profile.bio }}</p>
@@ -737,9 +744,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-   
-
     
 </script>
 {% endblock %}
