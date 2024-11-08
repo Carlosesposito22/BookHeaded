@@ -234,6 +234,11 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
       >Screencast do Lo-Fi</a
     >
   </li>
+        <li>
+    <a  href=""
+      >Bug Tracker</a
+    >
+  </li>
 
   <li>
     <a  href="https://www.figma.com/proto/647wQMhbLuuVg614lNbp5g/Untitled?node-id=0-1&t=J2t430tHXVBytTUY-1"
