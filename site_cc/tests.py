@@ -28,143 +28,6 @@ import os
 import subprocess
 
 
-class SeguirUsuarioTest(LiveServerTestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--no-sandbox")
-        
-        cls.driver = webdriver.Chrome(options=chrome_options)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.quit()
-        super().tearDownClass()
-
-    def setUp(self):
-        
-        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
-        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
-        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
-               
-    
-
-    def teste_cenario1(self):
-        driver = self.driver
-
-        driver.get("http://127.0.0.1:8000/membros/register/")
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "username"))
-        )
-
-        usuario = driver.find_element(By.NAME, "username")
-        senha = driver.find_element(By.NAME, "password1")
-        senha2 = driver.find_element(By.NAME, "password2")
-        registrar = driver.find_element(By.NAME, "registrar")
-
-        assert usuario is not None, "Campo 'username' não encontrado"
-        assert senha is not None, "Campo 'password1' não encontrado"
-        assert senha2 is not None, "Campo 'password2' não encontrado"
-        assert registrar is not None, "Botão 'registrar' não encontrado"
-
-        usuario.send_keys("testefollow")
-        senha.send_keys("senha")
-        senha2.send_keys("senha")
-        registrar.send_keys(Keys.ENTER)
-
-        driver.get("http://127.0.0.1:8000/membros/login/")
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "username"))
-        )
-
-        usuariologin = driver.find_element(By.NAME, "username")
-        senhalogin = driver.find_element(By.NAME, "password")
-
-        assert usuariologin is not None, "Campo de login 'username' não encontrado"
-        assert senhalogin is not None, "Campo de login 'password' não encontrado"
-
-        usuariologin.send_keys("testefollow")
-        senhalogin.send_keys("senha")
-        senhalogin.send_keys(Keys.ENTER)
-
-        driver.get("http://127.0.0.1:8000/usuarios/?nomes=")
-
-        try:
-            WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.NAME, 'user'))
-            )
-            pfp_touch = driver.find_element(By.NAME, 'user')
-            pfp_touch.click()
-            WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.ID, 'follow-text'))
-            )
-            followbtn = driver.find_element(By.ID, 'follow-text')
-            followbtn.click()
-            time.sleep(2)
-
-            view_followers = driver.find_element(By.ID, 'followers-text2')
-            assert view_followers is not None, "Botão de visualização de seguidores não encontrado"
-            view_followers.click()
-            time.sleep(2)
-        except Exception as e:
-            print(f"Erro ao seguir: {e}")
-
-    def teste_cenario2(self):
-        driver = self.driver
-
-        driver.get("http://127.0.0.1:8000/membros/login/")
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.NAME, "username"))
-        )
-
-        usuariologin = driver.find_element(By.NAME, "username")
-        senhalogin = driver.find_element(By.NAME, "password")
-
-        assert usuariologin is not None, "Campo de login 'username' não encontrado"
-        assert senhalogin is not None, "Campo de login 'password' não encontrado"
-
-        usuariologin.send_keys("testefollow")
-        senhalogin.send_keys("senha")
-        senhalogin.send_keys(Keys.ENTER)
-
-        driver.get("http://127.0.0.1:8000/usuarios/?nomes=")
-
-        WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.NAME, 'user'))
-        )
-        pfp_touch = driver.find_element(By.NAME, 'user')
-        pfp_touch.click()
-        time.sleep(2)
-
-        view_followers = driver.find_element(By.ID, 'followers-text2')
-        assert view_followers is not None, "Botão de visualização de seguidores não encontrado"
-        view_followers.click()
-        time.sleep(2)
-
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//*[contains(text(),'Unfollow')]"))
-        )
-
-        try:
-            unfollow_button = driver.find_element(By.XPATH, "//*[contains(text(),'Unfollow')]")
-            assert unfollow_button is not None, "Botão 'Unfollow' não encontrado"
-            driver.execute_script("arguments[0].click();", unfollow_button)
-            
-            WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, "//*[contains(text(),'Follow')]"))
-            )
-
-            view_followers2 = driver.find_element(By.ID, 'followers-text2')
-            assert view_followers2 is not None, "Botão de visualização de seguidores não encontrado após Unfollow"
-            time.sleep(2)
-            view_followers2.click()
-            time.sleep(2)
-            print("Unfollow realizado com sucesso.")
-        except Exception as e:
-            print(f"Erro ao realizar Unfollow: {e}")
 
 
 class ComentarioTests(LiveServerTestCase):
@@ -175,6 +38,7 @@ class ComentarioTests(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
+
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -189,8 +53,8 @@ class ComentarioTests(LiveServerTestCase):
     def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
-        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
         super().tearDown()
 
@@ -336,27 +200,31 @@ class ComentarioTests(LiveServerTestCase):
         time.sleep(1)
 
         driver.get("http://127.0.0.1:8000/clubs/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/clubs/", "Não foi redirecionado corretamente para a página 'Clubs'.")
 
         time.sleep(1)
-
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-        time.sleep(1)
+        time.sleep(2)
 
         botao_card = driver.find_element(By.NAME, "titles")
+        self.assertIsNotNone(botao_card, "Botão do card do clube não encontrado.")
         botao_card.click()
 
-        time.sleep(1)
+        time.sleep(2)
 
+        # Acessa a modal de clubs
         botao_club = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club, "Botão de entrar no clube não encontrado.")
         botao_club.click()
 
-        time.sleep(1)
+        time.sleep(3)
 
+        # Acessa a modal de clubs novamente
         botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club_novo_entrar, "Botão de entrar no clube (2ª vez) não encontrado.")
         botao_club_novo_entrar.click()
 
-        time.sleep(1)
+        time.sleep(3)
 
         findComentarioBox = driver.find_element(By.NAME, "comentario")
         findComentarioBox.send_keys("Comentario para teste do usuario nao adm!!")
@@ -1023,6 +891,11 @@ class BarraDePesquisa(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=1920,1080")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--disable-infobars")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1897,65 +1770,64 @@ class AvaliacaoClubeTests(LiveServerTestCase):
 
         time.sleep(1)
 
-        # 1. Registro do membro
+        # 5. Registro do membro
         driver.get("http://127.0.0.1:8000/membros/register/")
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
-        usuario_membro = driver.find_element(By.NAME, "username")
-        senha_membro = driver.find_element(By.NAME, "password1")
-        senha2_membro = driver.find_element(By.NAME, "password2")
-        registrar_membro = driver.find_element(By.NAME, "registrar")
+        usuarioComentar2 = driver.find_element(By.NAME, "username")
+        senhaComentar2 = driver.find_element(By.NAME, "password1")
+        senha2Comentar2 = driver.find_element(By.NAME, "password2")
+        registrarComentar2 = driver.find_element(By.NAME, "registrar")
 
-        # Assert para garantir que os campos de registro do membro estão presentes
-        self.assertIsNotNone(usuario_membro, "Campo de 'username' do membro não encontrado.")
-        self.assertIsNotNone(senha_membro, "Campo de 'senha' do membro não encontrado.")
-        self.assertIsNotNone(senha2_membro, "Campo de confirmação de senha do membro não encontrado.")
-        self.assertIsNotNone(registrar_membro, "Botão de registrar membro não encontrado.")
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar2, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar2, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar2, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar2, "Botão de registro não encontrado.")
 
-        usuario_membro.send_keys("membro_clube")
-        senha_membro.send_keys("senha_membro")
-        senha2_membro.send_keys("senha_membro")
-        registrar_membro.send_keys(Keys.ENTER)
+        usuarioComentar2.send_keys("membro_clube")
+        senhaComentar2.send_keys("senha_membro")
+        senha2Comentar2.send_keys("senha_membro")
+        registrarComentar2.send_keys(Keys.ENTER)
 
-        time.sleep(2)
-
-        # 2. Login do membro
+        # 6. Login do membro
         driver.get("http://127.0.0.1:8000/membros/login/")
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
-        login_membro = driver.find_element(By.NAME, "username")
-        senha_login_membro = driver.find_element(By.NAME, "password")
+        usuariologin2 = driver.find_element(By.NAME, "username")
+        senhalogin2 = driver.find_element(By.NAME, "password")
 
-        # Assert para garantir que os campos de login estão presentes
-        self.assertIsNotNone(login_membro, "Campo de 'username' do membro não encontrado.")
-        self.assertIsNotNone(senha_login_membro, "Campo de 'senha' do membro não encontrado.")
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin2, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin2, "Campo 'password' de login não encontrado.")
 
-        login_membro.send_keys("membro_clube")
-        senha_login_membro.send_keys("senha_membro")
-        senha_login_membro.send_keys(Keys.ENTER)
+        usuariologin2.send_keys("membro_clube")
+        senhalogin2.send_keys("senha_membro")
+        senhalogin2.send_keys(Keys.ENTER)
 
-        time.sleep(2)
+        time.sleep(1)
 
-        # 3. Membro entra no clube criado pelo moderador
+        # 7. Navegar para o clube e entrar nele
         driver.get("http://127.0.0.1:8000/clubs/")
         self.assertEqual(driver.current_url, "http://127.0.0.1:8000/clubs/", "Não foi redirecionado corretamente para a página 'Clubs'.")
 
         time.sleep(1)
+
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(2)
+        time.sleep(1)
 
         botao_card = driver.find_element(By.NAME, "titles")
         self.assertIsNotNone(botao_card, "Botão do card do clube não encontrado.")
         botao_card.click()
 
-        time.sleep(2)
+        time.sleep(1)
 
         # Acessa a modal de clubs
         botao_club = driver.find_element(By.NAME, "entrar-btn")
         self.assertIsNotNone(botao_club, "Botão de entrar no clube não encontrado.")
         botao_club.click()
 
-        time.sleep(3)
+        time.sleep(1)
 
         # Acessa a modal de clubs novamente
         botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
@@ -2024,7 +1896,7 @@ class FavoritarClubeTests(LiveServerTestCase):
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
+    
     def setUp(self):
         subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
         subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
@@ -2414,7 +2286,6 @@ class FavoritarClubeTests(LiveServerTestCase):
 
 
 class TopLivrosTests(LiveServerTestCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -2672,7 +2543,6 @@ class TopLivrosTests(LiveServerTestCase):
 
 
 class verificarProgresso(TestCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -2685,11 +2555,20 @@ class verificarProgresso(TestCase):
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
+    
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
+
+    
         
                
     
@@ -2841,27 +2720,33 @@ class verificarProgresso(TestCase):
 
 
 class verificarMembros(LiveServerTestCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
+    
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
-               
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
+
+
+    
     
 
     def teste_cenario_aprovando(self):
@@ -3447,17 +3332,34 @@ class verificarMembros(LiveServerTestCase):
 
         time.sleep(2)
 
-        driver.get("http://127.0.0.1:8000/membros/login/")
+        driver.get("http://127.0.0.1:8000/membros/register/")
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "username"))
         )
 
+        usuario = driver.find_element(By.NAME, "username")
+        senha = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        registrar = driver.find_element(By.NAME, "registrar")
+
+        usuario.send_keys("UserComum")
+        senha.send_keys("senha")
+        senha2.send_keys("senha")
+        registrar.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        
         usuariologin = driver.find_element(By.NAME, "username")
         senhalogin = driver.find_element(By.NAME, "password")
 
-        usuariologin.send_keys("userComum")
+        usuariologin.send_keys("UserComum")
         senhalogin.send_keys("senha")
         senhalogin.send_keys(Keys.ENTER)
+
+        
+        
+
+       
 
         driver.get("http://127.0.0.1:8000/clubs/")
 
@@ -3587,7 +3489,7 @@ class verificarMembros(LiveServerTestCase):
         usuariologin = driver.find_element(By.NAME, "username")
         senhalogin = driver.find_element(By.NAME, "password")
 
-        usuariologin.send_keys("userComum")
+        usuariologin.send_keys("UserComum")
         senhalogin.send_keys("senha")
         senhalogin.send_keys(Keys.ENTER)
 
@@ -3622,7 +3524,7 @@ class TestFiltro(LiveServerTestCase):
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
+    
     def setUp(self):
         subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
         subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
@@ -3635,7 +3537,7 @@ class TestFiltro(LiveServerTestCase):
         super().tearDown()
 
     # Cenario sem clube
-    def teste_cenario1(self):
+    def teste1(self):
         driver = self.driver
 
         # 1. Registro do moderador
@@ -3743,7 +3645,7 @@ class TestFiltro(LiveServerTestCase):
         self.assertIn("Mistério", page_content, "O filtro de Mistério não foi aplicado corretamente.")
 
     # Cenario com clube
-    def teste_cenario2(self):
+    def teste2(self):
         driver = self.driver
 
         # 1. Registro do moderador
@@ -3868,25 +3770,35 @@ class TestFiltro(LiveServerTestCase):
 
 
 class ProfileViewTest(TestCase):
-    
+
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
+    
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
+
+    
+   
         
                
 
@@ -4165,14 +4077,12 @@ class ProfileViewTest(TestCase):
         time.sleep(5)
 
         # Verificar se o botão "Seguir" existe antes de clicar
-        try:
-            seguir_botao = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.ID, 'follow-text'))
-            )
-            action.move_to_element(seguir_botao).click().perform()
-            time.sleep(3)
-        except TimeoutException:
-            print("Botão 'Seguir' não encontrado ou não clicável")
+        
+        seguir_botao = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, 'follow-text'))
+        )
+        action.move_to_element(seguir_botao).click().perform()
+        time.sleep(3)
 
         # Logout do segundo usuário (maria)
         dropdown = driver.find_element(by=By.NAME, value="pfp")
@@ -4248,20 +4158,24 @@ class Editprofiletest(TestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
-  
-
+    
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
         
                
 
@@ -4415,26 +4329,32 @@ class Editprofiletest(TestCase):
         self.assertEqual(icone_atualizado.get_attribute("src"), "http://127.0.0.1:8000/static/images/icon4.svg", "O ícone não foi atualizado corretamente.")
 
         
-class usuarioprofiletest(TestCase):   
+class usuarioprofiletest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-     
     
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()   
+   
         
                
 
@@ -4602,3 +4522,52 @@ class usuarioprofiletest(TestCase):
         # Verificar se o usuário correto foi acessado
         nome_usuario = icone.get_attribute("innerText").strip()  # Capturar o nome de usuário
         self.assertEqual(nome_usuario, "Search results for:", "usuarios foram nencontrados.")
+
+class favoritoprofiletest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+  
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+
+    def teste_1(self):
+        #Fazendo o registro e o login
+        driver = self.driver
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        time.sleep(3)
+
+        usuario = driver.find_element(by=By.NAME, value="username")
+        senha = driver.find_element(by=By.NAME, value="password1")
+        senha2 = driver.find_element(by=By.NAME, value="password2")
+        registrar = driver.find_element(by=By.NAME, value="registrar")
+
+        usuario.send_keys("joao")
+        senha.send_keys("senha")
+        senha2.send_keys("senha")
+        registrar.send_keys(Keys.ENTER)
+
+        time.sleep(8)  # Aguardar o registro ser processado
+
+        # Fazer login como o primeiro usuário (joao)
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        usuariol = driver.find_element(by=By.NAME, value="username")
+        senhalogin = driver.find_element(by=By.NAME, value="password")
+        registrarl = driver.find_element(by=By.NAME, value="loginB")
+
+        usuariol.send_keys("joao")
+        senhalogin.send_keys("senha")
+        registrarl.send_keys(Keys.ENTER)
+        time.sleep(2)

@@ -57,6 +57,13 @@
         border-radius: 1rem;
         width: fit-content;
         max-width: 80%;
+        background-color: var(--bs-custom-bg);
+    }
+
+    @include color-mode(dark) {
+        .biodiv{
+            background-color: blue;
+        }
     }
 
 
@@ -496,7 +503,7 @@
                 <div class="img-user-div">
                     {% if request.user == profile.user %}
                         <div class="img-user">
-                            <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder"  onclick="openModal()">
+                            <img src="{% if profile.icone %}{% static profile.icone %}{% else %}{% static 'images/icon3.svg' %}{% endif %}" alt="Foto de perfil" class="pfp-holder" name="foto"  onclick="openModal()">
                             <strong style="cursor: pointer;" name="followers-text2" onclick="openFollowersModal()">{{ seguidores_count }} Followers</strong> <!-- Aqui tem que aparecer antes do 'Followers' o numero de followers -->
                             
                            
@@ -526,7 +533,7 @@
                         {% endif %}
                     {% endif %}
                     </div>
-                    <div class="biodiv">
+                    <div class="biodiv" data-bs-theme="dark">
                         {% if request.user == profile.user %}
                             {% if profile.bio %}
                                 <p class="text-break bio" name="bio_usuario">{{ profile.bio }}</p>
@@ -737,9 +744,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-   
-
     
 </script>
 {% endblock %}
