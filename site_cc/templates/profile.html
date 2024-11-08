@@ -75,10 +75,21 @@
 
     .user-data {
         background-color: #ececec;
-        width: fit-content;
-        padding: 0.5rem 1rem;
         border-radius: 0.5rem;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
         font-weight: bold;
+        max-height: 400px; 
+        overflow-y: auto; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .user-data::-webkit-scrollbar {
+        display: none;
     }
 
 
@@ -344,10 +355,6 @@
         }
 
     }
-    .user-data {
-        max-height: 400px; 
-        overflow-y: auto; 
-    }
     
     .N-favoritos-list {
         height: fit-content;
@@ -355,6 +362,9 @@
         border-radius: 1rem;
         padding: 0.5rem; 
         margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
     
     .N-favoritos-list li {
@@ -384,14 +394,12 @@
     
     .info-box {
         background-color: #f2ad00; 
-        padding: 0.5rem; 
-        border-radius: 1rem;
         margin-top: 0.5rem; 
         display: block; 
         transition: max-height 0.3s ease, opacity 0.3s ease; 
         overflow: hidden; 
-        max-width: 1000px;  
         height: 60px; 
+        width: 100%;
     }
     
     .rating {
@@ -413,9 +421,16 @@
         margin-top: 0.1rem;
     }
     
+    .fav-list{
+        list-style: none;
+        width: 100%;
+    }
     
-    
-    
+    .data-n-title{
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
     
 
 </style>
@@ -548,25 +563,27 @@
                     </div>
                 </div>
             </div>
-            <div class="user-data">
-                <p class="user-info">User Info</p>
-                <h3>Favorites Clubes</h3>
-                <ul class="N-favoritos-list">
-                    {% for clube in clubes_favoritos %}
-                        <li>
-                            <div class="favoritosheader">
-                                {{ clube.titulo }} 
-                                <div class="info-box">
-                                    <div class="date-rating">
-                                        <p class="rating">Rating: &nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p> 
-                                        <p class="categoria"><span class="badge date" id="fav-date">{{ clube.categoria.nome }}</span></p>  <!-- Mudado de "Since" para "categoria" -->
-                            </div>
-                        </li>
-                    {% empty %}
-                        <li>User has no favorite clubes yet.</li>
-                    {% endfor %}
-                </ul>
+            <div class="data-n-title">
+                <h4 style="padding: 0.5rem; background-color: #0066FF; color: white; margin: 0; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;"><strong>Favorite Clubs</strong></h4>
+                <div class="user-data">
+                    <ul class="N-favoritos-list">
+                        {% for clube in clubes_favoritos %}
+                            <li class="fav-list">
+                                <div class="favoritosheader">
+                                    {{ clube.titulo }} 
+                                    <div class="info-box">
+                                        <div class="date-rating">
+                                            <p class="rating">Rating: &nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p> 
+                                            <p class="categoria"><span class="badge date" id="fav-date">{{ clube.categoria.nome }}</span></p>  <!-- Mudado de "Since" para "categoria" -->
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li style="color: black; list-style: none; font-weight: normal;">User has no favorite clubs yet.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
+            
             
             
             

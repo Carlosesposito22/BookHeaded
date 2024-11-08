@@ -21,11 +21,11 @@
                 <p><strong>Admin:</strong> {{ clube.moderador }}</p>
                 <p><strong>Club Privacy:</strong> {% if clube.privado %}Private{% else %}Public{% endif %}</p>
                 <p><strong>Members:</strong> {{ clube.contar_membros }}</p>
-                <p><strong>Data de Criação:</strong> {{ clube.dataDeCriacao|date:"d/m/Y" }}</p>
+                <p><strong>Foundation:</strong> {{ clube.dataDeCriacao|date:"d/m/Y" }}</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                <a href="{% url 'club-Detail' clube.pk %}" class="btn btn-primary" name="entrar-btn">Entrar</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{% url 'club-Detail' clube.pk %}" class="btn btn-primary" name="entrar-btn">Enter</a>
             </div>
         </div>
     </div>

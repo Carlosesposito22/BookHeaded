@@ -40,7 +40,7 @@
                         {% if clube.privado %}
                             {% if not clube_context.user_is_member %}
                                 {% if clube_context.user_request_pending %}
-                                    <p class="btn btn-warning text-white text-center">Solicitação Pendente</p>
+                                    <p class="btn btn-warning text-white text-center">Pending Invitation</p>
                                 {% else %}
                                     <form method="post" action="{% url 'adicionar-membro' clube.pk %}" class="d-flex justify-content-center my-3">
                                         {% csrf_token %}
@@ -48,20 +48,20 @@
                                     </form>
                                 {% endif %}
                             {% else %}
-                                <p class="btn btn-success text-white text-center">Você é membro deste clube</p>
+                                <p class="btn btn-success text-white text-center">You're a member of this club</p>
                             {% endif %}
                         {% else %}
                             {% if not clube_context.user_is_member %}
                                 <form method="post" action="{% url 'adicionar-membro-publico' clube.pk %}" class="d-flex justify-content-center my-3">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-success text-white py-2 text-center" name="entrar-btn">Juntar-se ao Clube</button>
+                                    <button type="submit" class="btn btn-success text-white py-2 text-center" name="entrar-btn">Join Club</button>
                                 </form>
                             {% else %}
-                                <p class="btn btn-success text-white text-center">Você é membro deste clube</p>
+                                <p class="btn btn-success text-white text-center">You're a member of this club</p>
                             {% endif %}
                         {% endif %}
                     {% else %}
-                        <p class="btn btn-warning text-white text-center">Você é o Moderador</p>
+                        <p class="btn btn-warning text-white text-center">You're the admin</p>
                     {% endif %}
                 {% endif %}
             </div>
