@@ -230,7 +230,7 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
     >
   </li>
       <li>
-    <a  href=""
+    <a  href="https://youtu.be/HIGIJcHg02s?si=Uy5NNb7FnRjBV661"
       >Screencast do Lo-Fi</a
     >
   </li>
