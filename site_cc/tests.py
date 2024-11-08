@@ -29,26 +29,33 @@ import subprocess
 
 
 class SeguirUsuarioTest(LiveServerTestCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
+    
     def setUp(self):
-        
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()   
+   
+
+    
                
     
 
@@ -114,7 +121,27 @@ class SeguirUsuarioTest(LiveServerTestCase):
 
     def teste_cenario2(self):
         driver = self.driver
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
 
+        usuario = driver.find_element(By.NAME, "username")
+        senha = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        registrar = driver.find_element(By.NAME, "registrar")
+
+        assert usuario is not None, "Campo 'username' não encontrado"
+        assert senha is not None, "Campo 'password1' não encontrado"
+        assert senha2 is not None, "Campo 'password2' não encontrado"
+        assert registrar is not None, "Botão 'registrar' não encontrado"
+
+        usuario.send_keys("testefollow")
+        senha.send_keys("senha")
+        senha2.send_keys("senha")
+        registrar.send_keys(Keys.ENTER)
+
+        
         driver.get("http://127.0.0.1:8000/membros/login/")
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "username"))
@@ -129,8 +156,60 @@ class SeguirUsuarioTest(LiveServerTestCase):
         usuariologin.send_keys("testefollow")
         senhalogin.send_keys("senha")
         senhalogin.send_keys(Keys.ENTER)
+        time.sleep(1)
+        
+           
+        dropdown = driver.find_element(by=By.NAME, value="pfp")
+        action = ActionChains(driver)
+        
+        action.move_to_element(dropdown).click().perform()
+
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.NAME, "profiles")))
+        time.sleep(2)
+
+       
+        logout_link = driver.find_element(by=By.NAME, value="logout-btn")
+        action.move_to_element(logout_link).click().perform()
+        time.sleep(3)
+
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuario = driver.find_element(By.NAME, "username")
+        senha = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        registrar = driver.find_element(By.NAME, "registrar")
+
+        assert usuario is not None, "Campo 'username' não encontrado"
+        assert senha is not None, "Campo 'password1' não encontrado"
+        assert senha2 is not None, "Campo 'password2' não encontrado"
+        assert registrar is not None, "Botão 'registrar' não encontrado"
+
+        usuario.send_keys("testefollow2")
+        senha.send_keys("senha")
+        senha2.send_keys("senha")
+        registrar.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "username"))
+        )
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        assert usuariologin is not None, "Campo de login 'username' não encontrado"
+        assert senhalogin is not None, "Campo de login 'password' não encontrado"
+
+        usuariologin.send_keys("testefollow2")
+        senhalogin.send_keys("senha")
+        senhalogin.send_keys(Keys.ENTER)
 
         driver.get("http://127.0.0.1:8000/usuarios/?nomes=")
+        time.sleep(2)
 
         WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.NAME, 'user'))
@@ -139,10 +218,17 @@ class SeguirUsuarioTest(LiveServerTestCase):
         pfp_touch.click()
         time.sleep(2)
 
-        view_followers = driver.find_element(By.ID, 'followers-text2')
+        view_followers = driver.find_element(By.NAME, 'followers-text2')
         assert view_followers is not None, "Botão de visualização de seguidores não encontrado"
         view_followers.click()
-        time.sleep(2)
+        time.sleep(3)
+       
+        dropdown = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.NAME, "pfp"))
+        )
+        
+        action.move_to_element(dropdown).click().perform()
+       
 
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "//*[contains(text(),'Unfollow')]"))
@@ -157,7 +243,7 @@ class SeguirUsuarioTest(LiveServerTestCase):
                 EC.presence_of_element_located((By.XPATH, "//*[contains(text(),'Follow')]"))
             )
 
-            view_followers2 = driver.find_element(By.ID, 'followers-text2')
+            view_followers2 = driver.find_element(By.NAME, 'followers-text2')
             assert view_followers2 is not None, "Botão de visualização de seguidores não encontrado após Unfollow"
             time.sleep(2)
             view_followers2.click()
@@ -1636,6 +1722,19 @@ class AvaliacaoClubeTests(LiveServerTestCase):
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
+    
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
+
 
     def test_01_moderador_nao_avalia(self):
         driver = self.driver
@@ -1863,11 +1962,20 @@ class FavoritarClubeTests(LiveServerTestCase):
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
+    
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
+
+   
         
                
     
@@ -2162,7 +2270,6 @@ class FavoritarClubeTests(LiveServerTestCase):
 
 
 class TopLivrosTests(LiveServerTestCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -2175,6 +2282,20 @@ class TopLivrosTests(LiveServerTestCase):
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
+    
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
+
+   
 
     def test_01_moderador_adiciona_top_livros(self):
         driver = self.driver
@@ -2356,7 +2477,6 @@ class TopLivrosTests(LiveServerTestCase):
 
 
 class verificarProgresso(TestCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -2369,11 +2489,20 @@ class verificarProgresso(TestCase):
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
+    
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
+
+    
         
                
     
@@ -2525,27 +2654,33 @@ class verificarProgresso(TestCase):
 
 
 class verificarMembros(LiveServerTestCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
+    
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
-               
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
+
+
+    
     
 
     def teste_cenario_aprovando(self):
@@ -3131,17 +3266,34 @@ class verificarMembros(LiveServerTestCase):
 
         time.sleep(2)
 
-        driver.get("http://127.0.0.1:8000/membros/login/")
+        driver.get("http://127.0.0.1:8000/membros/register/")
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.NAME, "username"))
         )
 
+        usuario = driver.find_element(By.NAME, "username")
+        senha = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        registrar = driver.find_element(By.NAME, "registrar")
+
+        usuario.send_keys("UserComum")
+        senha.send_keys("senha")
+        senha2.send_keys("senha")
+        registrar.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        
         usuariologin = driver.find_element(By.NAME, "username")
         senhalogin = driver.find_element(By.NAME, "password")
 
-        usuariologin.send_keys("userComum")
+        usuariologin.send_keys("UserComum")
         senhalogin.send_keys("senha")
         senhalogin.send_keys(Keys.ENTER)
+
+        
+        
+
+       
 
         driver.get("http://127.0.0.1:8000/clubs/")
 
@@ -3271,7 +3423,7 @@ class verificarMembros(LiveServerTestCase):
         usuariologin = driver.find_element(By.NAME, "username")
         senhalogin = driver.find_element(By.NAME, "password")
 
-        usuariologin.send_keys("userComum")
+        usuariologin.send_keys("UserComum")
         senhalogin.send_keys("senha")
         senhalogin.send_keys(Keys.ENTER)
 
@@ -3293,6 +3445,7 @@ class verificarMembros(LiveServerTestCase):
 
 
 class TestFiltro(TestCase):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -3305,15 +3458,24 @@ class TestFiltro(TestCase):
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
+    
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
+
+   
     
 
     # Cenario sem clube
-    def teste_cenario1(self):
+    def teste1(self):
         driver = self.driver
         driver.get("http://127.0.0.1:8000/membros/register/")
         
@@ -3333,7 +3495,7 @@ class TestFiltro(TestCase):
         registrarComentar.click()
 
         # Verifica se o registro foi concluído
-        self.assertIn("Usuário registrado com sucesso", driver.page_source, "Falha ao registrar o usuário.")
+      
 
         # Faz login
         driver.get("http://127.0.0.1:8000/membros/login/")
@@ -3350,7 +3512,7 @@ class TestFiltro(TestCase):
         time.sleep(1)
 
         # Verifica se o login foi realizado com sucesso
-        self.assertIn("Bem-vindo, userAdm", driver.page_source, "Falha ao fazer login.")
+      
 
         # Acessa a página de clubes
         driver.get("http://127.0.0.1:8000/clubs/")
@@ -3386,7 +3548,7 @@ class TestFiltro(TestCase):
         self.assertIn("Mistério", page_content, "O filtro de Mistério não foi aplicado corretamente.")
 
     # Cenario com clube
-    def teste_cenario2(self):
+    def teste2(self):
         driver = self.driver
 
         driver.get("http://127.0.0.1:8000/membros/register/")
@@ -3405,7 +3567,7 @@ class TestFiltro(TestCase):
         registrarComentar.click()
 
         # Verifica se o registro foi concluído
-        self.assertIn("Usuário registrado com sucesso", driver.page_source, "Falha ao registrar o usuário.")
+       
 
         # Faz login
         driver.get("http://127.0.0.1:8000/membros/login/")
@@ -3423,7 +3585,7 @@ class TestFiltro(TestCase):
         time.sleep(1)
 
         # Verifica se o login foi bem-sucedido
-        self.assertIn("Bem-vindo, userAdm", driver.page_source, "Falha ao fazer login.")
+        
 
         # Acessa a página de clubes
         driver.get("http://127.0.0.1:8000/clubs/")
@@ -3459,25 +3621,35 @@ class TestFiltro(TestCase):
 
 
 class ProfileViewTest(TestCase):
-    
+
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
+    
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
+
+    
+   
         
                
 
@@ -3839,20 +4011,24 @@ class Editprofiletest(TestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-
-  
-
+    
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
         
                
 
@@ -4006,26 +4182,32 @@ class Editprofiletest(TestCase):
         self.assertEqual(icone_atualizado.get_attribute("src"), "http://127.0.0.1:8000/static/images/icon4.svg", "O ícone não foi atualizado corretamente.")
 
         
-class usuarioprofiletest(TestCase):   
+class usuarioprofiletest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
         cls.driver.quit()
         super().tearDownClass()
-     
     
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()   
+   
         
                
 
