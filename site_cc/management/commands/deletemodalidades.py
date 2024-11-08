@@ -9,4 +9,4 @@ class Command(BaseCommand):
         Modalidade.objects.all().delete()
         
         # Exibir mensagem de sucesso no terminal
-        self.stdout.write(self.style.SUCCESS('Todas as modalidades foram apagadas com sucesso.'))
+        self.stdout.write("\033[91mTodas as modalidades foram apagadas com sucesso!\033[0m")

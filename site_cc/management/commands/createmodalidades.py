@@ -7,15 +7,12 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Lista de modalidades a serem criadas
         modalidades = [
-            "online",
-            "presencial",
-            
+            "Online", "presencial", "Hibrid"
         ]
 
         # Criar modalidades no banco de dados
         for nome in modalidades:
             Modalidade.objects.create(nome=nome)
-            self.stdout.write(self.style.SUCCESS(f'Modalidade "{nome}" criada com sucesso.'))
 
         # Exibir mensagem final de sucesso
-        self.stdout.write(self.style.SUCCESS('Todas as modalidades foram criadas com sucesso.'))
+        self.stdout.write("\033[92mTodas as modalidades foram criadas com sucesso!\033[0m")

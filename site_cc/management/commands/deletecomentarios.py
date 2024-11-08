@@ -9,4 +9,4 @@ class Command(BaseCommand):
         Comentario.objects.all().delete()
         
         # Exibir mensagem de sucesso no terminal
-        self.stdout.write(self.style.SUCCESS('Todos os comentários foram apagados com sucesso.'))
+        self.stdout.write("\033[91mTodos os comentarios foram apagados com sucesso!\033[0m")

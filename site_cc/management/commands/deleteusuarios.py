@@ -6,4 +6,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         User.objects.all().delete()
-        self.stdout.write(self.style.SUCCESS('Todos os usuários foram apagados com sucesso.'))
+        self.stdout.write("\033[91mTodos os usuarios foram apagados com sucesso!\033[0m")     

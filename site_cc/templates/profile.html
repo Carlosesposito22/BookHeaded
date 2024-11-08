@@ -344,7 +344,79 @@
         }
 
     }
-
+    .user-data {
+        max-height: 400px; 
+        overflow-y: auto; 
+    }
+    
+    .N-favoritos-list {
+        height: fit-content;
+        width: fit-content;
+        border-radius: 1rem;
+        padding: 0.5rem; 
+        margin: 0;
+    }
+    
+    .N-favoritos-list li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .favoritosheader {
+        display: flex;
+        flex-direction: column; 
+        background-color: #f2ad00;
+        color: #111;
+        padding: 0.5rem;
+        font-size: 20px;
+        font-weight: bold;
+        border-radius: 1rem;
+        box-shadow: 0 6px 0 #e18b00,
+            0 6px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: white;
+        width: fit-content;
+        align-items: flex-start; 
+    }
+    
+    .info-box {
+        background-color: #f2ad00; 
+        padding: 0.5rem; 
+        border-radius: 1rem;
+        margin-top: 0.5rem; 
+        display: block; 
+        transition: max-height 0.3s ease, opacity 0.3s ease; 
+        overflow: hidden; 
+        max-width: 1000px;  
+        height: 60px; 
+    }
+    
+    .rating {
+        font-size: 14px; 
+        margin-bottom: 0.1rem; 
+    }
+    
+    #fav-date {
+        background-color: #e18b00;
+        color: white;
+        padding: 0.2rem 0.5rem; 
+        border-radius: 0.5rem; 
+        display: inline-block; 
+        font-size: 12px; 
+        margin-top: -1rem; 
+    }
+    
+    .description {
+        margin-top: 0.1rem;
+    }
+    
+    
+    
+    
+    
 
 </style>
 
@@ -478,8 +550,27 @@
             </div>
             <div class="user-data">
                 <p class="user-info">User Info</p>
+                <h3>Favorites Clubes</h3>
+                <ul class="N-favoritos-list">
+                    {% for clube in clubes_favoritos %}
+                        <li>
+                            <div class="favoritosheader">
+                                {{ clube.titulo }} 
+                                <div class="info-box">
+                                    <div class="date-rating">
+                                        <p class="rating">Rating: &nbsp;{% autoescape off %}{{ clube.estrelas_avaliacoes }}{% endautoescape %}</p> 
+                                        <p class="categoria"><span class="badge date" id="fav-date">{{ clube.categoria.nome }}</span></p>  <!-- Mudado de "Since" para "categoria" -->
+                            </div>
+                        </li>
+                    {% empty %}
+                        <li>User has no favorite clubes yet.</li>
+                    {% endfor %}
+                </ul>
             </div>
-        </div>
+            
+            
+            
+                      
     </div>
 </div>
 
@@ -630,6 +721,29 @@ window.onclick = function(event) {
         closeFollowersModal();
     }
 };
+
+document.addEventListener('DOMContentLoaded', function() {
+    const headers = document.querySelectorAll('.favoritosheader');
+
+    headers.forEach(header => {
+        header.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-bs-target');
+            const targetDiv = document.querySelector(targetId);
+            const caretIcon = this.querySelector('#caret-icon');
+
+            // Alterna a classe de exibição
+            targetDiv.classList.toggle('collapse');
+            caretIcon.classList.toggle('rotate');
+
+            // Muda a direção do ícone
+            if (targetDiv.classList.contains('collapse')) {
+                caretIcon.style.transform = 'rotate(0deg)';
+            } else {
+                caretIcon.style.transform = 'rotate(180deg)';
+            }
+        });
+    });
+});
     
 </script>
 {% endblock %}

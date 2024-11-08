@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 class Categoria(models.Model):
     nome = models.CharField(max_length=100)
@@ -125,3 +126,36 @@ class HistoricoMaratona(models.Model):
 
     def __str__(self):
         return f"{self.nome_maratona} - {self.data_fim} - {self.data_inicio}"
+
+class Enquete(models.Model):
+    clube = models.ForeignKey('Clube', on_delete=models.CASCADE, related_name='enquetes')
+    moderador = models.ForeignKey(User, on_delete=models.CASCADE)
+    titulo = models.CharField(max_length=200)
+    prazo = models.DateField()
+    criada_em = models.DateTimeField(auto_now_add=True)
+
+    def encerrada(self):
+        return timezone.now().date() > self.prazo
+
+    def __str__(self):
+        return self.titulo
+
+class Opcao(models.Model):
+    enquete = models.ForeignKey(Enquete, on_delete=models.CASCADE, related_name='opcoes')
+    texto = models.CharField(max_length=200)
+    votos = models.ManyToManyField(User, blank=True, related_name='votos')
+
+    def contar_votos(self):
+        return self.votos.count()
+
+    def __str__(self):
+        return f"{self.texto} - {self.contar_votos()} votos"
+    
+class Voto(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    enquete = models.ForeignKey(Enquete, on_delete=models.CASCADE)
+    opcao = models.ForeignKey(Opcao, on_delete=models.CASCADE)
+    data_voto = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('usuario', 'enquete')

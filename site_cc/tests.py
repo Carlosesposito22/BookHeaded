@@ -1410,7 +1410,7 @@ class MaratonaTests(LiveServerTestCase):
             self.fail(f"Falha no teste de criação de maratona: {e}")
 
 
-class SairDoClubeTests(TestCase):
+class SairDoClubeTests(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -1426,12 +1426,16 @@ class SairDoClubeTests(TestCase):
         super().tearDownClass()
 
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
-       
-               
-    
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
 
     def test_sair_do_clube(self):
         driver = self.driver
@@ -4189,3 +4193,52 @@ class usuarioprofiletest(TestCase):
         # Verificar se o usuário correto foi acessado
         nome_usuario = icone.get_attribute("innerText").strip()  # Capturar o nome de usuário
         self.assertEqual(nome_usuario, "Search results for:", "usuarios foram nencontrados.")
+
+class favoritoprofiletest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+  
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+
+    def teste_1(self):
+        #Fazendo o registro e o login
+        driver = self.driver
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        time.sleep(3)
+
+        usuario = driver.find_element(by=By.NAME, value="username")
+        senha = driver.find_element(by=By.NAME, value="password1")
+        senha2 = driver.find_element(by=By.NAME, value="password2")
+        registrar = driver.find_element(by=By.NAME, value="registrar")
+
+        usuario.send_keys("joao")
+        senha.send_keys("senha")
+        senha2.send_keys("senha")
+        registrar.send_keys(Keys.ENTER)
+
+        time.sleep(8)  # Aguardar o registro ser processado
+
+        # Fazer login como o primeiro usuário (joao)
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        usuariol = driver.find_element(by=By.NAME, value="username")
+        senhalogin = driver.find_element(by=By.NAME, value="password")
+        registrarl = driver.find_element(by=By.NAME, value="loginB")
+
+        usuariol.send_keys("joao")
+        senhalogin.send_keys("senha")
+        registrarl.send_keys(Keys.ENTER)
+        time.sleep(2)

@@ -9,4 +9,4 @@ class Command(BaseCommand):
         Clube.objects.all().delete()
         
         # Exibir mensagem de sucesso no terminal
-        self.stdout.write(self.style.SUCCESS('Todos os clubes foram apagados com sucesso.'))
+        self.stdout.write("\033[91mTodos os clubes foram apagados com sucesso!\033[0m")
