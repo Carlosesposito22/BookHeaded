@@ -131,6 +131,8 @@ function fetchResultadosEnquetes(clubeId) {
                         const votes = enquete.opcoes.map(opcao => opcao.votos);
                         const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
 
+                        const isHorizontal = labels.length > 4;
+                        
                         new Chart(ctx, {
                             type: 'bar',
                             data: {
@@ -145,17 +147,24 @@ function fetchResultadosEnquetes(clubeId) {
                             },
                             options: {
                                 responsive: true,
+                                indexAxis: isHorizontal ? 'y' : 'x',
                                 plugins: {
-                                    legend: { display: false }
+                                    legend: { display: isHorizontal }
                                 },
-                                scales: {
+                                scales: isHorizontal ? {
                                     x: {
-                                        title: { display: false },
+                                        beginAtZero: true,
+                                        grid: { display: false }
+                                    },
+                                    y: {
+                                        grid: { display: false }
+                                    }
+                                } : {
+                                    x: {
                                         grid: { display: false }
                                     },
                                     y: {
                                         beginAtZero: true,
-                                        display: false,
                                         grid: { display: false }
                                     }
                                 }

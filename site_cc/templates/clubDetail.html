@@ -215,28 +215,30 @@
 
         <!-- Modal de criação de enquete -->
         <div class="modal fade" id="criarEnqueteModal" tabindex="-1" aria-labelledby="criarEnqueteModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-primary text-white">
                         <h5 class="modal-title" id="criarEnqueteModalLabel">Criar Enquete</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="post" action="{% url 'criar_enquete' clube.id %}">
                         {% csrf_token %}
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label for="enqueteTitulo" class="form-label">Título da Enquete</label>
+                                <label for="enqueteTitulo" class="form-label fw-bold">Título da Enquete</label>
                                 <input type="text" class="form-control" id="enqueteTitulo" name="titulo" required>
                             </div>
                             <div class="mb-3">
-                                <label for="enquetePrazo" class="form-label">Prazo para Encerramento</label>
+                                <label for="enquetePrazo" class="form-label fw-bold">Prazo para Encerramento</label>
                                 <input type="date" class="form-control" id="enquetePrazo" name="prazo" required>
                             </div>
-                            <div id="opcoesContainer">
-                                <label for="opcoes" class="form-label">Opções</label>
-                                <div class="input-group mb-2">
-                                    <input type="text" class="form-control" name="opcoes" placeholder="Opção 1" required>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="adicionarOpcao()">+</button>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Opções</label>
+                                <div id="opcoesContainer">
+                                    <div class="input-group mb-2">
+                                        <input type="text" class="form-control" name="opcoes" placeholder="Opção 1" required>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="adicionarOpcao()">+</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -248,7 +250,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Modal de Enquetes -->
         <div class="modal fade" id="enquetesModal" tabindex="-1" aria-labelledby="enquetesModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
