@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Q
-from .models import Clube, Categoria, Modalidade, Comentario,Profile, Membro,HistoricoMaratona
+from .models import Clube, Categoria, Modalidade, Comentario, Profile, Membro, HistoricoMaratona, Enquete, Opcao, Voto
 import json
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -227,6 +227,9 @@ def club_detail_view(request, pk):
     progresso_percentual = (clube.progresso_atual / clube.total_capitulos * 100) if clube.total_capitulos > 0 else 0
     total_maratona_finalizadas = clube.total_maratona_finalizadas
     top_livros = clube.top_livros.split('\n') if clube.top_livros else []
+    now = timezone.now()
+    enquetes_ativas = clube.enquetes.filter(prazo__gte=now)
+    enquetes_expiradas = clube.enquetes.filter(prazo__lt=now)
 
     context = {
         'clube': clube,
@@ -236,7 +239,10 @@ def club_detail_view(request, pk):
         'user_is_member': Membro.objects.filter(clube=clube, usuario=user, aprovado=True).exists(),
         'user_request_pending': Membro.objects.filter(clube=clube, usuario=user, aprovado=False).exists(),
         'total_maratona_finalizadas': total_maratona_finalizadas,
-        'top_livros': top_livros
+        'top_livros': top_livros,
+        'now': timezone.now(),
+        'enquetes_ativas': enquetes_ativas,
+        'enquetes_expiradas': enquetes_expiradas
     }
     return render(request, 'clubDetail.html', context)
 
@@ -614,3 +620,96 @@ def deletar_historico(request, username):
             return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'}, status=400)
 
+@login_required
+def criar_enquete_view(request, clube_id):
+    clube = get_object_or_404(Clube, id=clube_id)
+
+    if request.user != clube.moderador:
+        messages.error(request, "Apenas moderadores podem criar enquetes.")
+        return redirect('club-Detail', pk=clube.id)
+    
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        prazo = request.POST.get('prazo')
+
+        if not titulo or not prazo:
+            messages.error(request, "Título e prazo são obrigatórios.")
+            return redirect('club-Detail', pk=clube.id)
+
+        try:
+            prazo = timezone.datetime.strptime(prazo, '%Y-%m-%d').date()
+            hoje = timezone.localdate()
+
+            if prazo < hoje:
+                messages.error(request, "A data de encerramento não pode ser no passado.")
+                return redirect('club-Detail', pk=clube.id)
+            
+            enquete = Enquete.objects.create(clube=clube, moderador=request.user, titulo=titulo, prazo=prazo)
+
+            opcoes_texto = request.POST.getlist('opcoes')
+            for texto in opcoes_texto:
+                if texto.strip():
+                    Opcao.objects.create(enquete=enquete, texto=texto.strip())
+
+            messages.success(request, "Enquete criada com sucesso!")
+            return redirect('club-Detail', pk=clube.id)
+
+        except ValueError:
+            messages.error(request, "Data de prazo inválida.")
+            return redirect('club-Detail', pk=clube.id)
+
+    return render(request, 'criar_enquete.html', {'clube': clube})
+
+@login_required
+def votar_enquete(request, enquete_id):
+    if request.method == "POST":
+        usuario = request.user
+        enquete = get_object_or_404(Enquete, id=enquete_id)
+
+        try:
+            data = json.loads(request.body)
+            opcao_id = data.get('opcao_id')
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Dados inválidos no corpo da requisição.'})
+
+        if not opcao_id:
+            return JsonResponse({'success': False, 'message': 'Nenhuma opção foi selecionada.'})
+
+        nova_opcao = get_object_or_404(Opcao, id=opcao_id, enquete=enquete)
+
+        voto_existente = Voto.objects.filter(usuario=usuario, enquete=enquete).first()
+
+        if voto_existente:
+            voto_existente.opcao.votos.remove(usuario)
+            voto_existente.opcao.save()
+
+            voto_existente.opcao = nova_opcao
+            voto_existente.save()
+        else:
+            Voto.objects.create(usuario=usuario, enquete=enquete, opcao=nova_opcao)
+
+        nova_opcao.votos.add(usuario)
+        nova_opcao.save()
+
+        return JsonResponse({'success': True, 'message': 'Voto registrado com sucesso!'})
+
+    return JsonResponse({'success': False, 'message': 'Requisição inválida.'})
+
+
+def resultados_enquetes_view(request, clube_id):
+    clube = get_object_or_404(Clube, id=clube_id)
+    enquetes_data = []
+
+    for enquete in clube.enquetes.all():
+        opcoes_data = [
+            {"texto": opcao.texto, "votos": opcao.votos.count()}
+            for opcao in enquete.opcoes.all()
+        ]
+        enquetes_data.append({
+            "id": enquete.id,
+            "titulo": enquete.titulo,
+            "prazo": enquete.prazo.strftime('%d/%m/%Y'),
+            "opcoes": opcoes_data
+        })
+
+    return JsonResponse({"success": True, "enquetes": enquetes_data})

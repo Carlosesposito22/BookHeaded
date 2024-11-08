@@ -20,7 +20,6 @@ from .views import (
     profile,
     lista_usuarios,
     favoritar_clube,
-    
     add_top_livros,
     get_modalidades,
     get_categorias,
@@ -30,6 +29,10 @@ from .views import (
     sair_do_clube,
     deletar_historico,
     seguir_usuario,
+    criar_enquete_view,
+    resultados_enquetes_view,
+    votar_enquete,
+
 )
 
 urlpatterns = [
@@ -68,7 +71,9 @@ urlpatterns = [
     path('clube/<int:clube_id>/listar_historico_maratona/', listar_historico_maratona_view, name='listar_historico_maratona'),
     path('clube/<int:clube_id>/sair/', views.sair_do_clube, name='sair-do-clube'),
     path('delete_search/<str:username>/', deletar_historico, name='delete_search'),
-    path('seguir/<int:user_id>/', seguir_usuario, name='seguir_usuario')
-    
+    path('seguir/<int:user_id>/', seguir_usuario, name='seguir_usuario'),
+    path('clube/<int:clube_id>/criar_enquete/', criar_enquete_view, name='criar_enquete'),
+    path('clube/<int:clube_id>/resultados_enquetes/', resultados_enquetes_view, name='resultados_enquetes'),
+    path('votar/<int:enquete_id>/', views.votar_enquete, name='votar_enquete')
 
 ]

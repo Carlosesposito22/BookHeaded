@@ -54,6 +54,9 @@
                     {% else %}
                         <span class="capitulo-atual">Capítulo atual: <span id="capituloAtualSpan">{{ clube.progresso_atual }}</span></span>
                     {% endif %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#enquetesModal">
+                        Ver Enquetes
+                    </button>
                 </div>
             </div>
             
@@ -210,6 +213,120 @@
             </div>
         </div>
 
+        <!-- Modal de criação de enquete -->
+        <div class="modal fade" id="criarEnqueteModal" tabindex="-1" aria-labelledby="criarEnqueteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="criarEnqueteModalLabel">Criar Enquete</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post" action="{% url 'criar_enquete' clube.id %}">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="enqueteTitulo" class="form-label">Título da Enquete</label>
+                                <input type="text" class="form-control" id="enqueteTitulo" name="titulo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="enquetePrazo" class="form-label">Prazo para Encerramento</label>
+                                <input type="date" class="form-control" id="enquetePrazo" name="prazo" required>
+                            </div>
+                            <div id="opcoesContainer">
+                                <label for="opcoes" class="form-label">Opções</label>
+                                <div class="input-group mb-2">
+                                    <input type="text" class="form-control" name="opcoes" placeholder="Opção 1" required>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="adicionarOpcao()">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Criar Enquete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Enquetes -->
+        <div class="modal fade" id="enquetesModal" tabindex="-1" aria-labelledby="enquetesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="enquetesModalLabel">Enquetes do Clube</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% if enquetes_ativas %}
+                            <div id="enqueteListContainer">
+                                {% for enquete in enquetes_ativas %}
+                                    <button class="btn btn-outline-primary w-100 text-start mb-2 fw-bold enquete-title" 
+                                            data-enquete-id="{{ enquete.id }}" onclick="toggleEnqueteDetails({{ enquete.id }})">
+                                        {{ enquete.titulo }}
+                                    </button>
+                                    <div id="enqueteDetails-{{ enquete.id }}" class="enquete-details collapse p-3 border rounded bg-light">
+                                        <p class="text-muted">Expira em: {{ enquete.prazo|date:"d/m/Y" }}</p>
+                                        <form id="votacaoForm-{{ enquete.id }}" onsubmit="votarEnquete(event, {{ enquete.id }})">
+                                            {% csrf_token %}
+                                            {% for opcao in enquete.opcoes.all %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="opcao_id" value="{{ opcao.id }}" id="opcao-{{ opcao.id }}" required>
+                                                    <label class="form-check-label" for="opcao-{{ opcao.id }}">{{ opcao.texto }}</label>
+                                                </div>
+                                            {% endfor %}
+                                            <button type="submit" class="btn btn-success mt-3">Votar</button>
+                                        </form>
+                                        <div id="votacaoMensagem-{{ enquete.id }}" class="mt-2"></div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-center text-muted">Não há enquetes ativas no momento.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Resultados das Enquetes -->
+        <div class="modal fade" id="resultadosEnquetesModal" tabindex="-1" aria-labelledby="resultadosEnquetesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="resultadosEnquetesModalLabel">Resultados das Enquetes</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="resultadosContainer">
+                            {% if enquetes_ativas %}
+                                {% for enquete in enquetes_ativas %}
+                                    <button class="btn btn-outline-primary w-100 text-start mb-2 fw-bold" 
+                                            data-enquete-id="{{ enquete.id }}" onclick="toggleChartVisibility({{ enquete.id }})">
+                                        {{ enquete.titulo }}
+                                    </button>
+                                    <p class="text-muted ms-2">Data de Encerramento: {{ enquete.prazo|date:"d/m/Y" }}</p>
+
+                                    <div id="noVotesMessage-{{ enquete.id }}" class="no-votes-message text-muted" style="display: none;">
+                                        Nenhum voto foi feito nesta enquete!
+                                    </div>
+                                    
+                                    <div id="chartContainer-{{ enquete.id }}" class="small-chart-container collapse">
+                                        <canvas id="chart-{{ enquete.id }}" width="200" height="150"></canvas>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-center text-muted">Nenhuma enquete foi encontrada.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {% include 'modal_delete.html' %}
         {% include 'modal_avaliar.html' %}
         {% include 'pedidos.html' %}
@@ -250,6 +367,10 @@
                     <strong>Total Sprees:</strong> {{ total_maratona_finalizadas }} 
                     <i class="bi bi-eye-fill" id="listarHistorico" data-clube-id="{{ clube.id }}" style="cursor: pointer;"></i>
                 </p>
+                <p>
+                    <strong>Total de Enquetes:</strong> {{ clube.enquetes.count }}
+                    <i class="bi bi-bar-chart-fill" id="listarResultadosEnquetes" data-clube-id="{{ clube.id }}" style="cursor: pointer;"></i>
+                </p>
                 <hr>
                 {% if user != clube.moderador %}
                     <button type="button" class="btn btn-primary" name="avaliarbtn" data-bs-toggle="modal" data-bs-target="#avaliarModal-{{ clube.id }}">
@@ -268,6 +389,8 @@
                     {% else %}
                         <button id="createMaratona" data-clube-id="{{ clube.id }}" class="btn btn-primary btn-sm reluzir" data-bs-toggle="modal" data-bs-target="#maratonaModal">Start Spree</button>
                     {% endif %}
+                        <br>
+                        <button type="button" class="btn btn-primary btn-sm reluzir" data-bs-toggle="modal" data-bs-target="#criarEnqueteModal">Nova enquete</button>
                 {% endif %}
             </div>
             {% include 'modal_livros.html' %}
@@ -384,9 +507,9 @@
 </div>
 
 <script src="{% static 'js/clubDetail.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-// JS da maratona --> vai ficar aq pq modularizado fica bugado e eu tô sem saco pra mecher nisso
     
 document.getElementById('listarHistorico').addEventListener('click', function() {
     const clubeId = this.getAttribute('data-clube-id');

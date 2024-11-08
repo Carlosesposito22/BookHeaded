@@ -1,3 +1,227 @@
+function adicionarOpcao() {
+    const opcoesContainer = document.getElementById('opcoesContainer');
+    const novaOpcao = document.createElement('div');
+    novaOpcao.classList.add('input-group', 'mb-2');
+    novaOpcao.innerHTML = `
+        <input type="text" class="form-control" name="opcoes" placeholder="Nova Opção" required>
+        <button type="button" class="btn btn-outline-danger" onclick="removerOpcao(this)">-</button>
+    `;
+    opcoesContainer.appendChild(novaOpcao);
+}
+
+function removerOpcao(button) {
+    button.parentElement.remove();
+}
+
+function votarNaOpcao(enqueteId, opcaoId) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    fetch(`/votar/${enqueteId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({ 'opcao_id': opcaoId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            const votosContador = document.querySelector(`#votos-contador-${opcaoId}`);
+            votosContador.textContent = parseInt(votosContador.textContent) + 1;
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao registrar o voto:', error);
+    });
+}
+
+function toggleEnqueteDetails(enqueteId) {
+    document.querySelectorAll('.enquete-details').forEach(element => {
+        if (element.getAttribute('id') !== `enqueteDetails-${enqueteId}`) {
+            element.classList.remove('show');
+        }
+    });
+
+    const details = document.getElementById(`enqueteDetails-${enqueteId}`);
+    details.classList.toggle('show');
+}
+
+function votarEnquete(event, enqueteId) {
+    event.preventDefault();
+    const form = document.getElementById(`votacaoForm-${enqueteId}`);
+    const opcaoSelecionada = form.querySelector('input[name="opcao_id"]:checked');
+    const mensagemContainer = document.getElementById(`votacaoMensagem-${enqueteId}`);
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    if (!opcaoSelecionada) {
+        mensagemContainer.innerHTML = `<div class="alert alert-danger">Por favor, selecione uma opção para votar.</div>`;
+        return;
+    }
+
+    const opcaoId = opcaoSelecionada.value;
+
+    fetch(`/votar/${enqueteId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({ 'opcao_id': opcaoId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            mensagemContainer.innerHTML = `<div class="alert alert-success">Voto registrado com sucesso!</div>`;
+            form.style.display = 'none';
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            mensagemContainer.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao votar:', error);
+        mensagemContainer.innerHTML = `<div class="alert alert-danger">Ocorreu um erro. Tente novamente.</div>`;
+    });
+}
+
+document.getElementById('listarResultadosEnquetes').addEventListener('click', function() {
+    const clubeId = this.getAttribute('data-clube-id');
+    fetchResultadosEnquetes(clubeId);
+});
+
+function fetchResultadosEnquetes(clubeId) {
+    fetch(`/clube/${clubeId}/resultados_enquetes/`)
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('resultadosContainer');
+            container.innerHTML = '';
+
+            if (data.success) {
+                data.enquetes.forEach(enquete => {
+                    const enqueteTitle = document.createElement('button');
+                    enqueteTitle.classList.add('btn', 'btn-outline-primary', 'mb-2', 'w-100');
+                    enqueteTitle.textContent = enquete.titulo;
+                    enqueteTitle.setAttribute('data-enquete-id', enquete.id);
+                    enqueteTitle.addEventListener('click', function() {
+                        toggleChartVisibility(enquete.id, enquete.prazo);
+                    });
+                    container.appendChild(enqueteTitle);
+
+                    const totalVotes = enquete.opcoes.reduce((sum, opcao) => sum + opcao.votos, 0);
+                    if (totalVotes === 0) {
+                        const noVotesMessage = document.createElement('div');
+                        noVotesMessage.classList.add('no-votes-message');
+                        noVotesMessage.setAttribute('id', `noVotesMessage-${enquete.id}`);
+                        noVotesMessage.textContent = 'Nenhum voto foi feito nesta enquete!';
+                        container.appendChild(noVotesMessage);
+                    } else {
+                        const chartContainer = document.createElement('div');
+                        chartContainer.classList.add('small-chart-container');
+                        chartContainer.setAttribute('id', `chartContainer-${enquete.id}`);
+                        chartContainer.style.display = 'none';
+                        chartContainer.innerHTML = `<canvas id="chart-${enquete.id}" width="200" height="150"></canvas>`;
+                        container.appendChild(chartContainer);
+
+                        const ctx = document.getElementById(`chart-${enquete.id}`).getContext('2d');
+                        const labels = enquete.opcoes.map(opcao => opcao.texto);
+                        const votes = enquete.opcoes.map(opcao => opcao.votos);
+                        const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
+
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Votos',
+                                    data: votes,
+                                    backgroundColor: colors.slice(0, labels.length),
+                                    borderColor: '#333333',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: { display: false }
+                                },
+                                scales: {
+                                    x: {
+                                        title: { display: false },
+                                        grid: { display: false }
+                                    },
+                                    y: {
+                                        beginAtZero: true,
+                                        display: false,
+                                        grid: { display: false }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+
+                const modal = new bootstrap.Modal(document.getElementById('resultadosEnquetesModal'));
+                modal.show();
+            } else {
+                container.innerHTML = '<p>Nenhuma enquete foi encontrada.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+        });
+}
+
+function toggleChartVisibility(enqueteId, prazo) {
+    document.querySelectorAll('.small-chart-container, .no-votes-message, .prazo-element').forEach(element => {
+        if (element.getAttribute('id') !== `chartContainer-${enqueteId}` && 
+            element.getAttribute('id') !== `noVotesMessage-${enqueteId}` && 
+            element.getAttribute('id') !== `prazo-${enqueteId}`) {
+            element.style.display = 'none';
+        }
+    });
+
+    const chartContainer = document.getElementById(`chartContainer-${enqueteId}`);
+    const noVotesMessage = document.getElementById(`noVotesMessage-${enqueteId}`);
+
+    let prazoElement = document.getElementById(`prazo-${enqueteId}`);
+    if (!prazoElement && chartContainer) {
+        prazoElement = document.createElement('p');
+        prazoElement.classList.add('text-muted', 'ms-2', 'prazo-element');
+        prazoElement.setAttribute('id', `prazo-${enqueteId}`);
+        prazoElement.textContent = `Data de Encerramento: ${prazo}`;
+        chartContainer.parentNode.insertBefore(prazoElement, chartContainer);
+    }
+
+    if (chartContainer) {
+        const isCurrentlyHidden = chartContainer.style.display === 'none' || chartContainer.style.display === '';
+        chartContainer.style.display = isCurrentlyHidden ? 'block' : 'none';
+        if (prazoElement) prazoElement.style.display = isCurrentlyHidden ? 'block' : 'none';
+        if (noVotesMessage) noVotesMessage.style.display = 'none';
+    } else if (noVotesMessage) {
+        noVotesMessage.style.display = 'block';
+        if (prazoElement) prazoElement.style.display = 'block';
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 function getCSRFToken() {
     let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
     return csrfToken;

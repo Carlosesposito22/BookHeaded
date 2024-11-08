@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Criar Enquete</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="titulo" class="form-label">Título da Enquete</label>
+        <input type="text" id="titulo" name="titulo" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="prazo" class="form-label">Prazo para Encerramento</label>
+        <input type="date" id="prazo" name="prazo" class="form-control" required>
+    </div>
+
+    <h4>Opções</h4>
+    <div id="opcoesContainer">
+        <div class="input-group mb-2">
+            <input type="text" name="opcoes" placeholder="Opção 1" class="form-control" required>
+            <button type="button" class="btn btn-outline-secondary" onclick="adicionarOpcao()">+</button>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Criar Enquete</button>
+</form>
+
+<script>
+    function adicionarOpcao() {
+        const opcoesContainer = document.getElementById('opcoesContainer');
+        const novaOpcao = document.createElement('div');
+        novaOpcao.classList.add('input-group', 'mb-2');
+        novaOpcao.innerHTML = `
+            <input type="text" name="opcoes" placeholder="Nova Opção" class="form-control" required>
+            <button type="button" class="btn btn-outline-danger" onclick="removerOpcao(this)">-</button>
+        `;
+        opcoesContainer.appendChild(novaOpcao);
+    }
+
+    function removerOpcao(button) {
+        button.parentElement.remove();
+    }
+</script>
+{% endblock %}
