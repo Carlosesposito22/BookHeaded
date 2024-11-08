@@ -7,19 +7,14 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Lista de categorias a serem criadas
         categorias = [
-            "Ficção",
-            "Não-ficção",
-            "Mistério",
-            "Romance",
-            "História",
-            "Ciência",
-            "Filosofia"
+            "Ficção", "Não-ficção", "Fantasia", 
+            "Biografia", "História", "Mistério", 
+            "Romance", "Ciência", "Tecnologia", "Autoajuda"
         ]
 
         # Criar categorias no banco de dados
         for nome in categorias:
             Categoria.objects.create(nome=nome)
-            self.stdout.write(self.style.SUCCESS(f'Categoria "{nome}" criada com sucesso.'))
 
         # Exibir mensagem final de sucesso
-        self.stdout.write(self.style.SUCCESS('Todas as categorias foram criadas com sucesso.'))
+        self.stdout.write("\033[92mTodas as categorias foram criadas com sucesso!\033[0m")

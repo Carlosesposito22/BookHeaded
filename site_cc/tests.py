@@ -1410,7 +1410,7 @@ class MaratonaTests(LiveServerTestCase):
             self.fail(f"Falha no teste de criação de maratona: {e}")
 
 
-class SairDoClubeTests(TestCase):
+class SairDoClubeTests(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -1426,12 +1426,16 @@ class SairDoClubeTests(TestCase):
         super().tearDownClass()
 
     def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deletecomentarios'], check=True)
         subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
-       
-               
-    
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
 
     def test_sair_do_clube(self):
         driver = self.driver

@@ -9,4 +9,4 @@ class Command(BaseCommand):
         Categoria.objects.all().delete()
         
         # Exibir mensagem de sucesso no terminal
-        self.stdout.write(self.style.SUCCESS('Todas as categorias foram apagadas com sucesso.'))
+        self.stdout.write("\033[91mTodas as categorias foram apagadas com sucesso.\033[0m")
