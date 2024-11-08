@@ -220,6 +220,11 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
     >
   </li>
     <li>
+    <a  href="https://bookheaded.azurewebsites.net/"
+      >Deployment</a
+    >
+  </li>
+    <li>
     <a  href=""
       >Screencast do Deployment</a
     >
