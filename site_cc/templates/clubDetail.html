@@ -236,15 +236,15 @@
                                 <label class="form-label fw-bold">Opções</label>
                                 <div id="opcoesContainer">
                                     <div class="input-group mb-2">
-                                        <input type="text" class="form-control" name="opcoes" placeholder="Opção 1" required>
-                                        <button type="button" class="btn btn-outline-secondary" onclick="adicionarOpcao()">+</button>
+                                        <input type="text" class="form-control" name="opcoes1" id="opcoes-enquete" placeholder="Opção 1" required>
+                                        <button type="button" name="btn-mais" class="btn btn-outline-secondary" onclick="adicionarOpcao()">+</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Criar Enquete</button>
+                            <button type="submit" id="save-enquete" class="btn btn-primary">Criar Enquete</button>
                         </div>
                     </form>
                 </div>
@@ -391,7 +391,7 @@
                         <button id="createMaratona" data-clube-id="{{ clube.id }}" class="btn btn-primary btn-sm reluzir" data-bs-toggle="modal" data-bs-target="#maratonaModal">Start Spree</button>
                     {% endif %}
                         <br>
-                        <button type="button" class="btn btn-primary btn-sm reluzir" data-bs-toggle="modal" data-bs-target="#criarEnqueteModal">Nova enquete</button>
+                        <button type="button" name="criar-enquete" class="btn btn-primary btn-sm reluzir" data-bs-toggle="modal" data-bs-target="#criarEnqueteModal">Nova enquete</button>
                 {% endif %}
             </div>
             {% include 'modal_livros.html' %}

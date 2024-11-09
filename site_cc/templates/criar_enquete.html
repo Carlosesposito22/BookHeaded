@@ -6,22 +6,22 @@
     {% csrf_token %}
     <div class="mb-3">
         <label for="titulo" class="form-label">Título da Enquete</label>
-        <input type="text" id="titulo" name="titulo" class="form-control" required>
+        <input type="text" id="titulo" name="titulo" name="titulo-enquete" id="enqueteTitulo" class="form-control" required>
     </div>
     <div class="mb-3">
         <label for="prazo" class="form-label">Prazo para Encerramento</label>
-        <input type="date" id="prazo" name="prazo" class="form-control" required>
+        <input type="date" id="prazo" id="enquetePrazo" name="prazo" class="form-control" name="prazo-enquete" required>
     </div>
 
     <h4>Opções</h4>
     <div id="opcoesContainer">
         <div class="input-group mb-2">
-            <input type="text" name="opcoes" placeholder="Opção 1" class="form-control" required>
-            <button type="button" class="btn btn-outline-secondary" onclick="adicionarOpcao()">+</button>
+            <input type="text" name="opcoes" name="opcoes-enquete" placeholder="Opção 1" class="form-control" required>
+            <button type="button" name="btn-mais" class="btn btn-outline-secondary" onclick="adicionarOpcao()">+</button>
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Criar Enquete</button>
+    <button type="submit" class="btn btn-primary" id="save-enquete">Criar Enquete</button>
 </form>
 
 <script>
