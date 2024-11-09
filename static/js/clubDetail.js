@@ -3,7 +3,7 @@ function adicionarOpcao() {
     const novaOpcao = document.createElement('div');
     novaOpcao.classList.add('input-group', 'mb-2');
     novaOpcao.innerHTML = `
-        <input type="text" class="form-control" name="opcoes" placeholder="New Option" required>
+        <input type="text" class="form-control" name="opcoes" id="opcoes1" placeholder="New Option" required>
         <button type="button" class="btn btn-outline-danger" onclick="removerOpcao(this)">-</button>
     `;
     opcoesContainer.appendChild(novaOpcao);

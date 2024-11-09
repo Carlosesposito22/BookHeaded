@@ -4599,7 +4599,172 @@ class CriarEnqueteTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
         super().tearDown()
 
-    def test_enquete_visivel_moderador(self):
+    def test_01_enquete_visivel_moderador(self):
+        driver = self.driver
+
+        # 1. Registro do moderador
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
+
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar, "Botão de registro não encontrado.")
+
+        usuarioComentar.send_keys("moderador_clube")
+        senhaComentar.send_keys("senha_moderador")
+        senha2Comentar.send_keys("senha_moderador")
+        registrarComentar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        # 2. Login do moderador
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin, "Campo 'password' de login não encontrado.")
+
+        usuariologin.send_keys("moderador_clube")
+        senhalogin.send_keys("senha_moderador")
+        senhalogin.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        # 3. Criar um novo clube
+        newclub = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "newclub-btn")))
+        self.assertIsNotNone(newclub, "Botão 'Create Club' não encontrado.")
+        newclub.click()
+
+        findForm1 = driver.find_element(By.NAME, "titulo")
+        findForm2 = driver.find_element(By.NAME, "modalidade")
+        findForm3 = driver.find_element(By.NAME, "categoria")
+        findForm4 = driver.find_element(By.NAME, "descricao")
+        findForm5 = driver.find_element(By.ID, "create-btn")
+
+        # Asserts para verificar os campos de criação do clube
+        self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
+        self.assertIsNotNone(findForm2, "Campo 'modalidade' não encontrado.")
+        self.assertIsNotNone(findForm3, "Campo 'categoria' não encontrado.")
+        self.assertIsNotNone(findForm4, "Campo 'descricao' não encontrado.")
+        self.assertIsNotNone(findForm5, "Botão 'create-btn' não encontrado.")
+
+        findForm1.send_keys("Clube de Teste Enquete")
+        Select(findForm2).select_by_visible_text("Online")
+        Select(findForm3).select_by_visible_text("Ficção")
+        findForm4.send_keys("Descrição do clube de teste para enquete.")
+        time.sleep(2)
+        findForm5.click()
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        time.sleep(5)
+        # Assert para verificar se o moderador pode ver o botão de criar enquete
+        botao_enquete = driver.find_element(By.NAME, "criar-enquete")
+        self.assertIsNotNone(botao_enquete, "Erro: O Moderador não tem acesso ao botão de criar enquete.")
+        print("Sucesso: O Moderador tem acesso ao botão de criar enquete.")
+
+        # Logout do moderador
+        driver.get("http://127.0.0.1:8000")
+        pfp = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pfp")))
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
+        pfp.click()
+
+        logout = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "logout-btn")))
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
+        time.sleep(1)
+
+        # 4. Registro e login do membro
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuarioComentar2 = driver.find_element(By.NAME, "username")
+        senhaComentar2 = driver.find_element(By.NAME, "password1")
+        senha2Comentar2 = driver.find_element(By.NAME, "password2")
+        registrarComentar2 = driver.find_element(By.NAME, "registrar")
+
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar2, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar2, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar2, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar2, "Botão de registro não encontrado.")
+
+        usuarioComentar2.send_keys("membro_clube")
+        senhaComentar2.send_keys("senha_membro")
+        senha2Comentar2.send_keys("senha_membro")
+        time.sleep(2)
+        registrarComentar2.send_keys(Keys.ENTER)
+
+        # 5. Login do membro
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin2 = driver.find_element(By.NAME, "username")
+        senhalogin2 = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin2, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin2, "Campo 'password' de login não encontrado.")
+
+        usuariologin2.send_keys("membro_clube")
+        senhalogin2.send_keys("senha_membro")
+        time.sleep(1)
+        senhalogin2.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        # 6. Navegar para o clube e verificar acesso ao botão de criar enquete
+        driver.get("http://127.0.0.1:8000/clubs/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/clubs/", "Não foi redirecionado corretamente para a página 'Clubs'.")
+
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+
+        botao_card = driver.find_element(By.NAME, "titles")
+        self.assertIsNotNone(botao_card, "Botão do card do clube não encontrado.")
+        botao_card.click()
+
+        time.sleep(1)
+
+        # Acessa a modal de clubs
+        botao_club = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club, "Botão de entrar no clube não encontrado.")
+        botao_club.click()
+
+        time.sleep(1)
+
+        # Acessa a modal de clubs novamente
+        botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club_novo_entrar, "Botão de entrar no clube (2ª vez) não encontrado.")
+        botao_club_novo_entrar.click()
+
+        time.sleep(5)
+        botao_enquete_membro = driver.find_elements(By.NAME, "criar-enquete")
+        self.assertEqual(len(botao_enquete_membro), 0, "Erro: O Membro tem acesso ao botão de criar enquete.")
+        print("Sucesso: O Membro não tem acesso ao botão de criar enquete.")
+
+        # Logout do membro
+        driver.get("http://127.0.0.1:8000")
+        pfp = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pfp")))
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
+        time.sleep(1)
+        pfp.click()
+
+        logout = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "logout-btn")))
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
+
+    def test_02_criar_enquete_valida(self):
         driver = self.driver
 
         # 1. Registro do moderador
@@ -4659,7 +4824,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         self.assertIsNotNone(findForm4, "Campo 'descricao' não encontrado.")
         self.assertIsNotNone(findForm5, "Botão 'create-btn' não encontrado.")
 
-        findForm1.send_keys("Clube de Teste Sair")
+        findForm1.send_keys("Clube de Teste Enquete")
 
         modalidadeSelect = Select(findForm2)
         modalidadeSelect.select_by_visible_text("Online")
@@ -4672,15 +4837,214 @@ class CriarEnqueteTest(LiveServerTestCase):
         time.sleep(1)
         findForm5.click()
         time.sleep(2)
-        ####################################
 
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
         btnCriarEnquete.click()
-        time.sleep(2)
+        time.sleep(1)
 
         titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
         assert titulo_enquete is not None, "Campo 'enqueteTitulo' não encontrado"
+        titulo_enquete.click()
+        time.sleep(2)
+
+        botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
+        assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
+        botao_criar_enquete.click()
+        print("Não eh possivel criar uma enquete sem titulo")
+        time.sleep(2)
+
+        botao_sair_enquete = driver.find_element(By.ID, "sair-enquete")
+        assert botao_sair_enquete  is not None, "Botão 'sair-enquete' não encontrado"
+        botao_sair_enquete.click()
+        time.sleep(1)
+
+        btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
+        assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
+        btnCriarEnquete.click()
+        time.sleep(1)
+
+        titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
+        assert titulo_enquete is not None, "Campo 'enqueteTitulo' não encontrado"
+        titulo_enquete.send_keys("Enquete Sem Prazo")
+        titulo_enquete.click()
+        time.sleep(1)
+
+        prazo_enquete = driver.find_element(By.ID, "enquetePrazo")
+        assert prazo_enquete is not None, "Campo 'enquetePrazo' não encontrado"
+        prazo_enquete.click()
+        time.sleep(2)
+
+        botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
+        assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
+        botao_criar_enquete.click()
+        print("Não eh possivel criar uma enquete sem prazo")
+        time.sleep(2)
+
+        botao_sair_enquete = driver.find_element(By.ID, "sair-enquete")
+        assert botao_sair_enquete  is not None, "Botão 'sair-enquete' não encontrado"
+        botao_sair_enquete.click()
+        time.sleep(1)
+
+        btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
+        assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
+        btnCriarEnquete.click()
+        time.sleep(1)
+
+        titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
+        assert titulo_enquete is not None, "Campo 'enqueteTitulo' não encontrado"
+        titulo_enquete.send_keys(" e sem opções")
+        titulo_enquete.click()
+        time.sleep(1)
+
+        prazo_enquete = driver.find_element(By.ID, "enquetePrazo")
+        assert prazo_enquete is not None, "Campo 'enquetePrazo' não encontrado"
+        prazo_enquete.send_keys("30122024")
+        prazo_enquete.click()
+        time.sleep(2)
+
+        action = ActionChains(driver)
+        opcao_sim = driver.find_element(By.ID, "opcoes-enquete")
+        action.move_to_element(opcao_sim).click().perform()
+        time.sleep(1)
+
+        botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
+        assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
+        botao_criar_enquete.click()
+        print("Não eh possivel criar uma enquete sem opcoes")
+        time.sleep(2)
+
+        botao_sair_enquete = driver.find_element(By.ID, "sair-enquete")
+        assert botao_sair_enquete  is not None, "Botão 'sair-enquete' não encontrado"
+        botao_sair_enquete.click()
+        time.sleep(1)
+
+        btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
+        assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
+        btnCriarEnquete.click()
+        time.sleep(1)
+
+        titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
+        assert titulo_enquete is not None, "Campo 'enqueteTitulo' não encontrado"
+        titulo_enquete.clear()
+        titulo_enquete.send_keys("Enquete com todas as opções válidas")
+        titulo_enquete.click()
+        time.sleep(2)
+
+        prazo_enquete = driver.find_element(By.ID, "enquetePrazo")
+        assert prazo_enquete is not None, "Campo 'enquetePrazo' não encontrado"
+        prazo_enquete.send_keys("30122024")
+        prazo_enquete.click()
+        time.sleep(2)
+
+        action = ActionChains(driver)
+        opcao_sim = driver.find_element(By.ID, "opcoes-enquete")
+        action.move_to_element(opcao_sim).click().perform()
+        opcao_sim.send_keys("sim")
+        time.sleep(1)
+
+        btn_opcao_mais = driver.find_element(By.NAME, "btn-mais")
+        action.move_to_element(btn_opcao_mais).click().perform()
+        time.sleep(1)
+
+        btn_opcao_nao = driver.find_element(By.ID, "opcoes1")
+        action.move_to_element(btn_opcao_nao).click().perform()
+        btn_opcao_nao.send_keys("nao")
+        time.sleep(3)
+
+        botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
+        assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
+        botao_criar_enquete.click()
+        time.sleep(3)
+
+        # 4. clicar no logout
+        driver.get("http://127.0.0.1:8000")
+        pfp = driver.find_element(By.NAME, "pfp")
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
+        pfp.click()
+
+        time.sleep(2)
+
+        logout = driver.find_element(By.ID, "logout-btn")
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
+
+        time.sleep(1)
+
+    def test_03_visualizar_e_votoUnico(self):
+        driver = self.driver
+
+        # 1. Registro do moderador
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
+
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar, "Botão de registro não encontrado.")
+
+        usuarioComentar.send_keys("moderador_clube")
+        senhaComentar.send_keys("senha_moderador")
+        senha2Comentar.send_keys("senha_moderador")
+        registrarComentar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        # 2. Login do moderador
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin, "Campo 'password' de login não encontrado.")
+
+        usuariologin.send_keys("moderador_clube")
+        senhalogin.send_keys("senha_moderador")
+        senhalogin.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        # 3. Criar um novo clube
+        newclub = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "newclub-btn")))
+        self.assertIsNotNone(newclub, "Botão 'Create Club' não encontrado.")
+        newclub.click()
+
+        findForm1 = driver.find_element(By.NAME, "titulo")
+        findForm2 = driver.find_element(By.NAME, "modalidade")
+        findForm3 = driver.find_element(By.NAME, "categoria")
+        findForm4 = driver.find_element(By.NAME, "descricao")
+        findForm5 = driver.find_element(By.ID, "create-btn")
+
+        # Asserts para verificar os campos de criação do clube
+        self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
+        self.assertIsNotNone(findForm2, "Campo 'modalidade' não encontrado.")
+        self.assertIsNotNone(findForm3, "Campo 'categoria' não encontrado.")
+        self.assertIsNotNone(findForm4, "Campo 'descricao' não encontrado.")
+        self.assertIsNotNone(findForm5, "Botão 'create-btn' não encontrado.")
+
+        findForm1.send_keys("Clube de Teste Enquete")
+        Select(findForm2).select_by_visible_text("Online")
+        Select(findForm3).select_by_visible_text("Ficção")
+        findForm4.send_keys("Descrição do clube de teste para enquete.")
+        time.sleep(2)
+        findForm5.click()
+        time.sleep(1)
+
+        btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
+        assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
+        btnCriarEnquete.click()
+        time.sleep(1)
+        
+        titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
+        assert titulo_enquete is not None, "Campo 'enqueteTitulo' não encontrado"
+        titulo_enquete.clear()
         titulo_enquete.send_keys("Nova Enquete")
         titulo_enquete.click()
         time.sleep(2)
@@ -4701,7 +5065,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         action.move_to_element(btn_opcao_mais).click().perform()
         time.sleep(1)
 
-        btn_opcao_nao = driver.find_element(By.NAME, "opcoes")
+        btn_opcao_nao = driver.find_element(By.ID, "opcoes1")
         action.move_to_element(btn_opcao_nao).click().perform()
         btn_opcao_nao.send_keys("nao")
         time.sleep(3)
@@ -4709,23 +5073,20 @@ class CriarEnqueteTest(LiveServerTestCase):
         botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
         assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
         botao_criar_enquete.click()
-        time.sleep(10)
-
-        # 4. clicar no logout
+        time.sleep(2)
+        
+        # Logout do moderador
         driver.get("http://127.0.0.1:8000")
-        pfp = driver.find_element(By.NAME, "pfp")
+        pfp = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pfp")))
         self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
         pfp.click()
 
-        time.sleep(2)
-
-        logout = driver.find_element(By.ID, "logout-btn")
+        logout = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "logout-btn")))
         self.assertIsNotNone(logout, "Botão de logout não encontrado.")
         logout.click()
-
         time.sleep(1)
 
-        # 5. Registro do membro
+        # 4. Registro e login do membro
         driver.get("http://127.0.0.1:8000/membros/register/")
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
@@ -4743,9 +5104,10 @@ class CriarEnqueteTest(LiveServerTestCase):
         usuarioComentar2.send_keys("membro_clube")
         senhaComentar2.send_keys("senha_membro")
         senha2Comentar2.send_keys("senha_membro")
+        time.sleep(2)
         registrarComentar2.send_keys(Keys.ENTER)
 
-        # 6. Login do membro
+        # 5. Login do membro
         driver.get("http://127.0.0.1:8000/membros/login/")
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
 
@@ -4758,11 +5120,11 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         usuariologin2.send_keys("membro_clube")
         senhalogin2.send_keys("senha_membro")
+        time.sleep(1)
         senhalogin2.send_keys(Keys.ENTER)
-
         time.sleep(1)
 
-        # 7. Navegar para o clube e entrar nele
+        # 6. Navegar para o clube e verificar acesso ao botão de criar enquete
         driver.get("http://127.0.0.1:8000/clubs/")
         self.assertEqual(driver.current_url, "http://127.0.0.1:8000/clubs/", "Não foi redirecionado corretamente para a página 'Clubs'.")
 
@@ -4788,27 +5150,81 @@ class CriarEnqueteTest(LiveServerTestCase):
         botao_club_novo_entrar = driver.find_element(By.NAME, "entrar-btn")
         self.assertIsNotNone(botao_club_novo_entrar, "Botão de entrar no clube (2ª vez) não encontrado.")
         botao_club_novo_entrar.click()
+        time.sleep(2)
+        
+        ######################################
+        ver_enquetes = driver.find_element(By.ID, "ver-enquetes")
+        assert ver_enquetes is not None, "Botão 'ver-enquetes' não encontrado"
+        ver_enquetes.click()
+        time.sleep(2)
 
-        time.sleep(3)
+        votar_na_enquete = driver.find_element(By.NAME, "nova-enquete")
+        assert votar_na_enquete is not None, "Botão 'nova-enquete' não encontrado"
+        votar_na_enquete.click()
+        time.sleep(2)
 
-        # 8. Sair do clube
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "sair-do-clube-btn")))
-        sair_do_clube_btn = driver.find_element(By.ID, "sair-do-clube-btn")
-        self.assertIsNotNone(sair_do_clube_btn, "Botão 'Sair do Clube' não encontrado.")
-        sair_do_clube_btn.click()
+        # Votar na primeira opção
+        opcoes = driver.find_elements(By.CSS_SELECTOR, "input[name='opcao_id']")
+        opcoes[0].click()
+        time.sleep(1)
+        btn_vote = driver.find_element(By.NAME, "btn-vote")
+        assert btn_vote is not None, "Botão 'btn_vote' não encontrado"
+        btn_vote.click()
+        time.sleep(5)
 
-        # Verificar se a modal de confirmação aparece
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".modal.show")))
-        modal_sair = driver.find_element(By.CSS_SELECTOR, ".modal.show")
-        self.assertTrue(modal_sair.is_displayed(), "Modal de confirmação não foi exibido.")
+        ver_resultados = driver.find_element(By.ID, "listarResultadosEnquetes")
+        assert ver_resultados is not None, "Botão 'listarResultadosEnquetes' não encontrado"
+        ver_resultados.click()
+        time.sleep(2)
 
-        confirmar_sair = driver.find_element(By.XPATH, "//form[@method='post']//button[contains(text(), 'Sair do Clube')]")
-        self.assertIsNotNone(confirmar_sair, "Botão 'Confirmar Sair' não encontrado.")
-        confirmar_sair.click()
+        enquetes = driver.find_elements(By.CSS_SELECTOR, "button[data-enquete-id]")
+        assert enquetes, "Nenhuma enquete ativa encontrada."
+        
+        # Seleciona o primeiro botão de enquete
+        primeira_enquete_button = enquetes[0]
+        enquete_id = primeira_enquete_button.get_attribute("data-enquete-id")
 
-        # 9. Verificar se a mensagem de sucesso foi exibida no frontend após sair do clube
-        WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".alert-warning")))
-        mensagem_sucesso = driver.find_element(By.CSS_SELECTOR, ".alert-warning")
-        self.assertIn("Você saiu do clube", mensagem_sucesso.text, "Mensagem de sucesso não foi exibida ou está incorreta.")
+        # Aguardar até que o botão da primeira enquete seja clicável e clicar nele para abrir
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, f"button[data-enquete-id='{enquete_id}']"))).click()
 
-        time.sleep(3)
+        # Esperar até que o contêiner do gráfico esteja visível
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, f"chartContainer-{enquete_id}"))
+        )
+
+        
+
+
+
+
+
+        ######################################
+        ver_enquetes = driver.find_element(By.ID, "ver-enquetes")
+        assert ver_enquetes is not None, "Botão 'ver-enquetes' não encontrado"
+        ver_enquetes.click()
+        time.sleep(2)
+
+        votar_na_enquete = driver.find_element(By.NAME, "nova-enquete")
+        assert votar_na_enquete is not None, "Botão 'nova-enquete' não encontrado"
+        votar_na_enquete.click()
+        time.sleep(2)
+
+        # Votar na segunda opção
+        opcoes = driver.find_elements(By.CSS_SELECTOR, "input[name='opcao_id']")
+        opcoes[1].click()
+        time.sleep(1)
+        btn_vote = driver.find_element(By.NAME, "btn-vote")
+        assert btn_vote is not None, "Botão 'btn_vote' não encontrado"
+        btn_vote.click()
+        time.sleep(5)
+
+        # Logout do membro
+        driver.get("http://127.0.0.1:8000")
+        pfp = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pfp")))
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
+        time.sleep(1)
+        pfp.click()
+
+        logout = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "logout-btn")))
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
