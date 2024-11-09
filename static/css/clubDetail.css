@@ -11,7 +11,7 @@
     width: 100%;
 }
 
-.title-n-fav{
+.title-n-fav {
     display: flex;
     flex-direction: row;
     gap: 1.5rem;
@@ -32,7 +32,7 @@
     width: 65%;
 }
 
-.btn-progress-bar{
+.btn-progress-bar {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -75,7 +75,7 @@ h1 {
     max-width: 20rem;
 }
 
-#createMaratona{
+#createMaratona {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -121,9 +121,10 @@ small {
     display: flex;
     align-items: center;
 }
+
 .progress {
-    width: 100%; 
-    background-color: #000000; 
+    width: 100%;
+    background-color: #000000;
     border-radius: 10rem;
     height: 2rem;
 }
@@ -147,16 +148,16 @@ small {
     display: flex;
 }
 
-.delete-club{
+.delete-club {
     width: 90%;
     margin-left: 0.5rem;
 }
 
-.comentarioholder{
+.comentarioholder {
     padding: 0rem 1rem;
 }
 
-.comment-n-date{
+.comment-n-date {
     display: flex;
     flex-direction: row;
     justify-content: left;
@@ -165,7 +166,7 @@ small {
     gap: 3rem;
 }
 
-#pdocomentario{
+#pdocomentario {
     margin: 0;
 }
 
@@ -174,24 +175,24 @@ small {
     text-align: right;
 }
 
-.capitulo-atual{
+.capitulo-atual {
     font-size: large;
 }
 
-#setProgress{
+#setProgress {
     font-size: 1rem;
     padding: 0.5rem;
     border-radius: 0.5rem;
     font-weight: bold;
 }
 
-.comentario-wrapper{
+.comentario-wrapper {
     display: flex;
     flex-direction: row;
     gap: .8rem;
 }
 
-.dropdown-item:hover{
+.dropdown-item:hover {
     cursor: pointer;
 }
 
@@ -210,7 +211,7 @@ small {
 .btn.reluzir:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 0 #003b95,
-    0 12px 15px rgba(0, 0, 0, 0.3);
+        0 12px 15px rgba(0, 0, 0, 0.3);
 }
 
 .btn.reluzir::before {
@@ -225,7 +226,7 @@ small {
     transition: all 0.5s ease;
     z-index: 1;
     opacity: 0;
-    pointer-events: none; 
+    pointer-events: none;
 }
 
 .btn.reluzir:hover::before {
@@ -239,7 +240,8 @@ small {
     z-index: 2;
 }
 
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     overflow: auto;
@@ -247,7 +249,7 @@ body, html {
     width: 100%;
 }
 
-.modal-dialog{
+.modal-dialog {
     overflow: hidden;
 }
 
@@ -257,12 +259,12 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #0066FF; 
+    background-color: #0066FF;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1050;
-    border-radius: inherit; 
+    border-radius: inherit;
 }
 
 .overlay-text {
@@ -275,25 +277,53 @@ body, html {
 }
 
 @keyframes shake {
-    0%, 100% { transform: translate(0); }
-    10% { transform: translate(-3px, -3px); }
-    20% { transform: translate(3px, -3px); }
-    30% { transform: translate(-3px, 3px); }
-    40% { transform: translate(3px, 3px); }
-    50% { transform: translate(-3px, 0); }
-    60% { transform: translate(3px, 0); }
-    70% { transform: translate(0, -3px); }
-    80% { transform: translate(0, 3px); }
+
+    0%,
+    100% {
+        transform: translate(0);
+    }
+
+    10% {
+        transform: translate(-3px, -3px);
+    }
+
+    20% {
+        transform: translate(3px, -3px);
+    }
+
+    30% {
+        transform: translate(-3px, 3px);
+    }
+
+    40% {
+        transform: translate(3px, 3px);
+    }
+
+    50% {
+        transform: translate(-3px, 0);
+    }
+
+    60% {
+        transform: translate(3px, 0);
+    }
+
+    70% {
+        transform: translate(0, -3px);
+    }
+
+    80% {
+        transform: translate(0, 3px);
+    }
 }
 
-.data-n-topclubs{
+.data-n-topclubs {
     display: flex;
     flex-direction: column;
     width: 30%;
     gap: 1rem;
 }
 
-.top-books{
+.top-books {
     background-color: #0066FF;
     padding: 1rem;
     border-radius: 1rem;
@@ -301,8 +331,8 @@ body, html {
     display: flex;
     justify-content: center;
 }
-  
-  .top-books-li {
+
+.top-books-li {
     font-size: 18px;
     text-align: center;
     font-weight: 500;
@@ -310,9 +340,18 @@ body, html {
     overflow-y: hidden;
     overflow-x: scroll;
     padding: 0.5rem;
-  }
-  
-  .top-books-ul {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+    user-select: none;
+}
+
+
+.user-data::-webkit-scrollbar {
+    display: none;
+}
+
+.top-books-ul {
     list-style-type: none;
     padding: 0;
     display: flex;
@@ -320,48 +359,48 @@ body, html {
     margin-bottom: 0;
     gap: 0.5rem;
     align-items: self-end;
-  }
-  
-  #second{
+}
+
+#second {
     display: flex;
     flex-direction: column;
-  }
+}
 
-  #first{
+#first {
     display: flex;
     flex-direction: column;
-  }
+}
 
 
-  #third{
+#third {
     display: flex;
     flex-direction: column;
-  }
-  
-  .first-place {
+}
+
+.first-place {
     height: 150px;
     background-color: #0052cd !important;
     width: 6rem;
-  }
-  
-  .second-place {
+}
+
+.second-place {
     height: 100px;
     background-color: #003b93 !important;
     width: 6rem;
-  }
-  
-  .third-place {
+}
+
+.third-place {
     height: 75px;
     background-color: #002d6f !important;
     width: 6rem;
-  }
+}
 
-  .spree-ongoing{
+.spree-ongoing {
     background-color: #0066FF;
     width: 100%;
-  }
+}
 
-  .spree-informer{
+.spree-informer {
     background-color: #0066FF;
     padding: 1rem;
     font-size: 1.5rem;
@@ -369,18 +408,18 @@ body, html {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-  }
+}
 
-  .data-n-topbooks{
+.data-n-topbooks {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     width: 30%;
-  }
+}
 
-  @media (max-width: 700px) {
+@media (max-width: 700px) {
 
-    .data-n-topbooks{
+    .data-n-topbooks {
         width: 100% !important;
     }
 
@@ -391,7 +430,7 @@ body, html {
         width: 100%;
     }
 
-    .btn-progress-bar{
+    .btn-progress-bar {
         width: 100%;
         align-items: center;
     }
@@ -424,7 +463,10 @@ body, html {
         align-items: flex-start;
     }
 
-    .comentarioholder, .capitulo-container, .comentarios-container, .data-holder {
+    .comentarioholder,
+    .capitulo-container,
+    .comentarios-container,
+    .data-holder {
         width: 100%;
     }
 }
@@ -480,4 +522,8 @@ body, html {
 .modal-footer {
     display: flex;
     justify-content: space-between;
+}
+
+body{
+    padding-bottom: 1rem;
 }

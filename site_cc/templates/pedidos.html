@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="pedidosModalLabel">Pedidos Pendentes:</h3>
+                <h3 class="modal-title" id="pedidosModalLabel">Pending Invitations:</h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -14,12 +14,12 @@
 
                                 <form method="post" action="{% url 'aprovar-membro' clube.pk membro.pk %}" class="approve-form d-inline-block" data-url="{% url 'aprovar-membro' clube.pk membro.pk %}">
                                     {% csrf_token %}
-                                    <button type="submit" id="aprove" class="btn btn-outline-primary btn-sm">Aprovar</button>
+                                    <button type="submit" id="aprove" class="btn btn-outline-primary btn-sm">Approve</button>
                                 </form>
 
                                 <form method="post" action="{% url 'recusar-membro' clube.pk membro.pk %}" class="refuse-form d-inline-block" data-url="{% url 'recusar-membro' clube.pk membro.pk %}">
                                     {% csrf_token %}
-                                    <button type="submit" id="recusar" class="btn btn-outline-danger btn-sm ml-2">Recusar</button>
+                                    <button type="submit" id="recusar" class="btn btn-outline-danger btn-sm ml-2">Refuse</button>
                                 </form>
                             </li>
                         {% endif %}
@@ -27,7 +27,7 @@
                 </ul>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" name="fechar">Fechar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" name="fechar">Close</button>
             </div>
         </div>
     </div>
