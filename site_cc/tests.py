@@ -159,7 +159,7 @@ class ComentarioTests(LiveServerTestCase):
 
         findForm4.send_keys("Descrição do clube de teste para Comentário.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
 
         time.sleep(4)
@@ -355,7 +355,7 @@ class ClubePrivadoTests(LiveServerTestCase):
             
             findForm4.send_keys("Descrição do clube.")
             driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-            time.sleep(1)
+            time.sleep(10)
             findForm5.click()
         
         except Exception as e:
@@ -431,7 +431,7 @@ class ClubePrivadoTests(LiveServerTestCase):
         
         findForm4.send_keys("Descrição do clube.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
         time.sleep(2)
 
@@ -692,7 +692,7 @@ class ClubePrivadoTests(LiveServerTestCase):
             
             findForm4.send_keys("Descrição do clube.")
             driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-            time.sleep(1)
+            time.sleep(10)
             findForm5.click()
             time.sleep(2)
 
@@ -987,7 +987,7 @@ class BarraDePesquisa(LiveServerTestCase):
 
             findForm4.send_keys("Descrição do clube de teste para maratona.")
             driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-            time.sleep(1)
+            time.sleep(10)
             findForm5.click()
             time.sleep(2)
 
@@ -1170,7 +1170,7 @@ class MaratonaTests(LiveServerTestCase):
 
             findForm4.send_keys("Descrição do clube de teste para maratona.")
             driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-            time.sleep(1)
+            time.sleep(10)
             findForm5.click()
 
             driver.get("http://127.0.0.1:8000/membros/register/")
@@ -1311,7 +1311,7 @@ class MaratonaTests(LiveServerTestCase):
 
             findForm4.send_keys("Descrição do clube de teste para maratona.")
             driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-            time.sleep(1)
+            time.sleep(10)
             findForm5.click()
             time.sleep(1)
 
@@ -1445,7 +1445,7 @@ class SairDoClubeTests(LiveServerTestCase):
 
         findForm4.send_keys("Descrição do clube de teste para sair.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
 
         time.sleep(4)
@@ -1653,7 +1653,7 @@ class AvaliacaoClubeTests(LiveServerTestCase):
 
         findForm4.send_keys("Descrição do clube de teste para sair.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
 
         time.sleep(4)
@@ -1750,7 +1750,7 @@ class AvaliacaoClubeTests(LiveServerTestCase):
 
         findForm4.send_keys("Descrição do clube de teste para sair.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
 
         time.sleep(4)
@@ -1982,7 +1982,7 @@ class FavoritarClubeTests(LiveServerTestCase):
 
         findForm4.send_keys("Descrição do clube favorito para teste.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
 
         # 4. Navegar para a página "My Clubs"
@@ -2129,7 +2129,7 @@ class FavoritarClubeTests(LiveServerTestCase):
 
         findForm4.send_keys("Descrição do clube de teste para sair.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
 
         time.sleep(1)
@@ -2634,6 +2634,7 @@ class verificarProgresso(TestCase):
         categoriaSelect.select_by_visible_text("Ficção")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         findForm4.send_keys("Descricao pra teste de progress bar")
+        time.sleep(10)
         findForm5.click()
 
         WebDriverWait(driver, 10).until(
@@ -2811,7 +2812,7 @@ class verificarMembros(LiveServerTestCase):
 
         findForm4.send_keys("Descricao pra teste dos requests")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
 
         time.sleep(1)
@@ -3074,7 +3075,7 @@ class verificarMembros(LiveServerTestCase):
 
         findForm4.send_keys("Descricao pra teste dos requests")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
 
         time.sleep(1)
@@ -3328,7 +3329,7 @@ class verificarMembros(LiveServerTestCase):
 
         findForm4.send_keys("Descricao pra teste de editar info")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
 
         time.sleep(3)
@@ -3619,7 +3620,7 @@ class TestFiltro(LiveServerTestCase):
 
         findForm4.send_keys("Descrição do clube favorito para teste.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
 
         # Acessa a página de clubes
@@ -3727,7 +3728,7 @@ class TestFiltro(LiveServerTestCase):
 
         findForm4.send_keys("Descrição do clube favorito para teste.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
 
         # 2. Login do membro
@@ -4682,7 +4683,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         Select(findForm3).select_by_visible_text("Ficção")
         findForm4.send_keys("Descrição do clube de teste para enquete.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(2)
+        time.sleep(10)
         findForm5.click()
 
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -4856,7 +4857,7 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         findForm4.send_keys("Descrição do clube de teste para sair.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(1)
+        time.sleep(10)
         findForm5.click()
         time.sleep(2)
 
@@ -5053,7 +5054,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         Select(findForm3).select_by_visible_text("Ficção")
         findForm4.send_keys("Descrição do clube de teste para enquete.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(2)
+        time.sleep(10)
         findForm5.click()
         time.sleep(3)
 
@@ -5360,7 +5361,7 @@ class visualizacao(TestCase):
         Select(findForm3).select_by_visible_text("Ficção")
         findForm4.send_keys("Descrição do clube de teste para enquete.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(2)
+        time.sleep(10)
         findForm5.click()
         time.sleep(1)
 
@@ -5589,7 +5590,7 @@ class visualizacao(TestCase):
         Select(findForm3).select_by_visible_text("Ficção")
         findForm4.send_keys("Descrição do clube de teste para enquete.")
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
-        time.sleep(2)
+        time.sleep(10)
         findForm5.click()
         time.sleep(1)
 
