@@ -20,7 +20,7 @@ from unittest.mock import patch
 from django.conf import settings
 from selenium import webdriver
 from datetime import datetime
-import requests
+#import requests
 import json
 import logging
 import time
@@ -1542,8 +1542,8 @@ class SairDoClubeTests(LiveServerTestCase):
         modal_sair = driver.find_element(By.CSS_SELECTOR, ".modal.show")
         self.assertTrue(modal_sair.is_displayed(), "Modal de confirmação não foi exibido.")
 
-        confirmar_sair = driver.find_element(By.XPATH, "//form[@method='post']//button[contains(text(), 'Sair do Clube')]")
-        self.assertIsNotNone(confirmar_sair, "Botão 'Confirmar Sair' não encontrado.")
+        confirmar_sair = driver.find_element(By.XPATH, "//form[@method='post']//button[contains(text(), 'Leave')]")
+        self.assertIsNotNone(confirmar_sair, "Botão 'Leave' não encontrado.")
         confirmar_sair.click()
 
         # 9. Verificar se a mensagem de sucesso foi exibida no frontend após sair do clube
