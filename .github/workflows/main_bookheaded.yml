@@ -102,4 +102,3 @@ jobs:
         with:
           app-name: 'Bookheaded'
           slot-name: 'Production'
-          

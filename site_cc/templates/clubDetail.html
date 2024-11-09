@@ -307,7 +307,7 @@
                         <div id="resultadosContainer">
                             {% if enquetes_ativas %}
                                 {% for enquete in enquetes_ativas %}
-                                    <button class="btn btn-outline-primary w-100 text-start mb-2 fw-bold" name="ver-enquetesssss"
+                                    <button class="btn btn-outline-primary w-100 text-start mb-2 fw-bold"
                                             data-enquete-id="{{ enquete.id }}" onclick="toggleChartVisibility({{ enquete.id }})">
                                         {{ enquete.titulo }}
                                     </button>
