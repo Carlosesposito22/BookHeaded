@@ -40,6 +40,13 @@ jobs:
         with:
           version: latest
 
+      - name: Create staticfiles directory
+        run: mkdir -p /home/runner/work/BookHeaded/BookHeaded/staticfiles
+
+      - name: Collect static files
+        run: |
+          python manage.py collectstatic --noinput
+
       - name: Run local server and tests
         run: |
           python manage.py makemigrations
