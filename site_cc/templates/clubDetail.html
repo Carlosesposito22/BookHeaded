@@ -307,7 +307,7 @@
                         <div id="resultadosContainer">
                             {% if enquetes_ativas %}
                                 {% for enquete in enquetes_ativas %}
-                                    <button class="btn btn-outline-primary w-100 text-start mb-2 fw-bold" name="ver-enquetesssss"
+                                    <button class="btn btn-outline-primary w-100 text-start mb-2 fw-bold"
                                             data-enquete-id="{{ enquete.id }}" onclick="toggleChartVisibility({{ enquete.id }})">
                                         {{ enquete.titulo }}
                                     </button>
@@ -327,7 +327,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" name="btn-fechar-enquete-resultado" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
