@@ -7,7 +7,7 @@ name: Build and deploy Python app to Azure Web App - Bookheaded
 on:
   push:
     branches:
-      - main
+      - prod
   workflow_dispatch:
 
 jobs:
@@ -28,12 +28,39 @@ jobs:
           source venv/bin/activate
       
       - name: Install dependencies
-        run: pip install -r requirements.txt
-        
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+        run: |
+          set -ex
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          version: latest
+
+      - name: Run local server and tests
+        run: |
+          python manage.py makemigrations
+          python manage.py migrate
+          python manage.py runserver &
+          sleep 5
+          python manage.py test
+
+      - name: Cleaning testing files
+        run: |
+          cd BookHeaded/
+          rm db.sqlite3
+          rm .env
+          cd ..
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: |
+          cd BookHeaded/
+          zip release.zip ./* -r
+          cd ..
+          mv BookHeaded/release.zip .
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -65,9 +92,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D9988632F939409AB882B1090B0AC51D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_20F01B787C954DA492DD372283B7E08A }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_CE6B3281D25C466D8F8D2DCE1471C97F }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_789698FB3D5F4BFF94B9BBB9E4ECB7D6 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_8DB24EEC8D1D4337B3672A15A4AD0679 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_FFB99FA9EFEC482DAB6C56CE15119C1A }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
