@@ -158,7 +158,7 @@ class ComentarioTests(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descrição do clube de teste para Comentário.")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
 
@@ -354,7 +354,7 @@ class ClubePrivadoTests(LiveServerTestCase):
             checkbox.click()
             
             findForm4.send_keys("Descrição do clube.")
-
+            driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
             time.sleep(1)
             findForm5.click()
         
@@ -430,7 +430,7 @@ class ClubePrivadoTests(LiveServerTestCase):
         checkbox.click()
         
         findForm4.send_keys("Descrição do clube.")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
         time.sleep(2)
@@ -691,7 +691,7 @@ class ClubePrivadoTests(LiveServerTestCase):
             checkbox.click()
             
             findForm4.send_keys("Descrição do clube.")
-
+            driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
             time.sleep(1)
             findForm5.click()
             time.sleep(2)
@@ -986,7 +986,7 @@ class BarraDePesquisa(LiveServerTestCase):
             categoriaSelect.select_by_visible_text("Ficção")
 
             findForm4.send_keys("Descrição do clube de teste para maratona.")
-
+            driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
             time.sleep(1)
             findForm5.click()
             time.sleep(2)
@@ -1169,7 +1169,7 @@ class MaratonaTests(LiveServerTestCase):
             categoriaSelect.select_by_visible_text("Ficção")
 
             findForm4.send_keys("Descrição do clube de teste para maratona.")
-
+            driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
             time.sleep(1)
             findForm5.click()
 
@@ -1310,7 +1310,7 @@ class MaratonaTests(LiveServerTestCase):
             categoriaSelect.select_by_visible_text("Ficção")
 
             findForm4.send_keys("Descrição do clube de teste para maratona.")
-
+            driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
             time.sleep(1)
             findForm5.click()
             time.sleep(1)
@@ -1444,7 +1444,7 @@ class SairDoClubeTests(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descrição do clube de teste para sair.")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
 
@@ -1652,7 +1652,7 @@ class AvaliacaoClubeTests(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descrição do clube de teste para sair.")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
 
@@ -1749,7 +1749,7 @@ class AvaliacaoClubeTests(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descrição do clube de teste para sair.")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
 
@@ -1981,7 +1981,7 @@ class FavoritarClubeTests(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descrição do clube favorito para teste.")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
 
@@ -2128,7 +2128,7 @@ class FavoritarClubeTests(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descrição do clube de teste para sair.")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
 
@@ -2632,7 +2632,7 @@ class verificarProgresso(TestCase):
 
         categoriaSelect = Select(findForm3)
         categoriaSelect.select_by_visible_text("Ficção")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         findForm4.send_keys("Descricao pra teste de progress bar")
         findForm5.click()
 
@@ -2810,7 +2810,7 @@ class verificarMembros(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descricao pra teste dos requests")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
 
@@ -3073,7 +3073,7 @@ class verificarMembros(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descricao pra teste dos requests")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
 
@@ -3327,7 +3327,7 @@ class verificarMembros(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descricao pra teste de editar info")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
 
@@ -3618,7 +3618,7 @@ class TestFiltro(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descrição do clube favorito para teste.")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
 
@@ -3726,7 +3726,7 @@ class TestFiltro(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descrição do clube favorito para teste.")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
 
@@ -4681,6 +4681,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         Select(findForm2).select_by_visible_text("Online")
         Select(findForm3).select_by_visible_text("Ficção")
         findForm4.send_keys("Descrição do clube de teste para enquete.")
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(2)
         findForm5.click()
 
@@ -4854,7 +4855,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         categoriaSelect.select_by_visible_text("Ficção")
 
         findForm4.send_keys("Descrição do clube de teste para sair.")
-
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(1)
         findForm5.click()
         time.sleep(2)
@@ -5051,6 +5052,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         Select(findForm2).select_by_visible_text("Online")
         Select(findForm3).select_by_visible_text("Ficção")
         findForm4.send_keys("Descrição do clube de teste para enquete.")
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(2)
         findForm5.click()
         time.sleep(3)
@@ -5357,6 +5359,7 @@ class visualizacao(TestCase):
         Select(findForm2).select_by_visible_text("Online")
         Select(findForm3).select_by_visible_text("Ficção")
         findForm4.send_keys("Descrição do clube de teste para enquete.")
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(2)
         findForm5.click()
         time.sleep(1)
@@ -5585,6 +5588,7 @@ class visualizacao(TestCase):
         Select(findForm2).select_by_visible_text("Online")
         Select(findForm3).select_by_visible_text("Ficção")
         findForm4.send_keys("Descrição do clube de teste para enquete.")
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(2)
         findForm5.click()
         time.sleep(1)
