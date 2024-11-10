@@ -5187,10 +5187,11 @@ class CriarEnqueteTest(LiveServerTestCase):
             EC.visibility_of_element_located((By.ID, "enquetesModal"))
         )
 
-        # 3. Clique no botão da enquete específica usando o `data-enquete-id`
-        votar_na_enquete = driver.find_element(By.NAME, "nova-enquete")
-        assert votar_na_enquete is not None, "Botão 'nova-enquete' não encontrado"
-        votar_na_enquete.click()
+        # 3. Clique na primeira (e única) enquete disponível
+        primeira_enquete = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-enquete-id]"))
+        )
+        primeira_enquete.click()
         time.sleep(2)
 
         opcoes = driver.find_elements(By.CSS_SELECTOR, "input[name='opcao_id']")
@@ -5228,9 +5229,10 @@ class CriarEnqueteTest(LiveServerTestCase):
         ver_enquetes.click()
         time.sleep(2)
 
-        votar_na_enquete = driver.find_element(By.NAME, "nova-enquete")
-        assert votar_na_enquete is not None, "Botão 'nova-enquete' não encontrado"
-        votar_na_enquete.click()
+        primeira_enquete = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-enquete-id]"))
+        )
+        primeira_enquete.click()
         time.sleep(2)
 
         # Votar na segunda opção
@@ -5650,9 +5652,10 @@ class visualizacao(TestCase):
         ver_enquetes.click()
         time.sleep(2)
 
-        votar_na_enquete = driver.find_element(By.NAME, "nova-enquete")
-        assert votar_na_enquete is not None, "Botão 'nova-enquete' não encontrado"
-        votar_na_enquete.click()
+        primeira_enquete = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-enquete-id]"))
+        )
+        primeira_enquete.click()
         time.sleep(2)
 
         # Votar na primeira opção
@@ -5766,9 +5769,10 @@ class visualizacao(TestCase):
         ver_enquetes.click()
         time.sleep(2)
 
-        votar_na_enquete = driver.find_element(By.NAME, "nova-enquete")
-        assert votar_na_enquete is not None, "Botão 'nova-enquete' não encontrado"
-        votar_na_enquete.click()
+        primeira_enquete = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-enquete-id]"))
+        )
+        primeira_enquete.click()
         time.sleep(2)
 
         # Votar na primeira opção
