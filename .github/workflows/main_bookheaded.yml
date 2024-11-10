@@ -22,25 +22,24 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Chrome and ChromeDriver
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-          CHROME_VERSION=$(google-chrome --version | grep -oP '[0-9]+\.[0-9]+\.[0-9]+')
-          sudo apt-get install -y chromium-chromedriver=$CHROME_VERSION
-
       - name: Create and start virtual environment
         run: |
           python -m venv venv
           source venv/bin/activate
-
+      
       - name: Install dependencies
         run: |
-          source venv/bin/activate
+          set -ex
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install selenium
           
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          version: latest
+
       - name: Create staticfiles directory
         run: mkdir -p /home/runner/work/BookHeaded/BookHeaded/staticfiles
 
@@ -48,26 +47,14 @@ jobs:
         run: |
           python manage.py collectstatic --noinput
 
-      - name: Run migrations
+      - name: Run local server and tests
         run: |
           python manage.py makemigrations
           python manage.py migrate
-
-      - name: Run local server and tests
-        run: |
-          source venv/bin/activate
           python manage.py runserver &
           sleep 12
           python manage.py test site_cc.tests.MaratonaTests
-        env:
-          DISPLAY: ":99"  # Para simular um ambiente de display para testes headless
 
-      - name: Upload screenshots on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: screenshots
-          path: "*.png"
 
       - name: Cleaning testing files
         run: |
@@ -109,6 +96,7 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
