@@ -53,7 +53,7 @@ jobs:
           python manage.py migrate
           python manage.py runserver &
           sleep 12
-          python manage.py test site_cc.tests.CriarEnqueteTest
+          python manage.py test site_cc.tests.CriarEnqueteTest.test_03_visualizar_e_votoUnico
 
 
       - name: Cleaning testing files

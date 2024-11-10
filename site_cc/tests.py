@@ -4599,7 +4599,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -4619,7 +4619,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
         super().tearDown()
 
-    def t1est_01_enquete_visivel_moderador(self):
+    def test_01_enquete_visivel_moderador(self):
         driver = self.driver
 
         # 1. Registro do moderador
@@ -4786,7 +4786,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         self.assertIsNotNone(logout, "Botão de logout não encontrado.")
         logout.click()
 
-    def t1est_02_criar_enquete_valida(self):
+    def test_02_criar_enquete_valida(self):
         driver = self.driver
 
         # 1. Registro do moderador
