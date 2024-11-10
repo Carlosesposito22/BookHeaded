@@ -56,12 +56,7 @@ jobs:
           python manage.py test
 
 
-      - name: Cleaning testing files
-        run: |
-          cd BookHeaded/
-          rm db.sqlite3
-          rm .env
-          cd ..
+
 
       - name: Zip artifact for deployment
         run: |
