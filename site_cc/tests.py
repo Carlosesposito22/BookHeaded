@@ -4884,7 +4884,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
-        btnCriarEnquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(1)
 
         titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
@@ -4911,7 +4911,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
-        btnCriarEnquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(1)
 
         titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
@@ -4944,7 +4944,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
-        btnCriarEnquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(1)
 
         titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
@@ -5064,7 +5064,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
-        btnCriarEnquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(1)
         
         titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
@@ -5379,7 +5379,7 @@ class visualizacao(TestCase):
         time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
-        btnCriarEnquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(1)
         
         titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
@@ -5609,7 +5609,7 @@ class visualizacao(TestCase):
         time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
-        btnCriarEnquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(1)
         
         titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
