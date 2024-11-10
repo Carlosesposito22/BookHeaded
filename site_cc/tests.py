@@ -4860,6 +4860,8 @@ class CriarEnqueteTest(LiveServerTestCase):
         findForm5.click()
         time.sleep(2)
 
+        time.sleep(3)
+        driver.execute_script("arguments[0].scrollIntoView();", btnCriarEnquete)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
         btnCriarEnquete.click()
@@ -4880,6 +4882,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         botao_sair_enquete.click()
         time.sleep(1)
 
+        time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
         btnCriarEnquete.click()
@@ -4906,6 +4909,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         botao_sair_enquete.click()
         time.sleep(1)
 
+        time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
         btnCriarEnquete.click()
@@ -4938,6 +4942,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         botao_sair_enquete.click()
         time.sleep(1)
 
+        time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
         btnCriarEnquete.click()
@@ -5057,6 +5062,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         findForm5.click()
         time.sleep(3)
 
+        time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
         btnCriarEnquete.click()
@@ -5364,6 +5370,7 @@ class visualizacao(TestCase):
         findForm5.click()
         time.sleep(1)
 
+        time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
         btnCriarEnquete.click()
@@ -5593,6 +5600,7 @@ class visualizacao(TestCase):
         findForm5.click()
         time.sleep(1)
 
+        time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
         btnCriarEnquete.click()
