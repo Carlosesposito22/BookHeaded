@@ -40,12 +40,12 @@ jobs:
         with:
           version: latest
 
-      - name: Create staticfiles directory
-        run: mkdir -p /home/runner/work/BookHeaded/BookHeaded/staticfiles
+#      - name: Create staticfiles directory
+#        run: mkdir -p /home/runner/work/BookHeaded/BookHeaded/staticfiles
 
-      - name: Collect static files
-        run: |
-          python manage.py collectstatic --noinput
+#      - name: Collect static files
+#        run: |
+#          python manage.py collectstatic --noinput
 
       - name: Run local server and tests
         run: |
@@ -55,24 +55,20 @@ jobs:
           sleep 12
           python manage.py test site_cc.tests.AvaliacaoClubeTests
 
-      - name: Cleaning testing files
-        run: |
-          cd BookHeaded/
-          rm db.sqlite3
-          rm .env
-          cd ..
+#      - name: Cleaning testing files
+#        run: |
+#          cd BookHeaded/
+#          rm db.sqlite3
+#          rm .env
+#          cd ..
 
-      - name: Clean up Chrome and ChromeDriver
-        run: |
-          sudo apt remove -y google-chrome-stable
-          rm -rf /usr/local/bin/chromedriver
+#      - name: Clean up Chrome and ChromeDriver
+#        run: |
+#          sudo apt remove -y google-chrome-stable
+#          rm -rf /usr/local/bin/chromedriver
 
       - name: Zip artifact for deployment
-        run: |
-          cd BookHeaded/
-          zip release.zip ./* -r
-          cd ..
-          mv BookHeaded/release.zip .
+        run: zip release.zip ./* -r
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
