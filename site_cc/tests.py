@@ -40,7 +40,7 @@ class ComentarioTests(LiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -140,7 +140,7 @@ class ComentarioTests(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -260,7 +260,6 @@ class ClubePrivadoTests(LiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
 
     @classmethod
     def tearDownClass(cls):
@@ -332,7 +331,7 @@ class ClubePrivadoTests(LiveServerTestCase):
             findForm2 = driver.find_element(By.NAME, "modalidade")
             findForm3 = driver.find_element(By.NAME, "categoria")
             findForm4 = driver.find_element(By.NAME, "descricao")
-            findForm5 = driver.find_element(By.ID, "create-btn")
+            findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
             # Asserts para verificar os campos de criação do clube
             self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -408,7 +407,7 @@ class ClubePrivadoTests(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -669,7 +668,7 @@ class ClubePrivadoTests(LiveServerTestCase):
             findForm2 = driver.find_element(By.NAME, "modalidade")
             findForm3 = driver.find_element(By.NAME, "categoria")
             findForm4 = driver.find_element(By.NAME, "descricao")
-            findForm5 = driver.find_element(By.ID, "create-btn")
+            findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
             # Asserts para verificar os campos de criação do clube
             self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -896,7 +895,7 @@ class BarraDePesquisa(LiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -968,7 +967,7 @@ class BarraDePesquisa(LiveServerTestCase):
             findForm2 = driver.find_element(By.NAME, "modalidade")
             findForm3 = driver.find_element(By.NAME, "categoria")
             findForm4 = driver.find_element(By.NAME, "descricao")
-            findForm5 = driver.find_element(By.ID, "create-btn")
+            findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
             # Asserts para verificar os campos de criação do clube
             self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -1078,7 +1077,7 @@ class MaratonaTests(LiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -1151,7 +1150,7 @@ class MaratonaTests(LiveServerTestCase):
             findForm2 = driver.find_element(By.NAME, "modalidade")
             findForm3 = driver.find_element(By.NAME, "categoria")
             findForm4 = driver.find_element(By.NAME, "descricao")
-            findForm5 = driver.find_element(By.ID, "create-btn")
+            findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
             # Asserts para verificar os campos de criação do clube
             self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -1292,7 +1291,7 @@ class MaratonaTests(LiveServerTestCase):
             findForm2 = driver.find_element(By.NAME, "modalidade")
             findForm3 = driver.find_element(By.NAME, "categoria")
             findForm4 = driver.find_element(By.NAME, "descricao")
-            findForm5 = driver.find_element(By.ID, "create-btn")
+            findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
             # Asserts para verificar os campos de criação do clube
             self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -1357,7 +1356,7 @@ class SairDoClubeTests(LiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -1426,7 +1425,7 @@ class SairDoClubeTests(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -1563,7 +1562,7 @@ class AvaliacaoClubeTests(LiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -1634,7 +1633,7 @@ class AvaliacaoClubeTests(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -1731,7 +1730,7 @@ class AvaliacaoClubeTests(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -1893,7 +1892,7 @@ class FavoritarClubeTests(LiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -1963,7 +1962,7 @@ class FavoritarClubeTests(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -2110,7 +2109,7 @@ class FavoritarClubeTests(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -2297,7 +2296,7 @@ class TopLivrosTests(LiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -2556,7 +2555,7 @@ class verificarProgresso(TestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -2623,7 +2622,7 @@ class verificarProgresso(TestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         findForm1.send_keys("teste progressbar")
 
@@ -2736,7 +2735,7 @@ class verificarMembros(LiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -2800,7 +2799,7 @@ class verificarMembros(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         findForm1.send_keys("teste requests")
 
@@ -3063,7 +3062,7 @@ class verificarMembros(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         findForm1.send_keys("teste requests")
 
@@ -3317,7 +3316,7 @@ class verificarMembros(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         findForm1.send_keys("teste requests")
 
@@ -3530,7 +3529,7 @@ class TestFiltro(LiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -3601,7 +3600,7 @@ class TestFiltro(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -3709,7 +3708,7 @@ class TestFiltro(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -3792,7 +3791,7 @@ class ProfileViewTest(TestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -4174,7 +4173,7 @@ class Editprofiletest(TestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -4354,7 +4353,7 @@ class usuarioprofiletest(TestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -4550,7 +4549,7 @@ class favoritoprofiletest(TestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -4602,7 +4601,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
+        
 
     @classmethod
     def tearDownClass(cls):
@@ -4669,7 +4668,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -4838,7 +4837,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -5040,7 +5039,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -5274,7 +5273,6 @@ class visualizacao(TestCase):
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
-        chrome_options.add_argument("--window-size=1920,1080")
 
     @classmethod
     def tearDownClass(cls):
@@ -5347,7 +5345,7 @@ class visualizacao(TestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
@@ -5576,7 +5574,7 @@ class visualizacao(TestCase):
         findForm2 = driver.find_element(By.NAME, "modalidade")
         findForm3 = driver.find_element(By.NAME, "categoria")
         findForm4 = driver.find_element(By.NAME, "descricao")
-        findForm5 = driver.find_element(By.ID, "create-btn")
+        findForm5 = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "create-btn")))
 
         # Asserts para verificar os campos de criação do clube
         self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
