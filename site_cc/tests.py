@@ -39,8 +39,8 @@ class ComentarioTests(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -259,8 +259,8 @@ class ClubePrivadoTests(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -895,8 +895,8 @@ class BarraDePesquisa(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -1077,8 +1077,8 @@ class MaratonaTests(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -1356,8 +1356,8 @@ class SairDoClubeTests(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -1562,8 +1562,8 @@ class AvaliacaoClubeTests(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -1892,8 +1892,8 @@ class FavoritarClubeTests(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -2296,8 +2296,8 @@ class TopLivrosTests(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -2555,8 +2555,8 @@ class verificarProgresso(TestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -2734,8 +2734,8 @@ class verificarMembros(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -3528,8 +3528,8 @@ class TestFiltro(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -3790,8 +3790,8 @@ class ProfileViewTest(TestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -4172,8 +4172,8 @@ class Editprofiletest(TestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -4352,8 +4352,8 @@ class usuarioprofiletest(TestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -4548,8 +4548,8 @@ class favoritoprofiletest(TestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -4600,8 +4600,8 @@ class CriarEnqueteTest(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
@@ -5272,8 +5272,8 @@ class visualizacao(TestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
         chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
     def tearDownClass(cls):
