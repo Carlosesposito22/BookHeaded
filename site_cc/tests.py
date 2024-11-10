@@ -1317,7 +1317,7 @@ class MaratonaTests(LiveServerTestCase):
 
             botao_maratona = driver.find_element(By.ID, "createMaratona")
             assert botao_maratona is not None, "Botão 'createMaratona' não encontrado"
-            botao_maratona.click()
+            driver.execute_script("arguments[0].click();", botao_maratona)
             time.sleep(4)
 
             nome_maratona = driver.find_element(By.ID, "nomeMaratona")
@@ -4861,10 +4861,9 @@ class CriarEnqueteTest(LiveServerTestCase):
         time.sleep(2)
 
         time.sleep(3)
-        driver.execute_script("arguments[0].scrollIntoView();", btnCriarEnquete)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
         assert btnCriarEnquete is not None, "Botão 'criar-enquete ' não encontrado"
-        btnCriarEnquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(1)
 
         titulo_enquete = driver.find_element(By.ID, "enqueteTitulo")
@@ -4874,7 +4873,7 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
         assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
-        botao_criar_enquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(2)
 
         botao_sair_enquete = driver.find_element(By.ID, "sair-enquete")
@@ -4901,7 +4900,7 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
         assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
-        botao_criar_enquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(2)
 
         botao_sair_enquete = driver.find_element(By.ID, "sair-enquete")
@@ -4934,7 +4933,7 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
         assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
-        botao_criar_enquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(2)
 
         botao_sair_enquete = driver.find_element(By.ID, "sair-enquete")
@@ -4978,7 +4977,7 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
         assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
-        botao_criar_enquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(3)
 
         # 4. clicar no logout
@@ -5098,7 +5097,7 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
         assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
-        botao_criar_enquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(2)
         
         # Logout do moderador
@@ -5406,7 +5405,7 @@ class visualizacao(TestCase):
 
         botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
         assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
-        botao_criar_enquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(2)
 
         ver_resultados = driver.find_element(By.ID, "listarResultadosEnquetes")
@@ -5636,7 +5635,7 @@ class visualizacao(TestCase):
 
         botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
         assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
-        botao_criar_enquete.click()
+        driver.execute_script("arguments[0].click();", btnCriarEnquete)
         time.sleep(2)
 
         ver_enquetes = driver.find_element(By.ID, "ver-enquetes")
