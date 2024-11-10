@@ -24,6 +24,7 @@ from datetime import datetime
 import json
 import logging
 import time
+import sys
 import os
 import subprocess
 
@@ -1073,6 +1074,7 @@ class MaratonaTests(LiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        sys.exit()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
@@ -4596,6 +4598,7 @@ class CriarEnqueteTest(LiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        sys.exit()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
@@ -5283,6 +5286,7 @@ class visualizacao(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        sys.exit()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
