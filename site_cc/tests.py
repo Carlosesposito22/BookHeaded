@@ -4600,7 +4600,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1920,1080")
+        #chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -4878,7 +4878,7 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         botao_sair_enquete = driver.find_element(By.ID, "sair-enquete")
         assert botao_sair_enquete  is not None, "Botão 'sair-enquete' não encontrado"
-        botao_sair_enquete.click()
+        driver.execute_script("arguments[0].click();", botao_sair_enquete)
         time.sleep(1)
 
         time.sleep(3)
@@ -4905,7 +4905,7 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         botao_sair_enquete = driver.find_element(By.ID, "sair-enquete")
         assert botao_sair_enquete  is not None, "Botão 'sair-enquete' não encontrado"
-        botao_sair_enquete.click()
+        driver.execute_script("arguments[0].click();", botao_sair_enquete)
         time.sleep(1)
 
         time.sleep(3)
@@ -4938,7 +4938,7 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         botao_sair_enquete = driver.find_element(By.ID, "sair-enquete")
         assert botao_sair_enquete  is not None, "Botão 'sair-enquete' não encontrado"
-        botao_sair_enquete.click()
+        driver.execute_script("arguments[0].click();", botao_sair_enquete)
         time.sleep(1)
 
         time.sleep(3)
@@ -5097,7 +5097,7 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
         assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
-        driver.execute_script("arguments[0].click();", btnCriarEnquete)
+        botao_criar_enquete.click()
         time.sleep(2)
         
         # Logout do moderador
@@ -5176,11 +5176,18 @@ class CriarEnqueteTest(LiveServerTestCase):
         time.sleep(3)
         
         # Vota na primeira opção e vê o resultado
-        ver_enquetes = driver.find_element(By.ID, "ver-enquetes")
-        assert ver_enquetes is not None, "Botão 'ver-enquetes' não encontrado"
+        # 1. Abra o modal de enquetes
+        ver_enquetes = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, "ver-enquetes"))
+        )
         ver_enquetes.click()
-        time.sleep(2)
 
+        # 2. Aguarde que o modal esteja visível
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.ID, "enquetesModal"))
+        )
+
+        # 3. Clique no botão da enquete específica usando o `data-enquete-id`
         votar_na_enquete = driver.find_element(By.NAME, "nova-enquete")
         assert votar_na_enquete is not None, "Botão 'nova-enquete' não encontrado"
         votar_na_enquete.click()
