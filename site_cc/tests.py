@@ -4599,7 +4599,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -4619,7 +4619,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
         super().tearDown()
 
-    def test_01_enquete_visivel_moderador(self):
+    def t1est_01_enquete_visivel_moderador(self):
         driver = self.driver
 
         # 1. Registro do moderador
@@ -4786,7 +4786,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         self.assertIsNotNone(logout, "Botão de logout não encontrado.")
         logout.click()
 
-    def test_02_criar_enquete_valida(self):
+    def t1est_02_criar_enquete_valida(self):
         driver = self.driver
 
         # 1. Registro do moderador
@@ -5186,13 +5186,14 @@ class CriarEnqueteTest(LiveServerTestCase):
         WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located((By.ID, "enquetesModal"))
         )
-
-        # 3. Clique na primeira (e única) enquete disponível
-        primeira_enquete = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-enquete-id]"))
-        )
-        primeira_enquete.click()
+        ####################
+        action = ActionChains(driver)
         time.sleep(2)
+        primeira_enquete = driver.find_element(By.CSS_SELECTOR, "button[data-enquete-id]")
+        time.sleep(2)
+        action.move_to_element(primeira_enquete).click().perform()
+        time.sleep(2)
+        ####################
 
         opcoes = driver.find_elements(By.CSS_SELECTOR, "input[name='opcao_id']")
         opcoes[0].click()
@@ -5285,7 +5286,7 @@ class visualizacao(TestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -5305,13 +5306,7 @@ class visualizacao(TestCase):
         subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
         super().tearDown()
 
-
-
-
-
-
     def teste1(self):
-        
         driver = self.driver
 
         # 1. Registro do moderador
@@ -5376,7 +5371,7 @@ class visualizacao(TestCase):
         driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
         time.sleep(2)
         findForm5.click()
-        time.sleep(1)
+        time.sleep(3)
 
         time.sleep(3)
         btnCriarEnquete = driver.find_element(By.NAME, "criar-enquete")
@@ -5414,7 +5409,7 @@ class visualizacao(TestCase):
 
         botao_criar_enquete = driver.find_element(By.ID, "save-enquete")
         assert botao_criar_enquete  is not None, "Botão 'save-enquete' não encontrado"
-        driver.execute_script("arguments[0].click();", btnCriarEnquete)
+        botao_criar_enquete.click()
         time.sleep(2)
 
         ver_resultados = driver.find_element(By.ID, "listarResultadosEnquetes")
