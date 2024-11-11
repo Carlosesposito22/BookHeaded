@@ -211,11 +211,11 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
 <summary>Entrega 4</summary>
 <ul>
   <li>
-<a href="">Imagem do Backlog no Jira</a>
+<a href="Mídia/backlog4.jpg">Imagem do Backlog no Jira</a>
 </li>
   
 <li>
-    <a  href=""
+    <a  href="Mídia/board4.jpg"
       >Imagem do Quadro no Jira</a
     >
   </li>
@@ -240,7 +240,7 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
     >
   </li>
         <li>
-    <a  href=""
+    <a  href="Mídia/bugtracker.jpg"
       >Bug Tracker</a
     >
   </li>
