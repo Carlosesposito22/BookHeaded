@@ -225,7 +225,7 @@ Claro! Você pode participar de quantos clubes quiser e gerenciar suas participa
     >
   </li>
     <li>
-    <a  href=""
+    <a  href="https://www.youtube.com/watch?v=vrbSdCnwCd8"
       >Screencast do Deployment</a
     >
   </li>
