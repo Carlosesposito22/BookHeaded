@@ -353,6 +353,13 @@ Se tiver qualquer dúvida, sinta-se à vontade para abrir uma issue.
   </a>
 </p>
 
+## Apresentação Final
+<p style="text-align: center; text-decoration: none;">
+  <a href="https://www.canva.com/design/DAGWHbU_Ppg/psqAjLV1qEF_OzpMcwAACw/edit?utm_content=DAGWHbU_Ppg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" style="text-decoration: none;">
+  <span>🧷 Slide </span>
+  </a>
+</p>
+
 <br>
 </details>
 
