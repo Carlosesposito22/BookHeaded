@@ -4599,7 +4599,7 @@ class CriarEnqueteTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -5801,3 +5801,649 @@ class visualizacao(TestCase):
         time.sleep(2)
     
 
+class PerfilFavoritos(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def setUp(self):
+        subprocess.run(['python', 'manage.py', 'createcategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'createmodalidades'], check=True)        
+
+    def tearDown(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        subprocess.run(['python', 'manage.py', 'deleteclubs'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletecategorias'], check=True)
+        subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
+        super().tearDown()
+    
+    def teste2(self):
+        driver = self.driver
+
+        # 1. Registro do moderador
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
+
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar, "Botão de registro não encontrado.")
+
+        usuarioComentar.send_keys("moderador_clube")
+        senhaComentar.send_keys("senha_moderador")
+        senha2Comentar.send_keys("senha_moderador")
+        registrarComentar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        # 2. Login do moderador
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin, "Campo 'password' de login não encontrado.")
+
+        usuariologin.send_keys("moderador_clube")
+        senhalogin.send_keys("senha_moderador")
+        senhalogin.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        # 3. Criar um novo clube
+        newclub = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "newclub-btn")))
+        self.assertIsNotNone(newclub, "Botão 'Create Club' não encontrado.")
+        newclub.click()
+
+        findForm1 = driver.find_element(By.NAME, "titulo")
+        findForm2 = driver.find_element(By.NAME, "modalidade")
+        findForm3 = driver.find_element(By.NAME, "categoria")
+        findForm4 = driver.find_element(By.NAME, "descricao")
+        findForm5 = driver.find_element(By.ID, "create-btn")
+
+        # Asserts para verificar os campos de criação do clube
+        self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
+        self.assertIsNotNone(findForm2, "Campo 'modalidade' não encontrado.")
+        self.assertIsNotNone(findForm3, "Campo 'categoria' não encontrado.")
+        self.assertIsNotNone(findForm4, "Campo 'descricao' não encontrado.")
+        self.assertIsNotNone(findForm5, "Botão 'create-btn' não encontrado.")
+
+        findForm1.send_keys("Clube de Teste Enquete")
+        Select(findForm2).select_by_visible_text("Online")
+        Select(findForm3).select_by_visible_text("Ficção")
+        findForm4.send_keys("Descrição do clube de teste para enquete.")
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
+        time.sleep(2)
+        findForm5.click()
+        time.sleep(1)
+
+         # Logout do moderador
+        driver.get("http://127.0.0.1:8000")
+        pfp = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pfp")))
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
+        pfp.click()
+
+        logout = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "logout-btn")))
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
+        time.sleep(2)
+
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuarioComentar2 = driver.find_element(By.NAME, "username")
+        senhaComentar2 = driver.find_element(By.NAME, "password1")
+        senha2Comentar2 = driver.find_element(By.NAME, "password2")
+        registrarComentar2 = driver.find_element(By.NAME, "registrar")
+
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar2, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar2, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar2, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar2, "Botão de registro não encontrado.")
+
+        usuarioComentar2.send_keys("membro_clube")
+        senhaComentar2.send_keys("senha_membro")
+        senha2Comentar2.send_keys("senha_membro")
+        time.sleep(2)
+        registrarComentar2.send_keys(Keys.ENTER)
+
+        # 5. Login do membro
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin2 = driver.find_element(By.NAME, "username")
+        senhalogin2 = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin2, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin2, "Campo 'password' de login não encontrado.")
+
+        usuariologin2.send_keys("membro_clube")
+        senhalogin2.send_keys("senha_membro")
+        time.sleep(1)
+        senhalogin2.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+
+        driver.get("http://127.0.0.1:8000/clubs/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/clubs/", "Não foi redirecionado corretamente para a página 'Clubs'.")
+
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)
+
+        botao_card = driver.find_element(By.NAME, "titles")
+        self.assertIsNotNone(botao_card, "Botão do card do clube não encontrado.")
+        botao_card.click()
+
+        time.sleep(2)
+
+        # Acessa a modal de clubs
+        botao_club = driver.find_element(By.NAME, "entrar-btn")
+        self.assertIsNotNone(botao_club, "Botão de entrar no clube não encontrado.")
+        botao_club.click()
+
+        time.sleep(3)
+
+         # 4. Navegar para a página "My Clubs"
+        driver.get("http://127.0.0.1:8000/myclubes/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/myclubes/", "Não foi redirecionado corretamente para a página 'My Clubs'.")
+
+        # 5. Garantir que o dropdown de favoritos está aberto
+        time.sleep(2)
+
+        # 6. Recapturar o botão de favoritar após abrir o dropdown
+        favoritar_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "favoritar-btn"))
+        )
+        self.assertIsNotNone(favoritar_btn, "Botão de favoritar não encontrado.")
+
+        # 7. Clicar no botão de favoritar
+        favoritar_btn.click()
+
+        # 8. Verificar se o ícone de estrela foi atualizado para "favoritado"
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".bi-star-fill")))
+
+        time.sleep(2)
+
+        # Logout da 2 conta
+        driver.get("http://127.0.0.1:8000")
+        pfp = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pfp")))
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
+        pfp.click()
+
+        logout = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "logout-btn")))
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
+        time.sleep(2)
+
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin, "Campo 'password' de login não encontrado.")
+
+        usuariologin.send_keys("moderador_clube")
+        senhalogin.send_keys("senha_moderador")
+        senhalogin.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        driver.get("http://127.0.0.1:8000/usuarios/?nomes=membro_clube")
+        time.sleep(5)
+
+        
+        icone_joao = driver.find_element(By.NAME, "user")
+
+        # Clicar no ícone do perfil ou nome de usuário
+        action = ActionChains(driver)
+        action.move_to_element(icone_joao).click().perform()
+        time.sleep(5)
+
+    def teste3(self):
+        driver = self.driver
+
+        # 1. Registro do moderador
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
+
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar, "Botão de registro não encontrado.")
+
+        usuarioComentar.send_keys("moderador_clube")
+        senhaComentar.send_keys("senha_moderador")
+        senha2Comentar.send_keys("senha_moderador")
+        registrarComentar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        # 2. Login do moderador
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin, "Campo 'password' de login não encontrado.")
+
+        usuariologin.send_keys("moderador_clube")
+        senhalogin.send_keys("senha_moderador")
+        senhalogin.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        # 3. Criar um novo clube
+        newclub = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "newclub-btn")))
+        self.assertIsNotNone(newclub, "Botão 'Create Club' não encontrado.")
+        newclub.click()
+
+        findForm1 = driver.find_element(By.NAME, "titulo")
+        findForm2 = driver.find_element(By.NAME, "modalidade")
+        findForm3 = driver.find_element(By.NAME, "categoria")
+        findForm4 = driver.find_element(By.NAME, "descricao")
+        findForm5 = driver.find_element(By.ID, "create-btn")
+
+        # Asserts para verificar os campos de criação do clube
+        self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
+        self.assertIsNotNone(findForm2, "Campo 'modalidade' não encontrado.")
+        self.assertIsNotNone(findForm3, "Campo 'categoria' não encontrado.")
+        self.assertIsNotNone(findForm4, "Campo 'descricao' não encontrado.")
+        self.assertIsNotNone(findForm5, "Botão 'create-btn' não encontrado.")
+
+        findForm1.send_keys("Clube de Teste Enquete")
+        Select(findForm2).select_by_visible_text("Online")
+        Select(findForm3).select_by_visible_text("Ficção")
+        findForm4.send_keys("Descrição do clube de teste .")
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
+        time.sleep(2)
+        findForm5.click()
+        time.sleep(2)
+
+        # 4. Navegar para a página "My Clubs"
+        driver.get("http://127.0.0.1:8000/myclubes/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/myclubes/", "Não foi redirecionado corretamente para a página 'My Clubs'.")
+
+        # 5. Garantir que o dropdown de favoritos está aberto
+        time.sleep(2)
+
+        # 6. Recapturar o botão de favoritar após abrir o dropdown
+        favoritar_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "favoritar-btn"))
+        )
+        self.assertIsNotNone(favoritar_btn, "Botão de favoritar não encontrado.")
+
+        # 7. Clicar no botão de favoritar
+        favoritar_btn.click()
+
+        # 8. Verificar se o ícone de estrela foi atualizado para "favoritado"
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".bi-star-fill")))
+
+        time.sleep(2)
+
+        newclub = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "novo_clube")))
+        self.assertIsNotNone(newclub, "Botão 'Create Club' não encontrado.")
+        newclub.click()
+
+        findForm1 = driver.find_element(By.NAME, "titulo")
+        findForm2 = driver.find_element(By.NAME, "modalidade")
+        findForm3 = driver.find_element(By.NAME, "categoria")
+        findForm4 = driver.find_element(By.NAME, "descricao")
+        findForm5 = driver.find_element(By.ID, "create-btn")
+
+        # Asserts para verificar os campos de criação do clube
+        self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
+        self.assertIsNotNone(findForm2, "Campo 'modalidade' não encontrado.")
+        self.assertIsNotNone(findForm3, "Campo 'categoria' não encontrado.")
+        self.assertIsNotNone(findForm4, "Campo 'descricao' não encontrado.")
+        self.assertIsNotNone(findForm5, "Botão 'create-btn' não encontrado.")
+
+        findForm1.send_keys("Clube de Teste 2 Enquete")
+        Select(findForm2).select_by_visible_text("Online")
+        Select(findForm3).select_by_visible_text("Ficção")
+        findForm4.send_keys("Descrição do clube de teste 2 .")
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
+        time.sleep(2)
+        findForm5.click()
+        time.sleep(1)
+
+         # 4. Navegar para a página "My Clubs"
+        driver.get("http://127.0.0.1:8000/myclubes/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/myclubes/", "Não foi redirecionado corretamente para a página 'My Clubs'.")
+
+        # 5. Garantir que o dropdown de favoritos está aberto
+        time.sleep(2)
+
+        # 6. Recapturar o botão de favoritar após abrir o dropdown
+        favoritar_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "favoritar-btn"))
+        )
+        self.assertIsNotNone(favoritar_btn, "Botão de favoritar não encontrado.")
+
+        # 7. Clicar no botão de favoritar
+        favoritar_btn.click()
+
+        # 8. Verificar se o ícone de estrela foi atualizado para "favoritado"
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".bi-star-fill")))
+
+        time.sleep(2)
+
+        action = ActionChains(driver)
+
+        dropdown = driver.find_element(by=By.NAME, value="pfp")
+        action.move_to_element(dropdown).click().perform()
+
+        # Aguardar o menu dropdown ficar visível
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.NAME, "profiles"))
+        )
+
+        # Clicar no item "Profile" dentro do dropdown
+        profile_link = driver.find_element(by=By.NAME, value="profiles")
+        action.move_to_element(profile_link).click().perform()
+        time.sleep(5)
+    def test4(self):
+        driver = self.driver
+
+        # 1. Registro do moderador
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuarioComentar = driver.find_element(By.NAME, "username")
+        senhaComentar = driver.find_element(By.NAME, "password1")
+        senha2Comentar = driver.find_element(By.NAME, "password2")
+        registrarComentar = driver.find_element(By.NAME, "registrar")
+
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar, "Botão de registro não encontrado.")
+
+        usuarioComentar.send_keys("moderador_clube")
+        senhaComentar.send_keys("senha_moderador")
+        senha2Comentar.send_keys("senha_moderador")
+        registrarComentar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        # 2. Login do moderador
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin, "Campo 'password' de login não encontrado.")
+
+        usuariologin.send_keys("moderador_clube")
+        senhalogin.send_keys("senha_moderador")
+        senhalogin.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        action = ActionChains(driver)
+
+        dropdown = driver.find_element(by=By.NAME, value="pfp")
+        action.move_to_element(dropdown).click().perform()
+
+        # Aguardar o menu dropdown ficar visível
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.NAME, "profiles"))
+        )
+
+        # Clicar no item "Profile" dentro do dropdown
+        profile_link = driver.find_element(by=By.NAME, value="profiles")
+        action.move_to_element(profile_link).click().perform()
+        time.sleep(5)
+
+         # Logout do moderador
+        driver.get("http://127.0.0.1:8000")
+        pfp = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pfp")))
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
+        pfp.click()
+
+        logout = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "logout-btn")))
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
+        time.sleep(2)
+
+        driver.get("http://127.0.0.1:8000/membros/register/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuarioComentar2 = driver.find_element(By.NAME, "username")
+        senhaComentar2 = driver.find_element(By.NAME, "password1")
+        senha2Comentar2 = driver.find_element(By.NAME, "password2")
+        registrarComentar2 = driver.find_element(By.NAME, "registrar")
+
+        # Asserts para verificar que os elementos estão presentes
+        self.assertIsNotNone(usuarioComentar2, "Campo 'username' não encontrado.")
+        self.assertIsNotNone(senhaComentar2, "Campo 'password1' não encontrado.")
+        self.assertIsNotNone(senha2Comentar2, "Campo 'password2' não encontrado.")
+        self.assertIsNotNone(registrarComentar2, "Botão de registro não encontrado.")
+
+        usuarioComentar2.send_keys("membro_clube")
+        senhaComentar2.send_keys("senha_membro")
+        senha2Comentar2.send_keys("senha_membro")
+        time.sleep(2)
+        registrarComentar2.send_keys(Keys.ENTER)
+
+        # 5. Login do membro
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin2 = driver.find_element(By.NAME, "username")
+        senhalogin2 = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin2, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin2, "Campo 'password' de login não encontrado.")
+
+        usuariologin2.send_keys("membro_clube")
+        senhalogin2.send_keys("senha_membro")
+        time.sleep(1)
+        senhalogin2.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        driver.get("http://127.0.0.1:8000/usuarios/?nomes=membro_clube")
+        time.sleep(5)
+
+        
+        icone_joao = driver.find_element(By.NAME, "user")
+
+        # Clicar no ícone do perfil ou nome de usuário
+        action = ActionChains(driver)
+        action.move_to_element(icone_joao).click().perform()
+        time.sleep(5)
+
+         # Logout do moderador
+        driver.get("http://127.0.0.1:8000")
+        pfp = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pfp")))
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
+        pfp.click()
+
+        logout = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "logout-btn")))
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
+        time.sleep(2)
+
+
+
+
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin = driver.find_element(By.NAME, "username")
+        senhalogin = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin, "Campo 'password' de login não encontrado.")
+
+        usuariologin.send_keys("moderador_clube")
+        senhalogin.send_keys("senha_moderador")
+        senhalogin.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+        # 3. Criar um novo clube
+        newclub = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "newclub-btn")))
+        self.assertIsNotNone(newclub, "Botão 'Create Club' não encontrado.")
+        newclub.click()
+
+        findForm1 = driver.find_element(By.NAME, "titulo")
+        findForm2 = driver.find_element(By.NAME, "modalidade")
+        findForm3 = driver.find_element(By.NAME, "categoria")
+        findForm4 = driver.find_element(By.NAME, "descricao")
+        findForm5 = driver.find_element(By.ID, "create-btn")
+
+        # Asserts para verificar os campos de criação do clube
+        self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
+        self.assertIsNotNone(findForm2, "Campo 'modalidade' não encontrado.")
+        self.assertIsNotNone(findForm3, "Campo 'categoria' não encontrado.")
+        self.assertIsNotNone(findForm4, "Campo 'descricao' não encontrado.")
+        self.assertIsNotNone(findForm5, "Botão 'create-btn' não encontrado.")
+
+        findForm1.send_keys("Clube de Teste Enquete")
+        Select(findForm2).select_by_visible_text("Online")
+        Select(findForm3).select_by_visible_text("Ficção")
+        findForm4.send_keys("Descrição do clube de teste .")
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
+        time.sleep(2)
+        findForm5.click()
+        time.sleep(2)
+
+        # 4. Navegar para a página "My Clubs"
+        driver.get("http://127.0.0.1:8000/myclubes/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/myclubes/", "Não foi redirecionado corretamente para a página 'My Clubs'.")
+
+        # 5. Garantir que o dropdown de favoritos está aberto
+        time.sleep(2)
+
+        # 6. Recapturar o botão de favoritar após abrir o dropdown
+        favoritar_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "favoritar-btn"))
+        )
+        self.assertIsNotNone(favoritar_btn, "Botão de favoritar não encontrado.")
+
+        # 7. Clicar no botão de favoritar
+        favoritar_btn.click()
+
+        # 8. Verificar se o ícone de estrela foi atualizado para "favoritado"
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".bi-star-fill")))
+
+        time.sleep(2)
+
+        newclub = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "novo_clube")))
+        self.assertIsNotNone(newclub, "Botão 'Create Club' não encontrado.")
+        newclub.click()
+
+        findForm1 = driver.find_element(By.NAME, "titulo")
+        findForm2 = driver.find_element(By.NAME, "modalidade")
+        findForm3 = driver.find_element(By.NAME, "categoria")
+        findForm4 = driver.find_element(By.NAME, "descricao")
+        findForm5 = driver.find_element(By.ID, "create-btn")
+
+        # Asserts para verificar os campos de criação do clube
+        self.assertIsNotNone(findForm1, "Campo 'titulo' não encontrado.")
+        self.assertIsNotNone(findForm2, "Campo 'modalidade' não encontrado.")
+        self.assertIsNotNone(findForm3, "Campo 'categoria' não encontrado.")
+        self.assertIsNotNone(findForm4, "Campo 'descricao' não encontrado.")
+        self.assertIsNotNone(findForm5, "Botão 'create-btn' não encontrado.")
+
+        findForm1.send_keys("Clube de Teste 2 Enquete")
+        Select(findForm2).select_by_visible_text("Online")
+        Select(findForm3).select_by_visible_text("Ficção")
+        findForm4.send_keys("Descrição do clube de teste 2 .")
+        driver.execute_script("document.getElementById('create-btn').removeAttribute('disabled');")
+        time.sleep(2)
+        findForm5.click()
+        time.sleep(1)
+
+         # 4. Navegar para a página "My Clubs"
+        driver.get("http://127.0.0.1:8000/myclubes/")
+        self.assertEqual(driver.current_url, "http://127.0.0.1:8000/myclubes/", "Não foi redirecionado corretamente para a página 'My Clubs'.")
+
+        # 5. Garantir que o dropdown de favoritos está aberto
+        time.sleep(2)
+
+        # 6. Recapturar o botão de favoritar após abrir o dropdown
+        favoritar_btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.NAME, "favoritar-btn"))
+        )
+        self.assertIsNotNone(favoritar_btn, "Botão de favoritar não encontrado.")
+
+        # 7. Clicar no botão de favoritar
+        favoritar_btn.click()
+
+        # 8. Verificar se o ícone de estrela foi atualizado para "favoritado"
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".bi-star-fill")))
+
+        time.sleep(2)
+
+         # Logout do moderador
+        driver.get("http://127.0.0.1:8000")
+        pfp = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pfp")))
+        self.assertIsNotNone(pfp, "Avatar do perfil não encontrado.")
+        pfp.click()
+
+        logout = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "logout-btn")))
+        self.assertIsNotNone(logout, "Botão de logout não encontrado.")
+        logout.click()
+        time.sleep(2)
+
+        
+        # 5. Login do membro
+        driver.get("http://127.0.0.1:8000/membros/login/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "username")))
+
+        usuariologin2 = driver.find_element(By.NAME, "username")
+        senhalogin2 = driver.find_element(By.NAME, "password")
+
+        # Asserts para garantir que os campos de login estão presentes
+        self.assertIsNotNone(usuariologin2, "Campo 'username' de login não encontrado.")
+        self.assertIsNotNone(senhalogin2, "Campo 'password' de login não encontrado.")
+
+        usuariologin2.send_keys("membro_clube")
+        senhalogin2.send_keys("senha_membro")
+        time.sleep(1)
+        senhalogin2.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        driver.get("http://127.0.0.1:8000/usuarios/?nomes=moderador_clube")
+        time.sleep(5)
+        action = ActionChains(driver)
+
+
+        
+        icone_joao = driver.find_element(By.NAME, "user")
+        action.move_to_element(icone_joao).click().perform()
+        time.sleep(5)
