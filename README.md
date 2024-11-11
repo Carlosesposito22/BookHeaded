@@ -318,7 +318,7 @@ Se tiver qualquer dúvida, sinta-se à vontade para abrir uma issue.
     >
   </li>
       <li>
-    <a  href=""
+    <a  href="https://youtu.be/WygXgRIIWQw?si=7q1X2H6G9u8M6XK2"
       >Screencast dos Testes Automatizados</a
     >
   </li>
@@ -336,6 +336,11 @@ Se tiver qualquer dúvida, sinta-se à vontade para abrir uma issue.
   <li>
     <a  href="https://www.figma.com/proto/647wQMhbLuuVg614lNbp5g/Untitled?node-id=0-1&t=J2t430tHXVBytTUY-1"
       >Prototipação Lo-fi</a
+    >
+  </li>
+    <li>
+    <a  href="https://youtu.be/_5b7TI08JzQ?si=Z7M-X85ldDo5IfMN"
+      >CI/CD</a
     >
   </li>
 </details>
