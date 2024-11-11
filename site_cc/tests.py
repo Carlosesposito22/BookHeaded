@@ -1105,7 +1105,7 @@ class MaratonaTests(LiveServerTestCase):
         """Imprime uma mensagem de erro no estilo padrão do Django."""
         self.stdout.write(self.style.ERROR(message))
 
-    def teste_verifica_presenca_btn_moderador_participante(self):
+    def t1este_verifica_presenca_btn_moderador_participante(self):
         try:
             driver = self.driver
             driver.get("http://127.0.0.1:8000/membros/register/")
@@ -1246,7 +1246,7 @@ class MaratonaTests(LiveServerTestCase):
             print(f"Falha no teste de verificação de presença do botão de moderador e participante: {e}")
 
 
-    def teste_criar_maratona(self):
+    def t1este_criar_maratona(self):
         try:
             driver = self.driver
             driver.get("http://127.0.0.1:8000/membros/register/")
@@ -4994,7 +4994,7 @@ class CriarEnqueteTest(LiveServerTestCase):
 
         time.sleep(1)
 
-    def test_03_visualizar_e_votoUnico(self):
+    def t1est_03_visualizar_e_votoUnico(self):
         driver = self.driver
 
         # 1. Registro do moderador
@@ -5286,7 +5286,7 @@ class visualizacao(TestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -5306,7 +5306,7 @@ class visualizacao(TestCase):
         subprocess.run(['python', 'manage.py', 'deletemodalidades'], check=True)
         super().tearDown()
 
-    def teste1(self):
+    def t1este1(self):
         driver = self.driver
 
         # 1. Registro do moderador
@@ -5536,7 +5536,7 @@ class visualizacao(TestCase):
         fechar_modal_button.click()
         time.sleep(2)
         
-    def teste2(self):
+    def t1este2(self):
         driver = self.driver
 
         # 1. Registro do moderador

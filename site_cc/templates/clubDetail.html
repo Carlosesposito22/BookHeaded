@@ -8,7 +8,537 @@
 {% block content %}
 
 {% block extracss %}
-    <link href="{% static 'css/ClubDetail.css' %}" rel="stylesheet" />
+<style>
+* {
+    font-family: 'DM Sans', 'sans-serif';
+}
+
+.data-holder {
+    background-color: rgb(255, 255, 255);
+    padding: .8rem;
+    border-radius: 1rem;
+    z-index: 99;
+    height: fit-content;
+    width: 100%;
+}
+
+.title-n-fav {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.hold-evr {
+    margin-top: 3rem;
+    display: flex;
+    padding: 0rem;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.data-progress-holder {
+    display: flex;
+    flex-direction: column;
+    width: 65%;
+}
+
+.btn-progress-bar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.progressbar-holder {
+    max-width: 100%;
+    min-width: 80%;
+}
+
+.holder-title-btn {
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    align-items: center;
+}
+
+small {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+h1 {
+    font-size: clamp(16px, 4rem, 6rem);
+}
+
+.not-adm-items {
+    display: flex;
+    flex-direction: column;
+}
+
+.description-text {
+    max-width: 20rem;
+}
+
+#createMaratona {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.comentarios-container {
+    background-color: #f0f0f0;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comentario-item {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.meu-comentario {
+    background-color: #d9d9d9;
+    text-align: right;
+    padding: 10px;
+    border-radius: 8px;
+    margin-left: auto;
+    max-width: 80%;
+    width: fit-content;
+}
+
+.outro-comentario {
+    background-color: #a9a9a9;
+    text-align: left;
+    padding: 10px;
+    border-radius: 8px;
+    margin-right: auto;
+    max-width: 80%;
+    width: fit-content;
+    max-height: fit-content;
+}
+
+small {
+    display: flex;
+    align-items: center;
+}
+
+.progress {
+    width: 100%;
+    background-color: #000000;
+    border-radius: 10rem;
+    height: 2rem;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+    background-color: #0066FF;
+    font-weight: bold;
+}
+
+.club-data-icons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.div-stars {
+    width: fit-content;
+    font-size: 1.05rem;
+    display: flex;
+}
+
+.delete-club {
+    width: 90%;
+    margin-left: 0.5rem;
+}
+
+.comentarioholder {
+    padding: 0rem 1rem;
+}
+
+.comment-n-date {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    height: fit-content;
+    align-items: center;
+    gap: 3rem;
+}
+
+#pdocomentario {
+    margin: 0;
+}
+
+.comment-n-date.right-align {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.capitulo-atual {
+    font-size: large;
+}
+
+#setProgress {
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    font-weight: bold;
+}
+
+.comentario-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: .8rem;
+}
+
+.dropdown-item:hover {
+    cursor: pointer;
+}
+
+.btn.reluzir {
+    border: none;
+    border-radius: 1rem;
+    font-size: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-weight: 500;
+}
+
+.btn.reluzir:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 0 #003b95,
+        0 12px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn.reluzir::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+    transform: rotate(45deg);
+    transition: all 0.5s ease;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.btn.reluzir:hover::before {
+    opacity: 1;
+    left: 100%;
+    top: 100%;
+}
+
+.btn.reluzir span {
+    position: relative;
+    z-index: 2;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+}
+
+.modal-dialog {
+    overflow: hidden;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0066FF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+    border-radius: inherit;
+}
+
+.overlay-text {
+    color: white;
+    font-size: 4rem;
+    font-weight: bold;
+    text-align: center;
+    animation: shake 0.4s infinite;
+    line-height: 5rem;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translate(0);
+    }
+
+    10% {
+        transform: translate(-3px, -3px);
+    }
+
+    20% {
+        transform: translate(3px, -3px);
+    }
+
+    30% {
+        transform: translate(-3px, 3px);
+    }
+
+    40% {
+        transform: translate(3px, 3px);
+    }
+
+    50% {
+        transform: translate(-3px, 0);
+    }
+
+    60% {
+        transform: translate(3px, 0);
+    }
+
+    70% {
+        transform: translate(0, -3px);
+    }
+
+    80% {
+        transform: translate(0, 3px);
+    }
+}
+
+.data-n-topclubs {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    gap: 1rem;
+}
+
+.top-books {
+    background-color: #0066FF;
+    padding: 1rem;
+    border-radius: 1rem;
+    padding-bottom: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.top-books-li {
+    font-size: 18px;
+    text-align: center;
+    font-weight: 500;
+    color: white;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    padding: 0.5rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+    user-select: none;
+}
+
+
+.user-data::-webkit-scrollbar {
+    display: none;
+}
+
+.top-books-ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+    gap: 0.5rem;
+    align-items: self-end;
+}
+
+#second {
+    display: flex;
+    flex-direction: column;
+}
+
+#first {
+    display: flex;
+    flex-direction: column;
+}
+
+
+#third {
+    display: flex;
+    flex-direction: column;
+}
+
+.first-place {
+    height: 150px;
+    background-color: #0052cd !important;
+    width: 6rem;
+}
+
+.second-place {
+    height: 100px;
+    background-color: #003b93 !important;
+    width: 6rem;
+}
+
+.third-place {
+    height: 75px;
+    background-color: #002d6f !important;
+    width: 6rem;
+}
+
+.spree-ongoing {
+    background-color: #0066FF;
+    width: 100%;
+}
+
+.spree-informer {
+    background-color: #0066FF;
+    padding: 1rem;
+    font-size: 1.5rem;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.data-n-topbooks {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 30%;
+}
+
+@media (max-width: 700px) {
+
+    .data-n-topbooks {
+        width: 100% !important;
+    }
+
+    .data-progress-holder {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .btn-progress-bar {
+        width: 100%;
+        align-items: center;
+    }
+
+    .hold-evr-exc-admt {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .data-holder {
+        margin-top: 1rem;
+        width: 100% !important;
+    }
+
+    .container {
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hold-evr {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+    }
+
+    .holder-title-btn {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .comentarioholder,
+    .capitulo-container,
+    .comentarios-container,
+    .data-holder {
+        width: 100%;
+    }
+}
+
+.small-chart-container {
+    width: 250px;
+    height: 200px;
+    margin: 0 auto;
+    display: none;
+}
+
+.no-votes-message {
+    text-align: center;
+    color: #888;
+    font-size: 18px;
+    display: none;
+}
+
+.enquete-title {
+    font-size: 1.1rem;
+    color: #0d6efd;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.enquete-title:hover {
+    background-color: gray;
+}
+
+.enquete-details {
+    margin-top: 10px;
+}
+
+.modal-header.bg-primary {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+}
+
+#opcoesContainer .input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.input-group .btn-outline-secondary {
+    margin-left: 5px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+body{
+    padding-bottom: 1rem;
+}   
+</style>    
 {% endblock extracss %}
 
 {% if clube.maratona_ativa %}
@@ -512,11 +1042,493 @@
     
 </div>
 
-<script src="{% static 'js/clubDetail.js' %}"></script>
+<!--<script src="{% static 'js/clubDetail.js' %}"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+function adicionarOpcao() {
+    const opcoesContainer = document.getElementById('opcoesContainer');
+    const novaOpcao = document.createElement('div');
+    novaOpcao.classList.add('input-group', 'mb-2');
+    novaOpcao.innerHTML = `
+        <input type="text" class="form-control" name="opcoes" id="opcoes1" placeholder="New Option" required>
+        <button type="button" class="btn btn-outline-danger" onclick="removerOpcao(this)">-</button>
+    `;
+    opcoesContainer.appendChild(novaOpcao);
+}
+
+function removerOpcao(button) {
+    button.parentElement.remove();
+}
+
+function votarNaOpcao(enqueteId, opcaoId) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    fetch(`/votar/${enqueteId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({ 'opcao_id': opcaoId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            const votosContador = document.querySelector(`#votos-contador-${opcaoId}`);
+            votosContador.textContent = parseInt(votosContador.textContent) + 1;
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao registrar o voto:', error);
+    });
+}
+
+function toggleEnqueteDetails(enqueteId) {
+    document.querySelectorAll('.enquete-details').forEach(element => {
+        if (element.getAttribute('id') !== `enqueteDetails-${enqueteId}`) {
+            element.classList.remove('show');
+        }
+    });
+
+    const details = document.getElementById(`enqueteDetails-${enqueteId}`);
+    details.classList.toggle('show');
+}
+
+function votarEnquete(event, enqueteId) {
+    event.preventDefault();
+    const form = document.getElementById(`votacaoForm-${enqueteId}`);
+    const opcaoSelecionada = form.querySelector('input[name="opcao_id"]:checked');
+    const mensagemContainer = document.getElementById(`votacaoMensagem-${enqueteId}`);
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    if (!opcaoSelecionada) {
+        mensagemContainer.innerHTML = `<div class="alert alert-danger">Por favor, selecione uma opção para votar.</div>`;
+        return;
+    }
+
+    const opcaoId = opcaoSelecionada.value;
+
+    fetch(`/votar/${enqueteId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({ 'opcao_id': opcaoId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            mensagemContainer.innerHTML = `<div class="alert alert-success">Voto registrado com sucesso!</div>`;
+            form.style.display = 'none';
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            mensagemContainer.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao votar:', error);
+        mensagemContainer.innerHTML = `<div class="alert alert-danger">Ocorreu um erro. Tente novamente.</div>`;
+    });
+}
+
+document.getElementById('listarResultadosEnquetes').addEventListener('click', function() {
+    const clubeId = this.getAttribute('data-clube-id');
+    fetchResultadosEnquetes(clubeId);
+});
+
+function fetchResultadosEnquetes(clubeId) {
+    fetch(`/clube/${clubeId}/resultados_enquetes/`)
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('resultadosContainer');
+            container.innerHTML = '';
+
+            if (data.success) {
+                data.enquetes.forEach(enquete => {
+                    const enqueteTitle = document.createElement('button');
+                    enqueteTitle.classList.add('btn', 'btn-outline-primary', 'mb-2', 'w-100');
+                    enqueteTitle.textContent = enquete.titulo;
+                    enqueteTitle.setAttribute('data-enquete-id', enquete.id);
+                    enqueteTitle.addEventListener('click', function() {
+                        toggleChartVisibility(enquete.id, enquete.prazo);
+                    });
+                    container.appendChild(enqueteTitle);
+
+                    const totalVotes = enquete.opcoes.reduce((sum, opcao) => sum + opcao.votos, 0);
+                    if (totalVotes === 0) {
+                        const noVotesMessage = document.createElement('div');
+                        noVotesMessage.classList.add('no-votes-message');
+                        noVotesMessage.setAttribute('id', `noVotesMessage-${enquete.id}`);
+                        noVotesMessage.textContent = 'Nenhum voto foi feito nesta enquete!';
+                        container.appendChild(noVotesMessage);
+                    } else {
+                        const chartContainer = document.createElement('div');
+                        chartContainer.classList.add('small-chart-container');
+                        chartContainer.setAttribute('id', `chartContainer-${enquete.id}`);
+                        chartContainer.style.display = 'none';
+                        chartContainer.innerHTML = `<canvas id="chart-${enquete.id}" width="200" height="150"></canvas>`;
+                        container.appendChild(chartContainer);
+
+                        const ctx = document.getElementById(`chart-${enquete.id}`).getContext('2d');
+                        const labels = enquete.opcoes.map(opcao => opcao.texto);
+                        const votes = enquete.opcoes.map(opcao => opcao.votos);
+                        const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'];
+
+                        const isHorizontal = labels.length > 4;
+                        
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Votos',
+                                    data: votes,
+                                    backgroundColor: colors.slice(0, labels.length),
+                                    borderColor: '#333333',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                indexAxis: isHorizontal ? 'y' : 'x',
+                                plugins: {
+                                    legend: { display: isHorizontal }
+                                },
+                                scales: isHorizontal ? {
+                                    x: {
+                                        beginAtZero: true,
+                                        grid: { display: false }
+                                    },
+                                    y: {
+                                        grid: { display: false }
+                                    }
+                                } : {
+                                    x: {
+                                        grid: { display: false }
+                                    },
+                                    y: {
+                                        beginAtZero: true,
+                                        grid: { display: false }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+
+                const modal = new bootstrap.Modal(document.getElementById('resultadosEnquetesModal'));
+                modal.show();
+            } else {
+                container.innerHTML = '<p>Nenhuma enquete foi encontrada.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+        });
+}
+
+function toggleChartVisibility(enqueteId, prazo) {
+    document.querySelectorAll('.small-chart-container, .no-votes-message, .prazo-element').forEach(element => {
+        if (element.getAttribute('id') !== `chartContainer-${enqueteId}` && 
+            element.getAttribute('id') !== `noVotesMessage-${enqueteId}` && 
+            element.getAttribute('id') !== `prazo-${enqueteId}`) {
+            element.style.display = 'none';
+        }
+    });
+
+    const chartContainer = document.getElementById(`chartContainer-${enqueteId}`);
+    const noVotesMessage = document.getElementById(`noVotesMessage-${enqueteId}`);
+
+    let prazoElement = document.getElementById(`prazo-${enqueteId}`);
+    if (!prazoElement && chartContainer) {
+        prazoElement = document.createElement('p');
+        prazoElement.classList.add('text-muted', 'ms-2', 'prazo-element');
+        prazoElement.setAttribute('id', `prazo-${enqueteId}`);
+        prazoElement.textContent = `Data de Encerramento: ${prazo}`;
+        chartContainer.parentNode.insertBefore(prazoElement, chartContainer);
+    }
+
+    if (chartContainer) {
+        const isCurrentlyHidden = chartContainer.style.display === 'none' || chartContainer.style.display === '';
+        chartContainer.style.display = isCurrentlyHidden ? 'block' : 'none';
+        if (prazoElement) prazoElement.style.display = isCurrentlyHidden ? 'block' : 'none';
+        if (noVotesMessage) noVotesMessage.style.display = 'none';
+    } else if (noVotesMessage) {
+        noVotesMessage.style.display = 'block';
+        if (prazoElement) prazoElement.style.display = 'block';
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function getCSRFToken() {
+    let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    return csrfToken;
+}
+
+document.getElementById('saveProgress').addEventListener('click', function () {
+    const currentCapitulo = parseInt(document.getElementById('currentcapitulo').value);
+    const totalCapitulos = parseInt(document.getElementById('totalcapitulo').value);
+
+    if (currentCapitulo > 0 && totalCapitulos > 0) {
+        if (currentCapitulo > totalCapitulos) {
+            alert('O capítulo atual não pode ser maior que o total de capítulos.');
+        } else {
+            fetch(`{% url 'atualizar_progresso' clube.pk %}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    current_capitulo: currentCapitulo,
+                    total_capitulos: totalCapitulos
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); 
+                if (data.success) {
+                    const progressPercent = (currentCapitulo / totalCapitulos) * 100;
+                    document.getElementById('progressBar').style.width = progressPercent + '%';
+                    document.getElementById('progressBar').setAttribute('aria-valuenow', progressPercent);
+                    document.getElementById('progressBar').innerText = Math.round(progressPercent) + '%';
+
+                    document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
+
+                    $('#progressModal').modal('hide');
+                } else {
+                    alert('Erro ao salvar progresso.');
+                }
+            });
+        }
+    } else {
+        alert('Por favor, insira valores positivos para os capítulos.');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('saveProgress').addEventListener('click', function () {
+        const currentCapitulo = parseInt(document.getElementById('currentcapitulo').value);
+        const totalCapitulos = parseInt(document.getElementById('totalcapitulo').value);
+        const url = this.getAttribute('data-url');
+
+        if (currentCapitulo > 0 && totalCapitulos > 0) {
+            if (currentCapitulo > totalCapitulos) {
+                alert('O capítulo atual não pode ser maior que o total de capítulos.');
+            } else {
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCSRFToken(),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        current_capitulo: currentCapitulo,
+                        total_capitulos: totalCapitulos
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); 
+                    if (data.success) {
+                        const progressPercent = (currentCapitulo / totalCapitulos) * 100;
+                        const progressBar = document.getElementById('progressBar');
+                        
+                        progressBar.style.width = progressPercent + '%';
+                        progressBar.setAttribute('aria-valuenow', progressPercent);
+                        progressBar.innerText = Math.round(progressPercent) + '%';
     
+                        document.getElementById('capituloAtualSpan').innerText = currentCapitulo;
+    
+                        if (progressPercent === 100) {
+                            progressBar.classList.add('progress-bar-green');
+                        } else {
+                            progressBar.classList.remove('progress-bar-green');
+                            progressBar.style.backgroundColor = '#4169E1';
+                        }
+
+                        $('#progressModal').modal('hide');
+                    } else {
+                        alert('Erro ao salvar progresso.');
+                    }
+                });
+            }
+        } else {
+            alert('Por favor, insira valores positivos para os capítulos.');
+        }
+    });
+});
+
+document.querySelectorAll('[id^="topLivrosModal-"]').forEach(function (modal) {
+    modal.addEventListener('show.bs.modal', function (event) {
+        const clubeId = event.target.getAttribute('id').split('-')[1];
+        const modalContent = document.getElementById(`topLivrosContent-${clubeId}`);
+        
+        fetch(`/clube/${clubeId}/top-livros/`)
+            .then(response => response.text())
+            .then(html => {
+                modalContent.innerHTML = html;
+            })
+            .catch(err => {
+                modalContent.innerHTML = '<p>Erro ao carregar os top livros.</p>';
+            });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[id^="favoritar-btn-"]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var clubeId = this.getAttribute('data-clube-id');
+            var url = `/clube/favoritar/${clubeId}/`;
+            var buttonElement = this;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCSRFToken(),
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro na requisição: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.favoritado) {
+                    buttonElement.innerHTML = '<i class="bi bi-star-fill"></i>';
+                } else {
+                    buttonElement.innerHTML = '<i class="bi bi-star"></i>';
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+document.querySelectorAll('[id^="updateModal-"]').forEach(function (modal) {
+    modal.addEventListener('show.bs.modal', function (event) {
+        const clubeId = event.target.getAttribute('id').split('-')[1];
+        const modalidadeSelect = modal.querySelector('#modalidade');
+        const categoriaSelect = modal.querySelector('#categoria');
+
+        fetch('/api/modalidades/')
+            .then(response => response.json())
+            .then(modalidades => {
+                modalidadeSelect.innerHTML = '<option value="">Selecione uma modalidade</option>';
+                modalidades.forEach(modalidade => {
+                    const option = document.createElement('option');
+                    option.value = modalidade.id;
+                    option.textContent = modalidade.nome;
+                    
+                    if (modalidade.id == modal.getAttribute('data-modalidade-id')) {
+                        option.selected = true;
+                    }
+                    modalidadeSelect.appendChild(option);
+                });
+            })
+            .catch(err => console.error('Erro ao carregar modalidades:', err));
+
+        fetch('/api/categorias/')
+            .then(response => response.json())
+            .then(categorias => {
+                categoriaSelect.innerHTML = '<option value="">Selecione uma categoria</option>';
+                categorias.forEach(categoria => {
+                    const option = document.createElement('option');
+                    option.value = categoria.id;
+                    option.textContent = categoria.nome;
+                    
+                    if (categoria.id == modal.getAttribute('data-categoria-id')) {
+                        option.selected = true;
+                    }
+                    categoriaSelect.appendChild(option);
+                });
+            })
+            .catch(err => console.error('Erro ao carregar categorias:', err));
+    });
+});
+});
+
+const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  let cw = canvas.width = window.innerWidth;
+  let ch = canvas.height = window.innerHeight;
+  const rand = (min, max) => (min + Math.random() * (max - min));
+  class SpeedLine {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.speed = rand(2, 4);
+      this.life = this.curLife = rand(500, 900);
+      this.alpha = rand(0.25, 1);
+      this.angle = Math.PI * rand(0, 2);
+      this.size = rand(20, 40);
+      this.inRadius = rand(200, 400);
+      this.outRadius = cw;
+    }
+    update() {
+      this.curLife -= this.speed;
+      this.inRadius += this.speed * 4;
+      this.alpha *= this.curLife / this.life;
+      this.size *= this.curLife / this.life;
+      this.draw();
+    }
+    draw() {
+      const { x, y, size, angle, alpha } = this,
+        { inRadius, outRadius } = this;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.beginPath();
+      ctx.moveTo(0, inRadius);
+      ctx.lineTo(size, outRadius);
+      ctx.lineTo(-size, outRadius);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(255,255,255, ${alpha})`;
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+  const lines = [];
+  const MAX_LINES = 300;
+  function updateLines() {
+    lines.forEach((line, i) => {
+      if (!line || line.curLife < 0) lines[i] = new SpeedLine(cw / 2, ch / 2);
+      lines[i].update();
+    });
+  }
+  for (let i = 0; i < MAX_LINES; i++) {
+    lines[i] = new SpeedLine(cw / 2, ch / 2);
+  }
+  function animate() {
+    requestAnimationFrame(animate);
+    ctx.clearRect(0, 0, cw, ch);
+    updateLines();
+  }
+  animate();
+
+
 document.getElementById('listarHistorico').addEventListener('click', function() {
     const clubeId = this.getAttribute('data-clube-id');
     listarHistorico(clubeId);

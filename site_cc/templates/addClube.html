@@ -433,7 +433,7 @@ Criando
 
                 <input type="hidden" id="moderador" name="moderador">
 
-                <button class="create-btn" id="create-btn">Create Club</button>
+                <button class="create-btn" id="create-btn" disabled>Create Club</button>
             </form>
         </div>
     </div>
@@ -464,21 +464,21 @@ Criando
         return allValid;
     }
 
-//    function toggleSubmitButton() {
-//        const button = document.getElementById("create-btn");
-//        if (validateForm()) {
-//            button.removeAttribute("disabled");
-//        } else {
-//            button.setAttribute("disabled", "true");
-//        }
-//    }
+    function toggleSubmitButton() {
+        const button = document.getElementById("create-btn");
+        if (validateForm()) {
+            button.removeAttribute("disabled");
+        } else {
+            button.setAttribute("disabled", "true");
+        }
+    }
 
-//    document.querySelectorAll("input, textarea, select").forEach(input => {
-//        input.addEventListener("input", toggleSubmitButton);
-//        if (input.type === "checkbox") {
-//            input.addEventListener("change", toggleSubmitButton);
-//        }
-//    });
+    document.querySelectorAll("input, textarea, select").forEach(input => {
+        input.addEventListener("input", toggleSubmitButton);
+        if (input.type === "checkbox") {
+            input.addEventListener("change", toggleSubmitButton);
+        }
+    });
 
     var name = "{{ user.id }}";
     document.getElementById("moderador").value = name;
