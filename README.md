@@ -2,14 +2,28 @@
 
 # 📖 BookHeaded
 
-Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está sendo desenvolvida como parte da disciplina de Fundamentos de Software (FDS) para criar uma comunidade interativa entre os leitores, permitindo que eles compartilhem e discutam suas leituras de forma mais envolvente. Este novo projeto, chamado **Bookheaded**, visa principalmente aprimorar e promover conexões significativas através do amor pela leitura.
+Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma foi desenvolvida como parte da disciplina de Fundamentos de Software (FDS) para criar uma comunidade interativa entre os leitores, permitindo que eles compartilhem e discutam suas leituras de forma mais envolvente. Este novo projeto, chamado **Bookheaded**, visa principalmente aprimorar e promover conexões significativas através do amor pela leitura.
 <br>
 
 ## 🖇️ Links Importantes
 
-  <li>
-    <a href="https://projectdjango.atlassian.net/jira/software/projects/KAN/boards/1">Link do Jira</a>
-  </li>
+  <p style="text-align: center; text-decoration: none;">
+    <a href="https://projectdjango.atlassian.net/jira/software/projects/KAN/boards/1" style="text-decoration: none;">
+      <span>🧷 Jira</span>
+    </a>
+  </p>
+  
+  <p style="text-align: center; text-decoration: none;">
+    <a href="https://bookheaded.azurewebsites.net" style="text-decoration: none;">
+      <span>🧷 BookHeaded</span>
+    </a>
+  </p>
+
+  <p style="text-align: center; text-decoration: none;">
+    <a href="https://www.figma.com/design/647wQMhbLuuVg614lNbp5g/Untitled?node-id=0-1&t=NoCqAA1pU0jS4wmj-1" style="text-decoration: none;">
+      <span>🧷 Figma</span>
+    </a>
+  </p>
 
 ## ⚙ Tecnologias Utilizadas
 
@@ -17,182 +31,17 @@ Bem-vindo ao repositório do nosso projeto Bookheaded. Nossa plataforma está se
 
 - **Banco de Dados**:<br>![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 
-
 - **Framework de Desenvolvimento**:<br>![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)
 
 - **Frontend**:<br>![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 
 - **Organização**:<br>![Jira](https://img.shields.io/badge/Jira-0052CC?style=for-the-badge&logo=jira&logoColor=white)
 
-## 🔍 Como Acessar e Usar o BookHeaded?
-Seja bem-vindo ao BookHeaded! Siga este guia para entender como acessar sua conta, explorar clubes de leitura e participar da comunidade.
+## 🤝 Contribuindo para o Projeto BookHeaded
 
-### 1. Acessando o Site 🖥️
-Página Inicial: Quando você visita o BookHeaded, a primeira coisa que verá é a página inicial com uma breve introdução sobre o site e os clubes de leitura mais populares.
-
-Login ou Cadastro: Se você já possui uma conta, clique no botão Login no canto superior direito. Se ainda não tiver uma conta, clique em Register para criar uma nova.
-
-### 2. Como Fazer Login 🔑
-
-Acesse a Página de Login:
-
-Insira o seu nome de usuário e digite sua senha no campo apropriado.
-
-Se as informações estiverem corretas, você será redirecionado para a sua página inicial de usuário.
-
-Não Tem Conta? Cadastre-se: 📝
-
-Para novos usuários, preencha um pequeno formulário com nome, senha e reconfirmando a senha.
-
-Depois de cadastrado, você pode fazer o login e começar a explorar o site.
-
-### 3. Explorando Clubes de Leitura 📖
-No BookHeaded, os clubes de leitura são o coração da experiência, permitindo que você se conecte com outras pessoas que compartilham interesses de leitura semelhantes.
-
-Como Funciona:
-No menu principal, clique em Clubs para ver uma lista de clubes disponíveis.
-Explorar Clubes:
-
-Use a barra de pesquisa ou explore as categorias para encontrar clubes de acordo com seus interesses, como ficção científica, literatura clássica, ou autores contemporâneos.
-Juntar-se a um Clube 🤝:
-
-Para participar de um clube, clique em Entrar no perfil do clube escolhido. Você será automaticamente adicionado à lista de membros do clube e poderá participar das discussões.
-Acompanhar Atividades 📆:
-
-Dentro do clube, você verá as discussões em andamento, o progresso do clube e o capítulo atual, além de ver mais informações do clube como a quantidade de membros, quantas pessoas classificaram e qual a classificação média entre 1 e 5 ⭐.
-
-### 4. Participando de Discussões 💬
-Uma vez que você esteja em um clube, participar das discussões é simples:
-
-Acesse o Fórum do Clube:
-
-Cada clube tem um fórum onde os membros podem comentar, discutir livros ou compartilhar resenhas.
-
-Adicionar à Sua Lista de Leitura ➕:
-
-Ao clicar em um Clube e Entrar, você pode adicioná-lo à sua lista de leitura pessoal, "My clubs" onde poderá acompanhar o progresso da leitura e compartilhar resenhas depois de terminar.
-Recomendar Livros ✨:
-
-Como membro de um clube, você pode sugerir novos livros para a lista de leitura do grupo na área de comentários.
-
-### Dúvidas Frequentes ❓
-Posso criar meu próprio clube de leitura?
-
-Sim! Basta clicar em "New Club" e preencher as informações necessárias. Você poderá gerenciar o clube e convidar outros leitores para participar.
-Como posso encontrar novos livros? 📖
-
-Explore as recomendações dos membros em cada clube ou veja a seção de Destaques da Comunidade, onde livros populares são apresentados com base na interação da comunidade.
-Posso participar de mais de um clube? 🔄
-
-Claro! Você pode participar de quantos clubes quiser e gerenciar suas participações na seção de "My Clubs".
-<br><br>
-
-### Tutorial em vídeo 🎥
-<p style="text-align: center; text-decoration: none;">
-  <a href="https://www.youtube.com/watch?v=PGZQ2U1BcUk" style="text-decoration: none;">
-  <span>🧷 Screencast </span>
-  </a>
-</p>
-
-<br>
-
-### Link para o site
-<p style="text-align: center; text-decoration: none;">
-  <a href="https://bookheaded.azurewebsites.net" style="text-decoration: none;">
-  <span>🧷 BookHeaded</span>
-  </a>
-</p>
-
-<br>
-
-# Contribuindo para o Projeto BookHeaded 🤝
-
-Bem-vindo ao projeto BookHeaded! Obrigado por considerar contribuir para o nosso projeto! Siga as instruções abaixo para configurar o ambiente de desenvolvimento.
-
-## Pré-requisitos
-
-Antes de começar, certifique-se de ter o seguinte instalado na sua máquina:
-
-- [Python](https://www.python.org/downloads/)
-- [Git](https://git-scm.com/downloads)
-- [VScode](https://code.visualstudio.com/download)
-
-## Passos para Configuração
-
-### 1. Clone o Repositório
-
-Abra seu terminal e navegue até o diretório onde deseja clonar o repositório. Em seguida, execute o comando abaixo:
-```
-git clone https://github.com/Carlosesposito22/BookHeaded.git
-```
-
-### 2. Navegue até o Diretório do Projeto
-Use o comando
-```
-cd BookHeaded
-```
-
-### 3. Crie e Ative um Ambiente Virtual
-Para criar um ambiente virtual, execute o seguinte comando:
-```
-python -m venv venv
-```
-
-Para ativar o ambiente virtual:
-
-### No Windows:
-```
-source venv/Scripts/activate
-```
-
-### No macOS/Linux:
-```
-source venv/bin/activate
-```
-
-### 4. Instale as Dependências
-Com o ambiente virtual ativado dentro da mesma pasta, instale as dependências necessárias:
-```
-pip install -r requirements.txt
-```
-### 5. Execute as migrações:
-Realize as migrações no banco usando: 
-(Note que em algums dispositivos é usado py como prefixo ao inves de python)
-```
-python manage.py migrate
-```
-### 6. Execute o Servidor de Desenvolvimento
-Finalmente, para iniciar o servidor de desenvolvimento, execute:
-
-```
-python manage.py runserver
-```
-
-Agora, você deve ser capaz de acessar o aplicativo em seu navegador, normalmente o servidor local é http://localhost:8000/.
-
-### 7. Contribuindo com Código
-
-Recomendamos o uso do Visual Studio Code (VSCode) para desenvolver o projeto. Para abrir o projeto no VSCode, siga os passos abaixo:
-
-## Abra o VSCode.
-Clique em File > Open Folder... e selecione o diretório do projeto BookHeaded.
-Certifique-se de que o ambiente virtual esteja ativado no terminal do VSCode.
-
-## Abra um Pull Request.
-
-### Processo de Revisão
-Nossa equipe irá analisar todos os pull requests. Apenas aqueles que forem coerentes e estiverem alinhados com os objetivos do projeto serão aprovados.
-
-## Dúvidas?
-Se tiver qualquer dúvida, sinta-se à vontade para abrir uma issue.
-
-
-## Diretrizes de Desenvolvimento 🤔
-
-  - Para fazer uma boa contribuição siga as boas práticas de codificação em Python, HTML e CSS.
-  - Formatação correta do código.
-  - Ordem de imports correta no código.
-
+  <li>
+    <a href="Contributing.md">Contributing.md</a>
+  </li>
 
 ## ✅ Entregas
 
@@ -344,25 +193,14 @@ Se tiver qualquer dúvida, sinta-se à vontade para abrir uma issue.
     >
   </li>
 </details>
-<br>
 
-## 📑 Prototipação Lo-Fi
-<p style="text-align: center; text-decoration: none;">
-  <a href="https://www.figma.com/design/647wQMhbLuuVg614lNbp5g/Untitled?node-id=0-1&t=NoCqAA1pU0jS4wmj-1" style="text-decoration: none;">
-  <span>🧷 Figma</span>
-  </a>
-</p>
+## 📷 Apresentação Final
 
-## Apresentação Final
-<p style="text-align: center; text-decoration: none;">
-  <a href="https://www.canva.com/design/DAGWHbU_Ppg/psqAjLV1qEF_OzpMcwAACw/edit?utm_content=DAGWHbU_Ppg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" style="text-decoration: none;">
-  <span>🧷 Slide </span>
-  </a>
-</p>
-
-<br>
-</details>
-
+  <p style="text-align: center; text-decoration: none;">
+    <a href="https://www.canva.com/design/DAGWHbU_Ppg/psqAjLV1qEF_OzpMcwAACw/edit?utm_content=DAGWHbU_Ppg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" style="text-decoration: none;">
+      <span>🧷 Slide </span>
+    </a>
+  </p>
 
 ## 👩‍💻 Membros
 
